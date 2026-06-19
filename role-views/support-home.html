@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support console · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- layout grids ---- */
+  .sup-stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1080px) { .sup-stat-row { grid-template-columns: repeat(2, 1fr); } }
+
+  .sup-main {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1080px) { .sup-main { grid-template-columns: 1fr; } }
+
+  /* ---- stat dots (status indicators inside stat cards) ---- */
+  .dot-stat {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .dot-stat.bad  { background: var(--accent); }
+  .dot-stat.ok   { background: var(--c-sage); }
+  .dot-stat.warn { background: var(--c-honey); }
+
+  /* ---- quick-action list ---- */
+  .qa-list { display: flex; flex-direction: column; gap: 10px; }
+  .qa-list .btn { width: 100%; justify-content: flex-start; }
+  .qa-foot { margin-top: 4px; }
+
+  /* ---- stat-flat accent left border variants ---- */
+  .stat-flat.accent-clay  { border-left: 3px solid var(--c-clay); }
+  .stat-flat.accent-sage  { border-left: 3px solid var(--c-sage); }
+  .stat-flat.accent-honey { border-left: 3px solid var(--c-honey); }
+
+  /* ---- user lookup hero strip ---- */
+  .lookup-strip {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .lookup-strip .eyebrow { margin-bottom: 0; white-space: nowrap; }
+  .lookup-strip .input-wrap { flex: 1; position: relative; }
+  .lookup-strip .input-wrap input {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--r-pill);
+    padding-left: 42px;
+    padding-right: 14px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    font-size: 13.5px;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .lookup-strip .input-wrap input::placeholder { color: var(--ink-soft); }
+  .lookup-strip .input-wrap input:focus { outline: none; border-color: var(--ink-mute); box-shadow: 0 0 0 4px rgba(42,17,8,0.04); }
+  .lookup-strip .input-wrap::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+
+<!-- ad strip (locked chrome) -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- topbar (locked chrome) -->
+<header class="topbar">
+  <a href="support-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Support</span>
+  </a>
+  <div class="search"><input id="topbar-search" placeholder="Lookup by email, name, ID..."></div>
+  <div class="topbar-actions">
+    <span class="role-pill">SUPPORT ENG</span>
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SE" alt="SE"></div>
+  </div>
+</header>
+
+<div class="app">
+  <!-- sidebar (locked chrome) -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="support-home.html#open" class="sidebar-link is-active" data-nav="tickets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Tickets</span><span class="badge">14</span>
+      </a>
+      <a href="support-home.html#resolved" class="sidebar-link" data-nav="resolved">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Resolved</span><span class="badge">428</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">LOOKUP</div>
+      <a href="sup-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span>
+      </a>
+      <a href="sup-audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="../admin/admin-certificates.html" class="sidebar-link" data-nav="certificates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        <span>Certificates</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- main content -->
+  <main>
+
+    <!-- page hero -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Role-specific home &middot; Support engineer</div>
+        <h1 class="page-title">Support <em>console</em></h1>
+        <p class="page-sub">Support Engineer &middot; Maria Lopez. Resolve open tickets, look up users, and run quick account actions. Every action is written to the audit log.</p>
+      </div>
+    </div>
+
+    <!-- user lookup strip -->
+    <div class="lookup-strip">
+      <div class="eyebrow">User lookup</div>
+      <div class="input-wrap">
+        <input id="lookup-input" placeholder="Search by email, name, or user ID" aria-label="Search users">
+      </div>
+      <button class="btn btn-primary" id="lookup-btn" onclick="doLookup()">Search</button>
+    </div>
+
+    <!-- KPI stat strip -->
+    <div class="sup-stat-row">
+      <div class="stat-flat accent-clay">
+        <div class="stat-label">Open tickets</div>
+        <div class="stat-value">6 <span class="dot-stat bad"></span></div>
+      </div>
+      <div class="stat-flat accent-sage">
+        <div class="stat-label">Resolved this week</div>
+        <div class="stat-value">23 <span class="dot-stat ok"></span></div>
+      </div>
+      <div class="stat-flat accent-honey">
+        <div class="stat-label">Impersonation sessions active</div>
+        <div class="stat-value">2 <span class="dot-stat warn"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Password / OTP issues</div>
+        <div class="stat-value">4</div>
+      </div>
+    </div>
+
+    <!-- two-column layout: actions table + quick actions -->
+    <div class="sup-main">
+
+      <!-- recent actions table -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Recent <em>support</em> actions</div>
+        </div>
+        <div class="card-body flush">
+          <table class="tbl">
+            <thead>
+              <tr><th>Time</th><th>User</th><th>Action</th><th>Outcome</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="numeric" style="font-family:var(--font-label)">09:14</td>
+                <td>layla.omar@example.com</td>
+                <td><span class="chip chip-otp">OTP resent</span></td>
+                <td><span class="chip t-sage dot">Sent</span></td>
+              </tr>
+              <tr>
+                <td class="numeric" style="font-family:var(--font-label)">08:52</td>
+                <td>ahmed.rashid@corp.om</td>
+                <td><span class="chip chip-unlock">Account unlocked</span></td>
+                <td><span class="chip t-sage dot">Unlocked</span></td>
+              </tr>
+              <tr style="background:var(--paper-2)">
+                <td class="numeric" style="font-family:var(--font-label)">08:30</td>
+                <td>noor.habsi@imi.om</td>
+                <td><span class="chip chip-impers">Impersonation started</span></td>
+                <td><span class="chip t-honey dot">Active</span></td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--font-label)">Yesterday</td>
+                <td>fatima.blooshi@edu.om</td>
+                <td><span class="chip">Cert re-issued</span></td>
+                <td><span class="chip t-sage dot">Done</span></td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--font-label)">Yesterday</td>
+                <td>yusuf.khalfan@corp.om</td>
+                <td><span class="chip chip-reverify">Force profile re-verify</span></td>
+                <td><span class="chip t-sage dot">Email sent</span></td>
+              </tr>
+              <tr>
+                <td style="font-family:var(--font-label)">2d ago</td>
+                <td>omar.salim@example.com</td>
+                <td><span class="chip chip-unlock">Account unlocked</span></td>
+                <td><span class="chip t-sage dot">Unlocked</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- quick actions rail -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Quick <em>actions</em></div>
+        </div>
+        <div class="card-body">
+          <div class="qa-list">
+            <button class="btn btn-ghost btn-sm" id="btn-resend-otp" onclick="openQuickActionModal('resend-otp')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.69h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.29 6.29l1.28-1.28a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Resend OTP
+            </button>
+            <button class="btn btn-ghost btn-sm" id="btn-unlock-account" onclick="openQuickActionModal('unlock-account')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Unlock account
+            </button>
+            <button class="btn btn-ghost btn-sm" id="btn-force-reverify" onclick="openQuickActionModal('force-reverify')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Force profile re-verify
+            </button>
+            <button class="btn btn-ghost btn-sm" id="btn-reissue-home" onclick="openReissueModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+              Re-issue completion proof
+            </button>
+            <div class="qa-foot">
+              <span class="chip t-honey dot">All actions logged to audit trail</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tickets table with tabs -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title" id="tickets-title">Open <em>tickets</em></div>
+        <span class="chip t-clay dot" id="tickets-count">6 open</span>
+      </div>
+      <div class="card-body flush">
+        <div style="padding: 0 20px;">
+          <div class="tabs" role="tablist">
+            <button class="tab is" data-tab="open" role="tab" aria-selected="true" onclick="switchTab('open')">Open</button>
+            <button class="tab" data-tab="resolved" role="tab" aria-selected="false" onclick="switchTab('resolved')">Resolved</button>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr><th>ID</th><th>User</th><th>Issue</th><th>Age</th><th>Priority</th></tr>
+          </thead>
+          <tbody id="tickets-body">
+            <tr data-status="open" data-ticket-id="T-1042" data-ticket-title="Cannot complete profile" data-ticket-user="layla.omar@example.com" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1042</td>
+              <td>layla.omar@example.com</td>
+              <td>Cannot complete profile (photo upload fails)</td>
+              <td class="numeric" style="font-family:var(--font-label)">4h</td>
+              <td><span class="chip t-clay dot">High</span></td>
+            </tr>
+            <tr data-status="open" data-ticket-id="T-1039" data-ticket-title="Course proof not showing" data-ticket-user="ahmed.rashid@corp.om" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1039</td>
+              <td>ahmed.rashid@corp.om</td>
+              <td>Course Completed proof not showing after course completion</td>
+              <td class="numeric" style="font-family:var(--font-label)">1d</td>
+              <td><span class="chip t-clay dot">High</span></td>
+            </tr>
+            <tr data-status="open" data-ticket-id="T-1037" data-ticket-title="OTP not received" data-ticket-user="fatima.blooshi@edu.om" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1037</td>
+              <td>fatima.blooshi@edu.om</td>
+              <td>OTP not received on first login attempt</td>
+              <td class="numeric" style="font-family:var(--font-label)">2d</td>
+              <td><span class="chip t-honey dot">Medium</span></td>
+            </tr>
+            <tr data-status="open" data-ticket-id="T-1034" data-ticket-title="Progress not saving" data-ticket-user="yusuf.khalfan@corp.om" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1034</td>
+              <td>yusuf.khalfan@corp.om</td>
+              <td>Progress not saving after lesson 5</td>
+              <td class="numeric" style="font-family:var(--font-label)">3d</td>
+              <td><span class="chip">Normal</span></td>
+            </tr>
+            <tr data-status="resolved" data-ticket-id="T-1031" data-ticket-title="Dashboard not loading" data-ticket-user="sara.khalili@edu.om" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1031</td>
+              <td>sara.khalili@edu.om</td>
+              <td>Dashboard not loading on mobile browser</td>
+              <td class="numeric" style="font-family:var(--font-label)">5d</td>
+              <td><span class="chip t-honey dot">Medium</span></td>
+            </tr>
+            <tr data-status="resolved" data-ticket-id="T-1028" data-ticket-title="OTP delay on activation" data-ticket-user="omar.salim@example.com" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1028</td>
+              <td>omar.salim@example.com</td>
+              <td>Login OTP delay on first account activation</td>
+              <td class="numeric" style="font-family:var(--font-label)">6d</td>
+              <td><span class="chip">Normal</span></td>
+            </tr>
+            <tr data-status="resolved" data-ticket-id="T-1025" data-ticket-title="Badge missing from profile" data-ticket-user="noor.habsi@imi.om" class="row-link" style="cursor:pointer">
+              <td class="numeric" style="font-family:var(--font-label)">#T-1025</td>
+              <td>noor.habsi@imi.om</td>
+              <td>Course Completed badge missing from profile</td>
+              <td class="numeric" style="font-family:var(--font-label)">8d</td>
+              <td><span class="chip t-clay dot">High</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<style>
+  /* action chip tints (matching audit log page) */
+  .chip-otp      { border-color: rgba(80,130,155,0.55); color: #3E6B82; }
+  .chip-unlock   { border-color: rgba(126,155,111,0.60); color: var(--c-sage-text); }
+  .chip-reverify { border-color: rgba(201,155,46,0.55); color: var(--c-honey-text); }
+  .chip-impers   { border-color: rgba(201,155,46,0.55); color: var(--c-honey-text); }
+
+  .modal-scrim {
+    position: fixed; inset: 0;
+    background: rgba(42,17,8,0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: none; place-items: center;
+    padding: 40px 24px; z-index: 60;
+  }
+  .modal-scrim.open { display: grid; }
+  .modal-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    width: 100%; max-width: 460px;
+    padding: 28px 30px 24px;
+  }
+  .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+  .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1.3; }
+  .modal-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .modal-close { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-mute); font-size: 18px; flex-shrink: 0; transition: background 0.15s, color 0.15s; }
+  .modal-close:hover { background: var(--paper-2); color: var(--ink); }
+  .modal-body { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--paper);
+    font-size: 13px; font-family: var(--font-sans);
+    padding: 10px 20px; border-radius: var(--r-pill);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    white-space: nowrap; z-index: 99;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .tbl tbody tr.row-link:hover { background: var(--paper-2); }
+</style>
+
+<!-- Quick action modal (Resend OTP / Unlock / Force re-verify) -->
+<div class="modal-scrim" id="modal-quick-action" role="dialog" aria-modal="true" aria-labelledby="qa-modal-title">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="qa-modal-title"></div>
+        <div style="font-size:13px;color:var(--ink-mute);margin-top:4px" id="qa-modal-sub"></div>
+      </div>
+      <button class="modal-close" id="btn-qa-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="modal-body" id="qa-modal-body"></p>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
+      <input id="qa-action-email" class="input" style="width:100%;box-sizing:border-box" placeholder="learner@example.com" type="email">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" id="btn-qa-cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="btn-qa-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Re-issue completion proof modal -->
+<div class="modal-scrim" id="modal-reissue" role="dialog" aria-modal="true" aria-labelledby="reissue-modal-title">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="reissue-modal-title">Re-issue <em>completion proof</em></div>
+        <div style="font-size:13px;color:var(--ink-mute);margin-top:4px">Look up the user first to confirm the course</div>
+      </div>
+      <button class="modal-close" id="btn-reissue-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="modal-body">Enter the learner's email to re-generate their completion certificate and send a new download link. This action is written to the audit log.</p>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
+      <input id="reissue-email" class="input" style="width:100%;box-sizing:border-box" placeholder="learner@example.com" type="email">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" id="btn-reissue-cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="btn-reissue-confirm" onclick="confirmReissue()">Re-issue proof</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2800);
+  }
+
+  var QA_ACTIONS = {
+    'resend-otp': {
+      title: 'Resend <em>OTP</em>',
+      sub: 'Sends a new one-time password to the user',
+      body: "Enter the learner's email to resend their OTP. The existing OTP will be invalidated. This action is written to the audit log.",
+      confirm: 'Resend OTP',
+      toast: 'OTP resent to '
+    },
+    'unlock-account': {
+      title: 'Unlock <em>account</em>',
+      sub: 'Removes the lockout flag from the user account',
+      body: "Enter the learner's email to unlock their account. Confirm identity before proceeding. This action is written to the audit log.",
+      confirm: 'Unlock account',
+      toast: 'Account unlocked for '
+    },
+    'force-reverify': {
+      title: 'Force profile <em>re-verify</em>',
+      sub: 'Sends re-verification email to the user',
+      body: "Enter the learner's email to trigger a mandatory profile re-verification. The user will receive an email with instructions. This action is written to the audit log.",
+      confirm: 'Send re-verify email',
+      toast: 'Re-verification email sent to '
+    }
+  };
+  var currentQAAction = null;
+
+  function openQuickActionModal(actionKey) {
+    var cfg = QA_ACTIONS[actionKey];
+    if (!cfg) return;
+    currentQAAction = actionKey;
+    document.getElementById('qa-modal-title').innerHTML = cfg.title;
+    document.getElementById('qa-modal-sub').textContent = cfg.sub;
+    document.getElementById('qa-modal-body').textContent = cfg.body;
+    document.getElementById('btn-qa-confirm').textContent = cfg.confirm;
+    document.getElementById('qa-action-email').value = '';
+    document.getElementById('modal-quick-action').classList.add('open');
+    setTimeout(function() { document.getElementById('qa-action-email').focus(); }, 80);
+  }
+
+  function closeQuickActionModal() {
+    document.getElementById('modal-quick-action').classList.remove('open');
+    currentQAAction = null;
+  }
+
+  document.getElementById('btn-qa-close').addEventListener('click', closeQuickActionModal);
+  document.getElementById('btn-qa-cancel').addEventListener('click', closeQuickActionModal);
+  document.getElementById('modal-quick-action').addEventListener('click', function(e) {
+    if (e.target === this) closeQuickActionModal();
+  });
+  document.getElementById('btn-qa-confirm').addEventListener('click', function() {
+    var email = document.getElementById('qa-action-email').value.trim();
+    if (!email) { document.getElementById('qa-action-email').focus(); return; }
+    var cfg = QA_ACTIONS[currentQAAction];
+    var btn = document.getElementById('btn-qa-confirm');
+    btn.disabled = true; btn.textContent = 'Working...';
+    setTimeout(function() {
+      closeQuickActionModal();
+      btn.disabled = false;
+      if (cfg) { btn.textContent = cfg.confirm; showToast(cfg.toast + email); }
+    }, 700);
+  });
+
+  function openReissueModal() {
+    document.getElementById('modal-reissue').classList.add('open');
+    setTimeout(function() { document.getElementById('reissue-email').focus(); }, 80);
+  }
+
+  function closeReissueModal() {
+    document.getElementById('modal-reissue').classList.remove('open');
+    document.getElementById('reissue-email').value = '';
+  }
+
+  function confirmReissue() {
+    var email = document.getElementById('reissue-email').value.trim();
+    if (!email) { document.getElementById('reissue-email').focus(); return; }
+    var btn = document.getElementById('btn-reissue-confirm');
+    btn.disabled = true; btn.textContent = 'Re-issuing...';
+    setTimeout(function() {
+      closeReissueModal();
+      btn.disabled = false; btn.textContent = 'Re-issue proof';
+      showToast('Completion proof re-issued to ' + email);
+    }, 800);
+  }
+
+  document.getElementById('btn-reissue-close').addEventListener('click', closeReissueModal);
+  document.getElementById('btn-reissue-cancel').addEventListener('click', closeReissueModal);
+  document.getElementById('modal-reissue').addEventListener('click', function(e) {
+    if (e.target === this) closeReissueModal();
+  });
+
+  // ticket row navigation
+  document.querySelectorAll('#tickets-body tr.row-link').forEach(function(row) {
+    row.addEventListener('click', function() {
+      var id = '#' + this.getAttribute('data-ticket-id');
+      var title = this.getAttribute('data-ticket-title');
+      var user = this.getAttribute('data-ticket-user');
+      location.href = 'sup-ticket-detail.html?id=' + encodeURIComponent(id) + '&title=' + encodeURIComponent(title) + '&user=' + encodeURIComponent(user);
+    });
+  });
+
+  // topbar search
+  document.getElementById('topbar-search').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'sup-users.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  // lookup strip
+  document.getElementById('lookup-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { doLookup(); }
+  });
+
+  function doLookup() {
+    var val = document.getElementById('lookup-input').value.trim();
+    location.href = 'sup-users.html' + (val ? '?q=' + encodeURIComponent(val) : '');
+  }
+
+</script>
+
+<script>
+  function switchTab(tab) {
+    var rows = document.querySelectorAll('#tickets-body tr[data-status]');
+    var buttons = document.querySelectorAll('.tabs button[data-tab]');
+    var title = document.getElementById('tickets-title');
+    var count = document.getElementById('tickets-count');
+    var openCount = document.querySelectorAll('#tickets-body tr[data-status="open"]').length;
+    var resolvedCount = document.querySelectorAll('#tickets-body tr[data-status="resolved"]').length;
+
+    buttons.forEach(function(btn) {
+      var isActive = btn.getAttribute('data-tab') === tab;
+      btn.classList.toggle('is', isActive);
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    rows.forEach(function(row) {
+      row.style.display = row.getAttribute('data-status') === tab ? '' : 'none';
+    });
+
+    if (tab === 'open') {
+      title.innerHTML = 'Open <em>tickets</em>';
+      count.textContent = openCount + ' open';
+      count.className = 'chip t-clay dot';
+    } else {
+      title.innerHTML = 'Resolved <em>tickets</em>';
+      count.textContent = resolvedCount + ' resolved';
+      count.className = 'chip t-sage dot';
+    }
+
+    location.hash = tab;
+  }
+
+  (function() {
+    var hash = location.hash.replace('#', '');
+    var validTabs = ['open', 'resolved'];
+    var initial = validTabs.indexOf(hash) !== -1 ? hash : 'open';
+    switchTab(initial);
+  })();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles &amp; permissions · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- toolbar ---- */
+  .rp-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 200px 180px;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 900px) { .rp-toolbar { grid-template-columns: 1fr; } }
+  .rp-toolbar .search { max-width: none; }
+
+  .rp-select {
+    height: 38px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 13px;
+    padding: 0 32px 0 14px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    transition: border 0.18s, background-color 0.18s;
+  }
+  .rp-select:focus { outline: none; border-color: var(--ink-mute); }
+
+  /* ---- permissions matrix ---- */
+  .matrix-wrap { overflow-x: auto; }
+  table.matrix { min-width: 880px; }
+
+  table.matrix th.perm-col,
+  table.matrix td.perm-col {
+    text-align: left;
+    min-width: 200px;
+    white-space: nowrap;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  table.matrix th.role-col { text-align: center; white-space: nowrap; }
+  table.matrix td.cell { text-align: center; }
+
+  table.matrix th.role-col a {
+    color: var(--ink-soft);
+    font-family: var(--font-label);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  table.matrix th.role-col a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ---- permission indicator dots ---- */
+  .perm-dot {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--c-sage-wash);
+    color: var(--c-sage-text);
+    margin: 0 auto;
+  }
+  .perm-dot svg { width: 13px; height: 13px; }
+
+  .perm-no {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    opacity: 0.45;
+  }
+
+  /* ---- row actions menu trigger ---- */
+  .row-actions {
+    color: var(--ink-mute);
+    font-size: 18px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .row-actions:hover { color: var(--ink); }
+
+  /* ---- user cell ---- */
+  .user-name  { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .user-email { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
+  .cell-mono  { font-family: var(--font-label); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.03em; }
+</style>
+</head>
+<body>
+
+<!-- ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- topbar -->
+<header class="topbar">
+  <a class="brand" href="admin-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search users, courses, audit..." aria-label="Search">
+  </div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<!-- app shell -->
+<div class="app">
+
+  <!-- sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link is-active" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+      <a href="admin-password-reset.html" class="sidebar-link" data-nav="pwreset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Reset Passwords</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- main content -->
+  <main>
+
+    <!-- page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Access control</div>
+        <h1 class="page-title">Roles &amp; <em>permissions</em></h1>
+        <p class="page-sub">Manage access control for IMI platform users.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-primary" href="role-create.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add custom role
+        </a>
+      </div>
+    </div>
+
+    <!-- users table card -->
+    <div class="card mb-lg">
+      <div class="card-head">
+        <div class="card-title">Users</div>
+      </div>
+      <div class="card-body">
+        <div class="rp-toolbar">
+          <div class="search">
+            <input placeholder="Search by name or email" aria-label="Search users">
+          </div>
+          <select class="rp-select" aria-label="Filter by persona">
+            <option>Persona: All</option>
+            <option>Content Developer</option>
+            <option>Subject Matter Expert</option>
+            <option>Corporate Admin</option>
+            <option>Super Admin</option>
+          </select>
+          <select class="rp-select" aria-label="Filter by status">
+            <option>Status: All</option>
+            <option>Active</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Last Active</th>
+              <th style="text-align:right">Courses</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="user-name">Dr. Sarah Chen</div>
+                <div class="user-email">sarah@lumina.edu</div>
+              </td>
+              <td><span class="chip">Content Developer</span></td>
+              <td class="cell-mono">2026-03-25</td>
+              <td class="cell-mono" style="text-align:right">4</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="user-name">Prof. James Miller</div>
+                <div class="user-email">james@lumina.edu</div>
+              </td>
+              <td><span class="chip">Content Developer</span></td>
+              <td class="cell-mono">2026-03-24</td>
+              <td class="cell-mono" style="text-align:right">2</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="user-name">Maria Lopez</div>
+                <div class="user-email">maria@lumina.edu</div>
+              </td>
+              <td><span class="chip t-sage">Subject Matter Expert</span></td>
+              <td class="cell-mono">2026-03-23</td>
+              <td class="cell-mono" style="text-align:right">0</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="user-name">Admin User</div>
+                <div class="user-email">admin@lumina.edu</div>
+              </td>
+              <td><span class="chip t-ink">Super Admin</span></td>
+              <td class="cell-mono">2026-03-26</td>
+              <td class="cell-mono" style="text-align:right">0</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="user-name">Richard Torres</div>
+                <div class="user-email">richard@lumina.edu</div>
+              </td>
+              <td><span class="chip">Content Developer</span></td>
+              <td class="cell-mono">2026-03-22</td>
+              <td class="cell-mono" style="text-align:right">3</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="user-name">Aisha Al-Said</div>
+                <div class="user-email">aisha@lumina.edu</div>
+              </td>
+              <td><span class="chip t-clay">Corporate Admin</span></td>
+              <td class="cell-mono">2026-03-21</td>
+              <td class="cell-mono" style="text-align:right">0</td>
+              <td style="text-align:right"><span class="row-actions">&#183;&#183;&#183;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- permissions matrix card -->
+    <div class="card mb-lg">
+      <div class="card-head">
+        <div class="card-title">Permissions <em>matrix</em></div>
+        <span class="card-link">9 BASE ROLES</span>
+      </div>
+      <div class="card-body flush">
+        <div class="matrix-wrap">
+          <table class="tbl matrix">
+            <thead>
+              <tr>
+                <th class="perm-col">Permission</th>
+                <th class="role-col"><a href="role-create.html" title="Edit Visitor permissions">Visitor</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Learner / Member permissions">Learner / Member</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Free Member permissions">Free Member</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Content Dev permissions">Content Dev</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit SME permissions">SME</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Corporate User permissions">Corporate User</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Corporate Admin permissions">Corporate Admin</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Support Eng permissions">Support Eng</a></th>
+                <th class="role-col"><a href="role-create.html" title="Edit Super Admin permissions">Super Admin</a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- View public courses -->
+              <tr>
+                <td class="perm-col">View public courses</td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Enrol in courses -->
+              <tr>
+                <td class="perm-col">Enrol in courses</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Author courses -->
+              <tr>
+                <td class="perm-col">Author courses</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Approve courses -->
+              <tr>
+                <td class="perm-col">Approve courses</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Manage own tenant -->
+              <tr>
+                <td class="perm-col">Manage own tenant</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Manage all tenants -->
+              <tr>
+                <td class="perm-col">Manage all tenants</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Issue certificates -->
+              <tr>
+                <td class="perm-col">Issue certificates</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- View audit logs -->
+              <tr>
+                <td class="perm-col">View audit logs</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Create roles -->
+              <tr>
+                <td class="perm-col">Create roles</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Manage users -->
+              <tr>
+                <td class="perm-col">Manage users</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Configure system -->
+              <tr>
+                <td class="perm-col">Configure system</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+              <!-- Impersonate user -->
+              <tr>
+                <td class="perm-col">Impersonate user</td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-no"></span></td>
+                <td class="cell"><span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- custom roles info card -->
+    <div class="card">
+      <div class="card-body" style="display:flex;gap:14px;align-items:flex-start">
+        <div class="list-icon t-honey" style="flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin:0">
+          <strong style="color:var(--ink);font-weight:700">Custom roles:</strong>
+          Custom roles are an extension of the 9 base personas. Once created, custom roles inherit a base persona's permissions plus configured overrides. Only Super Admin can create custom roles. Impersonation actions are written to the audit log with an "Acting as" flag.
+        </p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  /* ---- toast helper ---- */
+  function toast(msg, type){
+    var t=document.createElement('div');
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-family:var(--font-sans);font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px);max-width:320px;';
+    if(type==='error') t.style.background='var(--c-clay)';
+    if(type==='success') t.style.background='var(--c-sage)';
+    t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(function(){t.style.opacity='1';t.style.transform='translateY(0)';},10);
+    setTimeout(function(){t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(function(){t.remove();},300);},3200);
+  }
+
+  /* ---- dropdown menu helper ---- */
+  function closeMenus(){ document.querySelectorAll('.row-menu').forEach(function(m){m.remove();}); }
+
+  /* ---- users table filtering ---- */
+  var tbody = document.querySelector('.tbl tbody');
+  var rows = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+
+  /* tag each row + make user-name cell clickable to detail page */
+  rows.forEach(function(tr){
+    var name = (tr.querySelector('.user-name')||{}).textContent||'';
+    var email = (tr.querySelector('.user-email')||{}).textContent||'';
+    var role = (tr.querySelector('.chip')||{}).textContent||'';
+    tr.dataset.name = name.toLowerCase();
+    tr.dataset.email = email.toLowerCase();
+    tr.dataset.role = role.trim();
+    /* map chip to persona filter value */
+    var chipEl = tr.querySelector('.chip');
+    if(chipEl){
+      var txt = chipEl.textContent.trim();
+      if(txt==='Content Developer') tr.dataset.persona='content developer';
+      else if(txt==='Subject Matter Expert') tr.dataset.persona='subject matter expert';
+      else if(txt==='Corporate Admin') tr.dataset.persona='corporate admin';
+      else if(txt==='Super Admin') tr.dataset.persona='super admin';
+      else tr.dataset.persona='other';
+    }
+    /* status: all rows start active */
+    tr.dataset.status='active';
+    /* make the first cell (user name+email) navigate to user detail */
+    var nameCell = tr.querySelector('td:first-child');
+    if(nameCell){
+      nameCell.style.cursor='pointer';
+      nameCell.addEventListener('click', function(e){
+        if(e.target.closest('.row-actions')) return;
+        window.location.href='admin-user-detail.html';
+      });
+    }
+  });
+
+  var countEl = document.querySelector('.card-title');
+  var searchEl = document.querySelector('.rp-toolbar .search input');
+  var personaSel = document.querySelector('select[aria-label="Filter by persona"]');
+  var statusSel = document.querySelector('select[aria-label="Filter by status"]');
+
+  function applyFilters(){
+    var q = searchEl ? searchEl.value.toLowerCase().trim() : '';
+    var persona = personaSel ? personaSel.value : 'Persona: All';
+    var status = statusSel ? statusSel.value : 'Status: All';
+    var shown=0, total=rows.length;
+    rows.forEach(function(tr){
+      var matchQ = !q || tr.dataset.name.includes(q) || tr.dataset.email.includes(q);
+      var matchP = persona==='Persona: All' || tr.dataset.persona===persona.toLowerCase();
+      var matchS = status==='Status: All' || tr.dataset.status===status.toLowerCase();
+      var vis = matchQ && matchP && matchS;
+      tr.style.display = vis ? '' : 'none';
+      if(vis) shown++;
+    });
+    /* update card title with count */
+    var card = tbody ? tbody.closest('.card') : null;
+    var titleEl = card ? card.querySelector('.card-title') : null;
+    if(titleEl) titleEl.textContent = 'Users (showing ' + shown + ' of ' + total + ')';
+  }
+
+  if(searchEl){ searchEl.addEventListener('input', applyFilters); }
+  if(personaSel){ personaSel.addEventListener('change', applyFilters); }
+  if(statusSel){ statusSel.addEventListener('change', applyFilters); }
+
+  /* ---- topbar search ---- */
+  var topSearch = document.querySelector('.topbar .search input');
+  if(topSearch){
+    topSearch.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        var q = encodeURIComponent(topSearch.value.trim());
+        if(q) window.location.href='admin-users.html?q='+q;
+      }
+    });
+  }
+
+  /* ---- row-actions 3-dot menus ---- */
+  document.addEventListener('click', function(e){
+    var ra = e.target.closest('.row-actions');
+    if(!ra){closeMenus();return;}
+    e.stopPropagation();
+    closeMenus();
+    var tr = ra.closest('tr');
+    var name = tr ? (tr.querySelector('.user-name')||{}).textContent||'User' : 'User';
+    var menu = document.createElement('div');
+    menu.className = 'row-menu';
+    menu.style.cssText='position:fixed;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-md);box-shadow:var(--shadow-card);z-index:1000;min-width:180px;padding:6px 0;font-size:13.5px;';
+    var items=[
+      {label:'Edit role', action:function(){ window.location.href='role-create.html?user='+encodeURIComponent(name); }},
+      {label:'Deactivate user', action:function(){ if(tr){ tr.dataset.status='inactive'; var chip=tr.querySelector('.chip'); if(chip){ chip.style.opacity='0.5'; chip.title='Inactive'; } } toast(name+' deactivated','success'); }},
+      {label:'View profile', action:function(){ window.location.href='admin-user-detail.html'; }},
+      {label:'Remove role', action:function(){ if(tr){ var chip=tr.querySelector('.chip'); if(chip){chip.textContent='No role';chip.className='chip';}} toast('Role removed from '+name,'success'); }},
+    ];
+    items.forEach(function(item){
+      var btn=document.createElement('button');
+      btn.type='button';
+      btn.textContent=item.label;
+      btn.style.cssText='display:block;width:100%;text-align:left;padding:9px 16px;background:none;border:none;cursor:pointer;color:var(--ink);font-family:var(--font-sans);font-size:13.5px;transition:background 0.12s;';
+      btn.addEventListener('mouseenter',function(){btn.style.background='var(--paper-2)';});
+      btn.addEventListener('mouseleave',function(){btn.style.background='none';});
+      btn.addEventListener('click',function(e){e.stopPropagation();item.action();closeMenus();});
+      menu.appendChild(btn);
+    });
+    var rect = ra.getBoundingClientRect();
+    menu.style.top=(rect.bottom+4)+'px';
+    menu.style.left=Math.max(8,rect.right-180)+'px';
+    document.body.appendChild(menu);
+  });
+
+  /* ---- permission matrix toggle ---- */
+  document.querySelectorAll('td.cell').forEach(function(td){
+    td.style.cursor='pointer';
+    td.addEventListener('click',function(){
+      var dot = td.querySelector('.perm-dot');
+      var no  = td.querySelector('.perm-no');
+      if(dot){
+        /* turn off */
+        td.innerHTML='<span class="perm-no"></span>';
+        toast('Permission removed','error');
+      } else if(no){
+        /* turn on */
+        td.innerHTML='<span class="perm-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+        toast('Permission granted','success');
+      }
+    });
+    /* tooltip hint */
+    td.title='Click to toggle permission';
+  });
+
+  /* initial count */
+  applyFilters();
+
+  /* ---- pick up toast from role-create ---- */
+  var stored = sessionStorage.getItem('rp_toast');
+  if(stored){ sessionStorage.removeItem('rp_toast'); setTimeout(function(){ toast(stored,'success'); }, 400); }
+
+})();
+</script>
+</body>
+</html>

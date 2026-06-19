@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System settings · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-specific: settings layout (vertical tab nav + panel). Tokens only. */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 232px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .settings-grid { grid-template-columns: 1fr; } }
+
+  .settings-nav {
+    position: sticky;
+    top: 80px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .settings-nav .nav-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 4px 12px 8px;
+  }
+  .settings-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    transition: background 0.15s var(--tn), color 0.15s, transform 0.12s var(--tn);
+  }
+  .settings-nav a .nav-num {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .settings-nav a:hover { background: var(--paper-2); color: var(--ink); transform: translateX(2px); }
+  .settings-nav a.is-active {
+    background: #5C3024;
+    color: var(--hero-bg);
+    font-weight: 600;
+  }
+  .settings-nav a.is-active .nav-num { color: rgba(252, 247, 174, 0.65); }
+
+  .settings-panel { min-width: 0; }
+
+  .sec-head { margin-bottom: 16px; }
+  .sec-head .sec-flag {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .sec-head h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .sec-head h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .sec-head p {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    max-width: 640px;
+  }
+
+  .sec-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 16px 0 18px;
+  }
+  .sec-break {
+    height: 2px;
+    background: var(--line-strong);
+    margin: 40px 0 24px;
+    border-radius: 2px;
+  }
+
+  .panel-card { padding: 22px 24px; margin-bottom: 16px; }
+
+  .card-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
+  }
+  @media (max-width: 720px) { .field-grid { grid-template-columns: 1fr; } }
+  .field-grid .field { margin-bottom: 0; }
+  .field .hint {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 7px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .field .input[disabled] { opacity: 0.55; cursor: not-allowed; background: var(--paper-2); }
+
+  .tag-sys {
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: var(--surface-3);
+    border: 1px solid var(--line);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .upload-box {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--r-sm);
+    background: var(--paper-2);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    text-align: center;
+    padding: 8px 14px;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 0;
+  }
+  .toggle-row + .toggle-row { border-top: 1px solid var(--line); }
+  .toggle-row.bordered { border-top: 1px solid var(--line); }
+  .toggle-row .tr-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .toggle-row .tr-sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pill-on {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: var(--ink);
+    color: var(--hero-bg);
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    flex-shrink: 0;
+  }
+  .pill-on.locked { opacity: 0.62; }
+
+  /* pill-toggle for editable toggles */
+  .pill-toggle { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+  .pill-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .pill-track {
+    position: absolute; inset: 0;
+    background: var(--surface-3);
+    border-radius: 100px;
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pill-track::after {
+    content: "";
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 16px; height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(42,17,8,0.18);
+    transition: transform 0.2s var(--tn);
+  }
+  .pill-toggle input:checked + .pill-track { background: var(--c-sage,#5A8A6A); border-color: var(--c-sage,#5A8A6A); }
+  .pill-toggle input:checked + .pill-track::after { transform: translateX(18px); }
+
+  .readonly-rule {
+    background: var(--paper-2);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .readonly-rule strong { color: var(--ink); }
+
+  .panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .summary-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding: 16px 20px;
+  }
+  .summary-card .s-item { font-size: 13px; color: var(--ink-soft); }
+  .summary-card .s-item strong { color: var(--ink); font-weight: 700; }
+  .summary-card .s-sep { color: var(--line-strong); }
+  .panel-collapsed { opacity: 0.62; }
+
+  /* ── Integrations Phase-2 card: wrap items so labels never clip ── */
+  .integrations-phase2-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    align-items: center;
+  }
+  .intg-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  /* ── Corporate / Tenancy Phase-2 placeholder ── */
+  .chip-p2 {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    background: var(--c-honey-wash);
+    color: var(--c-honey-text);
+    border: 1px solid var(--c-honey-soft);
+    padding: 3px 10px;
+    border-radius: var(--r-pill);
+    margin-bottom: 10px;
+  }
+  .corp-p2-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .corp-p2-note {
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.6;
+    max-width: 520px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="admin-dashboard.html" class="sidebar-link" data-nav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Overview</span></a>
+<a href="admin-users.html" class="sidebar-link" data-nav="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Users</span><span class="badge">487</span></a>
+<a href="roles-permissions.html" class="sidebar-link" data-nav="roles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Roles</span></a>
+<a href="admin-courses.html" class="sidebar-link" data-nav="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Courses</span><span class="badge">47</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">BUSINESS</div>
+<a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Corporate</span><span class="badge">23</span></a>
+<a href="admin-reports.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">SYSTEM</div>
+<a href="audit-log.html" class="sidebar-link" data-nav="audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Audit Log</span></a>
+<a href="admin-settings.html" class="sidebar-link is-active" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="admin-password-reset.html" class="sidebar-link" data-nav="pwreset"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Reset Passwords</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Configuration</div>
+    <h1 class="page-title">System <em>settings</em></h1>
+    <p class="page-sub">Platform-wide configuration. Super Admin only. Several values are locked for GDPR/PDPA compliance, MFA mandate, and academic integrity.</p>
+  </div>
+</div>
+
+<div class="settings-grid">
+
+  <!-- ── Vertical settings tab nav ── -->
+  <nav class="settings-nav">
+    <div class="nav-eyebrow">Configuration</div>
+    <a href="#organisation" class="is-active" onclick="document.getElementById('organisation').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">01</span>Organisation</a>
+    <a href="#authentication" onclick="document.getElementById('authentication').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">02</span>Authentication</a>
+    <a href="#certificates" onclick="document.getElementById('certificates').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">03</span>Certificates</a>
+    <a href="#assessment" onclick="document.getElementById('assessment').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">04</span>Assessment defaults</a>
+    <a href="#email" onclick="document.getElementById('email').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">05</span>Email &amp; notifications</a>
+    <a href="#corporate" onclick="document.getElementById('corporate').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">06</span>Corporate / tenancy</a>
+    <a href="#integrations" onclick="document.getElementById('integrations').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">07</span>Integrations</a>
+    <a href="#compliance" onclick="document.getElementById('compliance').scrollIntoView({behavior:'smooth'});return false"><span class="nav-num">08</span>Data &amp; compliance</a>
+  </nav>
+
+  <!-- ── Panel area ── -->
+  <div class="settings-panel">
+
+    <!-- ═══ 01 · Organisation ═══ -->
+    <section id="organisation">
+      <div class="sec-head">
+        <h2>Organisation</h2>
+        <p>Legal identity and platform-wide locale settings.</p>
+      </div>
+      <div class="sec-divider"></div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Identity</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Legal institution name</label>
+            <input class="input" value="Institute of Management and Innovation (IMI)">
+          </div>
+          <div class="field">
+            <label>Support email</label>
+            <input class="input" value="support@imi.om">
+          </div>
+          <div class="field">
+            <label>Default language</label>
+            <input class="input" value="English (EN) ▾">
+            <div class="hint">Arabic (AR) available as secondary locale.</div>
+          </div>
+          <div class="field">
+            <label>Timezone</label>
+            <input class="input" value="Asia/Muscat (UTC+4) ▾">
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Branding</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Logo</label>
+            <div class="upload-box" style="height:80px">Logo upload placeholder · PNG / SVG</div>
+            <div class="hint">Shown in email headers, certificate seal, and admin topbar.</div>
+          </div>
+          <div class="field">
+            <label>Primary brand colour token</label>
+            <input class="input" value="#1a1a1a" placeholder="#rrggbb or CSS var(--token)">
+            <div class="hint">Used in generated certificate PDFs and email templates only. UI theme is fixed.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Content sections (platform-wide)</div>
+        <div class="toggle-row">
+          <div>
+            <div class="tr-title">New releases section</div>
+            <div class="tr-sub">Show a "New releases" section on the learner home page, highlighting recently published courses.</div>
+          </div>
+          <label class="pill-toggle" aria-label="New releases section">
+            <input type="checkbox" id="toggle-new-releases" checked>
+            <span class="pill-track"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="tr-title">Trending section</div>
+            <div class="tr-sub">Show a "Trending" section on the learner home page based on enrollment activity in the past 30 days.</div>
+          </div>
+          <label class="pill-toggle" aria-label="Trending section">
+            <input type="checkbox" id="toggle-trending" checked>
+            <span class="pill-track"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetSection(this.closest('section'))">Reset to defaults</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save organisation settings</button>
+      </div>
+    </section>
+
+    <!-- ═══ 02 · Authentication ═══ -->
+    <div class="sec-break"></div>
+    <section id="authentication">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Authentication</h2>
+          <span class="chip">Section 02</span>
+        </div>
+        <p>OTP rules and session policy. Compliance-critical values are locked.</p>
+      </div>
+      <div class="sec-divider"></div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">OTP policy</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>OTP length (digits)</label>
+            <input class="input" value="6" disabled>
+            <div class="hint"><span class="tag-sys">System</span> Fixed for OTP compliance.</div>
+          </div>
+          <div class="field">
+            <label>OTP expiry</label>
+            <input class="input" value="2 minutes">
+          </div>
+          <div class="field">
+            <label>Max OTP retries before lockout</label>
+            <input class="input" value="3">
+          </div>
+          <div class="field">
+            <label>Lockout duration</label>
+            <input class="input" value="1 day">
+          </div>
+        </div>
+        <a href="otp-configuration.html" style="display:inline-block;margin-top:16px;font-family:var(--font-label);font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--accent-deep);text-decoration:underline;text-underline-offset:2px">Open full OTP configuration (resend attempts, cooldown) →</a>
+      </div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">MFA and sessions</div>
+        <div class="toggle-row">
+          <div>
+            <div class="tr-title">Admin MFA required</div>
+            <div class="tr-sub"><span class="tag-sys">Locked</span> Mandatory per ADMINUSER-12 (GDPR/PDPA compliance; MFA required for all admin access).</div>
+          </div>
+          <span class="pill-on locked">ON</span>
+        </div>
+        <div class="field-grid" style="margin-top:16px">
+          <div class="field">
+            <label>Admin session timeout</label>
+            <input class="input" value="30 minutes">
+          </div>
+          <div class="field">
+            <label>User session timeout</label>
+            <input class="input" value="7 days">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetSection(this.closest('section'))">Reset to defaults</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save authentication settings</button>
+      </div>
+    </section>
+
+    <!-- ═══ 03 · Certificates ═══ -->
+    <div class="sec-break"></div>
+    <section id="certificates">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Certificates</h2>
+          <span class="chip">Section 03</span>
+        </div>
+        <p>Platform-wide certificate eligibility, validity, and template settings.</p>
+      </div>
+      <div class="sec-divider"></div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Eligibility rule</div>
+        <div class="readonly-rule">
+          <span class="tag-sys" style="margin-right:6px">Read-only</span>
+          100% of lessons completed <strong>+</strong> quiz score ≥70% <strong>+</strong> learner profile 100% complete
+        </div>
+        <div class="hint" style="font-size:12px;color:var(--ink-mute)">Eligibility rule is defined in product logic. Contact engineering to modify.</div>
+      </div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Validity and issuance</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Default certificate validity</label>
+            <input class="input" value="3 years">
+          </div>
+          <div class="field">
+            <label>Verify URL base</label>
+            <input class="input" value="imi.om/verify/">
+            <div class="hint">Full URL: imi.om/verify/{cert-id}</div>
+          </div>
+        </div>
+        <div class="toggle-row bordered" style="margin-top:16px">
+          <div>
+            <div class="tr-title">Auto-issue on eligibility met</div>
+            <div class="tr-sub"><span class="tag-sys">Locked</span> Fixed system behavior per CERT-08. Certificate generated and emailed automatically; cannot be disabled.</div>
+          </div>
+          <span class="pill-on locked">ON</span>
+        </div>
+      </div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Certificate template</div>
+        <div class="upload-box" style="height:72px">Template upload placeholder · PDF / DOCX</div>
+        <div class="hint" style="margin-top:10px;font-size:12px;color:var(--ink-mute)">Uploaded template overrides the default IMI layout. Must include {learner_name}, {course}, {issue_date}, {cert_id} merge fields.</div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetSection(this.closest('section'))">Reset to defaults</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save certificate settings</button>
+      </div>
+    </section>
+
+    <!-- ═══ 04 · Assessment defaults ═══ -->
+    <div class="sec-break"></div>
+    <section id="assessment">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Assessment defaults</h2>
+          <span class="chip">Section 04</span>
+        </div>
+        <p>Platform defaults for all quizzes and assessments. Course builders may override unless locked.</p>
+      </div>
+      <div class="sec-divider"></div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Pass and retry rules</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Default pass mark</label>
+            <input class="input" value="70%">
+          </div>
+          <div class="field">
+            <label>Max attempts per assessment</label>
+            <input class="input" value="3">
+          </div>
+          <div class="field">
+            <label>Retake cooldown</label>
+            <input class="input" value="24 hours">
+          </div>
+          <div class="field">
+            <label>Video completion threshold</label>
+            <input class="input" value="90%">
+            <div class="hint">Minimum viewing percentage required to mark a video lesson complete (VID-02). Override per course.</div>
+          </div>
+        </div>
+        <div class="toggle-row bordered" style="margin-top:16px">
+          <div>
+            <div class="tr-title">No resume on exit</div>
+            <div class="tr-sub"><span class="tag-sys">Locked</span> Exiting an assessment counts as an attempt (academic integrity policy).</div>
+          </div>
+          <span class="pill-on locked">ON</span>
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetSection(this.closest('section'))">Reset to defaults</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save assessment settings</button>
+      </div>
+    </section>
+
+    <!-- ═══ 05 · Email and notifications ═══ -->
+    <div class="sec-break"></div>
+    <section id="email">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Email &amp; notifications</h2>
+          <span class="chip">Section 05</span>
+        </div>
+        <p>System sender, delivery defaults, and template editor entry points.</p>
+      </div>
+      <div class="sec-divider"></div>
+
+      <div class="card panel-card">
+        <div class="card-eyebrow">Sender and delivery</div>
+        <div class="field-grid">
+          <div class="field">
+            <label>Notification retention</label>
+            <input class="input" value="90 days">
+          </div>
+          <div class="field">
+            <label>Inactive learner reminder trigger</label>
+            <input class="input" value="2 weeks, 1 month ▾">
+            <div class="hint">Send reminder after 2 weeks and 1 month of learner inactivity.</div>
+          </div>
+          <div class="field">
+            <label>Notification priority levels</label>
+            <input class="input" value="High / Medium / Low">
+            <div class="hint">Platform-wide priority tiers applied to system notifications.</div>
+          </div>
+        </div>
+        <div class="toggle-row bordered" style="margin-top:16px">
+          <div>
+            <div class="tr-title">Lesson update notifications</div>
+            <div class="tr-sub">Notify in-progress learners when a published lesson is updated (LEARN-07). Applies to in-progress learners only.</div>
+          </div>
+          <label class="pill-toggle" aria-label="Lesson update notifications">
+            <input type="checkbox" id="toggle-lesson-notif" checked>
+            <span class="pill-track"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="tr-title">Weekly digest</div>
+            <div class="tr-sub">User-controlled notification frequency. Each learner sets their own preference; this is a user-level setting, not an admin platform default.</div>
+          </div>
+          <span class="tag-sys">User setting</span>
+        </div>
+      </div>
+
+      <div class="panel-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetSection(this.closest('section'))">Reset to defaults</button>
+        <button class="btn btn-primary btn-sm" type="submit">Save email settings</button>
+      </div>
+    </section>
+
+    <!-- ═══ 06 · Corporate / tenancy ═══ -->
+    <div class="sec-break"></div>
+    <section id="corporate" class="panel-collapsed">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Corporate / tenancy</h2>
+          <span class="chip">Section 06</span>
+        </div>
+        <p>Default seats per new tenant, invite link expiry, tenant-only course policy.</p>
+      </div>
+      <div class="card panel-card corp-p2-placeholder">
+        <span class="chip chip-p2">Phase 2</span>
+        <p class="corp-p2-note">Corporate / Tenancy settings are planned for Phase 2. Tenant seat defaults, invite link expiry, and tenant-only course policy will be configurable here.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 07 · Integrations ═══ -->
+    <div class="sec-break"></div>
+    <section id="integrations" class="panel-collapsed">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Integrations</h2>
+          <span class="chip">Section 07</span>
+        </div>
+        <p>SSO, Payment gateway, Analytics, Webhooks. All deferred to Phase 2.</p>
+      </div>
+      <div class="card panel-card integrations-phase2-card">
+        <div class="intg-item"><span class="s-item">SSO</span><span class="chip">Phase 2</span></div>
+        <div class="intg-item"><span class="s-item">Payment gateway</span><span class="chip">Phase 2</span></div>
+        <div class="intg-item"><span class="s-item">Analytics</span><span class="chip">Phase 2</span></div>
+        <div class="intg-item"><span class="s-item">Webhooks</span><span class="chip">Phase 2</span></div>
+      </div>
+    </section>
+
+    <!-- ═══ 08 · Data and compliance ═══ -->
+    <div class="sec-break"></div>
+    <section id="compliance" class="panel-collapsed">
+      <div class="sec-head">
+        <div class="sec-flag">
+          <h2>Data &amp; compliance</h2>
+          <span class="chip">Section 08</span>
+        </div>
+        <p>Data residency, account lifecycle configurables, deletion policy, and GDPR/PDPA controls.</p>
+      </div>
+      <div class="card panel-card">
+        <div class="summary-card" style="flex-wrap:wrap;margin-bottom:8px">
+          <span class="s-item">Data residency: <strong>Oman</strong></span>
+          <span class="s-sep">|</span>
+          <span class="s-item">Audit logs: <strong>purged on hard delete</strong> (LIFE-11)</span>
+          <span class="s-sep">|</span>
+          <span class="s-item" style="display:flex;align-items:center;gap:6px">GDPR/PDPA controls <span class="tag-sys">Locked</span></span>
+          <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="imiToast('Export started — you will receive the download link by email.');this.textContent='Export requested';this.disabled=true;setTimeout(function(btn){btn.textContent='Export all data';btn.disabled=false;}.bind(null,this),3000)">Export all data</button>
+        </div>
+        <div class="field-grid" style="margin-top:8px">
+          <div class="field">
+            <label>Soft delete retention window</label>
+            <input class="input" value="30 days">
+          </div>
+          <div class="field">
+            <label>Hard delete trigger after soft delete</label>
+            <input class="input" value="After soft-delete window ▾">
+          </div>
+          <div class="field">
+            <label>Dormant user auto-deactivation trigger</label>
+            <input class="input" value="6 months">
+          </div>
+          <div class="field">
+            <label>Account data retention after deletion</label>
+            <input class="input" value="30 days">
+          </div>
+          <div class="field">
+            <label>Temporary role expiry</label>
+            <input class="input" value="As assigned ▾">
+            <div class="hint">Set a default expiry duration for temporary role assignments.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+  </main>
+</div>
+<script>
+/* ── toast helper ── */
+function imiToast(msg, type) {
+  var t = document.getElementById('imi-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'imi-toast';
+    t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:8px;font-family:var(--font-label);font-size:13px;font-weight:700;letter-spacing:.04em;box-shadow:0 4px 18px rgba(42,17,8,.18);transition:opacity .25s,transform .25s;pointer-events:none;opacity:0;transform:translateY(8px);';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = (type === 'error') ? 'var(--c-clay,#B8523E)' : '#2A1108';
+  t.style.color = '#FCF7AE';
+  t.style.opacity = '1';
+  t.style.transform = 'translateY(0)';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(function() { t.style.opacity='0'; t.style.transform='translateY(8px)'; }, 2400);
+}
+
+/* ── reset section ── */
+function resetSection(sec) {
+  var inputs = sec.querySelectorAll('.input');
+  inputs.forEach(function(i) { if (!i.disabled) i.value = ''; });
+  imiToast('Section reset to defaults');
+}
+
+/* ── save section with label feedback ── */
+function saveSection(btn, label) {
+  var orig = btn.textContent;
+  btn.textContent = 'Saved';
+  btn.disabled = true;
+  imiToast(label + ' saved');
+  setTimeout(function() { btn.textContent = orig; btn.disabled = false; }, 1800);
+}
+
+/* ── settings nav: update active on scroll ── */
+(function() {
+  var navLinks = document.querySelectorAll('.settings-nav a');
+  var sections = [];
+  navLinks.forEach(function(a) {
+    var id = (a.getAttribute('href') || '').replace('#','');
+    var sec = document.getElementById(id);
+    if (sec) sections.push({ a: a, sec: sec });
+  });
+  function updateActive() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var best = sections[0];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].sec.getBoundingClientRect().top <= 120) best = sections[i];
+    }
+    navLinks.forEach(function(a) { a.classList.remove('is-active'); });
+    if (best) best.a.classList.add('is-active');
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+})();
+
+/* ── ad close ── */
+var adClose = document.querySelector('.ad-close');
+if (adClose) adClose.addEventListener('click', function() {
+  var strip = document.querySelector('.ad-strip');
+  if (strip) { strip.style.transition='opacity .2s'; strip.style.opacity='0'; setTimeout(function(){ strip.style.display='none'; }, 200); }
+});
+
+/* ── topbar search ── */
+var tbSearch = document.querySelector('.topbar .search input');
+if (tbSearch) tbSearch.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && this.value.trim()) { location.href = 'admin-users.html'; }
+});
+
+/* ── upload boxes: open file picker ── */
+document.querySelectorAll('.upload-box').forEach(function(box) {
+  box.style.cursor = 'pointer';
+  box.addEventListener('click', function() {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = box.textContent.indexOf('PDF') > -1 ? '.pdf,.docx' : '.png,.svg,.jpg,.jpeg';
+    inp.addEventListener('change', function() {
+      if (inp.files && inp.files[0]) {
+        box.textContent = inp.files[0].name + ' uploaded';
+        imiToast('File selected: ' + inp.files[0].name);
+      }
+    });
+    inp.click();
+  });
+});
+
+/* ── lesson update notifications toggle ── */
+var lessonNotifToggle = document.getElementById('toggle-lesson-notif');
+if (lessonNotifToggle) {
+  lessonNotifToggle.addEventListener('change', function() {
+    imiToast('Lesson update notifications ' + (lessonNotifToggle.checked ? 'enabled' : 'disabled'));
+  });
+}
+
+/* ── new releases toggle ── */
+var newReleasesToggle = document.getElementById('toggle-new-releases');
+if (newReleasesToggle) {
+  newReleasesToggle.addEventListener('change', function() {
+    imiToast('New releases section ' + (newReleasesToggle.checked ? 'enabled' : 'disabled'));
+  });
+}
+
+/* ── trending toggle ── */
+var trendingToggle = document.getElementById('toggle-trending');
+if (trendingToggle) {
+  trendingToggle.addEventListener('change', function() {
+    imiToast('Trending section ' + (trendingToggle.checked ? 'enabled' : 'disabled'));
+  });
+}
+
+/* ── wire Save buttons that only have type="submit" ── */
+document.querySelectorAll('button[type="submit"].btn-primary').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    var sec = btn.closest('section');
+    var label = sec ? (sec.querySelector('h2') ? sec.querySelector('h2').textContent.trim() : 'Settings') : 'Settings';
+    saveSection(btn, label);
+  });
+});
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

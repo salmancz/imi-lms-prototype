@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz results (pass) · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+
+  /* Quiz topbar - standalone (no sidebar) */
+  .qbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+    height: 52px;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .ad-strip + .qbar { top: 36px; }
+  .qbar-l {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .qbar-sep {
+    color: var(--ink-faint);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .qbar-title {
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: .10em;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .qbar-r {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .qbar-prog {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .qbar-track {
+    width: 160px;
+    height: 6px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .qbar-fill {
+    height: 100%;
+    background: var(--c-sage);
+    border-radius: var(--r-pill);
+  }
+
+  /* Results main */
+  .qmain {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* Results panel */
+  .qr {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* Completion proof thumbnail (replaces stuck spinner) */
+  .qr-proof-thumb {
+    width: 200px;
+    margin: 0 auto 20px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    background: var(--paper);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .qr-proof-thumb-inner {
+    padding: 20px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+  .qr-proof-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--c-sage-wash);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .qr-proof-badge svg {
+    width: 26px;
+    height: 26px;
+    stroke: var(--c-sage-text);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .qr-proof-label {
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .qr-proof-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    line-height: 1.3;
+  }
+  .qr-proof-thumb-foot {
+    border-top: 1px solid var(--line);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .qr-proof-thumb-foot .cert-id {
+    font-family: var(--font-label);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .qr-proof-thumb-foot .cert-score {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--c-sage-text);
+    letter-spacing: -0.02em;
+  }
+
+  /* Header text */
+  .qr-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .qr-title {
+    font-family: var(--font-sans);
+    font-size: 33px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .qr-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--c-sage-text);
+  }
+  .qr-sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 440px;
+    margin: 0 auto 36px;
+  }
+
+  /* Stat row */
+  .qr-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-top: 28px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .qr-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 20px 16px;
+    border-right: 1px solid var(--line);
+  }
+  .qr-stat:last-child { border-right: none; }
+  .qr-stat .v {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .qr-stat .v.pass { color: var(--c-sage-text); }
+  .qr-stat .v.fail { color: var(--accent); }
+  .qr-stat .l {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .qr-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 32px 0;
+  }
+
+  .qr-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .qr-pass-chip {
+    margin-top: 16px;
+    margin-bottom: 32px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Quiz topbar -->
+<header class="qbar">
+  <div class="qbar-l">
+    <a class="brand" href="dashboard.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      <span class="brand-text">IMI</span>
+      <span class="brand-sub">Learning</span>
+    </a>
+    <span class="qbar-sep">&middot;</span>
+    <span class="qbar-title">CDMP Practitioner Assessment</span>
+  </div>
+  <div class="qbar-r">
+    <span class="qbar-prog">Completed &middot; 10 of 10</span>
+    <div class="qbar-track">
+      <div class="qbar-fill" style="width:100%"></div>
+    </div>
+  </div>
+</header>
+
+<!-- Main content -->
+<main class="qmain">
+  <section class="qr">
+
+    <!-- Eyebrow + heading -->
+    <div class="qr-eyebrow">CDMP Practitioner &middot; Final assessment</div>
+    <h1 class="qr-title">You <em>passed</em> &#127881;</h1>
+    <p class="qr-sub">Congratulations. Your completion proof is ready below.</p>
+
+    <!-- Completion proof thumbnail (static, no spinner) -->
+    <div class="qr-proof-thumb" aria-label="Course completion proof thumbnail">
+      <div class="qr-proof-thumb-inner">
+        <div class="qr-proof-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 12l2 2 4-4"/>
+            <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
+          </svg>
+        </div>
+        <span class="qr-proof-label">Completion proof</span>
+        <span class="qr-proof-name">CDMP Practitioner</span>
+      </div>
+      <div class="qr-proof-thumb-foot">
+        <span class="cert-id">IMI &middot; imi.om</span>
+        <span class="cert-score">80%</span>
+      </div>
+    </div>
+
+    <!-- Pass chip -->
+    <div class="qr-pass-chip">
+      <span class="chip t-sage dot">Passed</span>
+    </div>
+
+    <!-- Stats row -->
+    <div class="qr-stats">
+      <div class="qr-stat">
+        <span class="v pass">8</span>
+        <span class="l">Correct</span>
+      </div>
+      <div class="qr-stat">
+        <span class="v fail">2</span>
+        <span class="l">Incorrect</span>
+      </div>
+    </div>
+
+    <div class="qr-divider"></div>
+
+    <!-- Action -->
+    <div class="qr-actions">
+      <a class="btn btn-primary" href="certificate.html">View Course Completed proof &rarr;</a>
+      <a class="btn btn-ghost" href="my-learning.html">Back to My Learning</a>
+    </div>
+
+  </section>
+</main>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile setup · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* top bar */
+  .sa-top {
+    padding: 0 40px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand-text {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sa-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* centered content */
+  .sa-wrap {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px 80px;
+  }
+  .sa-main { width: 100%; max-width: 720px; }
+
+  /* page header */
+  .ps-head { margin-bottom: 4px; }
+  .ps-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .ps-title {
+    font-family: var(--font-sans);
+    font-size: 33px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: var(--ink);
+  }
+  .ps-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .ps-sub {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    line-height: 1.55;
+    max-width: 600px;
+  }
+
+  /* progress row */
+  .ps-progress-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    margin: 22px 0 24px;
+    box-shadow: var(--shadow-xs);
+  }
+  .ps-progress-card .ps-bar { flex: 1; }
+  .ps-progress-card .ps-bar .progress { height: 8px; }
+  .ps-progress-card .ps-pct {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .ps-progress-card .ps-pct small {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+
+  /* tabs */
+  .ps-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .ps-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .ps-tab .ps-count {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
+  .ps-tab.is {
+    background: var(--ink);
+    color: var(--hero-bg);
+    border-color: var(--ink);
+  }
+  .ps-tab.is .ps-count { color: var(--c-sage-soft); }
+  .ps-tab:not(.is):hover { color: var(--ink); border-color: var(--line-strong); }
+  .ps-tab .ps-count.done { color: var(--c-sage-text); }
+
+  /* form panel */
+  .ps-panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 26px 28px;
+    box-shadow: var(--shadow-xs);
+  }
+  .ps-panel-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* two-column grid */
+  .ps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 22px;
+  }
+  .ps-grid .ps-field.full { grid-column: 1 / -1; }
+  @media (max-width: 640px) { .ps-grid { grid-template-columns: 1fr; } }
+
+  /* fields */
+  .ps-field label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 7px;
+  }
+  .ps-field label .req { color: var(--accent); margin-left: 2px; }
+  .ps-field label .opt { color: var(--ink-faint); font-weight: 500; letter-spacing: 0.04em; text-transform: none; }
+  .ps-field .input { height: 40px; font-size: 14px; }
+  .ps-field select.input {
+    appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+  }
+  .ps-field .input:disabled { background: var(--bg-alt); color: var(--ink-mute); cursor: not-allowed; }
+  .ps-field .hint { font-size: 12px; color: var(--ink-mute); margin-top: 7px; line-height: 1.45; }
+  .ps-field .hint.warm { color: var(--c-honey-text); }
+
+  /* drag/drop zone */
+  .ps-drop {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--paper-2);
+    color: var(--ink-mute);
+    font-size: 12.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 18px;
+    line-height: 1.4;
+    transition: border-color 0.18s, background 0.18s;
+    cursor: pointer;
+  }
+  .ps-drop:hover { border-color: var(--ink-mute); background: var(--bg-alt); }
+  .ps-drop.tall { min-height: 80px; }
+  .ps-drop.drag-over { border-color: var(--accent); background: #fffbef; }
+
+  /* file upload widget */
+  .ps-upload { display: flex; flex-direction: column; gap: 10px; }
+  .ps-upload-item {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ps-upload-item .upl-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .ps-upload-item .upl-icon svg { width: 16px; height: 16px; color: var(--ink-mute); }
+  .ps-upload-item .upl-meta { flex: 1; min-width: 0; }
+  .ps-upload-item .upl-name { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ps-upload-item .upl-size { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+  .ps-upload-item .upl-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+  .ps-upload-item .upl-bar { flex: 1; height: 5px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .ps-upload-item .upl-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.25s ease; }
+  .ps-upload-item .upl-bar-fill.done { background: var(--c-sage-text); }
+  .ps-upload-item .upl-status { font-family: var(--font-label); font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+  .ps-upload-item .upl-status.uploading { color: var(--ink-mute); }
+  .ps-upload-item .upl-status.complete { color: var(--c-sage-text); }
+  .ps-upload-item .upl-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--ink-faint);
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .ps-upload-item .upl-remove:hover { color: var(--ink); }
+  .ps-upload-item .upl-remove svg { display: block; width: 14px; height: 14px; }
+
+  /* selected chips */
+  .ps-chips { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+  .ps-chips .chip { cursor: default; }
+  .ps-chips .chip .x { color: var(--ink-faint); font-weight: 700; }
+
+  /* add link */
+  .ps-addlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .ps-addlink:hover { color: var(--accent); }
+
+  /* footer actions */
+  .ps-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 26px;
+  }
+
+  /* skip */
+  .ps-skip {
+    display: inline-block;
+    text-align: center;
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .ps-skip a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
+  .ps-skip a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="sa-top">
+  <a class="sa-brand" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" height="28" width="auto" style="height:28px;width:auto;display:block;" alt="IMI">
+  </a>
+</header>
+
+<div class="sa-wrap">
+  <main class="sa-main">
+
+    <div class="ps-head">
+      <div class="ps-eyebrow">Post-signup</div>
+      <h1 class="ps-title">Complete your <em>profile</em></h1>
+      <p class="ps-sub">Signup already captured your First Name, Last Name, Email and Country. Finish the remaining fields to reach 100% completion, required before your Course Completed proof can be issued.</p>
+    </div>
+
+    <div class="ps-progress-card">
+      <div class="ps-bar">
+        <div class="progress"><div class="progress-fill sage" style="width:42%"></div></div>
+      </div>
+      <div class="ps-pct">42%<small>Complete</small></div>
+      <button class="btn btn-primary btn-sm" id="btn-save-progress" type="button">Save and continue</button>
+    </div>
+
+    <div class="ps-tabs" role="tablist">
+      <button class="ps-tab is" data-tab="personal" type="button">Personal <span class="ps-count done">3/12</span></button>
+      <button class="ps-tab" data-tab="pro" type="button">Professional <span class="ps-count">0/3</span></button>
+      <button class="ps-tab" data-tab="links" type="button">Personal links <span class="ps-count">0/1</span></button>
+      <button class="ps-tab" data-tab="docs" type="button">Documents <span class="ps-count">0/2</span></button>
+    </div>
+
+    <section class="ps-panel" data-panel="personal">
+      <div class="ps-panel-label">Personal &middot; Core identity and demographic</div>
+      <div class="ps-grid">
+        <div class="ps-field">
+          <label>First Name <span class="req">*</span></label>
+          <input class="input" id="ps-first" value="Salman" disabled>
+          <div class="hint">Captured at signup. Edit later from Profile.</div>
+        </div>
+        <div class="ps-field">
+          <label>Last Name <span class="req">*</span></label>
+          <input class="input" id="ps-last" value="Ali" disabled>
+          <div class="hint">Captured at signup. Edit later from Profile.</div>
+        </div>
+        <div class="ps-field full">
+          <label>Email <span class="req">*</span> <span class="opt">(OTP required to change)</span></label>
+          <input class="input" id="ps-email" value="salman@webinnoventix.com" disabled>
+        </div>
+        <div class="ps-field">
+          <label>Title / Prefix <span class="opt">(optional)</span></label>
+          <input class="input" placeholder="e.g. Mr., Dr., Eng.">
+        </div>
+        <div class="ps-field">
+          <label>Name on your Course Completed proof <span class="req">*</span></label>
+          <input class="input" id="ps-proof-name" value="Salman Ali">
+          <div class="hint warm">Pre-filled from your First Name and Last Name. Edit if you want a different name shown on your Course Completed proof(s). OTP required to change after first save.</div>
+        </div>
+        <div class="ps-field full">
+          <label>Photo</label>
+          <div class="ps-upload" id="upload-photo">
+            <div class="ps-drop tall" data-upload="photo" data-accept="image/jpeg,image/png" data-max-mb="2" data-hint="square JPG/PNG up to 2 MB">Drag image or click to upload &middot; square JPG/PNG up to 2 MB &middot; preview shown before save</div>
+            <input type="file" accept="image/jpeg,image/png" style="display:none" id="file-photo">
+          </div>
+        </div>
+        <div class="ps-field">
+          <label>Preferred Language <span class="opt">(recommended)</span></label>
+          <select class="input"><option>English</option><option>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577; (Arabic)</option></select>
+        </div>
+        <div class="ps-field">
+          <label>Date of birth <span class="opt">(used for age verification &middot; min 16)</span></label>
+          <input class="input" placeholder="DD / MM / YYYY">
+        </div>
+        <div class="ps-field">
+          <label>Gender</label>
+          <select class="input"><option>Select...</option><option>Male</option><option>Female</option><option>Prefer not to say</option></select>
+        </div>
+        <div class="ps-field">
+          <label>Country <span class="req">*</span></label>
+          <select class="input" disabled><option selected>Oman</option><option>Option one</option><option>Option two</option></select>
+          <div class="hint">Captured at signup.</div>
+        </div>
+        <div class="ps-field">
+          <label>City</label>
+          <input class="input" placeholder="Muscat">
+        </div>
+        <div class="ps-field">
+          <label>Phone</label>
+          <input class="input" placeholder="+968 9X XXX XXXX">
+        </div>
+        <div class="ps-field full">
+          <label>Learning interests <span class="opt">(used for recommendations)</span></label>
+          <select class="input"><option>Add interest...</option><option>Records management</option><option>ISO 30401</option><option>Data governance</option></select>
+          <div class="ps-chips">
+            <span class="chip">Records mgmt <span class="x">&times;</span></span>
+            <span class="chip">ISO 30401 <span class="x">&times;</span></span>
+            <span class="chip">Data governance <span class="x">&times;</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ps-panel" data-panel="pro" hidden>
+      <div class="ps-panel-label">Professional &middot; Professional profile</div>
+      <div class="ps-grid">
+        <div class="ps-field">
+          <label>Current Role <span class="opt">(optional)</span></label>
+          <input class="input" placeholder="e.g. Information Architect">
+        </div>
+        <div class="ps-field">
+          <label>Experience Level <span class="opt">(optional)</span></label>
+          <select class="input"><option>Select...</option><option>Entry (0-2 yrs)</option><option>Mid (3-7 yrs)</option><option>Senior (8-15 yrs)</option><option>Lead / Principal (15+ yrs)</option></select>
+        </div>
+        <div class="ps-field full">
+          <label>Industry <span class="opt">(optional)</span></label>
+          <select class="input"><option>Select...</option><option>Government</option><option>Banking and Finance</option><option>Oil and Gas</option><option>Telecom</option><option>Healthcare</option><option>Education</option><option>Technology</option><option>Other</option></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="ps-panel" data-panel="links" hidden>
+      <div class="ps-panel-label">Personal links &middot; One field, multiple links allowed</div>
+      <div class="ps-grid">
+        <div class="ps-field full">
+          <label>Personal Site / Blog Links <span class="opt">(optional &middot; multiple allowed)</span></label>
+          <input class="input" placeholder="https://">
+          <a href="javascript:void(0)" class="ps-addlink" onclick="var f=document.createElement('input');f.className='input';f.placeholder='https://';f.style.marginTop='8px';this.closest('.ps-field').querySelector('.input').parentNode.insertBefore(f,this)">+ Add another link</a>
+          <div class="hint">One field that allows multiple social, professional, or personal web links.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ps-panel" data-panel="docs" hidden>
+      <div class="ps-panel-label">Documents &middot; Supporting evidence</div>
+      <div class="ps-grid">
+        <div class="ps-field full">
+          <label>CV / Resume <span class="opt">(PDF, up to 5 MB &middot; optional)</span></label>
+          <div class="ps-upload" id="upload-cv">
+            <div class="ps-drop tall" data-upload="cv" data-accept="application/pdf" data-max-mb="5" data-hint="PDF up to 5 MB">Drag PDF or click to upload</div>
+            <input type="file" accept="application/pdf" style="display:none" id="file-cv">
+          </div>
+        </div>
+        <div class="ps-field full">
+          <label>Externally Earned Certificates, Portfolio <span class="opt">(optional &middot; multi-upload)</span></label>
+          <div class="ps-upload" id="upload-certs">
+            <div class="ps-drop tall" data-upload="certs" data-accept="application/pdf,image/jpeg,image/png" data-max-mb="10" data-multi="true" data-hint="PDF/JPG/PNG up to 10 MB each">Add files or URLs &middot; certificates earned outside the platform and portfolio items combined in one field</div>
+            <input type="file" accept="application/pdf,image/jpeg,image/png" style="display:none" id="file-certs" multiple>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ps-foot">
+      <button class="btn btn-ghost" id="btn-save-later" type="button">Save and continue later</button>
+      <button class="btn btn-primary" id="btn-save-continue" type="button">Save and continue &rarr;</button>
+    </div>
+
+    <div class="ps-skip">Not ready yet? <a href="../learning/dashboard.html">Skip for now</a></div>
+
+  </main>
+</div>
+
+<script>
+  /* ---- populate from sessionStorage ---- */
+  (function () {
+    var first = sessionStorage.getItem('imi_first') || 'Salman';
+    var last = sessionStorage.getItem('imi_last') || 'Ali';
+    var email = sessionStorage.getItem('imi_email') || 'salman@webinnoventix.com';
+    var firstEl = document.getElementById('ps-first');
+    var lastEl = document.getElementById('ps-last');
+    var emailEl = document.getElementById('ps-email');
+    var proofEl = document.getElementById('ps-proof-name');
+    if (firstEl) firstEl.value = first;
+    if (lastEl) lastEl.value = last;
+    if (emailEl) emailEl.value = email;
+    if (proofEl) proofEl.value = first + ' ' + last;
+  })();
+
+  /* ---- toast ---- */
+  function showToast(msg, type) {
+    var t = document.getElementById('ps-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'ps-toast';
+      t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);padding:12px 20px;border-radius:8px;font-size:13.5px;font-weight:600;letter-spacing:-0.01em;opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:9999;white-space:nowrap;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.background = type === 'error' ? 'var(--ink)' : '#1a5c3a';
+    t.style.color = '#fff';
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(t._tmr);
+    t._tmr = setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(10px)';
+    }, 2800);
+  }
+
+  /* ---- tab switching ---- */
+  document.querySelectorAll('.ps-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var name = tab.dataset.tab;
+      document.querySelectorAll('.ps-tab').forEach(function (t) { t.classList.toggle('is', t === tab); });
+      document.querySelectorAll('.ps-panel').forEach(function (p) { p.hidden = p.dataset.panel !== name; });
+    });
+  });
+
+  /* file upload widget */
+  var FILE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  var REMOVE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  function simulateUpload(fillEl, statusEl, onDone) {
+    var pct = 0;
+    var iv = setInterval(function () {
+      pct += Math.floor(Math.random() * 18) + 8;
+      if (pct >= 100) {
+        pct = 100;
+        clearInterval(iv);
+        fillEl.style.width = '100%';
+        fillEl.classList.add('done');
+        statusEl.textContent = 'Uploaded';
+        statusEl.classList.remove('uploading');
+        statusEl.classList.add('complete');
+        if (onDone) onDone();
+      } else {
+        fillEl.style.width = pct + '%';
+        statusEl.textContent = pct + '%';
+      }
+    }, 120);
+    return function () { clearInterval(iv); };
+  }
+
+  function addFileItem(wrapEl, dropEl, file) {
+    var item = document.createElement('div');
+    item.className = 'ps-upload-item';
+    item.innerHTML =
+      '<div class="upl-icon">' + FILE_ICON + '</div>' +
+      '<div class="upl-meta">' +
+        '<div class="upl-name">' + file.name + '</div>' +
+        '<div class="upl-size">' + formatBytes(file.size) + '</div>' +
+        '<div class="upl-bar-row">' +
+          '<div class="upl-bar"><div class="upl-bar-fill" style="width:0%"></div></div>' +
+          '<span class="upl-status uploading">0%</span>' +
+        '</div>' +
+      '</div>' +
+      '<button class="upl-remove" type="button" aria-label="Remove file">' + REMOVE_ICON + '</button>';
+
+    var fillEl = item.querySelector('.upl-bar-fill');
+    var statusEl = item.querySelector('.upl-status');
+    var removeBtn = item.querySelector('.upl-remove');
+    var stopFn = simulateUpload(fillEl, statusEl);
+
+    removeBtn.addEventListener('click', function () {
+      stopFn();
+      item.remove();
+      var multi = dropEl.dataset.multi === 'true';
+      if (!multi) dropEl.style.display = '';
+    });
+
+    wrapEl.insertBefore(item, dropEl.nextSibling);
+  }
+
+  document.querySelectorAll('.ps-drop[data-upload]').forEach(function (drop) {
+    var uploadId = drop.dataset.upload;
+    var fileInput = document.getElementById('file-' + uploadId);
+    var wrapEl = drop.closest('.ps-upload');
+    var multi = drop.dataset.multi === 'true';
+
+    drop.addEventListener('click', function () { fileInput.click(); });
+
+    drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('drag-over'); });
+    drop.addEventListener('dragleave', function () { drop.classList.remove('drag-over'); });
+    drop.addEventListener('drop', function (e) {
+      e.preventDefault();
+      drop.classList.remove('drag-over');
+      handleFiles(Array.from(e.dataTransfer.files));
+    });
+
+    fileInput.addEventListener('change', function () {
+      if (!fileInput.files.length) return;
+      handleFiles(Array.from(fileInput.files));
+      fileInput.value = '';
+    });
+
+    function handleFiles(files) {
+      files.forEach(function (f) {
+        if (!multi) drop.style.display = 'none';
+        addFileItem(wrapEl, drop, f);
+      });
+    }
+  });
+
+  /* ---- chip remove ---- */
+  document.querySelectorAll('.ps-chips .chip').forEach(function (chip) {
+    chip.querySelector('.x').addEventListener('click', function (e) {
+      e.stopPropagation();
+      chip.remove();
+    });
+  });
+
+  /* ---- interests select: add chip ---- */
+  var interestSelect = document.querySelector('[data-panel="personal"] select.input:last-of-type, [data-panel="personal"] .ps-field:last-child select.input');
+  var allSelects = document.querySelectorAll('[data-panel="personal"] select.input');
+  var interestSel = allSelects[allSelects.length - 1];
+  if (interestSel) {
+    interestSel.addEventListener('change', function () {
+      var val = interestSel.value;
+      if (!val || val === 'Add interest...') return;
+      var chipsEl = interestSel.closest('.ps-field').querySelector('.ps-chips');
+      var exists = Array.from(chipsEl.querySelectorAll('.chip')).some(function (c) { return c.textContent.replace('×','').trim() === val; });
+      if (!exists) {
+        var chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.innerHTML = val + ' <span class="x">&times;</span>';
+        chip.querySelector('.x').addEventListener('click', function () { chip.remove(); });
+        chipsEl.appendChild(chip);
+      }
+      interestSel.value = 'Add interest...';
+    });
+  }
+
+  /* ---- save handlers ---- */
+  function doSave(dest) {
+    showToast('Profile saved successfully.', 'success');
+    setTimeout(function () { window.location.href = dest; }, 1200);
+  }
+
+  var btnSaveProgress = document.getElementById('btn-save-progress');
+  if (btnSaveProgress) btnSaveProgress.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+
+  var btnSaveLater = document.getElementById('btn-save-later');
+  if (btnSaveLater) btnSaveLater.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+
+  var btnSaveContinue = document.getElementById('btn-save-continue');
+  if (btnSaveContinue) btnSaveContinue.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

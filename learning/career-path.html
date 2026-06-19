@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career path · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-specific layout for the expand-on-click Career path list */
+  .path-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .path-card { padding: 0; overflow: hidden; }
+
+  .path-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 24px;
+    cursor: pointer;
+    background: var(--paper);
+    transition: background 0.18s;
+  }
+  .path-header:hover { background: var(--paper-2); }
+
+  .path-head-info { flex: 1; min-width: 0; }
+  .path-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .path-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .path-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+  .path-head-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+  .path-completion { text-align: right; }
+  .path-completion-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .path-completion-value {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .path-completion-value.is-done { color: var(--c-sage-text); }
+  .path-bar { width: 96px; }
+  .path-chevron {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink-soft);
+    transition: transform 0.25s var(--tn), background 0.18s;
+    flex-shrink: 0;
+  }
+  .path-chevron svg { width: 16px; height: 16px; display: block; }
+  .path-header:hover .path-chevron { background: var(--surface-3); }
+  .path-card.is-open .path-chevron { transform: rotate(180deg); }
+
+  .path-body {
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    padding: 18px 24px 20px;
+  }
+  .path-card:not(.is-open) .path-body { display: none; }
+
+  .path-instructor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .path-instructor .lbl {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    min-width: 78px;
+  }
+  .path-instructor strong { font-weight: 700; color: var(--ink); }
+
+  .path-section-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+
+  .path-outcome { margin-bottom: 16px; }
+  .path-outcome p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .course-flag {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .course-flag.is-optional { color: var(--c-sage-text); }
+
+  .course-list { display: flex; flex-direction: column; gap: 10px; }
+  .course-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    transition: border-color 0.2s;
+  }
+  .course-item.is-current { border-color: var(--ink); border-width: 1.5px; }
+  .course-item.is-locked { opacity: 0.6; }
+  .course-meta {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .course-name { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+
+  .path-empty { font-size: 13px; color: var(--ink-soft); }
+
+  .share-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink-soft);
+    transition: background 0.18s, color 0.18s, transform 0.2s var(--tn);
+    flex-shrink: 0;
+  }
+  .share-btn svg { width: 16px; height: 16px; }
+  .share-btn:hover { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); transform: translateY(-1px); }
+  .ad-arrow { width: 14px; height: 10px; display: inline-block; vertical-align: middle; margin-left: 4px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more <svg class="ad-arrow" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <button class="ad-close" aria-label="Dismiss ad">&#215;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link is-active" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="page-head" style="margin-bottom:24px">
+  <div class="hero-left">
+    <div class="eyebrow">Learning</div>
+    <h1 class="hero-title">Career <em>paths</em></h1>
+    <p class="hero-sub">Expand a path to see its courses. Click a course to view details.</p>
+  </div>
+  <div class="hero-actions" style="justify-content:flex-end;align-items:flex-start">
+    <button class="share-btn" title="Share career path" aria-label="Share career path" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+  </div>
+</div>
+
+<div class="path-list">
+
+  <!-- Path 1: Enrolled, in progress, expanded by default -->
+  <div class="card path-card is-open">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-eyebrow">Enrolled · Data Management</div>
+        <div class="path-title">CDMP - Certified Data Management Professional</div>
+        <div class="path-sub">3 courses · ~22 hrs · Intermediate → Advanced</div>
+      </div>
+      <div class="path-head-right">
+        <div class="path-completion">
+          <div class="path-completion-label">Completion</div>
+          <div class="path-completion-value">42%</div>
+        </div>
+        <div class="path-bar">
+          <div class="progress" style="height:6px"><div class="progress-fill" style="background:var(--c-honey);width:42%"></div></div>
+        </div>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="path-instructor" style="margin-bottom:0"><span class="lbl">Instructor</span><strong>IMI</strong></div>
+        <a class="btn btn-ghost btn-sm" href="career-path-expand.html">View full path map &rarr;</a>
+      </div>
+      <div class="path-outcome">
+        <div class="path-section-label">Learning Outcome</div>
+        <p>Apply data management standards to assess data quality, design governed data architectures, and lead a CDMP-aligned practicum end to end.</p>
+      </div>
+      <div class="path-section-label">Courses in this path</div>
+      <div class="course-list">
+        <div class="course-item" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div>
+            <div class="course-meta">Course 1 of 3 · 6 hrs · <span class="course-flag">Mandatory</span> · Completed</div>
+            <div class="course-name">Data Quality Foundations</div>
+          </div>
+          <span class="chip t-sage dot">Completed</span>
+        </div>
+        <div class="course-item is-current" style="cursor:pointer" onclick="location.href='player.html'">
+          <div>
+            <div class="course-meta">Course 2 of 3 · 9 hrs · <span class="course-flag">Mandatory</span> · In progress</div>
+            <div class="course-name">Data Architecture for Governance</div>
+          </div>
+          <a class="btn btn-primary btn-sm" href="player.html" onclick="event.stopPropagation()">Resume</a>
+        </div>
+        <div class="course-item is-locked">
+          <div>
+            <div class="course-meta">Course 3 of 3 · 7 hrs · <span class="course-flag is-optional">Optional</span> · Locked</div>
+            <div class="course-name">CDMP Master Practicum</div>
+          </div>
+          <span class="chip">Locked</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Path 2: Not enrolled, collapsed by default -->
+  <div class="card path-card">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-eyebrow">Not enrolled · Analytics</div>
+        <div class="path-title">Data Analytics Professional Path</div>
+        <div class="path-sub">4 courses · ~30 hrs · Beginner → Advanced</div>
+      </div>
+      <div class="path-head-right">
+        <div class="path-completion">
+          <div class="path-completion-label">Completion</div>
+          <div class="path-completion-value">0%</div>
+        </div>
+        <div class="path-bar">
+          <div class="progress" style="height:6px"><div class="progress-fill" style="background:var(--c-honey);width:0%"></div></div>
+        </div>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-outcome">
+        <div class="path-section-label">Learning Outcome</div>
+        <p>Build, query, and visualize analytics datasets, then translate findings into decision-ready reports for business stakeholders.</p>
+      </div>
+      <div class="path-section-label">Courses in this path</div>
+      <p class="path-empty">Enrol to unlock course details</p>
+      <a class="btn btn-primary btn-sm" href="career-path-expand.html" style="margin-top:12px;display:inline-flex">Enrol in path</a>
+    </div>
+  </div>
+
+  <!-- Path 3: Completed, collapsed by default -->
+  <div class="card path-card">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-eyebrow">Completed · Data Governance</div>
+        <div class="path-title">Data Governance Essentials</div>
+        <div class="path-sub">2 courses · ~12 hrs · Beginner</div>
+      </div>
+      <div class="path-head-right">
+        <div class="path-completion">
+          <div class="path-completion-label">Completion</div>
+          <div class="path-completion-value is-done">100%</div>
+        </div>
+        <div class="path-bar">
+          <div class="progress" style="height:6px"><div class="progress-fill" style="background:var(--c-sage);width:100%"></div></div>
+        </div>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-outcome">
+        <div class="path-section-label">Learning Outcome</div>
+        <p>Explain core data governance concepts and apply foundational policy and compliance practices to everyday data handling.</p>
+      </div>
+      <div class="path-section-label">Courses in this path</div>
+      <div class="course-list">
+        <div class="course-item" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div>
+            <div class="course-meta">5 hrs · <span class="course-flag">Mandatory</span></div>
+            <div class="course-name">Governance Fundamentals</div>
+          </div>
+          <span class="chip t-sage dot">Completed</span>
+        </div>
+        <div class="course-item" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div>
+            <div class="course-meta">7 hrs · <span class="course-flag">Mandatory</span></div>
+            <div class="course-name">Policy and Compliance Basics</div>
+          </div>
+          <span class="chip t-sage dot">Completed</span>
+        </div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="certificate.html" style="margin-top:14px">View Course Completed proof</a>
+    </div>
+  </div>
+
+</div>
+
+  </main>
+</div>
+<script>
+  // Expand/collapse: clicking a path header toggles its courses list.
+  document.querySelectorAll('.path-header').forEach(function (head) {
+    head.addEventListener('click', function () {
+      head.closest('.path-card').classList.toggle('is-open');
+    });
+  });
+
+  // Stop inner links/buttons from bubbling to path-header expand logic.
+  document.querySelectorAll('.path-body a, .path-body button').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
+
+  // Locked course rows: clicking shows a toast instead of navigating.
+  document.querySelectorAll('.course-item.is-locked').forEach(function(row) {
+    row.style.cursor = 'not-allowed';
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var t = document.createElement('div');
+      t.textContent = 'Complete the previous mandatory course to unlock this one.';
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:600;z-index:9999;pointer-events:none;white-space:nowrap;';
+      document.body.appendChild(t);
+      setTimeout(function(){ t.remove(); }, 2600);
+    });
+  });
+
+  // "Enrol in path" for path 2 (not enrolled): wire button correctly.
+  document.querySelectorAll('.path-body .btn-primary').forEach(function(btn) {
+    if (btn.textContent.trim() === 'Enrol in path') {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Navigate to the full expand view; wired as href already
+      });
+    }
+  });
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

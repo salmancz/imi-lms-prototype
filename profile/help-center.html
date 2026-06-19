@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help center · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .help-search {
+    max-width: none;
+    margin: 0 0 36px;
+  }
+  .help-search input {
+    height: 52px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    width: 100%;
+    padding: 0 20px 0 50px;
+    font-size: 14.5px;
+    color: var(--ink);
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  .help-search input::placeholder { color: var(--ink-soft); }
+  .help-search input:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+  }
+  .help-search::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  .topic-card {
+    display: block;
+    padding: 20px 22px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    transition: transform 0.25s var(--tn), border-color 0.2s, box-shadow 0.25s;
+  }
+  .topic-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-card);
+  }
+  .topic-card .t-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .topic-card .t-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .faq-stack { display: flex; flex-direction: column; gap: 12px; }
+  .faq {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    transition: border-color 0.2s, box-shadow 0.25s;
+  }
+  .faq[open] { box-shadow: var(--shadow-sm); }
+  .faq:hover { border-color: var(--line-strong); }
+  .faq summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    list-style: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary .faq-mark {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--ink-mute);
+    transition: transform 0.2s var(--tn);
+  }
+  .faq[open] summary .faq-mark { transform: rotate(180deg); }
+  .faq summary .faq-mark svg { width: 18px; height: 18px; }
+  .faq p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  .help-foot {
+    margin-top: 32px;
+    padding: 28px 30px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    text-align: center;
+  }
+  .help-foot .hf-title {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link is-active" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="page-head" style="display:block;margin-bottom:24px">
+  <div class="eyebrow">SUPPORT</div>
+  <h1 class="page-title">Help <em>center</em></h1>
+  <p class="page-sub">Search for an answer or browse common topics.</p>
+</div>
+
+<div class="search help-search" style="position:relative">
+  <input id="helpSearch" placeholder="Search for: 'how to enrol', 'OTP not received', 'edit Course Completed proof name'..." oninput="filterHelp(this.value)" onkeydown="if(event.key==='Enter')filterHelp(this.value)">
+</div>
+<div id="helpNoResults" style="display:none;font-size:14px;color:var(--ink-mute);padding:8px 0 20px">No results. Try different keywords or <a href="issue-report.html" style="color:var(--accent)">submit a support ticket</a>.</div>
+
+<div class="section-eyebrow" id="topicsLabel">Top topics</div>
+<div class="grid-3" style="margin-bottom:36px" id="topicsGrid">
+  <a href="active-sessions.html" class="topic-card" data-search="account sign-in otp resend locked sessions login password">
+    <div class="t-title">Account &amp; sign-in</div>
+    <p class="t-sub">OTP, OTP resend, account locked, sessions</p>
+  </a>
+  <a href="profile-edit-v2.html" class="topic-card" data-search="profile fields cert name edit completion avatar photo">
+    <div class="t-title">Profile</div>
+    <p class="t-sub">Fields, Course Completed proof name, profile completion</p>
+  </a>
+  <a href="../learning/catalog.html" class="topic-card" data-search="enrolment enroll free paid subscriptions wishlist course">
+    <div class="t-title">Enrolment</div>
+    <p class="t-sub">Free vs paid, subscriptions, wishlist</p>
+  </a>
+  <a href="../learning/player.html" class="topic-card" data-search="course player video notes resume transcript lesson playback">
+    <div class="t-title">Course player</div>
+    <p class="t-sub">Video, notes, resume, transcript</p>
+  </a>
+  <a href="../learning/quiz-results.html" class="topic-card" data-search="quiz assessment pass mark retake certificate proof download">
+    <div class="t-title">Quizzes &amp; Course Completed proofs</div>
+    <p class="t-sub">Pass mark, retake, Course Completed proof download</p>
+  </a>
+  <a href="../corporate/corp-dashboard.html" class="topic-card" data-search="corporate bulk invites assignments reports tenant company team">
+    <div class="t-title">Corporate accounts</div>
+    <p class="t-sub">Bulk invites, assignments, reports</p>
+  </a>
+</div>
+
+<div class="section-eyebrow" id="faqLabel">Most asked</div>
+<div class="faq-stack" id="faqStack">
+  <details class="faq" data-search="otp not received code spam resend verification">
+    <summary>I did not receive my OTP code<span class="faq-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+    <p>Check your spam folder first. OTPs expire after 2 min. If still missing, click Resend on the verification screen. After 3 failed verifications, your account locks for 24 hr.</p>
+  </details>
+  <details class="faq" data-search="download certificate proof not working profile completion">
+    <summary>Why can't I download my Course Completed proof?<span class="faq-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+    <p>Course Completed proof issuance requires 100% profile completion including optional fields. Visit Profile &gt; Edit and complete every section.</p>
+  </details>
+  <details class="faq" data-search="change name certificate proof edit update otp">
+    <summary>How do I change the name on my Course Completed proof?<span class="faq-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+    <p>Edit your Course Completed Name in Profile. OTP verification required. Note: changes apply to FUTURE Course Completed proofs only, already issued ones retain their original name.</p>
+  </details>
+  <details class="faq" data-search="quiz timer ran out resume restart question">
+    <summary>My quiz timer ran out, can I resume?<span class="faq-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+    <p>Quiz resume is NOT supported. Exiting mid-quiz means restarting from question 1. The quiz start warning page details this before you begin.</p>
+  </details>
+  <details class="faq" data-search="devices sessions how many limit active login">
+    <summary>How many devices can I use?<span class="faq-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+    <p>Max 2 registered devices, only 1 active session at a time. Sign out from one device before signing in on a third.</p>
+  </details>
+</div>
+
+<div class="help-foot">
+  <div class="hf-title">Still need help?</div>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-primary btn-sm" href="issue-report.html">Submit an issue</a>
+    <a class="btn btn-secondary btn-sm" href="submit-idea.html">Submit an Idea</a>
+  </div>
+</div>
+  </main>
+</div>
+<script>
+function filterHelp(q) {
+  var s = q.trim().toLowerCase();
+  var topics = document.querySelectorAll('#topicsGrid .topic-card');
+  var faqs   = document.querySelectorAll('#faqStack .faq');
+  var noRes  = document.getElementById('helpNoResults');
+  var topicsLabel = document.getElementById('topicsLabel');
+  var faqLabel    = document.getElementById('faqLabel');
+
+  var topicVis = 0, faqVis = 0;
+  topics.forEach(function(el) {
+    var hay = (el.getAttribute('data-search') + ' ' + el.textContent).toLowerCase();
+    var show = !s || hay.indexOf(s) !== -1;
+    el.style.display = show ? '' : 'none';
+    if (show) topicVis++;
+  });
+  faqs.forEach(function(el) {
+    var hay = (el.getAttribute('data-search') + ' ' + el.textContent).toLowerCase();
+    var show = !s || hay.indexOf(s) !== -1;
+    el.style.display = show ? '' : 'none';
+    if (show) { faqVis++; if (s) el.setAttribute('open',''); }
+  });
+
+  topicsLabel.style.display = topicVis ? '' : 'none';
+  document.getElementById('topicsGrid').style.display = topicVis ? '' : 'none';
+  faqLabel.style.display = faqVis ? '' : 'none';
+  document.getElementById('faqStack').style.display = faqVis ? '' : 'none';
+  noRes.style.display = (!topicVis && !faqVis && s) ? '' : 'none';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

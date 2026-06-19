@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SME review · 3-pane · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* page-specific: 3-pane review layout */
+  .review-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .review-top-left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .back-link svg { width: 14px; height: 14px; }
+  .back-link:hover { color: var(--ink); }
+  .review-divider { width: 1px; height: 18px; background: var(--line-strong); }
+  .review-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .review-meta { font-size: 12.5px; color: var(--ink-mute); margin-left: 8px; }
+
+  .pane-grid {
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr) 340px;
+    gap: 0;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--paper);
+    box-shadow: var(--shadow-sm);
+    min-height: 720px;
+  }
+  @media (max-width: 1200px) { .pane-grid { grid-template-columns: 1fr; } }
+
+  .pane { display: flex; flex-direction: column; min-width: 0; }
+  .pane + .pane { border-left: 1px solid var(--line); }
+  .pane-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .pane-title { font-size: 13px; font-weight: 700; letter-spacing: -0.005em; color: var(--ink); }
+  .pane-sub {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    margin-top: 3px;
+  }
+  .pane-scroll { flex: 1; overflow-y: auto; min-height: 0; }
+
+  /* outline pane */
+  .outline-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 18px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: default;
+    transition: background 0.15s;
+  }
+  .outline-item:hover { background: var(--paper-2); }
+  .outline-item.is {
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--c-honey-wash);
+    border-left: 2px solid var(--accent);
+    padding-left: 16px;
+  }
+  .o-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--line-strong); }
+  .o-dot.ok { background: var(--c-sage); }
+  .o-dot.warn { background: var(--c-honey); }
+  .o-dot.bad { background: var(--accent); }
+  .outline-group {
+    padding: 12px 18px 4px;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
+  }
+  .outline-group-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .outline-sub { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; color: var(--ink-soft); }
+
+  /* content pane */
+  .content-pane { padding: 22px 26px; overflow-y: auto; }
+  .content-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .content-lesson-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .content-tags { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+
+  /* video area: flat dark fill, no gradient */
+  .video-area {
+    aspect-ratio: 16 / 8.2;
+    background: var(--ink) url(../img/video-thumb.png) center / cover;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 16px 18px;
+    position: relative;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  .video-area .play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: rgba(252, 247, 174, 0.92);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+  }
+  .video-area .play svg { width: 22px; height: 22px; margin-left: 3px; }
+  .video-area .v-caption {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(252, 247, 174, 0.85);
+    position: relative;
+    z-index: 1;
+  }
+  .video-scrub { height: 4px; background: var(--surface-3); border-radius: var(--r-pill); overflow: hidden; margin-bottom: 16px; }
+  .video-scrub > span { display: block; height: 100%; width: 10%; background: var(--accent); border-radius: var(--r-pill); }
+
+  .player-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pbtn {
+    height: 32px;
+    min-width: 36px;
+    padding: 0 12px;
+    border-radius: var(--r-pill);
+    border: 1.5px solid var(--line-strong);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.15s var(--tn);
+  }
+  .pbtn:hover { background: var(--paper-2); transform: translateY(-1px); }
+  .pbtn.play-main { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); padding: 0 18px; }
+  .pbtn svg { width: 13px; height: 13px; }
+  .player-time { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+
+  .lesson-block-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+  .lesson-text { font-size: 13px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 18px; }
+
+  .attach-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    font-size: 13px;
+    margin-bottom: 12px;
+    background: var(--paper);
+  }
+  .attach-row.shade { background: var(--paper-2); }
+  .attach-row .a-tag {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent-deep);
+    background: var(--c-clay-wash);
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+  .attach-row .a-name { color: var(--ink); font-weight: 600; }
+  .attach-row .a-meta { color: var(--ink-mute); }
+  .attach-row .a-action { margin-left: auto; font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); }
+  .attach-row .a-action:hover { color: var(--ink); }
+
+  /* comments pane */
+  .comment-pane { background: var(--paper-2); }
+  .comment-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 16px;
+    margin-bottom: 14px;
+  }
+  .comment-card.required { border-left: 3px solid var(--accent); }
+  .comment-card.suggestion { border-left: 3px solid var(--ink-mute); }
+  .comment-card.resolved { border-left: 3px solid var(--c-sage); opacity: 0.8; }
+  .cc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
+  .cc-stamp { font-family: var(--font-label); font-size: 10px; letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
+  .cc-body { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 9px; }
+  .cc-author { font-family: var(--font-label); font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-mute); margin-bottom: 8px; }
+  .cc-reply {
+    background: var(--paper-2);
+    border-radius: var(--r-sm);
+    padding: 10px 13px;
+    margin-bottom: 10px;
+  }
+  .cc-reply p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; }
+  .cc-reply .cc-author { margin: 4px 0 0; }
+  .cc-actions { display: flex; gap: 6px; }
+  .cc-btn {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 5px 11px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    background: var(--paper);
+    transition: background 0.15s, color 0.15s;
+  }
+  .cc-btn:hover { background: var(--paper-2); color: var(--ink); }
+
+  .chip-required { background: transparent; border-color: rgba(184, 82, 62, 0.45); color: var(--accent); }
+  .chip-resolved { background: transparent; border-color: rgba(126, 155, 111, 0.5); color: var(--c-sage-text); }
+
+  .add-comment { padding: 10px 0 4px; }
+  .add-comment select.input { height: 32px; margin-bottom: 8px; }
+  .add-comment textarea.input {
+    height: auto;
+    padding: 9px 12px;
+    resize: none;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .verdict-bar {
+    border-top: 1.5px solid var(--line-strong);
+    padding: 20px 20px 22px;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+  .verdict-summary {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .verdict-summary strong { color: var(--ink); font-weight: 700; }
+  .verdict-btns { display: flex; flex-direction: column; gap: 10px; }
+  .btn-reject {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid rgba(184, 82, 62, 0.45);
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-reject:hover { background: var(--c-clay-wash); transform: translateY(-1px); }
+  .btn-approve { width: 100%; justify-content: center; }
+  .verdict-note { font-size: 11.5px; color: var(--ink-mute); margin-top: 14px; line-height: 1.55; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+<header class="topbar">
+  <a href="../role-views/sme-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Review</span>
+  </a>
+  <div class="search"><input placeholder="Search review queue..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='sme-queue.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="sme-queue.html#queue" class="sidebar-link" data-nav="queue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Queue</span><span class="badge">5</span></a>
+      <a href="sme-queue.html#in-progress" class="sidebar-link is-active" data-nav="in-progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg><span>In progress</span><span class="badge">1</span></a>
+      <a href="sme-queue.html#reviewed" class="sidebar-link" data-nav="reviewed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Reviewed</span><span class="badge">47</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">DOMAIN</div>
+      <a href="sme-queue.html?domain=km" class="sidebar-link" data-nav="km"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>KM Standards</span></a>
+      <a href="sme-queue.html?domain=records" class="sidebar-link" data-nav="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Records Mgmt</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../role-views/sme-reports.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="../role-views/sme-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+  <main class="blob-honey">
+
+    <div class="review-top">
+      <div class="review-top-left">
+        <a href="sme-queue.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back to queue</a>
+        <span class="review-divider"></span>
+        <div>
+          <span class="review-name">Reviewing: Knowledge Mapping</span>
+          <span class="review-meta">Submitted by A. Khalfan &middot; 6h ago</span>
+        </div>
+        <span class="chip t-honey dot">Under Review</span>
+      </div>
+      <a href="sme-queue.html" class="btn btn-ghost btn-sm">Skip to next &rarr;</a>
+    </div>
+
+    <div class="pane-grid">
+
+      <!-- Pane 1: Course outline -->
+      <div class="pane">
+        <div class="pane-head">
+          <div class="pane-title">Course outline</div>
+          <div class="pane-sub">9 lessons &middot; 12 quiz questions</div>
+        </div>
+        <div class="pane-scroll">
+          <div style="padding:8px 0">
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,1,'What is knowledge mapping','ok')"><span class="o-dot ok"></span><span>1. What is knowledge mapping</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,2,'Tacit vs explicit knowledge','warn')"><span class="o-dot warn"></span><span>2. Tacit vs explicit knowledge</span></div>
+            <div class="outline-item is" style="cursor:pointer" onclick="switchLesson(this,3,'Knowledge audits','bad')"><span class="o-dot bad"></span><span>3. Knowledge audits</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,4,'Mapping frameworks','')"><span class="o-dot"></span><span>4. Mapping frameworks</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,5,'Implementation','')"><span class="o-dot"></span><span>5. Implementation</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,6,'Measurement','')"><span class="o-dot"></span><span>6. Measurement</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,7,'Case studies','warn')"><span class="o-dot warn"></span><span>7. Case studies</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,8,'Common pitfalls','')"><span class="o-dot"></span><span>8. Common pitfalls</span></div>
+            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,9,'Knowledge transfer','')"><span class="o-dot"></span><span>9. Knowledge transfer</span></div>
+
+            <div class="outline-group">
+              <div class="outline-sub" style="font-weight:600;color:var(--ink-soft)"><span class="o-dot bad"></span><span>Assessment (12 questions)</span></div>
+            </div>
+
+            <div class="outline-group">
+              <div class="outline-group-label">Course-level</div>
+              <div class="outline-sub"><span class="o-dot"></span><span>Course info</span></div>
+              <div class="outline-sub"><span class="o-dot"></span><span>Thumbnail</span></div>
+              <div class="outline-sub"><span class="o-dot warn"></span><span>Learning outcomes</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pane 2: Content preview -->
+      <div class="pane">
+        <div class="content-pane">
+          <div class="content-chips">
+            <span class="chip t-ink">Lesson 3 of 9</span>
+            <span class="content-lesson-name">Knowledge audits</span>
+            <span class="chip">Video + PDF</span>
+            <span class="chip">45 min</span>
+            <span class="content-tags">Tags: audit, knowledge gaps</span>
+          </div>
+
+          <div class="video-area">
+            <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+            <span class="v-caption">Lesson 3 &middot; Knowledge audits &middot; 04:32 / 45:18</span>
+          </div>
+          <div class="video-scrub"><span></span></div>
+
+          <div class="player-bar">
+            <button class="pbtn" type="button" onclick="this.closest('.content-pane').querySelector('.video-scrub span').style.width='0%'" title="Restart / skip back"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button>
+            <button class="pbtn play-main" id="play-btn" type="button" onclick="togglePlay(this)"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+            <button class="pbtn" type="button" onclick="this.closest('.content-pane').querySelector('.video-scrub span').style.width='20%'" title="Skip forward"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button>
+            <span style="flex:1"></span>
+            <span class="player-time">04:32 / 45:18</span>
+            <button class="pbtn" type="button" onclick="var speeds=['1x','1.5x','2x'];var i=speeds.indexOf(this.textContent);this.textContent=speeds[(i+1)%speeds.length];this.closest('.player-bar').dataset.speed=this.textContent;" title="Playback speed">1x</button>
+          </div>
+
+          <div class="lesson-block-title">About this lesson</div>
+          <p class="lesson-text">This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories. Learners will apply the ISO 30401 KMS framework to a sample organisation and produce a structured audit report.</p>
+
+          <div class="attach-row shade">
+            <span class="a-tag">PDF</span>
+            <span class="a-name">knowledge-audit-template.pdf</span>
+            <a href="#" class="a-action" title="Download PDF" data-file="knowledge-audit-template.pdf" onclick="event.preventDefault();(function(){var blob=new Blob(['IMI Learning - Knowledge Audit Template\n\nPlaceholder download from the IMI prototype.'],{type:'application/octet-stream'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='knowledge-audit-template.pdf';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);showToast('Download started','t-sage');})()">Download</a>
+          </div>
+
+          <div class="attach-row">
+            <span class="a-name">Transcript</span>
+            <span class="a-meta">&middot; 8,400 words</span>
+            <a href="#" class="a-action" title="Prototype - expands transcript inline" onclick="event.preventDefault();var r=this.closest('.attach-row');var e=r.querySelector('.transcript-body');if(!e){e=document.createElement('p');e.className='transcript-body lesson-text';e.style.marginTop='8px';e.textContent='Transcript: This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories...';r.appendChild(e);this.textContent='Collapse';}else{e.remove();this.textContent='Click to expand';}">Click to expand</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pane 3: Comments + verdict -->
+      <div class="pane comment-pane">
+        <div class="pane-head">
+          <div class="pane-title">Comments</div>
+          <div class="pane-sub">4 open &middot; 2 resolved</div>
+        </div>
+        <div class="pane-scroll" style="padding:16px">
+
+          <div class="comment-card required">
+            <div class="cc-head">
+              <span class="chip chip-required">Required</span>
+              <span class="cc-stamp">00:42 &middot; Lesson 3</span>
+            </div>
+            <p class="cc-body">"Add ISO 30401 reference in lesson 3 intro. Current material doesn't cite the standard."</p>
+            <div class="cc-author">Dr. Faris Al-Maamari (SME) &middot; 2h ago &middot; pinned</div>
+            <div class="cc-reply">
+              <p>Will add in next revision.</p>
+              <div class="cc-author">A. Khalfan &middot; 1h ago</div>
+            </div>
+            <div class="cc-actions">
+              <button class="cc-btn" type="button" onclick="var f=this.closest('.comment-card').querySelector('.cc-reply-input');if(!f){f=document.createElement('textarea');f.className='input cc-reply-input';f.rows=2;f.placeholder='Write a reply...';f.style.marginTop='8px';f.style.width='100%';this.closest('.cc-actions').insertAdjacentElement('beforebegin',f);f.focus();}else{f.remove();}">Reply</button>
+              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();">Mark resolved</button>
+            </div>
+          </div>
+
+          <div class="comment-card suggestion">
+            <div class="cc-head">
+              <span class="chip">Suggestion</span>
+              <span class="cc-stamp">Lesson 7</span>
+            </div>
+            <p class="cc-body">"Consider adding a case study from a GCC ministry - current examples are all Western."</p>
+            <div class="cc-author">Dr. Faris &middot; 2h ago</div>
+            <div class="cc-actions">
+              <button class="cc-btn" type="button" onclick="var f=this.closest('.comment-card').querySelector('.cc-reply-input');if(!f){f=document.createElement('textarea');f.className='input cc-reply-input';f.rows=2;f.placeholder='Write a reply...';f.style.marginTop='8px';f.style.width='100%';this.closest('.cc-actions').insertAdjacentElement('beforebegin',f);f.focus();}else{f.remove();}">Reply</button>
+              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();">Mark resolved</button>
+            </div>
+          </div>
+
+          <div class="comment-card resolved">
+            <div class="cc-head">
+              <span class="chip chip-resolved">Resolved</span>
+              <span class="cc-stamp">4h ago</span>
+            </div>
+            <p class="cc-body">"Is the assessment auto-graded?"</p>
+            <div class="cc-author">Dr. Faris</div>
+            <div class="cc-reply">
+              <p>Yes, MCQ + T/F. Essay manually graded by SME within 48h.</p>
+              <div class="cc-author">A. Khalfan</div>
+            </div>
+          </div>
+
+          <div class="add-comment">
+            <select class="input" id="new-comment-type"><option>Suggestion</option><option>Required</option><option>Question</option><option>SME-internal</option></select>
+            <textarea class="input" id="new-comment-text" rows="2" placeholder="Add a comment..."></textarea>
+            <button class="btn btn-primary btn-sm" type="button" style="width:100%;justify-content:center" onclick="addComment()">+ Add comment</button>
+          </div>
+
+        </div>
+
+        <div class="verdict-bar">
+          <div class="verdict-summary" id="verdict-summary">Required changes: <strong>1 blocking</strong> &middot; Suggestions: <strong>1 open</strong></div>
+          <div class="verdict-btns">
+            <button class="btn btn-primary btn-approve" type="button" onclick="doApprove()">Approve &amp; publish</button>
+            <button class="btn btn-reject" type="button" onclick="doReject()">Reject &amp; return</button>
+            <button class="btn btn-ghost" type="button" style="width:100%;justify-content:center;margin-top:2px" onclick="doRequestChanges()">Request changes</button>
+          </div>
+          <p class="verdict-note">Approval gated until all Required comments are resolved. Reject requires a reason in comments.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+<style>
+  .imi-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--ink);
+    color: var(--hero-bg);
+    font-family: var(--font-label);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 12px 22px;
+    border-radius: var(--r-pill);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  .imi-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .imi-toast.t-sage { background: var(--c-sage); }
+  .imi-toast.t-clay { background: var(--c-clay); }
+  .imi-toast.t-honey { background: var(--c-honey); color: var(--ink); }
+</style>
+<div id="imi-toast" class="imi-toast"></div>
+<script>
+function showToast(msg, type, duration) {
+  var t = document.getElementById('imi-toast');
+  t.textContent = msg;
+  t.className = 'imi-toast' + (type ? ' ' + type : '');
+  requestAnimationFrame(function() { t.classList.add('show'); });
+  setTimeout(function() { t.classList.remove('show'); }, duration || 3000);
+}
+
+var isPlaying = false;
+var playInterval = null;
+
+function togglePlay(btn) {
+  isPlaying = !isPlaying;
+  var scrub = document.querySelector('.video-scrub span');
+  if (isPlaying) {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    playInterval = setInterval(function() {
+      var w = parseFloat(scrub.style.width || '10');
+      w = Math.min(w + 0.5, 100);
+      scrub.style.width = w + '%';
+      if (w >= 100) { clearInterval(playInterval); isPlaying = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; }
+    }, 200);
+  } else {
+    clearInterval(playInterval);
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  }
+}
+
+function switchLesson(el, num, name, status) {
+  document.querySelectorAll('.outline-item').forEach(function(i) { i.classList.remove('is'); });
+  el.classList.add('is');
+  var chip = document.querySelector('.content-chips .chip.t-ink');
+  if (chip) chip.textContent = 'Lesson ' + num + ' of 9';
+  var title = document.querySelector('.content-lesson-name');
+  if (title) title.textContent = name;
+  if (playInterval) { clearInterval(playInterval); isPlaying = false; }
+  var btn = document.getElementById('play-btn');
+  if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  var scrub = document.querySelector('.video-scrub span');
+  if (scrub) scrub.style.width = '0%';
+}
+
+function addComment() {
+  var type = document.getElementById('new-comment-type');
+  var txt = document.getElementById('new-comment-text');
+  var text = txt ? txt.value.trim() : '';
+  if (!text) { showToast('Please write a comment first', 't-clay'); return; }
+  var typeVal = type ? type.options[type.selectedIndex].text : 'Suggestion';
+  var container = document.querySelector('.pane-scroll');
+  var addArea = document.querySelector('.add-comment');
+  var card = document.createElement('div');
+  var cls = typeVal === 'Required' ? 'required' : typeVal === 'Question' ? 'suggestion' : 'suggestion';
+  card.className = 'comment-card ' + cls;
+  card.innerHTML = '<div class="cc-head"><span class="chip' + (cls === 'required' ? ' chip-required' : '') + '">' + typeVal + '</span><span class="cc-stamp">Just now</span></div><p class="cc-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p><div class="cc-author">Dr. Faris Al-Maamari (SME) &middot; just now</div><div class="cc-actions"><button class="cc-btn" type="button" onclick="var f=this.closest(\'.comment-card\').querySelector(\'.cc-reply-input\');if(!f){f=document.createElement(\'textarea\');f.className=\'input cc-reply-input\';f.rows=2;f.placeholder=\'Write a reply...\';f.style.marginTop=\'8px\';f.style.width=\'100%\';this.closest(\'.cc-actions\').insertAdjacentElement(\'beforebegin\',f);f.focus();}else{f.remove();}">Reply</button><button class="cc-btn" type="button" onclick="var c=this.closest(\'.comment-card\');c.className=c.className.replace(\'required\',\'resolved\').replace(\'suggestion\',\'resolved\');var chip=c.querySelector(\'.chip\');chip.className=\'chip chip-resolved\';chip.textContent=\'Resolved\';this.closest(\'.cc-actions\').remove();">Mark resolved</button></div>';
+  container.insertBefore(card, addArea);
+  txt.value = '';
+  showToast('Comment added', 't-sage');
+}
+
+function doApprove() {
+  var blocking = document.querySelectorAll('.comment-card.required').length;
+  if (blocking > 0) {
+    showToast('Resolve all Required comments first (' + blocking + ' remaining)', 't-clay', 4000);
+    return;
+  }
+  if (!confirm('Approve "Knowledge Mapping" and publish to learners?')) return;
+  showToast('Approved and published', 't-sage');
+  setTimeout(function() { location.href = 'sme-queue.html'; }, 1500);
+}
+
+function doReject() {
+  var reason = document.getElementById('new-comment-text');
+  var text = reason ? reason.value.trim() : '';
+  if (!text) {
+    showToast('Add a rejection reason in the comment box first', 't-clay', 4000);
+    if (reason) reason.focus();
+    return;
+  }
+  if (!confirm('Reject "Knowledge Mapping" and return to author with your comments?')) return;
+  showToast('Rejected and returned to author', 't-clay');
+  setTimeout(function() { location.href = 'sme-queue.html'; }, 1800);
+}
+
+function doRequestChanges() {
+  var reason = document.getElementById('new-comment-text');
+  var text = reason ? reason.value.trim() : '';
+  if (!text) {
+    showToast('Write the changes needed in the comment box', 't-honey', 4000);
+    if (reason) reason.focus();
+    return;
+  }
+  if (!confirm('Send change request to author?')) return;
+  showToast('Change request sent to author', 't-honey');
+  setTimeout(function() { location.href = 'sme-queue.html'; }, 1800);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

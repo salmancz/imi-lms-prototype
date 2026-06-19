@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+
+  /* ad-strip sticky offset for qbar */
+  .ad-strip + .qbar { top: 36px; }
+
+  /* ── quiz top bar ── */
+  .qbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 32px;
+    height: 52px;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .qbar-l {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .qbar-sep {
+    color: var(--ink-faint);
+    font-size: 16px;
+  }
+  .qbar-title {
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .qbar-r {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .qbar-prog {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .qbar-track {
+    width: 160px;
+    height: 6px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .qbar-fill {
+    height: 100%;
+    background: var(--c-honey);
+    border-radius: var(--r-pill);
+  }
+
+  /* ── main content area ── */
+  .qmain {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 40px 80px;
+  }
+
+  /* ── page breadcrumb / eyebrow row ── */
+  .q-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .q-breadcrumb a { color: var(--ink-mute); transition: color 0.15s; }
+  .q-breadcrumb a:hover { color: var(--accent); }
+  .q-breadcrumb .sep { color: var(--ink-faint); }
+
+  /* ── two-column quiz layout (navigator + question) ── */
+  .quiz-shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ── navigator panel ── */
+  .qnav {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 20px 18px;
+    position: sticky;
+    top: 108px;
+  }
+  .qnav-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .qnav-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .qnav-cell {
+    width: 100%;
+    aspect-ratio: 1;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    background: var(--paper);
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.12s var(--tn);
+  }
+  .qnav-cell:hover { transform: translateY(-1px); border-color: var(--ink-mute); color: var(--ink); }
+  .qnav-cell.is-answered { background: var(--ink); border-color: var(--ink); color: var(--hero-bg); }
+  .qnav-cell.is-current { border: 2px solid var(--ink); color: var(--ink); background: var(--c-honey-wash); font-weight: 800; }
+
+  .qnav-legend {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    line-height: 1.9;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .qnav-legend .lg { display: flex; align-items: center; gap: 8px; }
+  .qnav-legend .sw { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .qnav-legend .sw.answered { background: var(--ink); }
+  .qnav-legend .sw.current { background: var(--c-honey-wash); border: 1.5px solid var(--ink); }
+  .qnav-legend .sw.unanswered { background: var(--paper); border: 1px solid var(--line-strong); }
+
+  /* ── question card ── */
+  .qcard {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 36px 40px 32px;
+    box-shadow: var(--shadow-sm);
+  }
+  .q-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .q-title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .q-hint {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+
+  /* ── answer options ── */
+  .q-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.12s var(--tn);
+  }
+  .opt:hover { border-color: var(--ink-mute); transform: translateY(-1px); box-shadow: var(--shadow-xs); }
+  .opt-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--line-strong);
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    transition: border-color 0.18s;
+  }
+  .opt-letter {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    width: 16px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .opt.is-selected { border: 1.5px solid var(--ink); background: var(--c-honey-wash); }
+  .opt.is-selected .opt-radio { border-color: var(--ink); }
+  .opt.is-selected .opt-radio::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+  .opt.is-selected .opt-letter { color: var(--ink); }
+
+  /* ── footer controls ── */
+  .q-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .q-controls-r { display: flex; align-items: center; gap: 10px; }
+  .btn-skip {
+    background: transparent;
+    color: var(--ink-soft);
+    border: none;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .btn-skip:hover { color: var(--ink); }
+
+  @media (max-width: 880px) {
+    .quiz-shell { grid-template-columns: 1fr; }
+    .qnav { position: static; }
+    .qmain { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ad strip (consistent with approved exemplars) -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Quiz top bar -->
+<header class="qbar">
+  <div class="qbar-l">
+    <a href="dashboard.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      <span class="brand-text">IMI</span>
+    </a>
+    <span class="qbar-sep">&#183;</span>
+    <span class="qbar-title">CDMP Practitioner Assessment</span>
+  </div>
+  <div class="qbar-r">
+    <span class="qbar-prog" id="qbar-prog-label">Question 1 of 10</span>
+    <div class="qbar-track"><div class="qbar-fill" id="qbar-fill" style="width:10%"></div></div>
+    <button class="btn btn-ghost btn-sm" id="btn-exit-quiz" type="button">Exit quiz</button>
+  </div>
+</header>
+
+<!-- Main quiz content -->
+<main class="qmain">
+
+  <!-- Breadcrumb -->
+  <nav class="q-breadcrumb" aria-label="Breadcrumb">
+    <a href="my-learning.html">My Learning</a>
+    <span class="sep">/</span>
+    <a href="my-learning.html">CDMP Practitioner</a>
+    <span class="sep">/</span>
+    <span>Assessment</span>
+  </nav>
+
+  <div class="quiz-shell">
+
+    <!-- Question navigator panel -->
+    <aside class="qnav" aria-label="Question navigator">
+      <div class="qnav-label">Questions &middot; 10 total</div>
+      <div class="qnav-grid" id="qnav-grid" role="navigation"></div>
+      <div class="qnav-legend" id="qnav-legend" aria-label="Legend"></div>
+    </aside>
+
+    <!-- Question card -->
+    <section class="qcard" id="qcard" aria-live="polite"></section>
+
+    <!-- Question footer controls: persistent outside qcard so DOM nodes survive renderQuestion() -->
+    <div class="q-controls" id="q-footer-controls" style="margin-top:0;border-top:none;padding-top:0;">
+      <button class="btn btn-ghost btn-sm" id="btn-q-prev" type="button" style="visibility:hidden">&#8592; Previous</button>
+      <div class="q-controls-r">
+        <button class="btn-skip" id="btn-q-skip" type="button">Skip for now</button>
+        <button class="btn btn-primary btn-sm" id="btn-q-next" type="button">Next &#8594;</button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  /* ---- sample fallback set ---- */
+  var SAMPLE_QUESTIONS = [
+    {
+      text: "Which DAMA-DMBOK function defines stewardship roles?",
+      opts: ["Data architecture", "Data governance", "Metadata management", "Master data management"],
+      correct: 1
+    },
+    {
+      text: "What does the 'M' in DMBOK stand for?",
+      opts: ["Management", "Methodology", "Mapping", "Monitoring"],
+      correct: 0
+    },
+    {
+      text: "Which data management discipline focuses on the accuracy and completeness of data?",
+      opts: ["Data integration", "Data quality", "Data warehousing", "Data modelling"],
+      correct: 1
+    },
+    {
+      text: "A canonical data model is used primarily in which context?",
+      opts: ["Business intelligence", "Enterprise application integration", "Data archiving", "Master data management"],
+      correct: 1
+    },
+    {
+      text: "Reference data management is a sub-discipline of which broader area?",
+      opts: ["Data governance", "Data architecture", "Master data management", "Data security"],
+      correct: 2
+    },
+    {
+      text: "Which process ensures data retains its state as it moves through systems?",
+      opts: ["Data lineage tracking", "Data masking", "Data profiling", "Data indexing"],
+      correct: 0
+    },
+    {
+      text: "CDMP stands for which certification?",
+      opts: ["Certified Data Management Professional", "Certified Digital Management Practitioner", "Comprehensive Data Management Program", "Certified Data Mapping Professional"],
+      correct: 0
+    },
+    {
+      text: "Which DMBOK knowledge area covers understanding how data is used across the enterprise?",
+      opts: ["Data storage", "Data architecture", "Business intelligence", "Data integration"],
+      correct: 1
+    },
+    {
+      text: "Ontologies in data management are primarily used to represent:",
+      opts: ["Physical storage schemas", "Business glossaries and concept relationships", "ETL pipeline steps", "Data access permissions"],
+      correct: 1
+    },
+    {
+      text: "Which of the following best describes a 'golden record'?",
+      opts: ["The highest-priority backup copy", "The single authoritative version of an entity", "A record with no quality issues", "An archived historical record"],
+      correct: 1
+    }
+  ];
+
+  /* ---- load from localStorage (imi_assessment_questions), fall back to sample ---- */
+  var QUESTIONS = (function () {
+    try {
+      var saved = JSON.parse(localStorage.getItem('imi_assessment_questions') || '[]');
+      if (saved && saved.length > 0) {
+        return saved.map(function (q) {
+          var opts;
+          if (q.qtype === 'True / False') {
+            opts = ['True', 'False'];
+          } else {
+            opts = ['Option A', 'Option B', 'Option C', 'Option D'];
+          }
+          return { text: q.text, opts: opts, correct: 0 };
+        });
+      }
+    } catch (e) {}
+    return SAMPLE_QUESTIONS;
+  })();
+
+  /* ---- update nav label with live question count ---- */
+  (function () {
+    var navLabel = document.querySelector('.qnav-label');
+    if (navLabel) navLabel.textContent = 'Questions · ' + QUESTIONS.length + ' total';
+    var progLabel = document.getElementById('qbar-prog-label');
+    if (progLabel) progLabel.textContent = 'Question 1 of ' + QUESTIONS.length;
+    var fill = document.getElementById('qbar-fill');
+    if (fill) fill.style.width = Math.round(100 / QUESTIONS.length) + '%';
+  })();
+
+  var LETTERS = ['A', 'B', 'C', 'D'];
+  var current = 0;
+  var answers = new Array(QUESTIONS.length).fill(null);
+
+  /* build nav cells once, then update classes in-place */
+  function buildNavCells() {
+    var grid = document.getElementById('qnav-grid');
+    grid.innerHTML = '';
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = i + 1;
+      btn.className = 'qnav-cell';
+      btn.dataset.qidx = i;
+      btn.setAttribute('aria-label', 'Go to question ' + (i + 1));
+      (function (idx) {
+        btn.addEventListener('click', function () { goTo(idx); });
+      })(i);
+      grid.appendChild(btn);
+    }
+  }
+
+  function renderNav() {
+    var cells = document.querySelectorAll('.qnav-cell');
+    cells.forEach(function (btn) {
+      var idx = parseInt(btn.dataset.qidx, 10);
+      btn.className = 'qnav-cell';
+      if (answers[idx] !== null) btn.classList.add('is-answered');
+      if (idx === current) btn.classList.add('is-current');
+      btn.setAttribute('aria-label', 'Question ' + (idx + 1) + (answers[idx] !== null ? ', answered' : '') + (idx === current ? ', current' : ''));
+      if (idx === current) btn.setAttribute('aria-current', 'true');
+      else btn.removeAttribute('aria-current');
+    });
+    var legend = document.getElementById('qnav-legend');
+    var answeredNums = [];
+    for (var j = 0; j < answers.length; j++) { if (answers[j] !== null) answeredNums.push(j + 1); }
+    var unanswered = [];
+    for (var k = 0; k < QUESTIONS.length; k++) { if (answers[k] === null && k !== current) unanswered.push(k + 1); }
+    legend.innerHTML =
+      '<div class="lg"><span class="sw answered"></span>Answered (' + (answeredNums.length ? answeredNums.join(', ') : 'none') + ')</div>' +
+      '<div class="lg"><span class="sw current"></span>Current (' + (current + 1) + ')</div>' +
+      '<div class="lg"><span class="sw unanswered"></span>Unanswered (' + (unanswered.length ? unanswered.join(', ') : 'none') + ')</div>';
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[current];
+    var isLast = current === QUESTIONS.length - 1;
+    var sel = answers[current];
+
+    var optsHtml = '';
+    for (var i = 0; i < q.opts.length; i++) {
+      var isSel = sel === i;
+      optsHtml += '<div class="opt' + (isSel ? ' is-selected' : '') + '" role="radio" aria-checked="' + isSel + '" tabindex="0" data-idx="' + i + '">' +
+        '<span class="opt-radio" aria-hidden="true"></span>' +
+        '<span class="opt-letter">' + LETTERS[i] + '</span>' +
+        '<span class="opt-text">' + q.opts[i] + '</span>' +
+        '</div>';
+    }
+
+    var card = document.getElementById('qcard');
+    card.innerHTML =
+      '<div class="q-eyebrow">Multiple choice &middot; Question ' + (current + 1) + ' of ' + QUESTIONS.length + '</div>' +
+      '<h1 class="q-title">' + q.text + '</h1>' +
+      '<p class="q-hint">Select one answer.</p>' +
+      '<div class="q-options" role="radiogroup" aria-label="Answer options">' + optsHtml + '</div>';
+
+    card.querySelectorAll('.opt').forEach(function (el) {
+      function selectOpt(e) {
+        var idx = parseInt(el.getAttribute('data-idx'), 10);
+        answers[current] = idx;
+        card.querySelectorAll('.opt').forEach(function (o) {
+          o.classList.toggle('is-selected', parseInt(o.getAttribute('data-idx'), 10) === idx);
+          o.setAttribute('aria-checked', parseInt(o.getAttribute('data-idx'), 10) === idx ? 'true' : 'false');
+        });
+        renderNav();
+      }
+      el.addEventListener('click', selectOpt);
+      el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectOpt(e); } });
+    });
+
+    /* update persistent footer controls */
+    var prevBtn = document.getElementById('btn-q-prev');
+    if (prevBtn) prevBtn.style.visibility = current > 0 ? 'visible' : 'hidden';
+
+    var skipBtn = document.getElementById('btn-q-skip');
+    if (skipBtn) skipBtn.style.display = !isLast ? '' : 'none';
+
+    var nextBtn = document.getElementById('btn-q-next');
+    if (nextBtn) nextBtn.textContent = isLast ? 'Submit →' : 'Next →';
+
+    var prog = document.getElementById('qbar-prog-label');
+    if (prog) prog.textContent = 'Question ' + (current + 1) + ' of ' + QUESTIONS.length;
+    var fill = document.getElementById('qbar-fill');
+    if (fill) fill.style.width = Math.round(((current + 1) / QUESTIONS.length) * 100) + '%';
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= QUESTIONS.length) return;
+    current = idx;
+    renderNav();
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('btn-exit-quiz').addEventListener('click', function () {
+    if (confirm('Exit the quiz? Your progress will be lost.')) {
+      location.href = 'my-learning.html';
+    }
+  });
+
+  /* persistent footer button handlers */
+  document.getElementById('btn-q-prev').addEventListener('click', function () { goTo(current - 1); });
+  document.getElementById('btn-q-skip').addEventListener('click', function () { goTo(current + 1); });
+  document.getElementById('btn-q-next').addEventListener('click', function () {
+    if (document.getElementById('btn-q-next').textContent.indexOf('Submit') !== -1) {
+      /* submit */
+      var unanswered = answers.filter(function (a) { return a === null; }).length;
+      if (unanswered > 0) {
+        if (!confirm(unanswered + ' question(s) unanswered. Submit anyway?')) return;
+      }
+      var correct = 0;
+      for (var i = 0; i < QUESTIONS.length; i++) {
+        if (answers[i] === QUESTIONS[i].correct) correct++;
+      }
+      var pct = Math.round((correct / QUESTIONS.length) * 100);
+      location.href = pct >= 70 ? 'quiz-results.html' : 'quiz-failed.html';
+    } else {
+      goTo(current + 1);
+    }
+  });
+
+  buildNavCells();
+  renderNav();
+  renderQuestion();
+})();
+</script>
+</body>
+</html>

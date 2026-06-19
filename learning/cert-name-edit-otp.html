@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit name on Course Completed proof · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .modal-scrim {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    backdrop-filter: blur(3px) saturate(0.9);
+    -webkit-backdrop-filter: blur(3px) saturate(0.9);
+    display: grid;
+    place-items: center;
+    padding: 48px 24px;
+    z-index: 60;
+  }
+  .modal-card {
+    width: 100%;
+    max-width: 520px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: 0 32px 80px -24px rgba(42, 17, 8, 0.45);
+    overflow: hidden;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+  }
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 26px 30px 0;
+  }
+  .modal-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .modal-title {
+    font-family: var(--font-sans);
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .modal-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .modal-close {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-pill);
+    display: grid;
+    place-items: center;
+    color: var(--ink-mute);
+    flex-shrink: 0;
+    transition: background 0.18s, color 0.18s;
+  }
+  .modal-close:hover { background: var(--paper-2); color: var(--ink); }
+  .modal-close svg { width: 18px; height: 18px; }
+
+  .modal-body { padding: 22px 30px 30px; }
+
+  .step-panel {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 24px;
+  }
+
+  .panel-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .panel-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+
+  .name-field { margin-bottom: 12px; }
+  .name-field label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .name-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: var(--r-sm);
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s, background 0.18s;
+  }
+  .name-input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    background: #fff;
+    box-shadow: 0 0 0 4px var(--focus-ring);
+  }
+  .helper {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .btn.full {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+
+  .modal-foot {
+    text-align: center;
+    padding: 0 30px 26px;
+  }
+  .modal-foot a {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    transition: color 0.18s;
+  }
+  .modal-foot a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="certificate.html" class="sidebar-link is-active" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="modal-scrim">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+        <div class="modal-head">
+          <div>
+            <div class="modal-eyebrow">Course Completed proof</div>
+            <h1 class="modal-title" id="modal-title">Edit the name on your <em>proof</em></h1>
+          </div>
+          <a href="certificate.html" class="modal-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </a>
+        </div>
+
+        <div class="modal-body">
+          <!-- Step 1: Enter name -->
+          <div class="step-panel" id="step-name">
+            <div class="panel-title">Edit the name on your Course Completed proof</div>
+            <p class="panel-desc">This name appears on all future Course Completed proofs.</p>
+
+            <div class="name-field">
+              <label for="cert-name">Name on proof</label>
+              <input class="name-input" id="cert-name" type="text" value="Salman Ali" autocomplete="name">
+              <p id="name-error" style="color:var(--accent);font-size:12px;margin-top:6px;display:none;">Please enter a name before continuing.</p>
+            </div>
+            <p class="helper">Use your name exactly as it appears on official ID. Name changes apply only to future Course Completed proofs.</p>
+
+            <button type="button" class="btn btn-primary full" id="btn-request-otp">Send verification code</button>
+          </div>
+
+          <!-- Step 2: OTP (hidden initially) -->
+          <div class="step-panel" id="step-otp" style="display:none">
+            <div class="panel-title">Verify your identity</div>
+            <p class="panel-desc">We sent a 6-digit code to your registered email. Enter it below to confirm the name change.</p>
+
+            <div class="name-field">
+              <label for="cert-otp">Verification code</label>
+              <input class="name-input" id="cert-otp" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" style="letter-spacing:0.22em;font-family:var(--font-label);font-size:22px">
+              <p id="otp-error" style="color:var(--accent);font-size:12px;margin-top:6px;display:none;">Please enter the 6-digit code.</p>
+            </div>
+            <p class="helper" id="otp-resend-hint">Didn't receive it? <button type="button" id="btn-resend" style="background:none;border:none;padding:0;font-size:12px;font-family:var(--font-label);color:var(--accent);cursor:pointer;text-decoration:underline">Resend code</button></p>
+
+            <button type="button" class="btn btn-primary full" id="btn-confirm-otp">Confirm name change</button>
+          </div>
+        </div>
+
+        <div class="modal-foot">
+          <a href="certificate.html" id="cancel-link">Cancel, go back</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+<div class="imi-toast" id="imi-toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.03em;padding:10px 20px;border-radius:100px;box-shadow:0 24px 48px -16px rgba(42,17,8,0.10);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:200;"></div>
+<script src="../ui-enhance.js"></script>
+<script>
+var _toastTimer;
+function imiToast(msg) {
+  var t = document.getElementById('imi-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(16px)'; }, 2200);
+}
+
+document.getElementById('btn-request-otp').addEventListener('click', function () {
+  var nameVal = document.getElementById('cert-name').value.trim();
+  var errEl = document.getElementById('name-error');
+  if (!nameVal) {
+    errEl.style.display = 'block';
+    document.getElementById('cert-name').focus();
+    return;
+  }
+  errEl.style.display = 'none';
+  document.getElementById('step-name').style.display = 'none';
+  document.getElementById('step-otp').style.display = 'block';
+  document.getElementById('cert-otp').focus();
+  imiToast('Code sent to your registered email');
+});
+
+document.getElementById('btn-resend').addEventListener('click', function () {
+  document.getElementById('cert-otp').value = '';
+  document.getElementById('cert-otp').focus();
+  imiToast('Verification code resent');
+});
+
+document.getElementById('btn-confirm-otp').addEventListener('click', function () {
+  var otpVal = document.getElementById('cert-otp').value.trim();
+  var errEl = document.getElementById('otp-error');
+  if (!otpVal || otpVal.length < 4) {
+    errEl.style.display = 'block';
+    document.getElementById('cert-otp').focus();
+    return;
+  }
+  errEl.style.display = 'none';
+  location.href = '../profile/cert-name-confirm.html';
+});
+
+document.getElementById('cert-otp').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') document.getElementById('btn-confirm-otp').click();
+});
+document.getElementById('cert-name').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') document.getElementById('btn-request-otp').click();
+});
+</script>
+</body>
+</html>

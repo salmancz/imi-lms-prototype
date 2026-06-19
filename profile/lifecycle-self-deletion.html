@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delete Account · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .delete-wrap { max-width: 720px; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link svg { width: 13px; height: 13px; }
+
+  /* Flat danger warning card - solid fill, no gradient */
+  .warn-card {
+    background: var(--c-danger-wash);
+    border: 1px solid rgba(193, 42, 28, 0.20);
+    border-radius: var(--r-md);
+    padding: 22px 24px;
+    margin-bottom: 22px;
+  }
+  .warn-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .warn-ic {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(193, 42, 28, 0.10);
+    border: 1px solid rgba(193, 42, 28, 0.20);
+    display: grid;
+    place-items: center;
+    color: var(--c-danger);
+    flex-shrink: 0;
+  }
+  .warn-ic svg { width: 17px; height: 17px; }
+  .warn-head h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--c-danger);
+  }
+  .warn-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .warn-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .warn-list li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-danger);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .warn-list li > span { display: block; min-width: 0; }
+  .warn-list li strong { color: var(--ink); font-weight: 700; }
+
+  /* Summary KPI row */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 720px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .summary-cell {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+  }
+  .summary-cell .s-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .summary-cell .s-value {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  /* Form card */
+  .form-card { padding: 24px 26px; }
+  .form-card .field:last-of-type { margin-bottom: 0; }
+  .field .opt { color: var(--ink-faint); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .field .req { color: var(--c-danger); }
+
+  .confirm-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .confirm-check input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--c-danger);
+    flex-shrink: 0;
+  }
+  .confirm-check label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-weight: 400;
+  }
+
+  .delete-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a href="help-center.html" class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none">
+      <div class="avatar-ring" style="--pct:68">
+        <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+        <span class="ring-pct">68%</span>
+      </div>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span><span class="badge">8</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Wishlist</span><span class="badge">12</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Course Completed</span><span class="badge">5</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="settings.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="delete-wrap">
+
+      <a class="back-link" href="profile.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Profile
+      </a>
+
+      <div class="page-head" style="display:block;margin-bottom:24px">
+        <div class="eyebrow">Account</div>
+        <h1 class="page-title">Delete your <em>account</em></h1>
+        <p class="page-sub">We are sorry to see you go. Before you continue, please review what happens to your account and data.</p>
+      </div>
+
+      <!-- Warning card: flat solid fill, no gradient -->
+      <div class="warn-card">
+        <div class="warn-head">
+          <span class="warn-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          <h3>What happens when you delete</h3>
+        </div>
+        <ul class="warn-list">
+          <li>Your account is <strong>soft-deleted</strong> immediately. You can restore it within <strong>30 days</strong>.</li>
+          <li>All sessions are terminated and login is disabled.</li>
+          <li>In-progress courses are paused. Progress is preserved during the 30-day grace.</li>
+          <li>After 30 days, all PII (name, email, contact info) is purged permanently.</li>
+          <li><span>If you are a <strong>locally certified learner</strong>, your record is <strong>never hard deleted</strong> and is retained permanently by membership number for verification.</span></li>
+          <li>Access to your issued Course Completed proofs <strong>remains functional</strong> even after your account is deactivated, suspended, dormant, or deleted.</li>
+          <li>If you have a corporate account, your tenant admin is notified.</li>
+        </ul>
+      </div>
+
+      <!-- Account summary KPI row -->
+      <div class="summary-grid">
+        <div class="summary-cell">
+          <div class="s-label">Member since</div>
+          <div class="s-value" style="font-size:15px;font-weight:700">11 Apr 2024</div>
+        </div>
+        <div class="summary-cell">
+          <div class="s-label">Courses enrolled</div>
+          <div class="s-value">8</div>
+        </div>
+        <div class="summary-cell">
+          <div class="s-label">Completed</div>
+          <div class="s-value">5</div>
+        </div>
+        <div class="summary-cell">
+          <div class="s-label">Hours learned</div>
+          <div class="s-value" style="font-size:17px">142.8h</div>
+        </div>
+      </div>
+
+      <!-- Form card -->
+      <div class="card form-card">
+        <div class="field">
+          <label>Why are you leaving? <span class="opt">(optional, helps us improve)</span></label>
+          <select class="input">
+            <option>Choose a reason...</option>
+            <option>Not finding relevant courses</option>
+            <option>Too expensive</option>
+            <option>Switching to another platform</option>
+            <option>Privacy concerns</option>
+            <option>Account no longer needed</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Additional feedback <span class="opt">(optional)</span></label>
+          <textarea rows="3" placeholder="Tell us what we could have done better..."></textarea>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label>Type DELETE to confirm <span class="req">*</span></label>
+          <input class="input" id="deleteConfirmInput" placeholder="DELETE" oninput="updateDeleteBtn()">
+        </div>
+
+        <div class="confirm-check">
+          <input type="checkbox" id="confirm-delete" onchange="updateDeleteBtn()">
+          <label for="confirm-delete">I understand my account will be deactivated immediately and permanently deleted after 30 days.</label>
+        </div>
+      </div>
+
+      <div class="delete-actions">
+        <a class="btn btn-ghost" href="settings.html">Cancel</a>
+        <button class="btn btn-danger" id="deleteContBtn" onclick="proceedDeletion()" disabled style="opacity:0.45;cursor:not-allowed">Continue to confirmation &rarr;</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+function updateDeleteBtn() {
+  var inp = document.getElementById('deleteConfirmInput');
+  var cb  = document.getElementById('confirm-delete');
+  var btn = document.getElementById('deleteContBtn');
+  var ok  = inp && inp.value.trim() === 'DELETE' && cb && cb.checked;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.45';
+  btn.style.cursor  = ok ? 'pointer' : 'not-allowed';
+}
+function proceedDeletion() {
+  location.href = 'lifecycle-deletion-confirm.html';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

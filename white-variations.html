@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · white/light variations · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { background: var(--bg); }
+  .wv-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .wv-bar img { height: 28px; }
+  .wv-bar .r { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+  .wv-wrap { max-width: 1160px; margin: 0 auto; padding: 44px 40px 60px; }
+  .wv-head .eyebrow { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); }
+  .wv-head h1 { font-family: var(--font-serif); font-weight: 400; font-size: 34px; color: var(--ink); margin: 6px 0 6px; }
+  .wv-head h1 em { font-style: italic; }
+  .wv-head p { color: var(--ink-soft); font-size: 14.5px; max-width: 640px; line-height: 1.6; }
+
+  .wv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
+  @media (max-width: 1040px) { .wv-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .wv-grid { grid-template-columns: 1fr; } }
+
+  .wv-card { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.25s var(--tn), box-shadow 0.25s, border-color 0.2s; text-decoration: none; color: inherit; }
+  .wv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--line-strong); }
+  .wv-thumb { aspect-ratio: 16 / 10; background: var(--bg-alt); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .wv-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .wv-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .wv-num { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-deep); }
+  .wv-name { font-family: var(--font-sans); font-weight: 800; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); }
+  .wv-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .wv-open { margin-top: auto; padding-top: 12px; font-family: var(--font-label); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+  .wv-card:hover .wv-open { color: var(--accent); }
+
+  .wv-note { margin-top: 30px; display: flex; gap: 12px; align-items: flex-start; background: var(--c-honey-wash); border: 1px solid var(--c-honey-soft); border-radius: var(--r-md); padding: 16px 20px; font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .wv-note strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wv-bar">
+  <img src="img/imi-logo.png" alt="Information Management Institute">
+  <span class="r">Dashboard color study</span>
+</div>
+
+<div class="wv-wrap">
+  <div class="wv-head">
+    <div class="eyebrow">Learner dashboard · for review</div>
+    <h1>White &amp; light <em>variations</em></h1>
+    <p>Five takes on the same dashboard, playing only with white and off-white (no new colors) so it feels brighter and less flat-cream. Open each, compare, and pick one. Whichever you choose, I apply that surface treatment to the design system so it flows to every page.</p>
+  </div>
+
+  <div class="wv-grid">
+    <a class="wv-card" href="learning/dashboard-white-1.html" target="_blank" rel="noopener">
+      <div class="wv-thumb"><img src="learning/dashboard-white-1.png" alt="Variation 1"></div>
+      <div class="wv-body">
+        <span class="wv-num">Variation 1</span>
+        <span class="wv-name">White cards on cream</span>
+        <span class="wv-desc">Page stays warm cream; cards become pure white so they pop. The most subtle shift from today.</span>
+        <span class="wv-open">Open variation &rarr;</span>
+      </div>
+    </a>
+    <a class="wv-card" href="learning/dashboard-white-2.html" target="_blank" rel="noopener">
+      <div class="wv-thumb"><img src="learning/dashboard-white-2.png" alt="Variation 2"></div>
+      <div class="wv-body">
+        <span class="wv-num">Variation 2</span>
+        <span class="wv-name">Off-white page + white cards</span>
+        <span class="wv-desc">The page lifts toward white (a warm off-white, not gray) with crisp white cards. Brighter, still warm.</span>
+        <span class="wv-open">Open variation &rarr;</span>
+      </div>
+    </a>
+    <a class="wv-card" href="learning/dashboard-white-3.html" target="_blank" rel="noopener">
+      <div class="wv-thumb"><img src="learning/dashboard-white-3.png" alt="Variation 3"></div>
+      <div class="wv-body">
+        <span class="wv-num">Variation 3</span>
+        <span class="wv-name">Pure white page</span>
+        <span class="wv-desc">Background goes fully white; cream becomes a soft accent on the cards. The cleanest, most "SaaS" look.</span>
+        <span class="wv-open">Open variation &rarr;</span>
+      </div>
+    </a>
+    <a class="wv-card" href="learning/dashboard-white-4.html" target="_blank" rel="noopener">
+      <div class="wv-thumb"><img src="learning/dashboard-white-4.png" alt="Variation 4"></div>
+      <div class="wv-body">
+        <span class="wv-num">Variation 4</span>
+        <span class="wv-name">Airy off-white (lightest)</span>
+        <span class="wv-desc">Everything very light off-white with white cards. Soft and bright overall, minimal warmth.</span>
+        <span class="wv-open">Open variation &rarr;</span>
+      </div>
+    </a>
+    <a class="wv-card" href="learning/dashboard-white-5.html" target="_blank" rel="noopener">
+      <div class="wv-thumb"><img src="learning/dashboard-white-5.png" alt="Variation 5"></div>
+      <div class="wv-body">
+        <span class="wv-num">Variation 5</span>
+        <span class="wv-name">White hero band on light page</span>
+        <span class="wv-desc">Light page with one bright pure-white section (the hero) as a foreground accent. White used as a highlight.</span>
+        <span class="wv-open">Open variation &rarr;</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="wv-note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--c-honey-text);flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div>These are <strong>token-only overrides</strong> of the real learner dashboard, for comparison. Pick one and I&rsquo;ll apply that white treatment to <strong>shared.css</strong> so every page updates together; the other four get removed.</div>
+  </div>
+</div>
+<script src="ui-enhance.js"></script>
+</body>
+</html>

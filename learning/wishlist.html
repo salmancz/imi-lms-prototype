@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- Canonical .crs card (mirrors pilot-course-cards.html) ---- */
+  .crs {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s var(--tn), box-shadow 0.3s var(--tn), border-color 0.2s;
+  }
+  .crs:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--line-strong); }
+
+  .crs-cover { position: relative; aspect-ratio: 16 / 10; background: var(--bg-alt); }
+  .crs-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .crs-badge {
+    position: absolute; top: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 30px; padding: 0 13px;
+    background: var(--ink); color: #FBF7EF;
+    border-radius: var(--r-pill);
+    font-family: var(--font-label); font-weight: 700; font-size: 12.5px; letter-spacing: 0.01em;
+    box-shadow: 0 4px 12px -4px rgba(42,17,8,0.45);
+  }
+  .crs-badge svg { width: 14px; height: 14px; }
+  .crs-level { left: 14px; }
+  .crs-dur   { right: 14px; }
+  .crs-level .star { color: #F4CE5E; }
+  .crs-level.lv-practitioner .star { color: #A9C893; }
+  .crs-level.lv-basic .star { color: #E0A38C; }
+
+  /* Free badge on cover */
+  .crs-free {
+    position: absolute; top: 14px; left: 14px;
+    display: inline-flex; align-items: center;
+    height: 30px; padding: 0 13px;
+    background: var(--c-sage); color: var(--paper);
+    border-radius: var(--r-pill);
+    font-family: var(--font-label); font-weight: 700; font-size: 12.5px; letter-spacing: 0.01em;
+    box-shadow: 0 4px 12px -4px rgba(42,17,8,0.3);
+  }
+
+  .crs-body { padding: 20px 22px 18px; display: flex; flex-direction: column; flex: 1; }
+
+  .crs-type { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .crs-type-ic {
+    width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+    background: var(--c-clay-wash); color: var(--accent-deep);
+    display: grid; place-items: center;
+  }
+  .crs-type-ic svg { width: 16px; height: 16px; }
+  .crs-type-label { font-family: var(--font-sans); font-weight: 700; font-size: 15px; color: var(--accent-deep); }
+
+  .crs-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 5px;
+  }
+
+  .crs-title {
+    font-family: var(--font-sans); font-weight: 800; font-size: 18px; line-height: 1.22;
+    letter-spacing: -0.02em; color: var(--ink); margin: 0 0 10px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .crs-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+
+  .crs-meta {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.03em;
+    margin-bottom: 10px;
+  }
+  .crs-meta .sep { color: var(--line-strong); }
+
+  .crs-rule { height: 1px; background: var(--line); margin: 14px 0 14px; }
+
+  .crs-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+  .crs-by { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .crs-av { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+  .crs-by-txt { font-size: 13.5px; color: var(--ink-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crs-by-txt strong { color: var(--ink); font-weight: 700; }
+
+  .crs-acts { display: flex; gap: 7px; flex-shrink: 0; }
+  .crs-ic {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--paper-2); border: 1px solid var(--line); color: var(--ink-soft);
+    display: grid; place-items: center; cursor: pointer;
+    transition: background 0.18s var(--tn), color 0.18s, transform 0.12s var(--tn), border-color 0.18s;
+  }
+  .crs-ic svg { width: 17px; height: 17px; }
+  .crs-ic:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translateY(-1px); }
+
+  /* Saved chip inside foot row */
+  .crs-saved-chip {
+    font-family: var(--font-label); font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.03em; white-space: nowrap;
+  }
+
+  /* ---- Filter rail (matches catalog.html pattern) ---- */
+  .wish-layout { display: grid; grid-template-columns: 232px minmax(0,1fr); gap: 36px; align-items: start; margin-top: 24px; }
+  @media (max-width: 1100px) { .wish-layout { grid-template-columns: 1fr; } }
+
+  .wish-filters {
+    position: sticky; top: 88px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 20px 20px 22px;
+  }
+  .wish-filters-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .wish-filters-head .ttl {
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .wish-filters-head .reset { font-size: 12px; color: var(--accent); font-weight: 600; }
+  .wish-fgroup + .wish-fgroup { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .wish-fgroup h5 {
+    font-family: var(--font-label);
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 10px;
+  }
+  .wish-check {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13.5px; color: var(--ink-soft);
+    padding: 4px 0; cursor: pointer;
+    transition: color 0.15s;
+  }
+  .wish-check:hover { color: var(--ink); }
+  .wish-check input { width: 15px; height: 15px; accent-color: var(--ink); flex-shrink: 0; cursor: pointer; }
+  .wish-check .ct { flex: 1; }
+
+  /* Result bar */
+  .wish-result-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  }
+  .wish-result-bar .cnt { font-size: 13px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; }
+  .wish-sort {
+    height: 32px; padding: 0 32px 0 14px; border-radius: var(--r-pill);
+    border: 1px solid var(--line); background: var(--paper);
+    font-size: 12.5px; color: var(--ink); cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 13px;
+  }
+
+  /* Card grid — auto-fill so 4 cards never orphan in a 3-col row */
+  .wish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 720px) { .wish-grid { grid-template-columns: 1fr; } }
+
+  /* Filter checkbox labels — darken from ink-soft to ink for legibility */
+  .wish-check { color: var(--ink); }
+  .wish-check:hover { color: var(--ink-deep); }
+
+  /* Active tab underline — thicker and full-ink so it's clearly visible */
+  .tabs button.is { border-bottom-width: 3px; border-bottom-color: var(--ink-deep); color: var(--ink-deep); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link is-active" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">4</span></a>
+      <a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <div class="page-head" style="grid-template-columns:1fr;margin-bottom:18px">
+      <div class="hero-left" style="max-width:none">
+        <div class="eyebrow">Saved for Later</div>
+        <h1 class="page-title">Your <em>wishlist</em></h1>
+        <p class="page-sub">4 saved &middot; Filter by type below</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="is" data-wl-tab="all" onclick="wlTab(this,'all')">All (4)</button>
+      <button data-wl-tab="course" onclick="wlTab(this,'course')">Courses (4)</button>
+      <button data-wl-tab="path" onclick="wlTab(this,'path')">Career paths (0)</button>
+      <button data-wl-tab="video" onclick="wlTab(this,'video')">Short videos (0)</button>
+    </div>
+
+    <div class="wish-layout">
+
+      <aside class="wish-filters">
+        <div class="wish-filters-head">
+          <span class="ttl">Filters</span>
+          <a class="reset" href="#" id="wl-reset-btn">Reset</a>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Category</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="category" data-wl-val="course"><span class="ct">Courses</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="category" data-wl-val="career-path"><span class="ct">Career paths</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="category" data-wl-val="explainer-video"><span class="ct">Explainer videos</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="category" data-wl-val="master"><span class="ct">Master content</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Duration</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="duration" data-wl-val="short"><span class="ct">Under 2h</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="duration" data-wl-val="medium"><span class="ct">2-5h</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="duration" data-wl-val="long"><span class="ct">5h+</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Difficulty level</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="difficulty" data-wl-val="beginner"><span class="ct">Beginner</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="difficulty" data-wl-val="intermediate"><span class="ct">Intermediate</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="difficulty" data-wl-val="advanced"><span class="ct">Advanced</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Learning type</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="ltype" data-wl-val="course"><span class="ct">Course</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="ltype" data-wl-val="explainer-video"><span class="ct">Explainer video</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="ltype" data-wl-val="career-path"><span class="ct">Career path</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="ltype" data-wl-val="standalone"><span class="ct">Standalone lesson</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Subject</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="subject" data-wl-val="data-governance"><span class="ct">Data governance</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="subject" data-wl-val="records-management"><span class="ct">Records management</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="subject" data-wl-val="information-architecture"><span class="ct">Information architecture</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="subject" data-wl-val="knowledge-management"><span class="ct">Knowledge management</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Field of Study</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="fos" data-wl-val="information-management"><span class="ct">Information management</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="fos" data-wl-val="risk-compliance"><span class="ct">Risk &amp; compliance</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="fos" data-wl-val="digital-archiving"><span class="ct">Digital archiving</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Skill Level</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="skill" data-wl-val="foundation"><span class="ct">Foundation</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="skill" data-wl-val="practitioner"><span class="ct">Practitioner</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="skill" data-wl-val="expert"><span class="ct">Expert</span></label>
+        </div>
+
+        <div class="wish-fgroup">
+          <h5>Completion status</h5>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="completion" data-wl-val="not-started"><span class="ct">Not started</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="completion" data-wl-val="in-progress"><span class="ct">In progress</span></label>
+          <label class="wish-check"><input type="checkbox" data-wl-filter="completion" data-wl-val="completed"><span class="ct">Completed</span></label>
+        </div>
+      </aside>
+
+      <div>
+        <div class="wish-result-bar">
+          <span class="cnt">Showing 4 saved courses</span>
+          <select class="wish-sort" aria-label="Sort wishlist">
+            <option>Sort: Recently saved</option>
+            <option>Alphabetical</option>
+            <option>Shortest first</option>
+            <option>Longest first</option>
+          </select>
+        </div>
+
+        <div class="wish-grid">
+
+          <!-- Card 1: Practitioner level, Data Governance -->
+          <article class="crs" data-wl-type="course" data-wl-subject="data-governance" data-wl-difficulty="advanced" data-wl-dur="long" data-wl-access="locked" data-wl-ltype="course" data-wl-fos="information-management" data-wl-skill="practitioner" data-wl-completion="not-started" style="cursor:pointer" onclick="if(!event.target.closest('button,a'))location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="CDMP Practitioner Prep">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>28 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course</span>
+              </div>
+              <div class="crs-eyebrow">Data Governance &middot; CDMP</div>
+              <h3 class="crs-title">CDMP Practitioner Prep</h3>
+              <div class="crs-chips">
+                <span class="chip t-clay">Advanced</span>
+                <span class="chip">20 lessons</span>
+              </div>
+              <div class="crs-meta">
+                <span>Data governance</span><span class="sep">&middot;</span><span>Records management</span>
+              </div>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=layla-alhashimi" alt="">
+                  <span class="crs-by-txt">By: <strong>Layla Al-Hashimi</strong></span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <a class="crs-ic" href="player.html" title="Enrol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></a>
+                </div>
+              </div>
+              <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+                <span class="crs-saved-chip">Saved 3 days ago</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px" onclick="event.stopPropagation();this.closest('.crs').remove();wlUpdateCount()">Remove</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Strategist level, Records Management -->
+          <article class="crs" data-wl-type="course" data-wl-subject="records-management" data-wl-difficulty="advanced" data-wl-dur="long" data-wl-access="locked" data-wl-ltype="course" data-wl-fos="risk-compliance" data-wl-skill="expert" data-wl-completion="not-started" style="cursor:pointer" onclick="if(!event.target.closest('button,a'))location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-2.jpg" alt="Records Retention Bootcamp">
+              <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>25 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course</span>
+              </div>
+              <div class="crs-eyebrow">Records Management &middot; IGP</div>
+              <h3 class="crs-title">Records Retention Bootcamp</h3>
+              <div class="crs-chips">
+                <span class="chip t-clay">Advanced</span>
+                <span class="chip">16 lessons</span>
+              </div>
+              <div class="crs-meta">
+                <span>Records management</span><span class="sep">&middot;</span><span>Risk &amp; compliance</span>
+              </div>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-official" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong></span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <a class="crs-ic" href="player.html" title="Enrol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></a>
+                </div>
+              </div>
+              <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+                <span class="crs-saved-chip">Saved 1 week ago</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px" onclick="event.stopPropagation();this.closest('.crs').remove();wlUpdateCount()">Remove</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Practitioner level, Information Architecture -->
+          <article class="crs" data-wl-type="course" data-wl-subject="information-architecture" data-wl-difficulty="intermediate" data-wl-dur="medium" data-wl-access="locked" data-wl-ltype="course" data-wl-fos="digital-archiving" data-wl-skill="practitioner" data-wl-completion="not-started" style="cursor:pointer" onclick="if(!event.target.closest('button,a'))location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-3.jpg" alt="Metadata for Records Pros">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>20 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course</span>
+              </div>
+              <div class="crs-eyebrow">Information Architecture &middot; CIP</div>
+              <h3 class="crs-title">Metadata for Records Pros</h3>
+              <div class="crs-chips">
+                <span class="chip t-honey">Intermediate</span>
+                <span class="chip">10 lessons</span>
+              </div>
+              <div class="crs-meta">
+                <span>Information architecture</span><span class="sep">&middot;</span><span>Digital archiving</span>
+              </div>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=tariq-albalushi" alt="">
+                  <span class="crs-by-txt">By: <strong>Tariq Al-Balushi</strong></span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <a class="crs-ic" href="player.html" title="Enrol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></a>
+                </div>
+              </div>
+              <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+                <span class="crs-saved-chip">Saved 2 weeks ago</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px" onclick="event.stopPropagation();this.closest('.crs').remove();wlUpdateCount()">Remove</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Basic level, Free access -->
+          <article class="crs" data-wl-type="course" data-wl-subject="knowledge-management" data-wl-difficulty="beginner" data-wl-dur="short" data-wl-access="free" data-wl-ltype="course" data-wl-fos="information-management" data-wl-skill="foundation" data-wl-completion="not-started" style="cursor:pointer" onclick="if(!event.target.closest('button,a'))location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="ISO 15489 in 60 minutes">
+              <span class="crs-free">Free</span>
+              <span class="crs-badge crs-level lv-basic" style="left:auto;right:14px"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Basic</span>
+              <span class="crs-badge crs-dur" style="top:auto;bottom:14px;right:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>18 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course</span>
+              </div>
+              <div class="crs-eyebrow">Information Management &middot; ERM</div>
+              <h3 class="crs-title">ISO 15489 in 60 minutes</h3>
+              <div class="crs-chips">
+                <span class="chip t-sage">Beginner</span>
+                <span class="chip">12 lessons</span>
+              </div>
+              <div class="crs-meta">
+                <span>Information management</span><span class="sep">&middot;</span><span>Risk &amp; compliance</span>
+              </div>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-official2" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong></span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <a class="crs-ic" href="player.html" title="Enrol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-14 9V3z"/></svg></a>
+                </div>
+              </div>
+              <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+                <span class="crs-saved-chip">Free access &middot; Saved 1 month ago</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px" onclick="event.stopPropagation();this.closest('.crs').remove();wlUpdateCount()">Remove</button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+<script>
+/* Wishlist interactive logic */
+(function(){
+  var _activeTab = 'all';
+
+  function getCheckedVals(filterKey) {
+    return Array.from(document.querySelectorAll('.wish-filters input[data-wl-filter="' + filterKey + '"]:checked')).map(function(cb){ return cb.getAttribute('data-wl-val'); });
+  }
+
+  function wlApplyFilters() {
+    var cats    = getCheckedVals('category');
+    var durs    = getCheckedVals('duration');
+    var diffs   = getCheckedVals('difficulty');
+    var ltypes  = getCheckedVals('ltype');
+    var subjs   = getCheckedVals('subject');
+    var foss    = getCheckedVals('fos');
+    var skills  = getCheckedVals('skill');
+    var comps   = getCheckedVals('completion');
+
+    var cards = document.querySelectorAll('.wish-grid .crs');
+    var shown = 0;
+    cards.forEach(function(card){
+      var d = card.dataset;
+      var tabOk  = _activeTab === 'all' || d.wlType === _activeTab;
+      var catOk  = cats.length === 0   || cats.indexOf(d.wlType) !== -1;
+      var durOk  = durs.length === 0   || durs.indexOf(d.wlDur) !== -1;
+      var difOk  = diffs.length === 0  || diffs.indexOf(d.wlDifficulty) !== -1;
+      var ltOk   = ltypes.length === 0 || ltypes.indexOf(d.wlLtype) !== -1;
+      var subOk  = subjs.length === 0  || subjs.indexOf(d.wlSubject) !== -1;
+      var fosOk  = foss.length === 0   || foss.indexOf(d.wlFos) !== -1;
+      var sklOk  = skills.length === 0 || skills.indexOf(d.wlSkill) !== -1;
+      var cmpOk  = comps.length === 0  || comps.indexOf(d.wlCompletion) !== -1;
+      var show = tabOk && catOk && durOk && difOk && ltOk && subOk && fosOk && sklOk && cmpOk;
+      card.style.display = show ? '' : 'none';
+      if (show) shown++;
+    });
+
+    var cnt = document.querySelector('.wish-result-bar .cnt');
+    if (cnt) cnt.textContent = 'Showing ' + shown + ' saved ' + (shown === 1 ? 'item' : 'items');
+    var sub = document.querySelector('.page-sub');
+    if (sub) {
+      var total = document.querySelectorAll('.wish-grid .crs').length;
+      sub.textContent = total + ' saved · Filter by type below';
+    }
+    wlRefreshTabCounts();
+  }
+
+  function wlRefreshTabCounts() {
+    var tabBar = document.querySelector('.tabs');
+    if (!tabBar) return;
+    tabBar.querySelectorAll('button[data-wl-tab]').forEach(function(b){
+      var t = b.getAttribute('data-wl-tab');
+      var allCards = Array.from(document.querySelectorAll('.wish-grid .crs'));
+      var n = t === 'all' ? allCards.length : allCards.filter(function(c){ return c.dataset.wlType === t; }).length;
+      var labels = { 'all':'All', 'course':'Courses', 'path':'Career paths', 'video':'Short videos' };
+      b.textContent = (labels[t] || t) + ' (' + n + ')';
+    });
+  }
+
+  window.wlTab = function(btn, type) {
+    _activeTab = type;
+    btn.closest('.tabs').querySelectorAll('button').forEach(function(b){ b.classList.remove('is'); });
+    btn.classList.add('is');
+    wlApplyFilters();
+  };
+
+  /* Wire checkboxes */
+  document.querySelectorAll('.wish-filters input[type=checkbox]').forEach(function(cb){
+    cb.addEventListener('change', wlApplyFilters);
+  });
+
+  /* Reset button */
+  document.getElementById('wl-reset-btn').addEventListener('click', function(e){
+    e.preventDefault();
+    document.querySelectorAll('.wish-filters input[type=checkbox]').forEach(function(c){ c.checked = false; });
+    wlApplyFilters();
+  });
+
+  /* Sort */
+  document.querySelector('.wish-sort').addEventListener('change', function(){
+    var grid = document.querySelector('.wish-grid');
+    var cards = Array.from(grid.querySelectorAll('.crs'));
+    var val = this.value;
+    if (val.indexOf('Alphabetical') !== -1) {
+      cards.sort(function(a,b){ return a.querySelector('.crs-title').textContent.localeCompare(b.querySelector('.crs-title').textContent); });
+    } else if (val.indexOf('Shortest') !== -1) {
+      cards.sort(function(a,b){ return (parseInt((a.querySelector('.crs-badge.crs-dur')||{textContent:'0'}).textContent)||0) - (parseInt((b.querySelector('.crs-badge.crs-dur')||{textContent:'0'}).textContent)||0); });
+    } else if (val.indexOf('Longest') !== -1) {
+      cards.sort(function(a,b){ return (parseInt((b.querySelector('.crs-badge.crs-dur')||{textContent:'0'}).textContent)||0) - (parseInt((a.querySelector('.crs-badge.crs-dur')||{textContent:'0'}).textContent)||0); });
+    }
+    cards.forEach(function(c){ grid.appendChild(c); });
+  });
+
+  /* Remove buttons */
+  document.querySelectorAll('.wish-grid .crs button').forEach(function(btn){
+    if (btn.textContent.trim() === 'Remove') {
+      btn.removeAttribute('onclick');
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var card = btn.closest('.crs');
+        if (card) card.remove();
+        wlApplyFilters();
+        if (window.imiToast) window.imiToast('Removed from wishlist');
+      });
+    }
+  });
+
+  /* Stop inner controls from propagating to card nav */
+  document.querySelectorAll('.crs-ic, .crs button, .crs a').forEach(function(el){
+    el.addEventListener('click', function(e){ e.stopPropagation(); });
+  });
+
+  /* Init */
+  var cnt = document.querySelector('.wish-result-bar .cnt');
+  if (cnt) {
+    var total = document.querySelectorAll('.wish-grid .crs').length;
+    cnt.textContent = 'Showing ' + total + ' saved items';
+  }
+  var sub = document.querySelector('.page-sub');
+  if (sub) {
+    var ttl = document.querySelectorAll('.wish-grid .crs').length;
+    sub.textContent = ttl + ' saved · Filter by type below';
+  }
+  wlRefreshTabCounts();
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

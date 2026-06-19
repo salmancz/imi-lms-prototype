@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Completed name confirm · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* page-specific: name-confirm modal over dimmed learner app */
+  .modal-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    padding: 40px 24px;
+    background: var(--scrim);
+    backdrop-filter: blur(3px) saturate(1.05);
+    -webkit-backdrop-filter: blur(3px) saturate(1.05);
+  }
+  .confirm-card {
+    width: 100%;
+    max-width: 540px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 40px 44px 36px;
+    text-align: center;
+  }
+  .confirm-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .confirm-brand .brand-logo-mark { width: 30px; height: 30px; }
+  .confirm-brand .cb-word {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .confirm-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .confirm-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.18;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .confirm-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .confirm-sub {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 420px;
+    margin: 0 auto 26px;
+  }
+  .name-plate {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 20px 22px;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .name-plate .np-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .name-plate .np-name {
+    font-family: var(--font-serif);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 0.005em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .confirm-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    text-align: left;
+    cursor: pointer;
+    padding: 4px 2px;
+    margin-bottom: 24px;
+  }
+  .confirm-check input {
+    margin-top: 2px;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .confirm-check span {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .confirm-actions { display: flex; flex-direction: column; gap: 10px; }
+  .confirm-actions .btn { width: 100%; justify-content: center; padding: 13px 18px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link is-active" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="page-head">
+  <div class="hero-left">
+    <div class="eyebrow">Course Completed</div>
+    <h1 class="hero-title">One last step before we issue your <em>proof</em></h1>
+    <p class="hero-sub">Confirm the name on your Course Completed proof.</p>
+  </div>
+</div>
+<div class="modal-scrim">
+  <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="confirm-brand">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      <span class="cb-word">IMI</span>
+    </div>
+    <div class="confirm-eyebrow">Course Completed proof</div>
+    <h2 class="confirm-title" id="confirm-title">Confirm your name for this <em>course completion</em> proof</h2>
+    <p class="confirm-sub">This is the name that will appear on your Course Completed proof. Once issued, it cannot be edited on this proof.</p>
+    <div class="name-plate">
+      <div class="np-label">Name as it will appear</div>
+      <div class="np-name">Salman Ali</div>
+    </div>
+    <label class="confirm-check">
+      <input type="checkbox" id="nameConfirmCb" onchange="updateConfirmBtn()">
+      <span>I confirm this name is correct as it should appear on my proof. I understand future Course Completed proofs will use this name unless I update it in my profile.</span>
+    </label>
+    <div class="confirm-actions">
+      <button class="btn btn-primary" id="confirmProofBtn" onclick="generateProof()" disabled style="opacity:0.45;cursor:not-allowed">Confirm and generate proof</button>
+      <a class="btn btn-ghost" href="../learning/cert-name-edit-otp.html">Edit name first</a>
+    </div>
+  </div>
+</div>
+  </main>
+</div>
+<script>
+function updateConfirmBtn() {
+  var cb  = document.getElementById('nameConfirmCb');
+  var btn = document.getElementById('confirmProofBtn');
+  btn.disabled = !cb.checked;
+  btn.style.opacity = cb.checked ? '1' : '0.45';
+  btn.style.cursor  = cb.checked ? 'pointer' : 'not-allowed';
+}
+function generateProof() {
+  var btn = document.getElementById('confirmProofBtn');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+  setTimeout(function() {
+    location.href = '../learning/completed-proof-detail.html';
+  }, 1000);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

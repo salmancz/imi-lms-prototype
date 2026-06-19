@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share modal · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* page-specific: dim overlay + centered share dialog */
+  .modal-scrim {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    backdrop-filter: blur(3px) saturate(1.1);
+    -webkit-backdrop-filter: blur(3px) saturate(1.1);
+    display: grid;
+    place-items: center;
+    padding: 40px 24px;
+    z-index: 40;
+  }
+  .share-dialog {
+    width: 480px;
+    max-width: 100%;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 30px 32px 32px;
+  }
+  .share-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .share-head h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .share-head h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .share-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink-mute);
+    transition: background 0.18s, color 0.18s;
+  }
+  .share-close:hover { background: var(--paper-2); color: var(--ink); }
+  .share-close svg { width: 17px; height: 17px; }
+  .share-course {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 22px;
+  }
+  .share-cover {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--c-honey-wash);
+  }
+  .share-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .share-course-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.3; margin-bottom: 3px; }
+  .share-course-url {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: var(--ink-mute);
+  }
+  .share-socials {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .share-social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 6px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    color: var(--ink-soft);
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: transform 0.2s var(--tn), border-color 0.2s, box-shadow 0.2s, color 0.2s;
+  }
+  .share-social:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink);
+  }
+  .share-social .si {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+  .share-social .si svg { width: 18px; height: 18px; }
+  .share-social.s-linkedin .si { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .share-social.s-x .si { background: var(--surface-3); color: var(--ink); }
+  .share-social.s-email .si { background: var(--c-clay-wash); color: #8C4534; }
+  .share-social.s-whatsapp .si { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .share-copy-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .share-message { margin-bottom: 22px; }
+  .share-message textarea.input {
+    width: 100%;
+    height: auto;
+    min-height: 72px;
+    padding: 11px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink);
+    background: var(--paper-2);
+    resize: vertical;
+  }
+  .share-copy-row { display: flex; gap: 8px; }
+  .share-copy-row .input {
+    flex: 1;
+    height: 40px;
+    font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: var(--paper-2);
+  }
+  .share-copy-row .btn { flex-shrink: 0; }
+  .share-note {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link is-active" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="page-head">
+  <div class="hero-left">
+    <h1 class="hero-title"><strong>Spread</strong> what you <em>learn.</em></h1>
+    <p class="hero-sub">Share a course with your network. Title, cover image, and duration travel with the link. The actual content stays gated by enrollment and persona.</p>
+  </div>
+</div>
+
+<div class="modal-scrim">
+  <div class="share-dialog" role="dialog" aria-modal="true" aria-labelledby="share-title">
+    <div class="share-head">
+      <h2 id="share-title">Share <em>this</em></h2>
+      <a href="../learning/course-detail.html" class="share-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
+    </div>
+
+    <div class="share-course">
+      <div class="share-cover"><img src="../img/A02-01.png" alt=""></div>
+      <div class="share-course-info">
+        <div class="share-course-title">Knowledge Mapping for Working Professionals</div>
+        <div class="share-course-url">imi.com/course/knowledge-mapping</div>
+      </div>
+    </div>
+
+    <div class="share-copy-label">Add a message</div>
+    <div class="share-message">
+      <textarea class="input" placeholder="Add a note to share with this course (optional)"></textarea>
+    </div>
+
+    <div class="share-socials">
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fimi.com%2Fcourse%2Fknowledge-mapping" target="_blank" rel="noopener" class="share-social s-linkedin">
+        <span class="si"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.45c0-1.3-.02-2.97-1.8-2.97-1.8 0-2.08 1.4-2.08 2.87V21H9z"/></svg></span>
+        LinkedIn
+      </a>
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fimi.com%2Fcourse%2Fknowledge-mapping&text=Knowledge+Mapping+for+Working+Professionals" target="_blank" rel="noopener" class="share-social s-x">
+        <span class="si"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.4 8.45L23 22h-6.6l-5.16-6.74L5.3 22H2.2l7.9-9.04L1.5 2h6.77l4.66 6.16zm-1.16 18h1.7L7.36 3.74H5.54z"/></svg></span>
+        X / Twitter
+      </a>
+      <a href="mailto:?subject=Knowledge%20Mapping%20for%20Working%20Professionals&body=Check%20out%20this%20course%3A%20https%3A%2F%2Fimi.com%2Fcourse%2Fknowledge-mapping" onclick="event.stopPropagation()" class="share-social s-email">
+        <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
+        Email
+      </a>
+      <a href="https://api.whatsapp.com/send?text=Knowledge+Mapping+for+Working+Professionals%20https%3A%2F%2Fimi.com%2Fcourse%2Fknowledge-mapping" target="_blank" rel="noopener" class="share-social s-whatsapp">
+        <span class="si"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.05L2 22l5.1-1.34A10 10 0 1 0 12 2zm5.5 14.1c-.23.65-1.34 1.24-1.84 1.28-.5.05-1.02.24-3.42-.71-2.9-1.14-4.74-4.1-4.88-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.08 1-2.37.23-.25.5-.31.67-.31h.48c.16 0 .36-.03.56.43.23.55.79 1.93.86 2.07.07.14.12.3.02.49-.1.19-.14.3-.28.47-.14.16-.3.36-.42.49-.14.14-.29.29-.12.57.16.28.73 1.2 1.57 1.95 1.08.96 1.99 1.26 2.27 1.4.28.14.44.12.61-.07.16-.19.7-.81.88-1.09.18-.28.37-.23.62-.14.25.1 1.6.76 1.88.9.28.14.46.21.53.33.07.12.07.65-.16 1.3z"/></svg></span>
+        WhatsApp
+      </a>
+    </div>
+
+    <div class="share-copy-label">Or copy link</div>
+    <div class="share-copy-row">
+      <input class="input" value="https://imi.com/course/knowledge-mapping" readonly>
+      <a class="btn btn-primary" href="#" onclick="navigator.clipboard.writeText('https://imi.com/course/knowledge-mapping');this.textContent='Copied!';setTimeout(function(){this.textContent='Copy';}.bind(this),2000);return false;">Copy</a>
+    </div>
+
+    <p class="share-note">Sharing reveals title + cover image + duration. Actual content stays gated by enrollment + persona.</p>
+  </div>
+</div>
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

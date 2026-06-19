@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learner detail · Ahmed Al-Balushi · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Back breadcrumb */
+  .ld-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    transition: color 0.15s;
+  }
+  .ld-back:hover { color: var(--ink); }
+
+  /* Profile header card */
+  .ld-profile {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 26px 30px;
+    margin-bottom: 26px;
+  }
+
+  /* Flat avatar: solid ink bg, initials in cream */
+  .ld-avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--hero-bg);
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    border: 1px solid var(--line-strong);
+  }
+
+  .ld-id { flex: 1; min-width: 0; }
+  .ld-name {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .ld-name h1 {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .ld-name h1 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .ld-meta {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .ld-actions {
+    display: flex;
+    gap: 9px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  /* KPI stat grid using flat stat cards */
+  .ld-statgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  /* Section label */
+  .ld-section-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  /* In-progress course grid */
+  .ld-prog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .ld-prog-card { padding: 20px 22px; }
+  .ld-prog-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .ld-prog-meta {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+    margin-bottom: 16px;
+  }
+  .ld-prog-bar { display: flex; align-items: center; gap: 12px; }
+  .ld-prog-bar .pct {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 34px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Color accents on left border of in-progress cards */
+  .ld-prog-card.accent-honey { border-left: 3px solid var(--c-honey); }
+  .ld-prog-card.accent-clay  { border-left: 3px solid var(--c-clay); }
+
+  /* Panel hide/show */
+  .ld-panel[hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Corporate</span>
+  </div>
+  <div class="search"><input placeholder="Search team, groups, courses..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Dashboard</span></a>
+      <a href="oa-team.html" class="sidebar-link is-active" data-nav="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span><span class="badge">487</span></a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Groups</span><span class="badge">12</span></a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Assignments</span><span class="badge">24</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Licenses</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <a class="ld-back" href="oa-team.html">&larr; Tenant users</a>
+
+    <!-- Learner profile header -->
+    <div class="card ld-profile">
+      <div class="ld-avatar">AB</div>
+      <div class="ld-id">
+        <div class="ld-name">
+          <h1>Ahmed <em>Al-Balushi</em></h1>
+          <span class="chip t-sage dot">Active</span>
+          <span class="chip">Lead Engineer</span>
+        </div>
+        <p class="ld-meta">ahmed.b@pdo.co.om &middot; Oman &middot; Joined 15 Jan 2024 &middot; Last active 2 min ago</p>
+      </div>
+      <div class="ld-actions">
+        <a class="btn btn-danger-ghost btn-sm" href="#" onclick="if(confirm('Suspend Ahmed Al-Balushi? They will lose access immediately.')){}; return false;">Suspend</a>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="is" data-tab="lrn-overview">Overview</button>
+      <button data-tab="lrn-courses">Courses (8)</button>
+      <button data-tab="lrn-certs">Completion proofs (5)</button>
+      <button data-tab="lrn-activity">Activity log</button>
+      <button data-tab="lrn-permissions">Permissions</button>
+    </div>
+
+    <!-- Overview panel -->
+    <div class="ld-panel" data-panel="lrn-overview">
+      <div class="ld-statgrid">
+        <div class="stat-flat">
+          <div class="stat-label">Hours learned</div>
+          <div class="stat-value">142.8<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:3px">h</span></div>
+        </div>
+        <div class="stat-flat">
+          <div class="stat-label">Courses completed</div>
+          <div class="stat-value">5 <span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">/ 8</span></div>
+        </div>
+        <div class="stat-flat">
+          <div class="stat-label">Avg score</div>
+          <div class="stat-value">84.2<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
+        </div>
+      </div>
+
+      <div class="ld-section-label">In-progress courses</div>
+      <div class="ld-prog-grid">
+        <div class="card ld-prog-card accent-honey">
+          <div class="ld-prog-title">ISO 30401 KM Standard</div>
+          <div class="ld-prog-meta">4 of 6 modules &middot; Last accessed 2 hr ago</div>
+          <div class="ld-prog-bar">
+            <div class="progress" style="flex:1"><div class="progress-fill honey" style="width:62%"></div></div>
+            <span class="pct">62%</span>
+          </div>
+        </div>
+        <div class="card ld-prog-card accent-clay">
+          <div class="ld-prog-title">Data Governance Essentials</div>
+          <div class="ld-prog-meta">2 of 5 modules &middot; Last accessed 3 days ago</div>
+          <div class="ld-prog-bar">
+            <div class="progress" style="flex:1"><div class="progress-fill clay" style="width:28%"></div></div>
+            <span class="pct">28%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Courses panel -->
+    <div class="ld-panel" data-panel="lrn-courses" hidden>
+      <div class="card">
+        <div class="card-head"><div class="card-title">All <em>courses</em> &middot; 8 enrolled</div></div>
+        <div class="card-body flush">
+          <table class="tbl">
+            <thead><tr><th>Course</th><th>Status</th><th>Score</th><th>Progress</th></tr></thead>
+            <tbody>
+              <tr><td>ISO 30401 KM Standard</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:62%"></div></div><span style="font-size:11px;width:30px">62%</span></div></td></tr>
+              <tr><td>Data Governance Essentials</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:28%"></div></div><span style="font-size:11px;width:30px">28%</span></div></td></tr>
+              <tr><td>Knowledge Capture Fundamentals</td><td><span class="chip t-sage dot">Course Completed</span></td><td>92%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
+              <tr><td>Information Security Annual</td><td><span class="chip t-sage dot">Course Completed</span></td><td>88%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
+              <tr><td>Data Lifecycle Management</td><td><span class="chip t-sage dot">Course Completed</span></td><td>81%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
+              <tr><td>Records &amp; Retention Policy</td><td><span class="chip t-sage dot">Course Completed</span></td><td>76%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
+              <tr><td>Metadata Standards Primer</td><td><span class="chip t-sage dot">Course Completed</span></td><td>84%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
+              <tr><td>Taxonomy Design Workshop</td><td><span class="chip t-clay dot">Dropped</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:15%"></div></div><span style="font-size:11px;width:30px">15%</span></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion proofs panel -->
+    <div class="ld-panel" data-panel="lrn-certs" hidden>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Completion <em>proofs</em> &middot; 5</div></div>
+        <div class="card-body flush">
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Knowledge Capture Fundamentals</div><div class="list-sub">Course Completed &middot; 04 Mar 2025 &middot; Score 92%</div></div><a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a></div>
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Information Security Annual</div><div class="list-sub">Course Completed &middot; 18 Feb 2025 &middot; Score 88%</div></div><a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a></div>
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Data Lifecycle Management</div><div class="list-sub">Course Completed &middot; 09 Jan 2025 &middot; Score 81%</div></div><a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a></div>
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Records &amp; Retention Policy</div><div class="list-sub">Course Completed &middot; 21 Nov 2024 &middot; Score 76%</div></div><a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a></div>
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Metadata Standards Primer</div><div class="list-sub">Course Completed &middot; 02 Oct 2024 &middot; Score 84%</div></div><a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity log panel -->
+    <div class="ld-panel" data-panel="lrn-activity" hidden>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Activity <em>log</em> &middot; last 30 days</div></div>
+        <div class="card-body flush">
+          <div class="list-row"><div class="list-icon t-honey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="list-body"><div class="list-title">Resumed &middot; ISO 30401 KM Standard</div><div class="list-sub">Module four &middot; 18 minutes</div></div><span class="list-meta">2H</span></div>
+          <div class="list-row"><div class="list-icon t-sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div class="list-body"><div class="list-title">Course Completed &middot; Knowledge Capture Fundamentals</div><div class="list-sub">Score 92%</div></div><span class="list-meta">6D</span></div>
+          <div class="list-row"><div class="list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div><div class="list-body"><div class="list-title">Logged in</div><div class="list-sub">Web &middot; Muscat, Oman</div></div><span class="list-meta">6D</span></div>
+          <div class="list-row"><div class="list-icon t-honey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="list-body"><div class="list-title">Started &middot; Data Governance Essentials</div><div class="list-sub">Module one</div></div><span class="list-meta">9D</span></div>
+          <div class="list-row"><div class="list-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div><div class="list-body"><div class="list-title">Logged in</div><div class="list-sub">Web &middot; Muscat, Oman</div></div><span class="list-meta">12D</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permissions panel -->
+    <div class="ld-panel" data-panel="lrn-permissions" hidden>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Tenant-scoped <em>access</em></div></div>
+        <div class="card-body flush">
+          <div class="list-row"><div class="list-body"><div class="list-title">Enrol in catalog courses</div><div class="list-sub">Self-serve from the tenant catalog</div></div><span class="chip t-sage dot">Allowed</span></div>
+          <div class="list-row"><div class="list-body"><div class="list-title">View own completion proofs</div><div class="list-sub">Download and share personal records</div></div><span class="chip t-sage dot">Allowed</span></div>
+          <div class="list-row"><div class="list-body"><div class="list-title">Access group reports</div><div class="list-sub">Engineering group dashboards and rankings</div></div><span class="chip t-sage dot">Allowed</span></div>
+          <div class="list-row"><div class="list-body"><div class="list-title">Manage other learners</div><div class="list-sub">Reserved for tenant admins</div></div><span class="chip t-clay dot">Restricted</span></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  /* ── Tab switcher ── */
+  var tabs = document.querySelectorAll('.tabs button[data-tab]');
+  var panels = document.querySelectorAll('.ld-panel[data-panel]');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('is'); });
+      tab.classList.add('is');
+      var target = tab.getAttribute('data-tab');
+      panels.forEach(function (p) {
+        p.hidden = p.getAttribute('data-panel') !== target;
+      });
+    });
+  });
+
+  /* ── toast helper ── */
+  function showToast(msg) {
+    var t = document.getElementById('imi-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'imi-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._tid);
+    t._tid = setTimeout(function () { t.style.opacity = '0'; }, 3000);
+  }
+
+  /* ── topbar search ── */
+  var srch = document.querySelector('.search input');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'oa-team.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── Suspend button: confirm then apply suspended state visually ── */
+  var suspendBtn = document.querySelector('.btn-danger-ghost');
+  if (suspendBtn) suspendBtn.onclick = function (e) {
+    e.preventDefault();
+    if (confirm('Suspend Ahmed Al-Balushi? They will lose access immediately.')) {
+      var chip = document.querySelector('.chip.t-sage.dot');
+      if (chip) { chip.className = 'chip t-clay dot'; chip.textContent = 'Suspended'; }
+      suspendBtn.textContent = 'Unsuspend';
+      suspendBtn.className = 'btn btn-ghost btn-sm';
+      suspendBtn.onclick = function (ev) {
+        ev.preventDefault();
+        if (confirm('Unsuspend Ahmed Al-Balushi? They will regain access.')) {
+          var chip2 = document.querySelector('.chip.t-clay.dot');
+          if (chip2) { chip2.className = 'chip t-sage dot'; chip2.textContent = 'Active'; }
+          suspendBtn.textContent = 'Suspend';
+          suspendBtn.className = 'btn btn-danger-ghost btn-sm';
+        }
+      };
+      showToast('Ahmed Al-Balushi has been suspended.');
+    }
+  };
+
+  /* ── In-progress course cards navigate to oa-course-detail ── */
+  document.querySelectorAll('.ld-prog-card').forEach(function (card) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function () {
+      location.href = 'oa-course-detail.html';
+    });
+  });
+
+  /* ── Courses panel: table rows navigate to course detail ── */
+  document.querySelectorAll('[data-panel="lrn-courses"] .tbl tbody tr').forEach(function (row) {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function () {
+      location.href = 'oa-course-detail.html';
+    });
+  });
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

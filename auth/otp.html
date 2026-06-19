@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OTP Verify · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* top strip */
+  .sa-top {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img { height: 28px; width: auto; display: block; }
+  .sa-brand-text {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sa-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* centered layout */
+  .sa-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .sa-main { width: 100%; max-width: 460px; }
+
+  /* auth card */
+  .auth-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 44px 40px 36px;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+  }
+
+  /* centered logo lockup */
+  .auth-lockup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+  .auth-lockup img { height: 38px; width: auto; display: block; }
+
+  /* eyebrow + heading */
+  .auth-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .auth-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .auth-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .auth-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+  .auth-email {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  /* OTP digit row */
+  .otp-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .otp-box {
+    width: 54px;
+    height: 64px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--paper-2);
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    caret-color: transparent;
+  }
+  .otp-box:focus, .otp-box.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(184, 82, 62, 0.10);
+    background: var(--paper);
+  }
+  .otp-box.filled {
+    background: var(--paper);
+    border-color: var(--ink-mute);
+  }
+
+  /* expiry */
+  .otp-expiry {
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+    font-family: var(--font-label);
+    letter-spacing: 0.02em;
+  }
+  .otp-expiry strong {
+    color: var(--ink);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* primary CTA */
+  .btn-full {
+    width: 100%;
+    justify-content: center;
+    height: 48px;
+    font-size: 14px;
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+  }
+
+  /* divider */
+  .auth-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 24px 0 20px;
+  }
+
+  /* footer links */
+  .auth-foot {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .auth-foot a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .auth-foot + .auth-foot { margin-top: 8px; }
+  .auth-foot.help a { font-weight: 500; color: var(--ink-soft); }
+  .auth-foot.help a:hover { color: var(--ink); }
+
+  /* legal strip */
+  .auth-legal {
+    margin-top: 28px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+  }
+  .auth-legal a {
+    color: var(--ink-mute);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .auth-legal a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="sa-top">
+  <a class="sa-brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" alt="IMI">
+    <span class="sa-brand-text">IMI</span>
+    <span class="sa-brand-sub">Learning</span>
+  </a>
+</div>
+
+<div class="sa-wrap">
+  <main class="sa-main">
+    <div class="auth-card">
+
+      <a class="auth-lockup" href="../learning/dashboard.html">
+        <img src="../img/imi-logo.png" alt="IMI">
+      </a>
+
+      <p class="auth-eyebrow">Verify your email</p>
+      <h1 class="auth-title">Check your <em>inbox</em></h1>
+      <p class="auth-sub">We sent a 6-digit code to</p>
+      <p class="auth-email" id="otp-dest">salman@webinnoventix.com</p>
+
+      <div class="otp-row" id="otp-row">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+      </div>
+
+      <div id="otp-error" style="display:none;margin-bottom:12px;font-size:12.5px;color:var(--c-warn-text,#b85200);font-weight:500;text-align:center;"></div>
+
+      <p class="otp-expiry">Code expires in <strong id="otp-timer">10:00</strong></p>
+
+      <button class="btn btn-primary btn-full" id="btn-verify" type="button">Verify &rarr;</button>
+
+      <div class="auth-divider"></div>
+
+      <p class="auth-foot">Didn't get it? <button id="btn-resend" class="btn btn-ghost btn-sm" type="button" disabled style="font-size:13px;">Resend code (<span id="resend-cd">0:30</span>)</button></p>
+      <p class="auth-foot help"><a href="../profile/help-center.html">Need help?</a></p>
+
+      <div class="auth-legal">
+        <a href="../profile/help-center.html" rel="privacy">Privacy Policy</a>
+        <a href="../profile/help-center.html" rel="terms">Terms of Service</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var email = sessionStorage.getItem('imi_email') || 'your email';
+  var destEl = document.getElementById('otp-dest');
+  if (destEl) destEl.textContent = email;
+
+  var boxes = Array.from(document.querySelectorAll('.otp-box'));
+  var timerEl = document.getElementById('otp-timer');
+  var errEl = document.getElementById('otp-error');
+  var btnVerify = document.getElementById('btn-verify');
+  var btnResend = document.getElementById('btn-resend');
+  var resendCdEl = document.getElementById('resend-cd');
+
+  /* OTP input wiring */
+  boxes.forEach(function (box, i) {
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Backspace') {
+        if (box.value === '' && i > 0) { boxes[i - 1].focus(); boxes[i - 1].value = ''; }
+        box.value = '';
+        updateFilled();
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft' && i > 0) {
+        boxes[i - 1].focus(); e.preventDefault();
+      } else if (e.key === 'ArrowRight' && i < boxes.length - 1) {
+        boxes[i + 1].focus(); e.preventDefault();
+      }
+    });
+
+    box.addEventListener('input', function () {
+      var v = box.value.replace(/\D/g, '');
+      if (v.length > 1) {
+        var digits = v.split('');
+        digits.forEach(function (d, j) { if (boxes[i + j]) boxes[i + j].value = d; });
+        var next = Math.min(i + digits.length, boxes.length - 1);
+        boxes[next].focus();
+      } else {
+        box.value = v;
+        if (v && i < boxes.length - 1) boxes[i + 1].focus();
+      }
+      updateFilled();
+    });
+
+    box.addEventListener('focus', function () { box.select(); });
+  });
+
+  function updateFilled() {
+    boxes.forEach(function (b) { b.classList.toggle('filled', b.value !== ''); });
+    clearError();
+  }
+
+  function getCode() { return boxes.map(function (b) { return b.value; }).join(''); }
+
+  function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
+  function clearError() { errEl.style.display = 'none'; }
+
+  /* expiry countdown: 10 min */
+  var expiryLeft = 600;
+  var expiryIv = setInterval(function () {
+    expiryLeft--;
+    if (expiryLeft <= 0) {
+      clearInterval(expiryIv);
+      timerEl.textContent = '0:00';
+      timerEl.style.color = 'var(--c-warn-text, #b85200)';
+      showError('This code has expired. Request a new one below.');
+      btnVerify.disabled = true;
+    } else {
+      var m = Math.floor(expiryLeft / 60);
+      var s = expiryLeft % 60;
+      timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }
+  }, 1000);
+
+  /* resend countdown: 30 s */
+  var resendLeft = 30;
+  var resendIv = setInterval(function () {
+    resendLeft--;
+    if (resendLeft <= 0) {
+      clearInterval(resendIv);
+      btnResend.disabled = false;
+      btnResend.innerHTML = 'Resend code';
+    } else {
+      resendCdEl.textContent = '0:' + (resendLeft < 10 ? '0' : '') + resendLeft;
+    }
+  }, 1000);
+
+  btnResend.addEventListener('click', function () {
+    if (btnResend.disabled) return;
+    window.location.href = 'resend-otp.html';
+  });
+
+  /* verify */
+  btnVerify.addEventListener('click', function () {
+    var code = getCode();
+    if (code.length < 6) {
+      showError('Please enter all 6 digits of your code.');
+      var emptyIdx = boxes.findIndex(function (b) { return b.value === ''; });
+      if (emptyIdx >= 0) boxes[emptyIdx].focus();
+      return;
+    }
+    clearError();
+    btnVerify.textContent = 'Verifying...';
+    btnVerify.disabled = true;
+    /* Prototype: route to email-verification for new signups, dashboard for returning logins */
+    var isSignup = sessionStorage.getItem('imi_first') || sessionStorage.getItem('imi_last');
+    setTimeout(function () {
+      window.location.href = isSignup ? 'email-verification.html' : '../learning/dashboard.html';
+    }, 800);
+  });
+
+  boxes[0].focus();
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

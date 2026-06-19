@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Issue reporting · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .form-wrap { max-width: 760px; }
+
+  /* field overrides for this form */
+  .field-lg { margin-bottom: 22px; }
+  .field-lg label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .field-lg .req { color: var(--accent); margin-left: 2px; }
+  .input-lg {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    border-radius: var(--r-sm);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .input-lg:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+  }
+  textarea.input-lg {
+    height: auto;
+    padding: 12px 16px;
+    line-height: 1.55;
+    resize: vertical;
+  }
+  select.input-lg {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 42px;
+    cursor: pointer;
+  }
+  .btn-full { width: 100%; justify-content: center; padding: 14px; font-size: 14px; }
+
+  /* upload zone */
+  .upload-zone {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    background: var(--paper-2);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .upload-zone:hover,
+  .upload-zone.drag-over {
+    border-color: var(--c-honey);
+    background: var(--c-honey-wash);
+  }
+  .upload-zone input[type="file"] { display: none; }
+  .upload-icon { color: var(--ink-mute); margin-bottom: 10px; }
+  .upload-hint { font-size: 13px; color: var(--ink-soft); }
+  .upload-hint strong { color: var(--c-honey-text); font-weight: 600; }
+  .upload-sub { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+  /* file list */
+  .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .file-item {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+  }
+  .file-item-icon { color: var(--ink-mute); flex-shrink: 0; }
+  .file-item-body { min-width: 0; }
+  .file-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .file-item-size { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+
+  .file-progress-wrap {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-progress-track {
+    flex: 1;
+    height: 5px;
+    background: var(--surface-3);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .file-progress-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--c-sage);
+    transition: width 0.25s ease;
+    width: 0%;
+  }
+  .file-progress-bar.done { background: var(--c-sage); }
+  .file-status {
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .file-status.pending   { color: var(--ink-mute); }
+  .file-status.uploading { color: var(--c-honey-text); }
+  .file-status.done      { color: var(--c-sage-text); }
+  .file-status.error     { color: var(--accent); }
+
+  .file-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-faint);
+    padding: 4px;
+    border-radius: var(--r-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+  }
+  .file-remove:hover { color: var(--c-danger); background: var(--c-danger-wash); }
+  .file-remove.hidden { visibility: hidden; pointer-events: none; }
+
+  /* back breadcrumb */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--ink); }
+  .back-link svg { width: 14px; height: 14px; }
+
+  /* divider inside card */
+  .form-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 6px 0 26px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a href="help-center.html" class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none">
+      <div class="avatar-ring" style="--pct:68">
+        <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+        <span class="ring-pct">68%</span>
+      </div>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span><span class="badge">8</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Wishlist</span><span class="badge">12</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Course Completed</span><span class="badge">5</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="form-wrap">
+
+      <a href="help-center.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Help Centre
+      </a>
+
+      <div class="page-head" style="grid-template-columns:1fr;margin-bottom:24px">
+        <div>
+          <div class="eyebrow">Help &middot; Support</div>
+          <h1 class="page-title">Report an <em>issue</em></h1>
+          <p class="page-sub">Tell us what happened and our support team will look into it.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Submit a support ticket</span>
+          <span class="chip t-sage dot">Support</span>
+        </div>
+        <div class="card-body" style="padding:28px 28px 32px">
+
+          <div class="field-lg">
+            <label>Issue type <span class="req">*</span></label>
+            <select class="input-lg">
+              <option>Select issue category...</option>
+              <option>Account / sign-in problem</option>
+              <option>Profile completion issue</option>
+              <option>Course enrolment problem</option>
+              <option>Video / playback not working</option>
+              <option>Quiz / assessment issue</option>
+              <option>Course completion proof not generated / wrong name</option>
+              <option>Notification not received</option>
+              <option>Corporate / tenant issue</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field-lg">
+            <label>Which page or course is affected?</label>
+            <input class="input-lg" placeholder="e.g. Course player &middot; Knowledge Mapping &middot; Lesson 4">
+          </div>
+
+          <div class="field-lg">
+            <label>Describe the issue <span class="req">*</span></label>
+            <textarea class="input-lg" rows="5" placeholder="What happened? What did you expect? What did you see instead?"></textarea>
+          </div>
+
+          <div class="field-lg" style="margin-bottom:28px">
+            <label>Attachments <span style="color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx,.txt,.mp4">
+              <div class="upload-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <p class="upload-hint"><strong>Click to upload</strong> or drag and drop</p>
+              <p class="upload-sub">Screenshots, videos, or documents up to 20 MB each</p>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+
+          <div class="field-lg" style="margin-bottom:4px">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-weight:400;text-transform:none;letter-spacing:0;font-size:13px;cursor:pointer">
+              <input type="checkbox" id="diagInfoCb" checked style="margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--accent)">
+              <span style="color:var(--ink-soft);line-height:1.5">Include diagnostic info (current page URL, browser/device, session ID). Helps support resolve faster.</span>
+            </label>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <button class="btn btn-primary btn-full" id="submitBtn" onclick="submitTicket(event)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Submit ticket
+          </button>
+
+        </div>
+      </div>
+
+      <p style="margin-top:16px;font-family:var(--font-label);font-size:11px;letter-spacing:0.04em;color:var(--ink-faint);text-align:center">
+        Our support team typically responds within 1 business day. &nbsp;&middot;&nbsp;
+        <a href="help-center.html" style="color:var(--ink-soft);text-decoration:underline">Your tickets &middot; View all (2 open)</a>
+      </p>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function() {
+  var zone = document.getElementById('uploadZone');
+  var input = document.getElementById('fileInput');
+  var list  = document.getElementById('fileList');
+  var files = [];
+
+  function fmt(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+    return (bytes/1048576).toFixed(1) + ' MB';
+  }
+
+  function fileIcon() {
+    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>';
+  }
+
+  function addFiles(newFiles) {
+    Array.from(newFiles).forEach(function(f) {
+      var id = 'f' + Date.now() + Math.random().toString(36).slice(2);
+      var entry = { id: id, file: f, status: 'pending', progress: 0 };
+      files.push(entry);
+      renderItem(entry);
+      setTimeout(function() { simulateUpload(entry); }, 80);
+    });
+  }
+
+  function renderItem(entry) {
+    var el = document.createElement('div');
+    el.className = 'file-item';
+    el.id = entry.id;
+    el.innerHTML =
+      '<div class="file-item-icon">' + fileIcon() + '</div>' +
+      '<div class="file-item-body">' +
+        '<div class="file-item-name">' + entry.file.name + '</div>' +
+        '<div class="file-item-size">' + fmt(entry.file.size) + '</div>' +
+        '<div class="file-progress-wrap">' +
+          '<div class="file-progress-track"><div class="file-progress-bar" id="bar-' + entry.id + '" style="width:0%"></div></div>' +
+          '<span class="file-status pending" id="st-' + entry.id + '">Ready</span>' +
+        '</div>' +
+      '</div>' +
+      '<button class="file-remove" id="rm-' + entry.id + '" aria-label="Remove file" title="Remove">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>';
+    list.appendChild(el);
+
+    document.getElementById('rm-' + entry.id).addEventListener('click', function() {
+      removeFile(entry.id);
+    });
+  }
+
+  function removeFile(id) {
+    var entry = files.find(function(f) { return f.id === id; });
+    if (!entry || entry.status === 'uploading') return;
+    files = files.filter(function(f) { return f.id !== id; });
+    var el = document.getElementById(id);
+    if (el) el.remove();
+  }
+
+  function simulateUpload(entry) {
+    entry.status = 'uploading';
+    var bar = document.getElementById('bar-' + entry.id);
+    var st  = document.getElementById('st-'  + entry.id);
+    var rm  = document.getElementById('rm-'  + entry.id);
+    if (st) { st.className = 'file-status uploading'; st.textContent = 'Uploading...'; }
+    if (rm) rm.classList.add('hidden');
+
+    var pct = 0;
+    var iv = setInterval(function() {
+      pct += Math.random() * 18 + 4;
+      if (pct >= 100) { pct = 100; clearInterval(iv); finish(); }
+      if (bar) bar.style.width = pct + '%';
+    }, 180);
+
+    function finish() {
+      entry.status = 'done';
+      if (bar) bar.classList.add('done');
+      if (st)  { st.className = 'file-status done'; st.textContent = 'Uploaded'; }
+    }
+  }
+
+  zone.addEventListener('click', function(e) {
+    if (e.target.closest('.file-remove')) return;
+    input.click();
+  });
+
+  input.addEventListener('change', function() {
+    addFiles(input.files);
+    input.value = '';
+  });
+
+  zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    addFiles(e.dataTransfer.files);
+  });
+
+})();
+
+function submitTicket(e) {
+  e.preventDefault();
+  var issueType = document.querySelector('.card-body select.input-lg');
+  var desc      = document.querySelector('.card-body textarea.input-lg');
+  if (!issueType || issueType.selectedIndex === 0) {
+    issueType && issueType.focus();
+    shakeFocus(issueType);
+    return;
+  }
+  if (!desc || !desc.value.trim()) {
+    desc && desc.focus();
+    shakeFocus(desc);
+    return;
+  }
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ticket submitted';
+  btn.style.background = 'var(--c-sage)';
+  showTicketToast();
+  setTimeout(function() { location.href = 'help-center.html'; }, 2400);
+}
+
+function shakeFocus(el) {
+  if (!el) return;
+  el.style.outline = '2px solid var(--c-danger)';
+  setTimeout(function(){ el.style.outline = ''; }, 1800);
+}
+
+function showTicketToast() {
+  var t = document.createElement('div');
+  t.textContent = 'Ticket submitted. We\'ll respond within 1 business day.';
+  t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--c-sage);color:#fff;padding:12px 24px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.15);white-space:nowrap;';
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 3000);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

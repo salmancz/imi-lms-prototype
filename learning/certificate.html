@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Completed · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .cc-wrap { max-width: 1040px; }
+
+  .sort-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .sort-bar .count {
+    font-family: var(--font-label);
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  .sort-select {
+    height: 30px;
+    padding: 0 30px 0 12px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    font-size: 12px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+  }
+
+  /* completed-proof grid */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .proof-grid { grid-template-columns: 1fr; } }
+
+  .proof-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    border: 1.5px solid rgba(201, 155, 46, 0.30);
+    border-radius: var(--r-lg);
+    padding: 22px 24px 20px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.25s var(--tn), box-shadow 0.25s, border-color 0.2s;
+  }
+  .proof-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(201, 155, 46, 0.55);
+    box-shadow: var(--shadow-card);
+  }
+  .proof-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .proof-seal {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--c-honey-wash);
+    border: 2px solid rgba(201, 155, 46, 0.55);
+    font-family: var(--font-label);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: var(--c-honey-text);
+    flex-shrink: 0;
+    box-shadow: var(--shadow-xs);
+  }
+  .proof-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+  }
+  .proof-course {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .proof-org {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+  .proof-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(201, 155, 46, 0.30);
+  }
+  .proof-date {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+  .proof-date strong { color: var(--ink); font-weight: 700; }
+  .proof-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 1px;
+  }
+  .proof-view svg { width: 13px; height: 13px; }
+
+  /* pro-credential proof keeps "Certificate" terminology */
+  .proof-card.t-cred {
+    background: var(--c-sage-wash);
+    border-color: rgba(126, 155, 111, 0.32);
+  }
+  .proof-card.t-cred:hover { border-color: rgba(126, 155, 111, 0.55); }
+  .proof-card.t-cred .proof-seal {
+    background: var(--c-sage-soft);
+    border-color: rgba(126, 155, 111, 0.55);
+    color: var(--c-sage-text);
+  }
+  .proof-card.t-cred .proof-eyebrow { color: var(--c-sage-text); }
+  .proof-card.t-cred .proof-foot { border-top-color: rgba(126, 155, 111, 0.32); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link is-active" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="cc-wrap">
+
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Your proofs</div>
+      <h1 class="page-title">Course <em>Completed</em></h1>
+      <p class="page-sub">Every course you have finished, with its completion proof. Open any one to view, share, or download it.</p>
+    </div>
+    <div class="page-actions" style="justify-content:flex-end;align-items:flex-start;padding-top:6px">
+      <a class="btn btn-ghost" href="catalog.html">Browse catalog</a>
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <span class="count">5 courses completed</span>
+    <select class="sort-select" id="sort-select" aria-label="Sort by">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="name">Course name</option>
+    </select>
+  </div>
+
+  <div class="proof-grid">
+
+    <a class="proof-card" href="completed-proof-detail.html" data-date="2026-05-14" data-name="Data Quality Foundations">
+      <div class="proof-card-head">
+        <div class="proof-seal">IMI</div>
+        <div class="proof-eyebrow">Course Completed</div>
+      </div>
+      <div class="proof-course">Data Quality Foundations</div>
+      <div class="proof-org">CDMP Career Path · Information Management Institute</div>
+      <div class="proof-foot">
+        <span class="proof-date">Completed <strong>14 May 2026</strong></span>
+        <span class="proof-view">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </div>
+    </a>
+
+    <a class="proof-card" href="completed-proof-detail.html" data-date="2026-04-02" data-name="Metadata Management Essentials">
+      <div class="proof-card-head">
+        <div class="proof-seal">IMI</div>
+        <div class="proof-eyebrow">Course Completed</div>
+      </div>
+      <div class="proof-course">Metadata Management Essentials</div>
+      <div class="proof-org">CDMP Career Path · Information Management Institute</div>
+      <div class="proof-foot">
+        <span class="proof-date">Completed <strong>2 Apr 2026</strong></span>
+        <span class="proof-view">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </div>
+    </a>
+
+    <a class="proof-card t-cred" href="completed-proof-detail.html" data-date="2026-03-18" data-name="CDMP Associate Examination">
+      <div class="proof-card-head">
+        <div class="proof-seal">CDMP</div>
+        <div class="proof-eyebrow">CDMP Certificate</div>
+      </div>
+      <div class="proof-course">CDMP Associate Examination</div>
+      <div class="proof-org">Professional Credential · Information Management Institute</div>
+      <div class="proof-foot">
+        <span class="proof-date">Completed <strong>18 Mar 2026</strong></span>
+        <span class="proof-view">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </div>
+    </a>
+
+    <a class="proof-card" href="completed-proof-detail.html" data-date="2026-02-27" data-name="Data Governance Operating Models">
+      <div class="proof-card-head">
+        <div class="proof-seal">IMI</div>
+        <div class="proof-eyebrow">Course Completed</div>
+      </div>
+      <div class="proof-course">Data Governance Operating Models</div>
+      <div class="proof-org">CDMP Career Path · Information Management Institute</div>
+      <div class="proof-foot">
+        <span class="proof-date">Completed <strong>27 Feb 2026</strong></span>
+        <span class="proof-view">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </div>
+    </a>
+
+    <a class="proof-card" href="completed-proof-detail.html" data-date="2026-01-09" data-name="Introduction to Data Management">
+      <div class="proof-card-head">
+        <div class="proof-seal">IMI</div>
+        <div class="proof-eyebrow">Course Completed</div>
+      </div>
+      <div class="proof-course">Introduction to Data Management</div>
+      <div class="proof-org">Foundations Track · Information Management Institute</div>
+      <div class="proof-foot">
+        <span class="proof-date">Completed <strong>9 Jan 2026</strong></span>
+        <span class="proof-view">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  var sel = document.getElementById('sort-select');
+  var grid = document.querySelector('.proof-grid');
+  var countEl = document.querySelector('.sort-bar .count');
+  if (!sel || !grid) return;
+  sel.addEventListener('change', function () {
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.proof-card'));
+    var val = sel.value;
+    cards.sort(function (a, b) {
+      if (val === 'name') {
+        return (a.dataset.name || '').localeCompare(b.dataset.name || '');
+      }
+      var da = a.dataset.date || '', db = b.dataset.date || '';
+      return val === 'oldest' ? da.localeCompare(db) : db.localeCompare(da);
+    });
+    cards.forEach(function (c) { grid.appendChild(c); });
+    if (countEl) countEl.textContent = cards.length + ' courses completed';
+  });
+})();
+</script>
+</body>
+</html>

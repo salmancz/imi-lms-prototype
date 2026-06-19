@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate list (Super Admin) · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- toolbar ---- */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .filter-select {
+    height: 36px;
+    padding: 0 32px 0 14px;
+    border: 1px solid var(--line);
+    background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center / 13px;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    color: var(--ink);
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+  }
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    background-color: var(--paper);
+  }
+
+  /* ---- table helpers ---- */
+  .org-id {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+  }
+  .tenant-link {
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tenant-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .joined-cell {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .row-menu {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-pill);
+    display: inline-grid;
+    place-items: center;
+    color: var(--ink-mute);
+    transition: background 0.15s, color 0.15s;
+  }
+  .row-menu:hover {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+
+  /* ---- pager ---- */
+  .pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 18px;
+  }
+  .pager .count {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+  }
+  .pager .pages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pager .pages .page-pos {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    padding: 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- stat strip (flat, no gradients) ---- */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .stat-strip { grid-template-columns: 1fr; } }
+
+  .stat-tile {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    transition: transform 0.22s var(--tn), box-shadow 0.22s, border-color 0.18s;
+  }
+  .stat-tile:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-card);
+  }
+  .stat-tile .st-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-tile .st-label span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .stat-tile .st-value {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-tile .st-sub {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../admin/admin-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input id="cl-topbar-search" placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter'&&this.value.trim()){document.getElementById('cl-tenant-search').value=this.value.trim();clFilter();}"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" id="help-btn-cl" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../admin/admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="../admin/user-management.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="../admin/roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="../admin/admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="corp-list.html" class="sidebar-link is-active" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="../admin/admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="../admin/audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="../admin/admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Corporate</div>
+        <h1 class="page-title">Corporate <em>management</em></h1>
+        <p class="page-sub">All tenant organisations using IMI.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="corp-submit-idea.html">Submit an idea</a>
+        <div class="search" style="max-width:220px"><input id="cl-tenant-search" placeholder="Search tenants&hellip;" oninput="clFilter()"></div>
+        <a class="btn btn-primary" href="corp-create-tenant.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Onboard new tenant
+        </a>
+      </div>
+    </div>
+
+    <!-- KPI stat strip (flat tiles, zero gradients) -->
+    <div class="stat-strip">
+      <div class="stat-tile">
+        <div class="st-label">
+          <span style="background:var(--c-clay)"></span>
+          Active tenants
+        </div>
+        <div class="st-value">26</div>
+        <div class="st-sub">of 28 total</div>
+      </div>
+      <div class="stat-tile">
+        <div class="st-label">
+          <span style="background:var(--c-honey)"></span>
+          New this quarter
+        </div>
+        <div class="st-value">12</div>
+        <div class="st-sub">Q1 2026</div>
+      </div>
+      <div class="stat-tile">
+        <div class="st-label">
+          <span style="background:var(--ink-faint)"></span>
+          Inactive tenants
+        </div>
+        <div class="st-value">2</div>
+        <div class="st-sub">not currently active</div>
+      </div>
+      <div class="stat-tile">
+        <div class="st-label">
+          <span style="background:var(--c-sage)"></span>
+          Active learners
+        </div>
+        <div class="st-value">8,720</div>
+        <div class="st-sub">across tenants</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="toolbar">
+      <select class="filter-select" id="cl-industry-filter" onchange="clFilter()">
+        <option value="">All industries</option>
+        <option value="Technology">Technology</option>
+        <option value="Banking">Banking</option>
+        <option value="Energy">Energy</option>
+        <option value="Telecom">Telecom</option>
+        <option value="Government">Government</option>
+        <option value="Construction">Construction</option>
+      </select>
+      <select class="filter-select" id="cl-status-filter" onchange="clFilter()">
+        <option value="">All statuses</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+      <select class="filter-select" id="cl-country-filter" onchange="clFilter()">
+        <option value="">All countries</option>
+        <option value="Oman">Oman</option>
+        <option value="UAE">UAE</option>
+        <option value="Bahrain">Bahrain</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Kuwait">Kuwait</option>
+      </select>
+    </div>
+
+    <!-- Tenant table -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Tenant organisations</span>
+        <span class="chip">28 total</span>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Org ID</th>
+              <th>Industry</th>
+              <th>Country</th>
+              <th>Active users</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-name="TechVision Solutions" data-industry="Technology" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">TechVision Solutions</a></td>
+              <td><span class="org-id">T-0001</span></td>
+              <td>Technology</td>
+              <td>Oman</td>
+              <td>198</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Nov 2025</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'TechVision Solutions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Bank Muscat" data-industry="Banking" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Bank Muscat</a></td>
+              <td><span class="org-id">T-0002</span></td>
+              <td>Banking</td>
+              <td>Oman</td>
+              <td>287</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Jan 2026</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Bank Muscat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Petroleum Development Oman" data-industry="Energy" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Petroleum Development Oman</a></td>
+              <td><span class="org-id">T-0003</span></td>
+              <td>Energy</td>
+              <td>Oman</td>
+              <td>162</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Feb 2026</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Petroleum Development Oman')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Omantel" data-industry="Telecom" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Omantel</a></td>
+              <td><span class="org-id">T-0004</span></td>
+              <td>Telecom</td>
+              <td>Oman</td>
+              <td>78</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Dec 2025</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Omantel')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Ministry of Finance" data-industry="Government" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Ministry of Finance</a></td>
+              <td><span class="org-id">T-0005</span></td>
+              <td>Government</td>
+              <td>Oman</td>
+              <td>134</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Oct 2025</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Ministry of Finance')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Bahwan CyberTek" data-industry="Technology" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Bahwan CyberTek</a></td>
+              <td><span class="org-id">T-0006</span></td>
+              <td>Technology</td>
+              <td>Oman</td>
+              <td>52</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Mar 2026</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Bahwan CyberTek')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Royal Oman Police" data-industry="Government" data-status="Inactive" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Royal Oman Police</a></td>
+              <td><span class="org-id">T-0007</span></td>
+              <td>Government</td>
+              <td>Oman</td>
+              <td>38</td>
+              <td><span class="chip t-clay dot">Inactive</span></td>
+              <td><span class="joined-cell">May 2026</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Royal Oman Police')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+            <tr data-name="Galfar Engineering" data-industry="Construction" data-status="Active" data-country="Oman" onclick="location.href='corp-detail.html'" style="cursor:pointer">
+              <td><a href="corp-detail.html" class="tenant-link" onclick="event.stopPropagation()">Galfar Engineering</a></td>
+              <td><span class="org-id">T-0008</span></td>
+              <td>Construction</td>
+              <td>Oman</td>
+              <td>65</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td><span class="joined-cell">Sep 2025</span></td>
+              <td><button class="row-menu" aria-label="Tenant actions" onclick="event.stopPropagation();clOpenRowMenu(event,this,'Galfar Engineering')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pager -->
+    <div class="pager">
+      <span class="count" id="cl-count">Showing 1&ndash;8 of 28 tenants</span>
+      <div class="pages">
+        <button class="btn btn-ghost btn-sm" id="cl-prev-btn" aria-label="Previous page" onclick="clPage(-1)" disabled>&#9664;</button>
+        <span class="page-pos" id="cl-page-pos">1 of 4</span>
+        <button class="btn btn-ghost btn-sm" id="cl-next-btn" aria-label="Next page" onclick="clPage(1)">&#9654;</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Row menu -->
+<div id="cl-row-menu" style="display:none;position:fixed;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:500;min-width:160px;padding:4px 0">
+  <div style="padding:8px 16px;font-size:13px;cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="clRowAction('view')">View tenant</div>
+  <div style="padding:8px 16px;font-size:13px;cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="clRowAction('edit')">Edit details</div>
+  <div style="padding:8px 16px;font-size:13px;color:var(--c-clay);cursor:pointer;transition:background 0.12s;border-top:1px solid var(--line);margin-top:4px" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="clRowAction('suspend')">Suspend tenant</div>
+</div>
+<div id="cl-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)"></div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(){ document.querySelector('.ad-strip').style.display='none'; });
+
+  var helpBtn = document.getElementById('help-btn-cl');
+  if(helpBtn) helpBtn.addEventListener('click', function(){ clShowToast('Help centre coming soon.'); });
+
+  document.addEventListener('click', function(e){
+    var menu = document.getElementById('cl-row-menu');
+    if(menu && !menu.contains(e.target)) menu.style.display='none';
+  });
+})();
+
+var _clPage = 0;
+var _clPageSize = 8;
+var _clActiveTenant = '';
+
+function clFilter(){
+  var q = (document.getElementById('cl-tenant-search').value||'').toLowerCase();
+  var ind = document.getElementById('cl-industry-filter').value;
+  var stat = document.getElementById('cl-status-filter').value;
+  var cntry = document.getElementById('cl-country-filter').value;
+  var rows = Array.from(document.querySelectorAll('.tbl tbody tr'));
+  var visible = rows.filter(function(r){
+    var name = (r.dataset.name||'').toLowerCase();
+    var industry = r.dataset.industry||'';
+    var status = r.dataset.status||'';
+    var country = r.dataset.country||'';
+    return (!q || name.includes(q)) &&
+           (!ind || industry === ind) &&
+           (!stat || status === stat) &&
+           (!cntry || country === cntry);
+  });
+  _clPage = 0;
+  clRender(rows, visible);
+}
+
+function clRender(allRows, visible){
+  allRows.forEach(function(r){ r.style.display='none'; });
+  var start = _clPage * _clPageSize;
+  var end = start + _clPageSize;
+  visible.slice(start, end).forEach(function(r){ r.style.display=''; });
+  var count = document.getElementById('cl-count');
+  if(count) count.textContent = 'Showing ' + Math.min(end, visible.length) + ' of ' + visible.length + ' tenants';
+  var totalPages = Math.max(1, Math.ceil(visible.length / _clPageSize));
+  var pp = document.getElementById('cl-page-pos');
+  if(pp) pp.textContent = (_clPage+1) + ' of ' + totalPages;
+  var prev = document.getElementById('cl-prev-btn');
+  var next = document.getElementById('cl-next-btn');
+  if(prev) prev.disabled = _clPage === 0;
+  if(next) next.disabled = end >= visible.length;
+  window._clVisibleRows = visible;
+}
+
+function clPage(dir){
+  _clPage += dir;
+  var allRows = Array.from(document.querySelectorAll('.tbl tbody tr'));
+  clRender(allRows, window._clVisibleRows || allRows);
+}
+
+function clOpenRowMenu(e, btn, name){
+  _clActiveTenant = name;
+  var menu = document.getElementById('cl-row-menu');
+  var rect = btn.getBoundingClientRect();
+  menu.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+  menu.style.left = (rect.right - 160) + 'px';
+  menu.style.display='block';
+}
+
+function clRowAction(action){
+  document.getElementById('cl-row-menu').style.display='none';
+  if(action==='view') location.href='corp-detail.html';
+  else if(action==='edit') clShowToast('Edit "' + _clActiveTenant + '" - settings page.');
+  else if(action==='suspend') clShowToast('"' + _clActiveTenant + '" has been suspended.');
+}
+
+function clShowToast(msg){
+  var t = document.getElementById('cl-toast');
+  t.textContent = msg;
+  t.style.display='block';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(function(){ t.style.display='none'; }, 3000);
+}
+
+clFilter();
+</script>
+</body>
+</html>

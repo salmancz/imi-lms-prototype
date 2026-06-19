@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Completed proof detail · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .proof-wrap { max-width: 880px; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link svg { width: 14px; height: 14px; }
+
+  .proof-card {
+    background: var(--paper);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    padding: 48px 56px;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .proof-card::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid var(--line);
+    border-radius: calc(var(--r-lg) - 4px);
+    pointer-events: none;
+  }
+  .proof-card > * { position: relative; z-index: 1; }
+  .proof-issuer {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+  .proof-lead { font-size: 14px; color: var(--ink-soft); margin-bottom: 10px; }
+  .proof-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 42px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.05;
+  }
+  .proof-course {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 18px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .proof-meta { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+  .proof-verify {
+    display: inline-block;
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    background: var(--surface-3);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    padding: 6px 14px;
+  }
+
+  .proof-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 24px 0 36px;
+  }
+
+  .sec-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  .recog-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 36px;
+    align-items: stretch;
+  }
+  @media (max-width: 720px) { .recog-grid { grid-template-columns: 1fr; } }
+  .recog-card { padding: 20px 22px; display: flex; flex-direction: column; }
+  .recog-kicker {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .recog-title { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .recog-bar-val {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-top: 8px;
+  }
+  .skill-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+  .proof-foot-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    background: var(--c-sage-wash);
+    border: 1px solid rgba(126, 155, 111, 0.22);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .proof-foot-note strong { color: var(--c-sage-text); font-weight: 700; }
+
+  .proof-verify {
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+  }
+  .proof-verify:hover { background: var(--c-honey-wash); color: var(--c-honey-text); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link is-active" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="proof-wrap">
+
+  <a class="back-link" href="certificate.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Course Completed</a>
+
+  <div class="eyebrow">Course Completed</div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 class="page-title" style="margin-bottom:8px">Knowledge <em>Mapping</em></h1>
+      <p class="page-sub">Issued 12 Mar 2026 &middot; Proof ID IMI-CDMP-P-2026-04821 &middot; Verifiable</p>
+    </div>
+    <button type="button" class="btn btn-ghost btn-sm" id="btn-share" style="margin-top:8px;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Share</button>
+  </div>
+
+  <div class="proof-card" style="margin-top:24px">
+    <div class="proof-issuer">IMI &middot; Information Management Institute</div>
+    <div class="proof-lead">This is to confirm that</div>
+    <div class="proof-name">Salman Ali</div>
+    <div class="proof-lead">has successfully completed</div>
+    <div class="proof-course">Knowledge Mapping for Working Professionals</div>
+    <div class="proof-meta">Completed 12 March 2026 &middot; Quiz pass mark achieved (82%)</div>
+    <a class="proof-verify" href="https://imi.ae/verify/IMI-CDMP-P-2026-04821" id="verify-link" target="_blank" rel="noopener" aria-label="Public verification link - click to open proof">imi.ae/verify/IMI-CDMP-P-2026-04821</a>
+  </div>
+
+  <div class="proof-actions">
+    <a class="btn btn-ghost btn-sm" href="player.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Rewatch course</a>
+    <button type="button" class="btn btn-primary btn-sm" id="btn-download-pdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF</button>
+    <a class="btn btn-ghost btn-sm" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fimi.ae%2Fverify%2FIMI-CDMP-P-2026-04821" target="_blank" rel="noopener">Share to LinkedIn</a>
+    <button type="button" class="btn btn-ghost btn-sm" id="btn-copy-link">Copy verify link</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="btn-verify-proof"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Verify proof</button>
+    <a class="btn btn-ghost btn-sm" href="cert-name-edit-otp.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit name</a>
+  </div>
+
+  <div class="sec-label">Recognition counts toward</div>
+  <div class="recog-grid">
+    <div class="card recog-card">
+      <div class="recog-kicker">Career path</div>
+      <div class="recog-title">CDMP Practitioner</div>
+      <div class="progress" style="margin-top:12px"><div class="progress-fill" style="width:60%;background:var(--c-honey)"></div></div>
+      <div class="recog-bar-val">60% complete</div>
+    </div>
+    <div class="card recog-card">
+      <div class="recog-kicker">Skills demonstrated</div>
+      <div class="recog-title">2 skills earned</div>
+      <div class="skill-chips">
+        <span class="chip t-sage">Knowledge mapping</span>
+        <span class="chip t-honey">ISO 30401</span>
+      </div>
+      <div class="recog-bar-val" style="margin-top:auto;padding-top:12px;border-top:1px solid var(--line)">Added to your skill profile</div>
+    </div>
+  </div>
+
+  <div class="proof-foot-note">
+    <strong>Verification:</strong> Anyone can verify this proof at <a href="https://imi.ae/verify/IMI-CDMP-P-2026-04821" target="_blank" rel="noopener" style="color:var(--c-sage-text);font-weight:600;">imi.ae/verify/IMI-CDMP-P-2026-04821</a> without signing in. Proof visibility is not impacted by profile anonymization, deletion, or access restriction states.
+  </div>
+
+</div>
+  </main>
+</div>
+
+<!-- Verify Proof Modal -->
+<div id="verify-modal" role="dialog" aria-modal="true" aria-labelledby="verify-modal-title" style="display:none;position:fixed;inset:0;z-index:80;background:rgba(42,17,8,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);place-items:center;padding:40px 24px;">
+  <div style="width:100%;max-width:480px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 32px 80px -24px rgba(42,17,8,0.42);overflow:hidden;">
+    <div style="padding:26px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+      <div>
+        <div style="font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px;">Proof verification</div>
+        <h2 id="verify-modal-title" style="font-size:20px;font-weight:700;letter-spacing:-0.015em;color:var(--ink);margin:0;">Verified <em style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--c-sage-text);">authentic</em></h2>
+      </div>
+      <button type="button" id="verify-modal-close" aria-label="Close" style="width:34px;height:34px;border-radius:100px;display:grid;place-items:center;color:var(--ink-mute);flex-shrink:0;transition:background 0.18s,color 0.18s;cursor:pointer;border:none;background:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="padding:20px 28px 28px;">
+      <div style="background:var(--c-sage-wash);border:1.5px solid rgba(126,155,111,0.35);border-radius:var(--r-md);padding:18px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;flex-shrink:0;color:var(--c-sage-text);margin-top:1px"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <div>
+          <div style="font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--c-sage-text);margin-bottom:5px;">Proof is valid</div>
+          <div style="font-size:13px;color:var(--ink-soft);line-height:1.5;">This Course Completed proof was issued by IMI and has not been altered or revoked.</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:9px 0;color:var(--ink-mute);font-family:var(--font-label);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;width:44%;">Learner name</td>
+          <td style="padding:9px 0;color:var(--ink);font-weight:600;">Salman Ali</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:9px 0;color:var(--ink-mute);font-family:var(--font-label);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;">Course</td>
+          <td style="padding:9px 0;color:var(--ink);font-weight:600;">Knowledge Mapping for Working Professionals</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:9px 0;color:var(--ink-mute);font-family:var(--font-label);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;">Issued by</td>
+          <td style="padding:9px 0;color:var(--ink);">Information Management Institute</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:9px 0;color:var(--ink-mute);font-family:var(--font-label);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;">Date issued</td>
+          <td style="padding:9px 0;color:var(--ink);">12 March 2026</td>
+        </tr>
+        <tr>
+          <td style="padding:9px 0;color:var(--ink-mute);font-family:var(--font-label);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;">Proof ID</td>
+          <td style="padding:9px 0;color:var(--ink);font-family:var(--font-label);font-size:12px;">IMI-CDMP-P-2026-04821</td>
+        </tr>
+      </table>
+      <div style="margin-top:20px;display:flex;gap:10px;">
+        <button type="button" id="verify-modal-copy" class="btn btn-ghost btn-sm" style="flex:1;">Copy verify link</button>
+        <button type="button" id="verify-modal-done" class="btn btn-primary btn-sm" style="flex:1;">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+var VERIFY_URL = 'https://imi.ae/verify/IMI-CDMP-P-2026-04821';
+function imiCopy(url, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function () { window.imiToast(msg || 'Copied'); });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    window.imiToast(msg || 'Copied');
+  }
+}
+
+// Download PDF - generate a real HTML file as a downloadable certificate
+document.getElementById('btn-download-pdf').addEventListener('click', function () {
+  var btn = this;
+  btn.textContent = 'Preparing...';
+  btn.disabled = true;
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Course Completed Certificate - Knowledge Mapping</title><style>@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=Barlow:wght@400;600;700&display=swap");*{box-sizing:border-box;margin:0;padding:0}body{background:#FBF7EF;font-family:Barlow,sans-serif;padding:60px;display:flex;justify-content:center;align-items:center;min-height:100vh}.cert{background:#fff;border:2px solid #C99B2E;border-radius:12px;padding:60px 72px;max-width:760px;width:100%;text-align:center;position:relative}.cert::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,155,46,0.3);border-radius:8px;pointer-events:none}.issuer{font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#888;margin-bottom:24px}.lead{font-size:14px;color:#666;margin-bottom:10px}.name{font-family:Fraunces,serif;font-style:italic;font-size:48px;color:#2A1108;margin-bottom:16px}.course{font-size:24px;font-weight:700;color:#2A1108;margin-bottom:18px;line-height:1.3}.meta{font-size:13px;color:#888;margin-bottom:24px}.id{display:inline-block;font-size:11px;background:#F5F0E8;border:1px solid #ddd;border-radius:100px;padding:6px 14px;color:#666;letter-spacing:0.05em}</style></head><body><div class="cert"><div class="issuer">IMI &middot; Information Management Institute</div><div class="lead">This is to confirm that</div><div class="name">Salman Ali</div><div class="lead">has successfully completed</div><div class="course">Knowledge Mapping for Working Professionals</div><div class="meta">Completed 12 March 2026 &middot; Quiz pass mark achieved (82%)</div><div class="id">IMI-CDMP-P-2026-04821</div></div></body></html>';
+  var blob = new Blob([html], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'IMI-Certificate-Knowledge-Mapping.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  setTimeout(function () {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF';
+    btn.disabled = false;
+  }, 1500);
+  window.imiToast('Certificate downloaded');
+});
+
+// Share button
+document.getElementById('btn-share').addEventListener('click', function () {
+  if (navigator.share) {
+    navigator.share({ title: 'Course Completed: Knowledge Mapping', text: 'I completed Knowledge Mapping for Working Professionals at IMI.', url: VERIFY_URL }).catch(function () {});
+  } else {
+    imiCopy(VERIFY_URL, 'Link copied to clipboard');
+  }
+});
+
+// Copy verify link button
+document.getElementById('btn-copy-link').addEventListener('click', function () {
+  imiCopy(VERIFY_URL, 'Link copied');
+});
+
+// Verify proof modal
+var verifyModal = document.getElementById('verify-modal');
+function openVerifyModal() {
+  verifyModal.style.display = 'grid';
+  document.getElementById('verify-modal-close').focus();
+}
+function closeVerifyModal() {
+  verifyModal.style.display = 'none';
+}
+document.getElementById('btn-verify-proof').addEventListener('click', openVerifyModal);
+document.getElementById('verify-modal-close').addEventListener('click', closeVerifyModal);
+document.getElementById('verify-modal-done').addEventListener('click', closeVerifyModal);
+document.getElementById('verify-modal-copy').addEventListener('click', function () {
+  imiCopy(VERIFY_URL, 'Verify link copied');
+});
+verifyModal.addEventListener('click', function (e) {
+  if (e.target === verifyModal) closeVerifyModal();
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && verifyModal.style.display !== 'none') closeVerifyModal();
+});
+</script>
+</body>
+</html>

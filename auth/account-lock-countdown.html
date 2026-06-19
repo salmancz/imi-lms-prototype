@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account lock countdown · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Auth topbar: centered logo lockup */
+  .auth-top {
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .auth-brand img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+  .auth-brand-text {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .auth-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* Page layout */
+  .auth-wrap {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .auth-main {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* Lock card */
+  .lock-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 44px 40px 36px;
+    text-align: center;
+  }
+
+  .lock-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+  }
+
+  .lock-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 1.5px solid var(--c-clay-soft);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 22px;
+    color: var(--accent-deep);
+  }
+  .lock-icon svg { width: 28px; height: 28px; }
+
+  .lock-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .lock-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .lock-desc {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 auto 28px;
+    max-width: 360px;
+  }
+
+  /* Countdown timer */
+  .countdown-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  .countdown {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .cd-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cd-box {
+    min-width: 68px;
+    padding: 16px 12px;
+    background: var(--ink);
+    color: var(--hero-bg);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cd-unit-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .cd-sep {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    line-height: 1.65;
+    padding-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Attempts notice */
+  .lock-notice {
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.32);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+  .lock-notice .ln-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--c-honey-text);
+    margin-bottom: 4px;
+  }
+  .lock-notice .ln-title svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+  .lock-notice .ln-copy {
+    font-size: 12px;
+    color: var(--c-honey-text);
+    line-height: 1.55;
+  }
+
+  /* Actions */
+  .btn.full {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+  .btn.full[aria-disabled="true"] {
+    background: var(--surface-3);
+    color: var(--ink-mute);
+    box-shadow: none;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .btn-row { margin-bottom: 4px; }
+
+  .lock-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 22px 0 18px;
+  }
+
+  .lock-foot {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+  }
+  .lock-foot a {
+    color: var(--ink-soft);
+    font-weight: 600;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 1px;
+    transition: color 0.18s;
+  }
+  .lock-foot a:hover { color: var(--accent); }
+  .lock-foot .sep { color: var(--ink-faint); margin: 0 8px; }
+</style>
+</head>
+<body>
+
+<header class="auth-top">
+  <a class="auth-brand" href="login.html">
+    <img src="../img/imi-logo.png" alt="IMI">
+  </a>
+</header>
+
+<div class="auth-wrap">
+  <main class="auth-main">
+
+    <div class="lock-card">
+
+      <div class="lock-eyebrow">Account temporarily locked</div>
+
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+
+      <h1 class="lock-title">Account <em>locked</em></h1>
+      <p class="lock-desc">Too many incorrect codes were entered. For your security, this account is locked. You can try again once the timer below reaches zero.</p>
+
+      <div class="countdown-label">Retry available in</div>
+      <div class="countdown" role="timer" aria-label="Time until retry is available">
+        <div class="cd-unit">
+          <div class="cd-box" id="cd-h">23</div>
+          <span class="cd-unit-label">Hours</span>
+        </div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit">
+          <div class="cd-box" id="cd-m">58</div>
+          <span class="cd-unit-label">Min</span>
+        </div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit">
+          <div class="cd-box" id="cd-s">12</div>
+          <span class="cd-unit-label">Sec</span>
+        </div>
+      </div>
+
+      <div class="lock-notice">
+        <div class="ln-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          0 attempts remaining
+        </div>
+        <div class="ln-copy">After 3 incorrect attempts, this account is locked for 24 hours. You will need to wait or contact support.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary full" id="retry-btn" aria-disabled="true" disabled onclick="if(!this.disabled)window.location.href='login.html'">Try again in <span id="retry-label">23:58:12</span></button>
+      </div>
+
+      <div class="lock-divider"></div>
+
+      <p class="lock-foot">
+        <a href="../profile/help-center.html">Contact support</a>
+        <span class="sep">&middot;</span>
+        <a href="../profile/help-center.html">Need help?</a>
+      </p>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  var LOCK_KEY = 'imi_lock_until';
+  var stored = localStorage.getItem(LOCK_KEY);
+  var unlockAt;
+  if (stored) {
+    unlockAt = parseInt(stored, 10);
+  } else {
+    unlockAt = Date.now() + (23 * 3600 + 58 * 60 + 12) * 1000;
+    localStorage.setItem(LOCK_KEY, unlockAt);
+  }
+
+  var cdH = document.getElementById('cd-h');
+  var cdM = document.getElementById('cd-m');
+  var cdS = document.getElementById('cd-s');
+  var retryBtn = document.getElementById('retry-btn');
+  var retryLabel = document.getElementById('retry-label');
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function tick() {
+    var rem = Math.max(0, Math.floor((unlockAt - Date.now()) / 1000));
+    var h = Math.floor(rem / 3600);
+    var m = Math.floor((rem % 3600) / 60);
+    var s = rem % 60;
+    cdH.textContent = pad(h);
+    cdM.textContent = pad(m);
+    cdS.textContent = pad(s);
+    if (rem === 0) {
+      retryBtn.removeAttribute('aria-disabled');
+      retryBtn.removeAttribute('disabled');
+      retryBtn.innerHTML = 'Try again now';
+      localStorage.removeItem(LOCK_KEY);
+    } else {
+      retryLabel.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

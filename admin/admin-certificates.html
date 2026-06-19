@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificates issued · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .cert-kpi { text-align: center; }
+  .cert-kpi .kv {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .cert-kpi .kv.t-honey { color: var(--c-honey-text); }
+  .cert-kpi .kv.t-clay  { color: var(--accent); }
+  .cert-kpi .kl {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .cert-kpi .kn {
+    font-family: var(--font-label);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin-top: 4px;
+  }
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .filter-select {
+    height: 38px;
+    width: 168px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: var(--r-pill);
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    transition: border 0.18s, background 0.18s;
+  }
+  .filter-select:focus { outline: none; border-color: var(--ink-mute); background: #fff; }
+  .filter-select.w-sm { width: 144px; }
+  .cert-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .cert-table th {
+    text-align: left;
+    font-family: var(--font-label);
+    font-weight: 600;
+    color: var(--ink-mute);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .cert-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    vertical-align: middle;
+  }
+  .cert-table tr:last-child td { border-bottom: none; }
+  .cert-table tbody tr:hover { background: var(--paper-2); }
+  .cert-table tr.is-revoked { background: var(--c-clay-wash); }
+  .cert-table tr.is-revoked:hover { background: var(--c-clay-wash); }
+  .cert-table .c-date { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-soft); white-space: nowrap; }
+  .cert-table .c-name { color: var(--ink); font-weight: 600; }
+  .cert-table .c-email { font-size: 11.5px; color: var(--ink-mute); }
+  .cert-table .c-path { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-soft); letter-spacing: 0.04em; }
+  .cert-table .c-issuer { font-size: 11.5px; color: var(--ink-mute); }
+  .cert-table .c-verify { font-family: var(--font-label); font-size: 10.5px; }
+  .cert-table .c-verify a { color: var(--ink-mute); text-decoration: underline; text-underline-offset: 2px; }
+  .cert-table .c-verify a:hover { color: var(--accent); }
+  .cert-table .c-course { font-size: 12.5px; color: var(--ink-soft); }
+  .cert-table .c-cert-id { font-family: var(--font-label); font-size: 10.5px; color: var(--ink-mute); letter-spacing: 0.03em; white-space: nowrap; }
+  /* Column widths – keeps the 12-col layout legible at 1440px */
+  .cert-table col.col-cb       { width: 38px; }
+  .cert-table col.col-id       { width: 190px; }
+  .cert-table col.col-recipient{ width: 130px; }
+  .cert-table col.col-email    { width: 170px; }
+  .cert-table col.col-cert     { width: 120px; }
+  .cert-table col.col-course   { width: 180px; }
+  .cert-table col.col-date     { width: 110px; }
+  .cert-table col.col-issued   { width: 90px; }
+  .cert-table col.col-path     { width: 56px; }
+  .cert-table col.col-issuer   { width: 62px; }
+  .cert-table col.col-verify   { width: 180px; }
+  .cert-table col.col-status   { width: 120px; }
+  /* Verify URL: truncate long tokens rather than push other columns off */
+  .cert-table .c-verify { max-width: 0; overflow: hidden; }
+  .cb { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+  .status-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.ok { background: var(--c-sage); }
+  .status-dot.bad { background: var(--accent); }
+  .status-note { color: var(--ink-faint); font-size: 11px; }
+  .table-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  .page-note { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-mute); letter-spacing: 0.03em; }
+  .page-note a { color: var(--ink); font-weight: 700; }
+  .info-note {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c-honey);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .info-note.clay { border-left-color: var(--accent); }
+  .info-note .ni {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: var(--c-honey);
+    background: var(--c-honey-wash);
+  }
+  .info-note.clay .ni { color: var(--accent); background: var(--c-clay-wash); }
+  .info-note .ni svg { width: 16px; height: 16px; }
+  .info-note strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" onclick="event.preventDefault()">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input id="cert-topbar-search" placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter'){var q=document.getElementById('cert-search-hidden');if(q){q.value=this.value.trim();window.applyCertFilters&&window.applyCertFilters();}}"></div>
+  <input type="hidden" id="cert-search-hidden" value="">
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="admin-dashboard.html" class="sidebar-link" data-nav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Overview</span></a>
+<a href="admin-users.html" class="sidebar-link" data-nav="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Users</span><span class="badge">487</span></a>
+<a href="roles-permissions.html" class="sidebar-link" data-nav="roles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Roles</span></a>
+<a href="admin-courses.html" class="sidebar-link is-active" data-nav="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Courses</span><span class="badge">47</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">BUSINESS</div>
+<a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Corporate</span><span class="badge">23</span></a>
+<a href="admin-reports.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">SYSTEM</div>
+<a href="audit-log.html" class="sidebar-link" data-nav="audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Audit Log</span></a>
+<a href="admin-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="tabs" style="margin-bottom:18px"><button onclick="location.href='admin-courses.html'" style="cursor:pointer">Courses</button><button onclick="location.href='admin-learning-paths.html'" style="cursor:pointer">Learning Paths</button><button class="is" onclick="location.href='admin-certificates.html'" style="cursor:pointer">Certificates</button></div>
+
+<div class="page-head" style="grid-template-columns: minmax(0,1fr) auto;">
+  <div>
+    <div class="eyebrow">Credentials</div>
+    <h1 class="page-title">Certificates <em>issued</em></h1>
+    <p class="page-sub">All credentials issued by IMI to date.</p>
+  </div>
+  <div class="page-actions">
+    <a class="btn btn-primary" href="#" onclick="event.preventDefault();var rows=document.querySelectorAll('#cert-tbody tr');var csv='Certificate ID,Recipient,Email,Path,Status\n';rows.forEach(function(tr){if(tr.style.display!=='none'){var cells=tr.querySelectorAll('td');if(cells.length>1)csv+=cells[1].textContent.trim()+','+cells[2].textContent.trim()+','+cells[3].textContent.trim()+','+cells[8].textContent.trim()+','+cells[11].textContent.trim()+'\n';}});var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='certificates-export.csv';a.click();window.imiToast('CSV exported');"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a>
+  </div>
+</div>
+
+<div class="grid-4" style="margin-bottom:28px">
+  <div class="kpi cert-kpi">
+    <div class="kv">3,847</div>
+    <div class="kl">Total issued</div>
+  </div>
+  <div class="kpi cert-kpi">
+    <div class="kv">94</div>
+    <div class="kl">This week</div>
+  </div>
+  <div class="kpi cert-kpi t-honey">
+    <div class="kv t-honey">47</div>
+    <div class="kl">Pending issuance</div>
+    <div class="kn">profile &lt;100% complete</div>
+  </div>
+  <div class="kpi cert-kpi t-clay">
+    <div class="kv t-clay">12</div>
+    <div class="kl">Revoked / expired</div>
+  </div>
+</div>
+
+<div class="filter-row">
+  <select id="cert-filter-path" class="filter-select"><option value="">Career path</option><option value="cdmp">CDMP</option><option value="igp">IGP</option><option value="cip">CIP</option><option value="kmp">KMP</option><option value="erm">ERM</option><option value="dsa">DSA</option></select>
+  <select id="cert-filter-tenant" class="filter-select"><option value="">Tenant</option><option value="bankmuscat">Bank Muscat</option><option value="pdo">PDO</option><option value="omantel">Omantel</option><option value="imi">IMI</option></select>
+  <select id="cert-filter-status" class="filter-select w-sm"><option value="">Status</option><option value="active">Active</option><option value="revoked">Revoked</option><option value="expired">Expired</option></select>
+  <button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll('#cert-filter-path,#cert-filter-tenant,#cert-filter-status').forEach(function(s){s.selectedIndex=0;});var sh=document.getElementById('cert-search-hidden');if(sh)sh.value='';var tb=document.getElementById('cert-topbar-search');if(tb)tb.value='';applyCertFilters();">Clear filters</button>
+</div>
+
+<div class="card" style="overflow:hidden">
+  <table class="cert-table">
+    <colgroup>
+      <col class="col-cb">
+      <col class="col-id">
+      <col class="col-recipient">
+      <col class="col-email">
+      <col class="col-cert">
+      <col class="col-course">
+      <col class="col-date">
+      <col class="col-issued">
+      <col class="col-path">
+      <col class="col-issuer">
+      <col class="col-verify">
+      <col class="col-status">
+    </colgroup>
+    <thead>
+      <tr>
+        <th style="width:38px"><input type="checkbox" class="cb" id="cert-select-all" title="Select all" onclick="document.querySelectorAll('#cert-tbody .cb').forEach(function(c){c.checked=this.checked;c.closest('tr').classList.toggle('is-selected-row',this.checked);}.bind(this))"></th>
+        <th>Certificate ID</th>
+        <th>Recipient</th>
+        <th>Email</th>
+        <th>Certification</th>
+        <th>Course Name</th>
+        <th>Completion Date</th>
+        <th>Issued</th>
+        <th>Path</th>
+        <th>Issuer</th>
+        <th>Verify URL</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="cert-tbody">
+      <tr data-path="cdmp" data-tenant="webinnoventix" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CDMP-P-2026-04821</td>
+        <td class="c-name">Salman Ali</td>
+        <td class="c-email">salman@webinnoventix.com</td>
+        <td><span class="chip">CDMP Practitioner</span></td>
+        <td class="c-course">Certified Data Management Professional</td>
+        <td class="c-date">2026-05-10</td>
+        <td class="c-date">2026-05-14</td>
+        <td class="c-path">CDMP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CDMP-P-2026-04821</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="cdmp" data-tenant="bankmuscat" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CDMP-M-2026-04820</td>
+        <td class="c-name">Layla Al-Hashimi</td>
+        <td class="c-email">layla@bankmuscat.om</td>
+        <td><span class="chip">CDMP Master</span></td>
+        <td class="c-course">Certified Data Management Professional</td>
+        <td class="c-date">2026-05-09</td>
+        <td class="c-date">2026-05-13</td>
+        <td class="c-path">CDMP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CDMP-M-2026-04820</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="igp" data-tenant="pdo" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-IGP-2026-04819</td>
+        <td class="c-name">Tariq Al-Balushi</td>
+        <td class="c-email">tariq@pdo.com</td>
+        <td><span class="chip">IGP</span></td>
+        <td class="c-course">Innovation for Growth Programme</td>
+        <td class="c-date">2026-05-08</td>
+        <td class="c-date">2026-05-12</td>
+        <td class="c-path">IGP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-IGP-2026-04819</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="cip" data-tenant="omantel" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CIP-2026-04818</td>
+        <td class="c-name">Reem Al-Zadjali</td>
+        <td class="c-email">reem@omantel.om</td>
+        <td><span class="chip">CIP</span></td>
+        <td class="c-course">Certified Innovation Professional</td>
+        <td class="c-date">2026-05-06</td>
+        <td class="c-date">2026-05-10</td>
+        <td class="c-path">CIP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CIP-2026-04818</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="kmp" data-tenant="imi" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-KMP-M-2026-04817</td>
+        <td class="c-name">Faris Al-Maamari</td>
+        <td class="c-email">faris@imi.om</td>
+        <td><span class="chip">KMP Master</span></td>
+        <td class="c-course">Knowledge Management Professional</td>
+        <td class="c-date">2026-05-04</td>
+        <td class="c-date">2026-05-08</td>
+        <td class="c-path">KMP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-KMP-M-2026-04817</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="erm" data-tenant="finance" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-ERM-2026-04816</td>
+        <td class="c-name">Aisha Al-Said</td>
+        <td class="c-email">aisha@finance.gov.om</td>
+        <td><span class="chip">ERM</span></td>
+        <td class="c-course">Enterprise Risk Management</td>
+        <td class="c-date">2026-05-01</td>
+        <td class="c-date">2026-05-05</td>
+        <td class="c-path">ERM</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-ERM-2026-04816</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr class="is-revoked" data-path="cdmp" data-tenant="example" data-status="revoked" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CDMP-A-2026-04815</td>
+        <td class="c-name">Sami Al-Hinai</td>
+        <td class="c-email">sami@example.com</td>
+        <td><span class="chip">CDMP Associate</span></td>
+        <td class="c-course">Certified Data Management Professional</td>
+        <td class="c-date">2026-04-24</td>
+        <td class="c-date">2026-04-28</td>
+        <td class="c-path">CDMP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CDMP-A-2026-04815</a></td>
+        <td><span class="status-cell"><span class="status-dot bad"></span>Revoked <span class="status-note">(rule violation)</span></span></td>
+      </tr>
+      <tr data-path="cip" data-tenant="bahwan" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CIP-2026-04814</td>
+        <td class="c-name">Maryam Al-Bahri</td>
+        <td class="c-email">maryam@bahwan.com</td>
+        <td><span class="chip">CIP</span></td>
+        <td class="c-course">Certified Innovation Professional</td>
+        <td class="c-date">2026-04-21</td>
+        <td class="c-date">2026-04-25</td>
+        <td class="c-path">CIP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CIP-2026-04814</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="dsa" data-tenant="bankmuscat" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-DSA-2026-04813</td>
+        <td class="c-name">Ahmed Al-Said</td>
+        <td class="c-email">ahmed@bankmuscat.om</td>
+        <td><span class="chip">DSA</span></td>
+        <td class="c-course">Data Science and Analytics</td>
+        <td class="c-date">2026-04-16</td>
+        <td class="c-date">2026-04-20</td>
+        <td class="c-path">DSA</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-DSA-2026-04813</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+      <tr data-path="cdmp" data-tenant="imi" data-status="active" style="cursor:pointer" onclick="if(event.target.type!=='checkbox')location.href='../profile/public-profile.html'">
+        <td><input type="checkbox" class="cb" onclick="event.stopPropagation()"></td>
+        <td class="c-cert-id">IMI-CDMP-M-2026-04812</td>
+        <td class="c-name">Nadia Al-Rashid</td>
+        <td class="c-email">nadia@imi.om</td>
+        <td><span class="chip">CDMP Master</span></td>
+        <td class="c-course">Certified Data Management Professional</td>
+        <td class="c-date">2026-04-14</td>
+        <td class="c-date">2026-04-18</td>
+        <td class="c-path">CDMP</td>
+        <td class="c-issuer">system</td>
+        <td class="c-verify"><a href="../profile/public-profile.html" onclick="event.stopPropagation()">imi.om/verify/IMI-CDMP-M-2026-04812</a></td>
+        <td><span class="status-cell"><span class="status-dot ok"></span>Active</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-foot">
+  <a class="btn btn-primary btn-sm" href="#" onclick="event.preventDefault();var rows=document.querySelectorAll('#cert-tbody tr');var csv='Certificate ID,Recipient,Email,Path,Status\n';rows.forEach(function(tr){if(tr.style.display!=='none'){var cells=tr.querySelectorAll('td');if(cells.length>1)csv+=cells[1].textContent.trim()+','+cells[2].textContent.trim()+','+cells[3].textContent.trim()+','+cells[8].textContent.trim()+','+cells[11].textContent.trim()+'\n';}});var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='certificates-export.csv';a.click();window.imiToast('CSV exported');"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a>
+  <div class="page-note" id="cert-count">Showing <span id="cert-from">1</span>-<span id="cert-to">10</span> of <span id="cert-total">10</span> &middot; <button id="btn-cert-prev" class="btn btn-ghost btn-sm" disabled style="margin-left:4px">&larr; Prev</button> <button id="btn-cert-next" class="btn btn-primary btn-sm" disabled>Next &rarr;</button></div>
+</div>
+
+<div class="col gap" style="margin-top:28px;gap:12px">
+  <div class="info-note">
+    <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+    <div><strong>Auto-issuance rules:</strong> Certificates auto-issue when a learner: (a) completes 100% of lessons, (b) passes assessment with 70% or more, (c) has 100% profile completion. The 47 pending certificates are gated on profile completion only, the learner has already passed.</div>
+  </div>
+  <div class="info-note clay">
+    <span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+    <div><strong>Revocation:</strong> Revoking a credential immediately invalidates the public verify URL. All revocations require a mandatory admin comment and are logged in the audit trail. This action cannot be undone without re-issuing.</div>
+  </div>
+</div>
+
+  </main>
+</div>
+<script>
+(function(){
+  var CERT_PAGE_SIZE = 5;
+  var certPage = 0;
+  var certFiltered = [];
+  var certAllRows = [];
+
+  function getAllRows(){ return Array.from(document.querySelectorAll('#cert-tbody tr')); }
+
+  function applyCertFilters(){
+    var pathVal = (document.getElementById('cert-filter-path').value||'').toLowerCase();
+    var tenantVal = (document.getElementById('cert-filter-tenant').value||'').toLowerCase();
+    var statusVal = (document.getElementById('cert-filter-status').value||'').toLowerCase();
+    var searchHidden = document.getElementById('cert-search-hidden');
+    var searchVal = searchHidden ? (searchHidden.value||'').toLowerCase().trim() : '';
+    certFiltered = certAllRows.filter(function(tr){
+      var rPath = (tr.dataset.path||'').toLowerCase();
+      var rTenant = (tr.dataset.tenant||'').toLowerCase();
+      var rStatus = (tr.dataset.status||'').toLowerCase();
+      if(searchVal && tr.textContent.toLowerCase().indexOf(searchVal) === -1) return false;
+      if(pathVal && rPath !== pathVal) return false;
+      if(tenantVal && rTenant.indexOf(tenantVal) === -1) return false;
+      if(statusVal && rStatus !== statusVal) return false;
+      return true;
+    });
+    certPage = 0;
+    renderCertPage();
+  }
+
+  function renderCertPage(){
+    var start = certPage * CERT_PAGE_SIZE;
+    var end = start + CERT_PAGE_SIZE;
+    certAllRows.forEach(function(tr){ tr.style.display='none'; });
+    var page = certFiltered.slice(start, end);
+    page.forEach(function(tr){ tr.style.display=''; });
+    var total = certFiltered.length;
+    var from = total===0 ? 0 : start+1;
+    var to = Math.min(end, total);
+    var fromEl = document.getElementById('cert-from');
+    var toEl = document.getElementById('cert-to');
+    var totalEl = document.getElementById('cert-total');
+    if(fromEl) fromEl.textContent = from;
+    if(toEl) toEl.textContent = to;
+    if(totalEl) totalEl.textContent = total;
+    var prevBtn = document.getElementById('btn-cert-prev');
+    var nextBtn = document.getElementById('btn-cert-next');
+    if(prevBtn){ prevBtn.disabled = certPage===0; prevBtn.onclick = function(){ if(certPage>0){certPage--;renderCertPage();} }; }
+    if(nextBtn){ nextBtn.disabled = end>=total; nextBtn.onclick = function(){ if((certPage+1)*CERT_PAGE_SIZE<certFiltered.length){certPage++;renderCertPage();} }; }
+    var prev = document.body.dataset.certRender || '0';
+    document.body.dataset.certRender = String(parseInt(prev,10)+1);
+    document.body.classList.toggle('cert-render-even', parseInt(document.body.dataset.certRender,10) % 2 === 0);
+  }
+
+  function addRowMenus(){
+    document.querySelectorAll('#cert-tbody tr').forEach(function(tr){
+      if(tr.querySelector('.cert-row-menu')) return;
+      var lastTd = tr.querySelector('td:last-child');
+      if(!lastTd) return;
+      var statusEl = lastTd.querySelector('.status-cell');
+      var isRevoked = (tr.dataset.status||'').toLowerCase() === 'revoked';
+      var menuWrap = document.createElement('span');
+      menuWrap.className = 'cert-row-menu';
+      menuWrap.style.cssText = 'position:relative;display:inline-flex;align-items:center;gap:8px;';
+      if(statusEl) menuWrap.appendChild(statusEl.cloneNode(true));
+      var moreBtn = document.createElement('button');
+      moreBtn.className = 'btn btn-ghost btn-sm';
+      moreBtn.style.cssText = 'padding:3px 7px;font-size:14px;line-height:1;';
+      moreBtn.textContent = '⋯';
+      moreBtn.setAttribute('aria-label','Row actions');
+      var dropdown = document.createElement('div');
+      dropdown.style.cssText = 'display:none;position:absolute;right:0;top:100%;z-index:200;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:148px;padding:4px 0;';
+      function mkItem(label, fn){
+        var d = document.createElement('div');
+        d.style.cssText = 'padding:9px 14px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink);white-space:nowrap;';
+        d.textContent = label;
+        d.addEventListener('mouseenter', function(){ d.style.background='var(--paper-2)'; });
+        d.addEventListener('mouseleave', function(){ d.style.background=''; });
+        d.addEventListener('click', function(e){ e.stopPropagation(); dropdown.style.display='none'; fn(tr); });
+        return d;
+      }
+      if(!isRevoked){
+        dropdown.appendChild(mkItem('View certificate', function(){ location.href='../profile/public-profile.html'; }));
+        dropdown.appendChild(mkItem('Resend to learner', function(r){ window.imiToast('Certificate resent to learner'); }));
+        dropdown.appendChild(mkItem('Revoke certificate', function(r){
+          if(confirm('Revoke this certificate? This cannot be undone without re-issuing.')){
+            r.classList.add('is-revoked');
+            r.dataset.status='revoked';
+            var sc = r.querySelector('.status-cell');
+            if(sc){ sc.innerHTML='<span class="status-dot bad"></span>Revoked'; }
+            var mm = r.querySelector('.cert-row-menu .status-cell');
+            if(mm){ mm.innerHTML='<span class="status-dot bad"></span>Revoked'; }
+            window.imiToast('Certificate revoked');
+          }
+        }));
+      } else {
+        dropdown.appendChild(mkItem('View certificate', function(){ location.href='../profile/public-profile.html'; }));
+        dropdown.appendChild(mkItem('Re-issue certificate', function(r){
+          if(confirm('Re-issue this certificate?')){
+            r.classList.remove('is-revoked');
+            r.dataset.status='active';
+            var sc = r.querySelector('.status-cell');
+            if(sc){ sc.innerHTML='<span class="status-dot ok"></span>Active'; }
+            var mm2 = r.querySelector('.cert-row-menu .status-cell');
+            if(mm2){ mm2.innerHTML='<span class="status-dot ok"></span>Active'; }
+            window.imiToast('Certificate re-issued');
+          }
+        }));
+      }
+      moreBtn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var wasOpen = dropdown.classList.contains('is-open');
+        document.querySelectorAll('.cert-row-menu > div').forEach(function(d){ d.style.display='none'; d.classList.remove('is-open'); });
+        if(!wasOpen){ dropdown.style.display='block'; dropdown.classList.add('is-open'); }
+      });
+      document.addEventListener('click', function(){ document.querySelectorAll('.cert-row-menu > div').forEach(function(d){ d.style.display='none'; d.classList.remove('is-open'); }); }, { once: false });
+      menuWrap.appendChild(moreBtn);
+      menuWrap.appendChild(dropdown);
+      if(statusEl) statusEl.replaceWith(menuWrap);
+      else lastTd.appendChild(menuWrap);
+    });
+  }
+
+  window.applyCertFilters = applyCertFilters;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    certAllRows = getAllRows();
+    certFiltered = certAllRows.slice();
+    addRowMenus();
+    renderCertPage();
+    ['cert-filter-path','cert-filter-tenant','cert-filter-status'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.addEventListener('change', applyCertFilters);
+    });
+    var certSelectAll = document.getElementById('cert-select-all');
+    if(certSelectAll){
+      certSelectAll.onclick = function(){
+        document.querySelectorAll('#cert-tbody .cb').forEach(function(c){
+          c.checked = certSelectAll.checked;
+          c.closest('tr').classList.toggle('is-selected-row', certSelectAll.checked);
+        });
+      };
+    }
+  });
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

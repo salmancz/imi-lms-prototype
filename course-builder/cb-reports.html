@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Author analytics · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- page-level overrides: no gradients ---- */
+
+  /* KPI grid for this page: 4-up, stat-flat style */
+  .rep-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1100px) { .rep-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px)  { .rep-kpi-grid { grid-template-columns: 1fr; } }
+
+  /* Flat KPI cards (no gradient, no tonal class) */
+  .rep-kpi {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 18px 20px 16px;
+    box-shadow: var(--shadow-xs);
+    transition: border-color 0.2s, transform 0.2s var(--tn), box-shadow 0.2s;
+  }
+  .rep-kpi:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .rep-kpi .rk-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rep-kpi .rk-icon {
+    width: 28px; height: 28px;
+    border-radius: var(--r-xs);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .rep-kpi .rk-icon svg { width: 14px; height: 14px; }
+  .rep-kpi .rk-icon.sage { background: var(--c-sage-wash); color: var(--c-sage); }
+  .rep-kpi .rk-icon.honey { background: var(--c-honey-wash); color: var(--c-honey); }
+  .rep-kpi .rk-icon.clay { background: var(--c-clay-wash); color: var(--c-clay); }
+  .rep-kpi .rk-icon.ink { background: var(--surface-3); color: var(--ink-soft); }
+  .rep-kpi .rk-value {
+    font-family: var(--font-sans);
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .rep-kpi .rk-value em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* ---- sparklines ---- */
+  .sparkline-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sparkline {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 28px;
+  }
+  .sparkline span {
+    width: 4px;
+    border-radius: 1px 1px 0 0;
+    display: block;
+  }
+  .sparkline-arrow {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .sparkline-arrow.up   { color: var(--c-sage); }
+  .sparkline-arrow.down { color: var(--c-clay); }
+  .sparkline-pct {
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+  }
+  .sparkline-pct.up   { color: var(--c-sage); }
+  .sparkline-pct.down { color: var(--c-clay); }
+
+  /* ---- filter bar ---- */
+  .rep-filter {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    padding: 18px 20px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+  }
+  .rep-filter .field { margin-bottom: 0; }
+  .rep-filter .field label { margin-bottom: 6px; }
+  .rep-filter .input { width: auto; min-width: 150px; }
+  .rep-filter .rep-range-sep {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    padding-bottom: 7px;
+  }
+  .rep-filter .rep-range-note {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    padding-bottom: 7px;
+  }
+
+  /* ---- charts grid ---- */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .charts-grid { grid-template-columns: 1fr; } }
+
+  /* bar chart: solid fills, no gradient */
+  .chart-bars .bar {
+    background: var(--c-honey);
+    background-image: none !important;
+  }
+  .chart-bars .bar.honey { background: var(--c-honey); background-image: none !important; }
+  .chart-bars .bar.sage  { background: var(--c-sage); background-image: none !important; }
+  .chart-bars .bar.clay  { background: var(--c-clay); background-image: none !important; }
+  .chart-bars .bar.muted { background: var(--surface-3); opacity: 0.6; background-image: none !important; }
+
+  /* ---- donut (conic is allowed -- not linear/radial) ---- */
+  .donut-solid {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--c-sage)    0deg 151deg,
+      var(--c-honey)   151deg 234deg,
+      var(--c-clay)    234deg 295deg,
+      var(--surface-3) 295deg 360deg
+    );
+    position: relative;
+    flex-shrink: 0;
+  }
+  .donut-solid::after {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    background: var(--paper);
+    border-radius: 50%;
+  }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .donut-value { font-size: 17px; font-weight: 700; color: var(--ink); display: block; }
+  .donut-label { font-family: var(--font-label); font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); display: block; }
+
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+  }
+  .donut-legend-item .dl-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .dl-swatch.sage  { background: var(--c-sage); }
+  .dl-swatch.honey { background: var(--c-honey); }
+  .dl-swatch.clay  { background: var(--c-clay); }
+  .dl-swatch.muted { background: var(--surface-3); }
+
+  /* ---- gauge (half-arc SVG) ---- */
+  .gauge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .gauge-svg { display: block; overflow: visible; }
+  .gauge-value-text {
+    font-size: 20px;
+    font-weight: 700;
+    fill: var(--ink);
+    font-family: 'Switzer', sans-serif;
+  }
+  .gauge-label-text {
+    font-size: 9px;
+    fill: var(--ink-mute);
+    font-family: 'Barlow', sans-serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .gauge-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .gauge-state.pass { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .gauge-state.fail { background: var(--c-danger-wash); color: var(--c-danger); }
+  .gauge-state svg { width: 12px; height: 12px; }
+
+  /* ---- chart card header ---- */
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .chart-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .chart-sub {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  /* ---- table ---- */
+  .rep-table td .stat-num { font-variant-numeric: tabular-nums; }
+  .rep-table .col-num { color: var(--ink); font-weight: 500; }
+  .rep-table .col-updated { font-family: var(--font-label); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
+  .rep-status { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .rep-status .s-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .rep-status .s-dot.ok { background: var(--c-sage); }
+  .rep-status .s-dot.warn { background: var(--c-honey); }
+  .rep-status .s-dot.draft { background: var(--ink-faint); }
+  .rep-empty { color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+<header class="topbar">
+  <a href="../role-views/content-dev-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../role-views/content-dev-home.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="../role-views/content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Courses</span><span class="badge">12</span></a>
+      <a href="../role-views/content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Drafts</span><span class="badge">3</span></a>
+      <a href="../role-views/content-dev-home.html#published" class="sidebar-link" data-nav="published"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Published</span><span class="badge">9</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="../role-views/cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>SME Reviews</span><span class="badge">2</span></a>
+      <a href="../role-views/cd-feedback.html#qa" class="sidebar-link" data-nav="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span>Learner Q&A</span><span class="badge">8</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="cb-reports.html" class="sidebar-link is-active" data-nav="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Analytics</span></a>
+      <a href="../role-views/cd-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Course Builder &middot; Reports</div>
+        <h1 class="page-title">Content <em>reports</em></h1>
+        <p class="page-sub">Course performance, learner engagement, SME review throughput.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="event.preventDefault();exportTable('csv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</a>
+        <a class="btn btn-ghost" href="#" onclick="event.preventDefault();exportTable('tsv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export Excel</a>
+      </div>
+    </div>
+
+    <!-- Date filter -->
+    <div class="rep-filter">
+      <div class="field">
+        <label for="rep-from">From</label>
+        <input class="input" type="date" id="rep-from" value="2025-06-11">
+      </div>
+      <span class="rep-range-sep">to</span>
+      <div class="field">
+        <label for="rep-to">To</label>
+        <input class="input" type="date" id="rep-to" value="2026-06-11">
+      </div>
+      <span class="rep-range-note">Maximum range: 1 year</span>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="applyDateFilter()">Apply</button>
+    </div>
+
+    <!-- KPI cards (flat, no gradient) -->
+    <div class="rep-kpi-grid">
+      <div class="rep-kpi">
+        <div class="rk-label">
+          Courses published
+          <span class="rk-icon sage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+        </div>
+        <div class="rk-value">14</div>
+        <div class="kpi-delta up">
+          <span class="sparkline-wrap">
+            <span class="sparkline">
+              <span style="height:40%;background:var(--c-sage);opacity:.5"></span>
+              <span style="height:55%;background:var(--c-sage);opacity:.65"></span>
+              <span style="height:45%;background:var(--c-sage);opacity:.65"></span>
+              <span style="height:70%;background:var(--c-sage);opacity:.8"></span>
+              <span style="height:100%;background:var(--c-sage)"></span>
+            </span>
+            <span class="sparkline-arrow up">&#8593;</span>
+            <span class="sparkline-pct up">+3 this year</span>
+          </span>
+        </div>
+      </div>
+      <div class="rep-kpi">
+        <div class="rk-label">
+          In SME review
+          <span class="rk-icon honey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        </div>
+        <div class="rk-value">3</div>
+        <div class="kpi-delta flat">
+          <span class="sparkline-wrap">
+            <span class="sparkline">
+              <span style="height:60%;background:var(--c-honey);opacity:.6"></span>
+              <span style="height:80%;background:var(--c-honey);opacity:.7"></span>
+              <span style="height:50%;background:var(--c-honey);opacity:.7"></span>
+              <span style="height:70%;background:var(--c-honey);opacity:.8"></span>
+              <span style="height:60%;background:var(--c-honey)"></span>
+            </span>
+            <span class="sparkline-arrow" style="color:var(--ink-mute)">&#8594;</span>
+            <span class="sparkline-pct" style="color:var(--ink-mute)">avg 2.8</span>
+          </span>
+        </div>
+      </div>
+      <div class="rep-kpi">
+        <div class="rk-label">
+          Total enrolments
+          <span class="rk-icon clay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        </div>
+        <div class="rk-value">2,841</div>
+        <div class="kpi-delta up">
+          <span class="sparkline-wrap">
+            <span class="sparkline">
+              <span style="height:30%;background:var(--c-sage);opacity:.5"></span>
+              <span style="height:48%;background:var(--c-sage);opacity:.6"></span>
+              <span style="height:62%;background:var(--c-sage);opacity:.7"></span>
+              <span style="height:80%;background:var(--c-sage);opacity:.85"></span>
+              <span style="height:100%;background:var(--c-sage)"></span>
+            </span>
+            <span class="sparkline-arrow up">&#8593;</span>
+            <span class="sparkline-pct up">+18%</span>
+          </span>
+        </div>
+      </div>
+      <div class="rep-kpi">
+        <div class="rk-label">
+          Avg completion
+          <span class="rk-icon ink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
+        </div>
+        <div class="rk-value">73<em>%</em></div>
+        <div class="kpi-delta down">
+          <span class="sparkline-wrap">
+            <span class="sparkline">
+              <span style="height:100%;background:var(--c-clay);opacity:.9"></span>
+              <span style="height:88%;background:var(--c-clay);opacity:.8"></span>
+              <span style="height:80%;background:var(--c-clay);opacity:.75"></span>
+              <span style="height:76%;background:var(--c-clay);opacity:.75"></span>
+              <span style="height:73%;background:var(--c-clay)"></span>
+            </span>
+            <span class="sparkline-arrow down">&#8595;</span>
+            <span class="sparkline-pct down">-4 pts</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-grid">
+
+      <!-- Bar chart: monthly enrolments -->
+      <div class="card">
+        <div class="card-body">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Monthly enrolments</div>
+              <div class="chart-sub">Last 6 months across all published courses</div>
+            </div>
+          </div>
+          <div class="chart-bars" style="height:140px; gap:6px; padding:0 0 4px;">
+            <div class="bar honey" style="height:52%"></div>
+            <div class="bar honey" style="height:64%"></div>
+            <div class="bar honey" style="height:48%"></div>
+            <div class="bar honey" style="height:78%"></div>
+            <div class="bar honey" style="height:91%"></div>
+            <div class="bar honey" style="height:100%"></div>
+          </div>
+          <div class="chart-meta">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut chart: Course Completed breakdown -->
+      <div class="card">
+        <div class="card-body">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Course Completed</div>
+              <div class="chart-sub">By status</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:18px;margin-top:8px;">
+            <div class="donut-solid" style="position:relative;flex-shrink:0;">
+              <div class="donut-center">
+                <span class="donut-value">73%</span>
+                <span class="donut-label">avg</span>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="donut-legend-item"><span class="dl-swatch sage"></span>Completed (42%)</div>
+              <div class="donut-legend-item"><span class="dl-swatch honey"></span>In progress (23%)</div>
+              <div class="donut-legend-item"><span class="dl-swatch clay"></span>Dropped (17%)</div>
+              <div class="donut-legend-item"><span class="dl-swatch muted"></span>Not started (18%)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score gauge -->
+      <div class="card">
+        <div class="card-body">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Avg quiz score</div>
+              <div class="chart-sub">Across all published courses</div>
+            </div>
+          </div>
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" width="120" height="80" viewBox="0 0 120 80">
+              <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--surface-3)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--c-sage)" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="156 198"
+                stroke-dashoffset="0"/>
+              <text x="60" y="64" text-anchor="middle" class="gauge-value-text">79%</text>
+              <text x="60" y="76" text-anchor="middle" class="gauge-label-text">score</text>
+            </svg>
+            <div class="gauge-state pass">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Pass (threshold 70%)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SME throughput bar chart -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-head">
+        <span class="card-title">SME review throughput <em>(days per course)</em></span>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;gap:20px;align-items:flex-end;">
+          <div class="chart-bars" style="height:100px;flex:1;gap:8px;padding:0 0 4px;">
+            <div class="bar sage" style="height:40%"></div>
+            <div class="bar sage" style="height:60%"></div>
+            <div class="bar sage" style="height:80%"></div>
+            <div class="bar sage" style="height:100%"></div>
+            <div class="bar sage" style="height:70%"></div>
+          </div>
+        </div>
+        <div class="chart-meta">
+          <span>DQF</span><span>RR101</span><span>KM</span><span>ERM</span><span>Avg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course table -->
+    <div class="card">
+      <div class="card-body" style="padding-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;flex-wrap:wrap;">
+          <input class="input" id="rep-search" placeholder="Filter by course name..." style="max-width:260px;" oninput="filterTable()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-ghost btn-sm sort-btn" data-col="0" onclick="sortTable(0,this)">Course <span class="sort-arrow">↕</span></button>
+            <button class="btn btn-ghost btn-sm sort-btn" data-col="2" onclick="sortTable(2,this)">Enrolments <span class="sort-arrow">↕</span></button>
+            <button class="btn btn-ghost btn-sm sort-btn" data-col="3" onclick="sortTable(3,this)">Completion <span class="sort-arrow">↕</span></button>
+          </div>
+        </div>
+        <div id="rep-count" style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);letter-spacing:0.06em;margin-bottom:8px;">Showing 4 of 4</div>
+      </div>
+      <div class="card-body flush" style="padding-top:0;">
+        <table class="tbl rep-table" id="rep-table">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Status</th>
+              <th>Enrolments</th>
+              <th>Completion %</th>
+              <th>Avg quiz score</th>
+              <th>SME review time</th>
+              <th>Trend</th>
+              <th>Last updated</th>
+            </tr>
+          </thead>
+          <tbody id="rep-tbody">
+            <tr class="rep-row" data-href="../role-views/cd-course-overview.html" style="cursor:pointer;" onclick="location.href='../role-views/cd-course-overview.html'" data-name="Data Quality Foundations">
+              <td>Data Quality Foundations</td>
+              <td><span class="rep-status"><span class="s-dot ok"></span>Published</span></td>
+              <td class="col-num" data-val="1204">1,204</td>
+              <td class="col-num" data-val="78">78%</td>
+              <td class="col-num">81%</td>
+              <td class="col-num">2d</td>
+              <td>
+                <div class="sparkline-wrap">
+                  <span class="sparkline">
+                    <span style="height:50%;background:var(--c-sage);opacity:.55"></span>
+                    <span style="height:65%;background:var(--c-sage);opacity:.7"></span>
+                    <span style="height:80%;background:var(--c-sage);opacity:.85"></span>
+                    <span style="height:100%;background:var(--c-sage)"></span>
+                  </span>
+                  <span class="sparkline-arrow up">&#8593;</span>
+                </div>
+              </td>
+              <td class="col-updated">2w ago</td>
+            </tr>
+            <tr class="rep-row" data-href="../role-views/cd-course-overview.html" style="cursor:pointer;" onclick="location.href='../role-views/cd-course-overview.html'" data-name="Records Retention 101">
+              <td>Records Retention 101</td>
+              <td><span class="rep-status"><span class="s-dot ok"></span>Published</span></td>
+              <td class="col-num" data-val="198">198</td>
+              <td class="col-num" data-val="68">68%</td>
+              <td class="col-num">76%</td>
+              <td class="col-num">3d</td>
+              <td>
+                <div class="sparkline-wrap">
+                  <span class="sparkline">
+                    <span style="height:100%;background:var(--c-clay);opacity:.9"></span>
+                    <span style="height:85%;background:var(--c-clay);opacity:.75"></span>
+                    <span style="height:75%;background:var(--c-clay);opacity:.7"></span>
+                    <span style="height:68%;background:var(--c-clay)"></span>
+                  </span>
+                  <span class="sparkline-arrow down">&#8595;</span>
+                </div>
+              </td>
+              <td class="col-updated">1mo ago</td>
+            </tr>
+            <tr class="rep-row" data-href="../role-views/cd-course-overview.html" style="cursor:pointer;" onclick="location.href='../role-views/cd-course-overview.html'" data-name="Knowledge Mapping">
+              <td>Knowledge Mapping</td>
+              <td><span class="rep-status"><span class="s-dot warn"></span>In review</span></td>
+              <td class="rep-empty" data-val="-">-</td>
+              <td class="rep-empty" data-val="-">-</td>
+              <td class="rep-empty">-</td>
+              <td class="col-num">6h (ongoing)</td>
+              <td class="rep-empty">-</td>
+              <td class="col-updated">2d ago</td>
+            </tr>
+            <tr class="rep-row" data-href="../role-views/cd-course-overview.html" style="cursor:pointer;" onclick="location.href='../role-views/cd-course-overview.html'" data-name="ERM Compliance Checklist">
+              <td>ERM Compliance Checklist</td>
+              <td><span class="rep-status"><span class="s-dot draft"></span>Draft</span></td>
+              <td class="rep-empty" data-val="-">-</td>
+              <td class="rep-empty" data-val="-">-</td>
+              <td class="rep-empty">-</td>
+              <td class="rep-empty">-</td>
+              <td class="rep-empty">-</td>
+              <td class="col-updated">3d ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+var _sortDir = {};
+
+/* ---- Export real file ---- */
+function exportTable(fmt) {
+  var sep = fmt === 'csv' ? ',' : '\t';
+  var ext = fmt === 'csv' ? '.csv' : '.xls';
+  var mime = fmt === 'csv' ? 'text/csv' : 'application/vnd.ms-excel';
+  var headers = ['Course','Status','Enrolments','Completion %','Avg quiz score','SME review time','Last updated'];
+  var rows = Array.from(document.querySelectorAll('#rep-tbody .rep-row')).filter(function(r){return r.style.display !== 'none';});
+  var lines = [headers.join(sep)];
+  rows.forEach(function(r) {
+    var cells = Array.from(r.querySelectorAll('td')).slice(0,7).map(function(td) {
+      var txt = td.textContent.trim().replace(/\s+/g,' ');
+      return fmt === 'csv' ? '"' + txt.replace(/"/g,'""') + '"' : txt;
+    });
+    lines.push(cells.join(sep));
+  });
+  var blob = new Blob([lines.join('\r\n')], {type: mime + ';charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'imi-course-report' + ext;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  if (window.imiToast) window.imiToast('Export downloaded.');
+}
+
+/* ---- Apply date filter: filters table rows and updates KPIs ---- */
+function applyDateFilter() {
+  var fromVal = document.getElementById('rep-from').value;
+  var toVal   = document.getElementById('rep-to').value;
+  if (!fromVal || !toVal) {
+    if (window.imiToast) window.imiToast('Please select both From and To dates.');
+    return;
+  }
+  var fromD = new Date(fromVal), toD = new Date(toVal);
+  if (fromD > toD) {
+    if (window.imiToast) window.imiToast('From date must be before To date.');
+    return;
+  }
+  var diffMs = toD - fromD;
+  var diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+  /* Simulate row visibility: show "published" rows only for ranges > 180 days,
+     show all rows (including draft/review) for any range */
+  var rows = document.querySelectorAll('#rep-tbody .rep-row');
+  var shown = 0;
+  rows.forEach(function(r) {
+    var statusText = (r.querySelector('.rep-status') || {}).textContent || '';
+    var include = true;
+    if (diffDays < 60) {
+      /* Short range: only recently updated (Draft, In review) */
+      include = /draft|review/i.test(statusText);
+    } else if (diffDays < 180) {
+      /* Medium: exclude Draft */
+      include = !/draft/i.test(statusText);
+    }
+    r.style.display = include ? '' : 'none';
+    if (include) shown++;
+  });
+
+  var countEl = document.getElementById('rep-count');
+  if (countEl) countEl.textContent = 'Showing ' + shown + ' of ' + rows.length;
+
+  if (window.imiToast) window.imiToast('Date range applied: showing ' + shown + ' courses.');
+}
+
+function filterTable() {
+  var q = document.getElementById('rep-search').value.toLowerCase();
+  var rows = document.querySelectorAll('#rep-tbody .rep-row');
+  var shown = 0;
+  rows.forEach(function(r) {
+    var match = r.dataset.name.toLowerCase().includes(q);
+    r.style.display = match ? '' : 'none';
+    if (match) shown++;
+  });
+  var count = document.getElementById('rep-count');
+  if (count) count.textContent = 'Showing ' + shown + ' of ' + rows.length;
+}
+
+function sortTable(colIndex, btn) {
+  var tbody = document.getElementById('rep-tbody');
+  var rows = Array.from(tbody.querySelectorAll('.rep-row'));
+  var key = 'col' + colIndex;
+  _sortDir[key] = !_sortDir[key];
+  var asc = _sortDir[key];
+
+  rows.sort(function(a, b) {
+    var aCell = a.querySelectorAll('td')[colIndex];
+    var bCell = b.querySelectorAll('td')[colIndex];
+    var aVal = aCell ? (aCell.dataset.val || aCell.textContent.trim()) : '';
+    var bVal = bCell ? (bCell.dataset.val || bCell.textContent.trim()) : '';
+    var aNum = parseFloat(aVal), bNum = parseFloat(bVal);
+    if (!isNaN(aNum) && !isNaN(bNum)) return asc ? aNum - bNum : bNum - aNum;
+    return asc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+  });
+
+  rows.forEach(function(r) { tbody.appendChild(r); });
+
+  document.querySelectorAll('.sort-btn').forEach(function(b) {
+    b.querySelector('.sort-arrow').textContent = '↕';
+    b.classList.remove('sort-active');
+  });
+  btn.querySelector('.sort-arrow').textContent = asc ? '↑' : '↓';
+  btn.classList.add('sort-active');
+}
+</script>
+<style>
+  .rep-row:hover td { background: var(--paper-2); }
+  .sort-btn.sort-active { border-color: var(--ink-mute); }
+</style>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

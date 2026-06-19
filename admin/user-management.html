@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registered users · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── toolbar ── */
+  .um-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .um-search { flex: 1; min-width: 240px; position: relative; }
+  .um-search input {
+    width: 100%; height: 40px; border-radius: var(--r-pill);
+    border: 1px solid var(--line); background: var(--paper);
+    padding: 0 16px 0 40px; font-size: 13.5px; color: var(--ink);
+    transition: border 0.18s, background 0.18s, box-shadow 0.18s;
+  }
+  .um-search input::placeholder { color: var(--ink-soft); }
+  .um-search input:focus {
+    outline: none; background: #fff;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42,17,8,0.04);
+  }
+  .um-search::before {
+    content: ""; position: absolute; left: 15px; top: 50%;
+    transform: translateY(-50%); width: 14px; height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain; background-repeat: no-repeat;
+  }
+  .um-select {
+    height: 40px; padding: 0 14px;
+    border: 1px solid var(--line); background: var(--paper);
+    border-radius: var(--r-pill); font-size: 13px; color: var(--ink);
+    transition: border 0.18s, background 0.18s; cursor: pointer;
+  }
+  .um-select:focus { outline: none; border-color: var(--ink-mute); background: #fff; }
+
+  /* ── filter grid ── */
+  .um-filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .um-filter-col-label {
+    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 12px;
+  }
+  .um-check {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 13px; color: var(--ink-soft); margin-bottom: 9px; cursor: pointer;
+  }
+  .um-check:last-child { margin-bottom: 0; }
+  .um-check input { width: 14px; height: 14px; accent-color: var(--accent); flex-shrink: 0; }
+  .um-filter-select {
+    width: 100%; height: 36px; padding: 0 12px;
+    border: 1px solid var(--line); background: var(--paper);
+    border-radius: var(--r-sm); font-size: 13px; color: var(--ink);
+  }
+  @media (max-width: 1100px) { .um-filter-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ── user table ── */
+  .um-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .um-table th {
+    text-align: left; font-family: var(--font-label); font-weight: 600;
+    color: var(--ink-mute); padding: 13px 16px; border-bottom: 1px solid var(--line);
+    background: var(--paper-2); font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .um-table th:first-child, .um-table td:first-child { padding-left: 20px; }
+  .um-table th:last-child, .um-table td:last-child { padding-right: 20px; text-align: right; }
+  .um-table td {
+    padding: 15px 16px; border-bottom: 1px solid var(--line);
+    color: var(--ink-soft); vertical-align: middle;
+  }
+  .um-table tbody tr:last-child td { border-bottom: none; }
+  .um-table tbody tr { transition: background 0.16s; }
+  .um-table tbody tr:hover { background: var(--paper-2); }
+  .um-table input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+  .um-name {
+    color: var(--ink); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .um-name:hover { color: var(--accent); }
+  .um-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    overflow: hidden; flex-shrink: 0; background: var(--paper-2);
+  }
+  .um-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .um-email { font-family: var(--font-label); letter-spacing: 0.01em; color: var(--ink-soft); }
+  .um-certs { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .um-last { white-space: nowrap; font-family: var(--font-label); letter-spacing: 0.03em; color: var(--ink-mute); }
+
+  .chip .sdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .chip .sdot.ok   { background: var(--c-sage); }
+  .chip .sdot.warn { background: var(--c-honey); }
+  .chip .sdot.bad  { background: var(--accent); }
+
+  /* ── row actions + kebab ── */
+  .um-row-actions { display: inline-flex; align-items: center; gap: 6px; }
+  .um-kebab-wrap { position: relative; }
+  .um-kebab { font-size: 15px; line-height: 1; padding: 3px 7px; }
+  .um-kebab-menu {
+    position: absolute; right: 0; top: 100%; z-index: 300;
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(42,17,8,0.10);
+    min-width: 148px; padding: 4px 0; margin-top: 4px;
+  }
+  .um-mi {
+    display: block; padding: 9px 14px; font-size: 13px; font-weight: 500;
+    color: var(--ink); white-space: nowrap; transition: background 0.12s; text-decoration: none;
+  }
+  .um-mi:hover { background: var(--paper-2); }
+  .um-mi-del { color: var(--accent); }
+  .um-mi-del:hover { background: var(--accent-soft, #fce8e8); }
+
+  /* ── pager ── */
+  .um-pager {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 18px; font-size: 12.5px; color: var(--ink-mute);
+    font-family: var(--font-label); letter-spacing: 0.03em;
+  }
+  .um-pager .pg-page { padding: 0 14px; font-weight: 600; color: var(--ink-soft); }
+
+  /* ── bulk action bar ── */
+  .um-bulk-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 10px 18px;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .um-bulk-count { font-weight: 700; color: var(--ink); font-size: 13.5px; margin-right: 6px; white-space: nowrap; }
+  .um-bulk-bar .btn-ghost { font-size: 12.5px; height: 34px; padding: 0 14px; }
+  .um-bulk-purge {
+    background: var(--c-danger); color: #fff; border: none;
+    border-radius: var(--r-pill); font-family: var(--font-label);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0 16px; height: 34px;
+    cursor: pointer; white-space: nowrap;
+  }
+  .um-bulk-purge:hover { background: var(--c-danger-deep); }
+  .um-bulk-meta {
+    margin-left: auto; font-family: var(--font-label); font-size: 11px;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-mute); white-space: nowrap;
+  }
+
+  /* ── flat stat strip ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 900px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" target="_blank" rel="noopener">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link is-active" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">User management</div>
+        <h1 class="page-title">Registered <em>users</em> &middot; 9,847</h1>
+        <p class="page-sub">Learners, members, corporate users. For admin-role users see Admin users.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="alert('CSV export would download user data. (Prototype: no file generated.)');return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </a>
+      </div>
+    </div>
+
+    <!-- Flat stat strip (no gradients) -->
+    <div class="stat-strip">
+      <div class="stat-flat">
+        <div class="stat-label">Total users</div>
+        <div class="stat-value">9,847</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Active</div>
+        <div class="stat-value"><span class="stat-dot"></span>8,921</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Suspended</div>
+        <div class="stat-value" style="color:var(--accent)">143</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Invited (pending)</div>
+        <div class="stat-value" style="color:var(--c-honey)">783</div>
+      </div>
+    </div>
+
+    <!-- Bulk action bar -->
+    <div class="um-bulk-bar">
+      <span class="um-bulk-count">3 users selected</span>
+      <button class="btn btn-ghost btn-sm" onclick="if(confirm('Suspend 3 selected users? They will lose access until reactivated.')){location.href='admin-user-suspend.html';}">Suspend</button>
+      <button class="btn btn-ghost btn-sm" onclick="alert('Deactivate: selected users lose access until reactivated. (Prototype: no state change.)')">Deactivate</button>
+      <button class="btn btn-ghost btn-sm" onclick="alert('Reactivate: selected users regain access immediately. (Prototype: no state change.)')">Reactivate</button>
+      <button class="btn btn-ghost btn-sm" onclick="umBulkSoftDelete(this)">Soft delete</button>
+      <button class="um-bulk-purge" onclick="if(!confirm('Hard purge permanently deletes users. Locally certified members (Course Completed) are excluded and cannot be purged. Proceed with non-certified users only?'))return false;">Hard purge</button>
+      <span class="um-bulk-meta">Lifecycle states</span>
+    </div>
+
+    <!-- Toolbar: search + filters -->
+    <div class="um-toolbar">
+      <div class="um-search"><input placeholder="Search by name / email / ID"></div>
+      <select class="um-select">
+        <option>All personas</option>
+        <option>Learner / Member</option>
+        <option>Corporate User</option>
+        <option>Corporate Admin</option>
+        <option>SME</option>
+        <option>Content Developer (Moderator)</option>
+      </select>
+      <select class="um-select">
+        <option>All statuses</option>
+        <option>Invited</option>
+        <option>Active</option>
+        <option>Suspended</option>
+        <option>Deactivated</option>
+        <option>Deleted (Soft)</option>
+        <option>Purged (Hard)</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="var fp=document.getElementById('um-filter-bar');if(fp){var open=fp.classList.toggle('is-open');fp.style.display=open?'block':'none';document.body.classList.toggle('um-filters-open',open);}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        + Filters
+      </button>
+    </div>
+
+    <!-- Filter panel -->
+    <div id="um-filter-bar" class="card" style="margin-bottom:18px;display:none">
+      <div class="card-head">
+        <div class="card-title">Filter <em>panel</em></div>
+        <a class="card-link" href="#" onclick="document.querySelectorAll('.um-filter-grid input').forEach(function(el){el.checked=false;});document.querySelectorAll('.um-filter-select').forEach(function(el){el.selectedIndex=0;});return false;">CLEAR ALL</a>
+      </div>
+      <div class="card-body">
+        <div class="um-filter-grid">
+          <div>
+            <div class="um-filter-col-label">Role</div>
+            <label class="um-check"><input type="checkbox">Learner / Member</label>
+            <label class="um-check"><input type="checkbox">Corporate User</label>
+            <label class="um-check"><input type="checkbox">Corporate Admin</label>
+            <label class="um-check"><input type="checkbox">SME</label>
+            <label class="um-check"><input type="checkbox">Content Developer (Moderator)</label>
+          </div>
+          <div>
+            <div class="um-filter-col-label">Status</div>
+            <label class="um-check"><input type="checkbox">Invited</label>
+            <label class="um-check"><input type="checkbox">Active</label>
+            <label class="um-check"><input type="checkbox">Suspended</label>
+            <label class="um-check"><input type="checkbox">Deactivated</label>
+            <label class="um-check"><input type="checkbox">Deleted (Soft)</label>
+            <label class="um-check"><input type="checkbox">Purged (Hard)</label>
+          </div>
+          <div>
+            <div class="um-filter-col-label">Date joined</div>
+            <label class="um-check"><input type="radio" name="f-joined">Last 7 days</label>
+            <label class="um-check"><input type="radio" name="f-joined">Last 30 days</label>
+            <label class="um-check"><input type="radio" name="f-joined">Last 90 days</label>
+            <label class="um-check"><input type="radio" name="f-joined">Custom range</label>
+          </div>
+          <div>
+            <div class="um-filter-col-label">Last active</div>
+            <label class="um-check"><input type="checkbox">Last 7 days</label>
+            <label class="um-check"><input type="checkbox">Last 30 days</label>
+            <label class="um-check"><input type="checkbox">Over 90 days</label>
+            <label class="um-check"><input type="checkbox">Never logged in</label>
+          </div>
+          <div>
+            <div class="um-filter-col-label">Tenant</div>
+            <select class="um-filter-select">
+              <option>All tenants</option>
+              <option>Bank Muscat</option>
+              <option>Ministry of Health</option>
+              <option>Individual (no tenant)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User table -->
+    <div class="card" style="padding:0">
+      <table class="um-table">
+        <thead>
+          <tr>
+            <th style="width:18px"><input type="checkbox"></th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Persona</th>
+            <th>Status</th>
+            <th>Course Completed</th>
+            <th>Last login</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="admin-user-detail.html" class="um-name">
+                <span class="um-avatar"><img src="https://i.pravatar.cc/60?u=layla" alt=""></span>
+                Layla Al-Hashimi
+              </a>
+            </td>
+            <td class="um-email">layla@bankmuscat.om</td>
+            <td><span class="chip">Learner / Member</span> <span class="chip">SME</span></td>
+            <td><span class="chip t-sage"><span class="sdot ok"></span>Active</span></td>
+            <td class="um-certs">3</td>
+            <td class="um-last">2h ago</td>
+            <td><div class="um-row-actions"><a href="admin-user-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a><div class="um-kebab-wrap"><button class="btn btn-ghost btn-sm um-kebab" aria-label="More actions" onclick="(function(btn){btn.parentElement.querySelectorAll('.um-kebab-menu').forEach(function(m){var was=m.classList.contains('is-open');document.querySelectorAll('.um-kebab-menu').forEach(function(x){x.style.display='none';x.classList.remove('is-open');});if(!was){m.style.display='block';m.classList.add('is-open');}});event.stopPropagation();})">&#8943;</button><div class="um-kebab-menu" style="display:none"><a href="admin-user-detail.html" class="um-mi">View detail</a><a href="admin-user-suspend.html" class="um-mi">Suspend</a><a href="#" class="um-mi um-mi-del" onclick="return umSoftDelete(event,'Layla Al-Hashimi')">Soft delete</a></div></div></div></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="admin-user-detail.html" class="um-name">
+                <span class="um-avatar"><img src="https://i.pravatar.cc/60?u=tariq" alt=""></span>
+                Tariq Al-Balushi
+              </a>
+            </td>
+            <td class="um-email">tariq@pdo.com</td>
+            <td><span class="chip">Corporate User &middot; PDO</span> <span class="chip">Corporate Admin</span></td>
+            <td><span class="chip t-sage"><span class="sdot ok"></span>Active</span></td>
+            <td class="um-certs">2</td>
+            <td class="um-last">1d ago</td>
+            <td><div class="um-row-actions"><a href="admin-user-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a><div class="um-kebab-wrap"><button class="btn btn-ghost btn-sm um-kebab" aria-label="More actions" onclick="(function(btn){btn.parentElement.querySelectorAll('.um-kebab-menu').forEach(function(m){var was=m.classList.contains('is-open');document.querySelectorAll('.um-kebab-menu').forEach(function(x){x.style.display='none';x.classList.remove('is-open');});if(!was){m.style.display='block';m.classList.add('is-open');}});event.stopPropagation();})">&#8943;</button><div class="um-kebab-menu" style="display:none"><a href="admin-user-detail.html" class="um-mi">View detail</a><a href="admin-user-suspend.html" class="um-mi">Suspend</a><a href="#" class="um-mi um-mi-del" onclick="return umSoftDelete(event,'Tariq Al-Balushi')">Soft delete</a></div></div></div></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="admin-user-detail.html" class="um-name">
+                <span class="um-avatar"><img src="https://i.pravatar.cc/60?u=faris" alt=""></span>
+                Faris Al-Maamari
+              </a>
+            </td>
+            <td class="um-email">faris@imi.om</td>
+            <td><span class="chip">SME</span></td>
+            <td><span class="chip t-sage"><span class="sdot ok"></span>Active</span></td>
+            <td class="um-certs">5</td>
+            <td class="um-last">3h ago</td>
+            <td><div class="um-row-actions"><a href="admin-user-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a><div class="um-kebab-wrap"><button class="btn btn-ghost btn-sm um-kebab" aria-label="More actions" onclick="(function(btn){btn.parentElement.querySelectorAll('.um-kebab-menu').forEach(function(m){var was=m.classList.contains('is-open');document.querySelectorAll('.um-kebab-menu').forEach(function(x){x.style.display='none';x.classList.remove('is-open');});if(!was){m.style.display='block';m.classList.add('is-open');}});event.stopPropagation();})">&#8943;</button><div class="um-kebab-menu" style="display:none"><a href="admin-user-detail.html" class="um-mi">View detail</a><a href="admin-user-suspend.html" class="um-mi">Suspend</a><a href="#" class="um-mi um-mi-del" onclick="return umSoftDelete(event,'Faris Al-Maamari')">Soft delete</a></div></div></div></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="admin-user-detail.html" class="um-name">
+                <span class="um-avatar"><img src="https://i.pravatar.cc/60?u=reem" alt=""></span>
+                Reem Al-Zadjali
+              </a>
+            </td>
+            <td class="um-email">reem@omantel.om</td>
+            <td><span class="chip">Corporate User &middot; Omantel</span></td>
+            <td><span class="chip t-honey"><span class="sdot warn"></span>Deactivated</span></td>
+            <td class="um-certs">1</td>
+            <td class="um-last">7m ago</td>
+            <td><div class="um-row-actions"><a href="admin-user-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a><div class="um-kebab-wrap"><button class="btn btn-ghost btn-sm um-kebab" aria-label="More actions" onclick="(function(btn){btn.parentElement.querySelectorAll('.um-kebab-menu').forEach(function(m){var was=m.classList.contains('is-open');document.querySelectorAll('.um-kebab-menu').forEach(function(x){x.style.display='none';x.classList.remove('is-open');});if(!was){m.style.display='block';m.classList.add('is-open');}});event.stopPropagation();})">&#8943;</button><div class="um-kebab-menu" style="display:none"><a href="admin-user-detail.html" class="um-mi">View detail</a><a href="admin-user-suspend.html" class="um-mi">Suspend</a><a href="#" class="um-mi um-mi-del" onclick="return umSoftDelete(event,'Reem Al-Zadjali')">Soft delete</a></div></div></div></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <a href="admin-user-detail.html" class="um-name">
+                <span class="um-avatar"><img src="https://i.pravatar.cc/60?u=sami" alt=""></span>
+                Sami Al-Hinai
+              </a>
+            </td>
+            <td class="um-email">sami@example.com</td>
+            <td><span class="chip">Learner / Member</span></td>
+            <td><span class="chip t-clay"><span class="sdot bad"></span>Suspended</span></td>
+            <td class="um-certs">0</td>
+            <td class="um-last">2w ago</td>
+            <td><div class="um-row-actions"><a href="admin-user-detail.html" class="btn btn-ghost btn-sm">View &rarr;</a><div class="um-kebab-wrap"><button class="btn btn-ghost btn-sm um-kebab" aria-label="More actions" onclick="(function(btn){btn.parentElement.querySelectorAll('.um-kebab-menu').forEach(function(m){var was=m.classList.contains('is-open');document.querySelectorAll('.um-kebab-menu').forEach(function(x){x.style.display='none';x.classList.remove('is-open');});if(!was){m.style.display='block';m.classList.add('is-open');}});event.stopPropagation();})">&#8943;</button><div class="um-kebab-menu" style="display:none"><a href="admin-user-detail.html" class="um-mi">View detail</a><a href="admin-user-suspend.html" class="um-mi">Suspend</a><a href="#" class="um-mi um-mi-del" onclick="return umSoftDelete(event,'Sami Al-Hinai')">Soft delete</a></div></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pager -->
+    <div class="um-pager">
+      <span>Showing 1&ndash;25 of 10,432</span>
+      <div class="row gap-sm">
+        <button class="btn btn-ghost btn-sm" onclick="void(0)" disabled>&#9664;</button>
+        <span class="pg-page">1 of 418</span>
+        <button class="btn btn-ghost btn-sm" onclick="alert('Page 2 of 418; prototype shows page 1 only.')">&#9654;</button>
+      </div>
+    </div>
+
+    <!-- Lifecycle note -->
+    <p class="page-sub" style="margin-top:24px;font-size:12.5px;color:var(--ink-mute)">
+      <strong style="color:var(--ink-soft)">Lifecycle note:</strong>
+      No login for 6 months triggers auto-Deactivation (LIFE-09). Locally certified users (Course Completed) are retained permanently and cannot be hard purged (LIFE-08).
+    </p>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  /* ── kebab menus ── */
+  function closeAllKebabs(){
+    document.querySelectorAll('.um-kebab-menu').forEach(function(m){ m.style.display='none'; m.classList.remove('is-open'); });
+  }
+  document.addEventListener('click', closeAllKebabs);
+  document.querySelectorAll('.um-kebab').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var menu = btn.nextElementSibling;
+      var wasOpen = menu.classList.contains('is-open');
+      closeAllKebabs();
+      if(!wasOpen){ menu.style.display='block'; menu.classList.add('is-open'); }
+    });
+  });
+})();
+
+function umBulkSoftDelete(btn){
+  var n = document.querySelectorAll('.um-bulk-bar .um-bulk-count')[0];
+  var count = n ? n.textContent.match(/\d+/) : ['3'];
+  var num = count ? count[0] : '3';
+  if(confirm('Soft delete ' + num + ' selected user(s)?\n\nAccounts move to the deletion queue. A 30-day grace period applies before permanent PII removal.')){
+    var t = document.createElement('div');
+    t.textContent = num + ' account(s) moved to deletion queue.';
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
+    document.body.appendChild(t);
+    setTimeout(function(){t.remove();location.href='admin-deletion-queue.html';},1800);
+  }
+}
+
+function umSoftDelete(e, name){
+  e.preventDefault();
+  if(confirm('Soft delete ' + name + '?\n\nThis moves the account to the deletion queue. A 30-day grace period applies before permanent PII removal.')){
+    var row = e.target.closest('tr');
+    if(row){ row.style.opacity='0.38'; row.style.pointerEvents='none'; }
+    var t = document.createElement('div');
+    t.textContent = name + ' moved to deletion queue.';
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
+    document.body.appendChild(t);
+    setTimeout(function(){t.remove();},2600);
+  }
+  return false;
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

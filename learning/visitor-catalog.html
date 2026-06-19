@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor catalog · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+
+  /* ── visitor nav ── */
+  .vnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+    height: 56px;
+    background: rgba(253, 252, 250, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .vnav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .vnav-brand .brand-logo-mark {
+    height: 30px;
+    width: 30px;
+    object-fit: contain;
+    display: block;
+  }
+  .vnav-brand .brand-text {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .vnav-brand .brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+  .vnav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .vnav-links a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s var(--tn);
+  }
+  .vnav-links a:hover { color: var(--ink); }
+  .vnav-cta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .vnav-signin {
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .vnav-signup {
+    text-decoration: none;
+    background: var(--ink);
+    color: var(--hero-bg);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: var(--r-pill);
+    transition: transform 0.12s var(--tn), background 0.15s;
+  }
+  .vnav-signup:hover { transform: translateY(-1px); background: var(--ink-deep); }
+
+  /* ── page wrapper ── */
+  .vmain { max-width: 1200px; margin: 0 auto; padding: 40px; }
+
+  /* ── flat hero (no gradient) ── */
+  .v-hero {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 52px 40px 48px;
+    text-align: center;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-sm);
+  }
+  .v-hero .eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .v-hero h1 {
+    font-family: var(--font-sans);
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .v-hero h1 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .v-hero .v-hero-sub {
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .v-hero .v-hero-sub strong { color: var(--ink); font-weight: 700; }
+  .v-hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    margin: 24px 0 28px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .v-hero-stat { display: flex; flex-direction: column; gap: 4px; text-align: center; }
+  .v-hero-stat .hs-value {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .v-hero-stat .hs-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .v-sep { width: 1px; height: 36px; background: var(--line); }
+  .v-hero-actions { display: flex; gap: 12px; justify-content: center; }
+
+  /* ── discover / filter bar ── */
+  .v-discover {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    margin-bottom: 36px;
+  }
+  .v-search { position: relative; margin-bottom: 14px; }
+  .v-search input {
+    width: 100%;
+    height: 44px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    padding: 0 18px 0 46px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    box-sizing: border-box;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  .v-search input::placeholder { color: var(--ink-soft); }
+  .v-search input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+  }
+  .v-search::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    pointer-events: none;
+  }
+  .v-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+  .v-filter {
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    border-radius: var(--r-pill);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 26px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .v-filter:hover { border-color: var(--ink-mute); color: var(--ink); }
+  .v-filter:focus { outline: none; border-color: var(--ink-mute); box-shadow: 0 0 0 3px rgba(42,17,8,0.06); }
+
+  /* ── section label ── */
+  .v-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .v-section-label {
+    font-family: var(--font-label);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-label);
+  }
+  .v-section-count {
+    font-family: var(--font-label);
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── free video cards ── flat, photo cover ── */
+  .vid-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 44px;
+  }
+  @media (max-width: 1100px) { .vid-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .vid-grid { grid-template-columns: 1fr; } }
+
+  .vid-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s var(--tn), border-color 0.2s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .vid-card:hover { transform: translateY(-3px); border-color: var(--line-strong); box-shadow: var(--shadow-sm); }
+
+  .vid-cover {
+    height: 130px;
+    background: var(--bg-alt);
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .vid-cover img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.72;
+  }
+  .vid-play {
+    position: relative;
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(253, 252, 250, 0.92);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    box-shadow: 0 6px 18px -6px rgba(42, 17, 8, 0.30);
+    transition: transform 0.2s var(--tn);
+  }
+  .vid-card:hover .vid-play { transform: scale(1.08); }
+  .vid-play svg { width: 18px; height: 18px; margin-left: 3px; }
+  .vid-dur-tag {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    z-index: 1;
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: rgba(42,17,8,0.78);
+    color: var(--hero-bg);
+    padding: 3px 8px;
+    border-radius: var(--r-pill);
+  }
+  .vid-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+  .vid-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+  .vid-meta {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+    margin-top: auto;
+  }
+  .vid-free {
+    color: var(--c-sage-text);
+    font-weight: 700;
+  }
+
+  /* ── canonical .crs grid ── */
+  .crs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 0;
+  }
+  @media (max-width: 1100px) { .crs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .crs-grid { grid-template-columns: 1fr; } }
+
+  /* ── lock overlay for visitor view ── */
+  .crs-enrol-lock {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-top: 12px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .crs-enrol-lock:hover { border-color: var(--line-strong); color: var(--ink); }
+  .crs-enrol-lock svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  /* ── wishlist heart ── */
+  .crs-wish {
+    color: var(--ink-mute);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.15s;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .crs-wish:hover { color: var(--accent); }
+
+  /* ── footer CTA band ── */
+  .v-footer-cta {
+    margin-top: 52px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 44px 40px;
+    text-align: center;
+    box-shadow: var(--shadow-xs);
+  }
+  .v-footer-cta h2 {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .v-footer-cta h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .v-footer-cta p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.55;
+  }
+  .v-footer-cta .v-cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 720px) {
+    .vmain { padding: 24px 20px; }
+    .v-hero { padding: 36px 24px 32px; }
+    .vnav { padding: 0 20px; }
+    .vnav-links { display: none; }
+    .v-hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Visitor nav -->
+<header class="vnav">
+  <a class="vnav-brand" href="visitor-catalog.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <nav class="vnav-links">
+    <a href="visitor-catalog.html">Browse courses</a>
+    <a href="../learning/career-path.html">Career paths</a>
+    <a href="../learning/standalone-lessons.html">Short videos</a>
+  </nav>
+  <div class="vnav-cta">
+    <a class="vnav-signin" href="../auth/login.html">Sign in</a>
+    <a class="vnav-signup" href="../auth/signup.html">Sign up free</a>
+  </div>
+</header>
+
+<main class="vmain">
+
+  <!-- Hero: flat card, no gradient -->
+  <section class="v-hero">
+    <div class="eyebrow">Information Management Institute</div>
+    <h1>Free to browse. <em>Free to learn.</em></h1>
+    <p class="v-hero-sub"><strong>200+ explainer videos &middot; 30+ courses &middot; 4 career paths.</strong> Watch free content without signing up. Sign up only when you want to track progress or earn proof of completion.</p>
+    <div class="v-hero-stats">
+      <div class="v-hero-stat">
+        <span class="hs-value">200+</span>
+        <span class="hs-label">Free videos</span>
+      </div>
+      <span class="v-sep"></span>
+      <div class="v-hero-stat">
+        <span class="hs-value">30+</span>
+        <span class="hs-label">Courses</span>
+      </div>
+      <span class="v-sep"></span>
+      <div class="v-hero-stat">
+        <span class="hs-value">4</span>
+        <span class="hs-label">Career paths</span>
+      </div>
+      <span class="v-sep"></span>
+      <div class="v-hero-stat">
+        <span class="hs-value">12k+</span>
+        <span class="hs-label">Learners</span>
+      </div>
+    </div>
+    <div class="v-hero-actions">
+      <a class="btn btn-primary" href="../auth/signup.html">Sign up free &rarr;</a>
+      <a class="btn btn-ghost" href="#free-videos" onclick="document.getElementById('free-videos').scrollIntoView({behavior:'smooth'});return false;">Watch free videos</a>
+    </div>
+  </section>
+
+  <!-- Discover: search + filters -->
+  <div class="v-discover">
+    <div class="v-search">
+      <input type="search" placeholder="Search courses, lessons and career paths" aria-label="Search learning content">
+    </div>
+    <div class="v-filters">
+      <select class="v-filter" aria-label="Category"><option>Category</option><option>Courses</option><option>Standalone lessons</option><option>Explainer videos</option><option>Learning paths</option></select>
+      <select class="v-filter" aria-label="Duration"><option>Duration</option><option>Under 10 min</option><option>10-30 min</option><option>30-60 min</option><option>Over 1 hour</option></select>
+      <select class="v-filter" aria-label="Difficulty level"><option>Difficulty level</option><option>Basic</option><option>Practitioner</option><option>Strategist</option></select>
+      <select class="v-filter" aria-label="Learning type"><option>Learning type</option><option>Course</option><option>Standalone lesson</option><option>Explainer video</option></select>
+      <select class="v-filter" aria-label="Subject"><option>Subject</option><option>Data Management</option><option>Knowledge Management</option><option>Records Management</option><option>Information Architecture</option></select>
+      <select class="v-filter" aria-label="Field of Study"><option>Field of Study</option><option>Information Science</option><option>Data Governance</option><option>Compliance and Risk</option><option>Digital Preservation</option></select>
+      <select class="v-filter" aria-label="Skill Level"><option>Skill Level</option><option>Basic</option><option>Practitioner</option><option>Strategist</option></select>
+      <select class="v-filter" aria-label="Tags"><option>Tags</option><option>New</option><option>Popular</option><option>Required</option><option>Featured</option></select>
+      <select class="v-filter" aria-label="Completion status"><option>Completion status</option><option>Not started</option><option>In progress</option><option>Completed</option></select>
+    </div>
+  </div>
+
+  <!-- Completion-status sign-up nudge (hidden by default) -->
+  <div id="completion-nudge" style="display:none;background:var(--c-honey-wash);border:1px solid rgba(201,155,46,.30);border-radius:var(--r-md);padding:16px 20px;margin-bottom:24px;font-size:13.5px;color:var(--c-honey-text);line-height:1.55;">
+    <strong>Track your progress by signing up.</strong> Completion status filters (Not started / In progress / Completed) require a free account. <a href="../auth/signup.html" style="color:var(--c-honey-text);font-weight:700;text-decoration:underline;">Sign up free &rarr;</a>
+  </div>
+
+  <!-- Free explainer videos -->
+  <div class="v-section-head" id="free-videos">
+    <span class="v-section-label">Free explainer videos</span>
+    <span class="v-section-count">4 videos</span>
+  </div>
+  <div class="vid-grid">
+    <a class="vid-card" href="../learning/course-preview.html">
+      <div class="vid-cover">
+        <img src="../img/covers/cover-1.jpg" alt="Records management explainer">
+        <span class="vid-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        <span class="vid-dur-tag">2 min</span>
+      </div>
+      <div class="vid-body">
+        <div class="vid-title">What is records management?</div>
+        <div class="vid-meta">12,400 views &middot; <span class="vid-free">Free</span></div>
+      </div>
+    </a>
+    <a class="vid-card" href="../learning/course-preview.html">
+      <div class="vid-cover">
+        <img src="../img/covers/cover-2.jpg" alt="DMBOK 3.0 explainer">
+        <span class="vid-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        <span class="vid-dur-tag">3 min</span>
+      </div>
+      <div class="vid-body">
+        <div class="vid-title">DMBOK 3.0 in 3 minutes</div>
+        <div class="vid-meta">8,200 views &middot; <span class="vid-free">Free</span></div>
+      </div>
+    </a>
+    <a class="vid-card" href="../learning/course-preview.html">
+      <div class="vid-cover">
+        <img src="../img/covers/cover-3.jpg" alt="Knowledge audits explained">
+        <span class="vid-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        <span class="vid-dur-tag">2 min</span>
+      </div>
+      <div class="vid-body">
+        <div class="vid-title">Knowledge audits explained</div>
+        <div class="vid-meta">6,100 views &middot; <span class="vid-free">Free</span></div>
+      </div>
+    </a>
+    <a class="vid-card" href="../learning/course-preview.html">
+      <div class="vid-cover">
+        <img src="../img/covers/cover-1.jpg" alt="ISO 30401 explained">
+        <span class="vid-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+        <span class="vid-dur-tag">2 min</span>
+      </div>
+      <div class="vid-body">
+        <div class="vid-title">Why ISO 30401 matters</div>
+        <div class="vid-meta">4,800 views &middot; <span class="vid-free">Free</span></div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Premium courses: canonical .crs cards -->
+  <div class="v-section-head">
+    <span class="v-section-label">Premium courses (sign up to enrol)</span>
+    <span class="v-section-count">3 courses</span>
+  </div>
+  <div class="crs-grid">
+
+    <!-- Card 1: CDMP Practitioner Prep -->
+    <article class="crs" style="display:flex;flex-direction:column;">
+      <div class="crs-cover">
+        <img src="../img/covers/cover-1.jpg" alt="">
+        <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Advanced</span>
+        <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>12 h</span>
+      </div>
+      <div class="crs-body">
+        <div class="crs-type">
+          <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+          <span class="crs-type-label">Course</span>
+        </div>
+        <h3 class="crs-title">CDMP Practitioner Prep</h3>
+        <div class="crs-rule"></div>
+        <div class="crs-foot">
+          <div class="crs-by">
+            <img class="crs-av" src="https://i.pravatar.cc/80?u=layla-hashimi" alt="">
+            <span class="crs-by-txt">By: <strong>Layla Al-Hashimi</strong></span>
+          </div>
+          <div class="crs-acts">
+            <button class="crs-ic" title="Save to wishlist" onclick="alert('Sign up free to save courses to your wishlist.');return false;" aria-label="Sign up to add to wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'CDMP Practitioner Prep'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">20 lessons &middot; 12 h</div>
+        <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
+      </div>
+    </article>
+
+    <!-- Card 2: Knowledge Mapping Fundamentals -->
+    <article class="crs" style="display:flex;flex-direction:column;">
+      <div class="crs-cover">
+        <img src="../img/covers/cover-2.jpg" alt="">
+        <span class="crs-badge crs-level lv-basic"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Beginner</span>
+        <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 h</span>
+      </div>
+      <div class="crs-body">
+        <div class="crs-type">
+          <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+          <span class="crs-type-label">Course</span>
+        </div>
+        <h3 class="crs-title">Knowledge Mapping Fundamentals</h3>
+        <div class="crs-rule"></div>
+        <div class="crs-foot">
+          <div class="crs-by">
+            <img class="crs-av" src="https://i.pravatar.cc/80?u=dr-faris" alt="">
+            <span class="crs-by-txt">By: <strong>Dr. Faris</strong></span>
+          </div>
+          <div class="crs-acts">
+            <button class="crs-ic" title="Save to wishlist" onclick="alert('Sign up free to save courses to your wishlist.');return false;" aria-label="Sign up to add to wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Knowledge Mapping Fundamentals'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">6 lessons &middot; 3 h</div>
+        <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
+      </div>
+    </article>
+
+    <!-- Card 3: Data Retention Schedules -->
+    <article class="crs" style="display:flex;flex-direction:column;">
+      <div class="crs-cover">
+        <img src="../img/covers/cover-3.jpg" alt="">
+        <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Intermediate</span>
+        <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4 h</span>
+      </div>
+      <div class="crs-body">
+        <div class="crs-type">
+          <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+          <span class="crs-type-label">Course</span>
+        </div>
+        <h3 class="crs-title">Data Retention Schedules</h3>
+        <div class="crs-rule"></div>
+        <div class="crs-foot">
+          <div class="crs-by">
+            <img class="crs-av" src="https://i.pravatar.cc/80?u=dr-sara-lin" alt="">
+            <span class="crs-by-txt">By: <strong>Dr. Sara Lin</strong></span>
+          </div>
+          <div class="crs-acts">
+            <button class="crs-ic" title="Save to wishlist" onclick="alert('Sign up free to save courses to your wishlist.');return false;" aria-label="Sign up to add to wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+            <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Data Retention Schedules'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
+        </div>
+        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">8 lessons &middot; 4 h</div>
+        <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Footer CTA band -->
+  <div class="v-footer-cta">
+    <h2>Ready to <em>start learning?</em></h2>
+    <p>Create a free account to track your progress, save courses to your wishlist, and earn proof of completion on finished courses.</p>
+    <div class="v-cta-row">
+      <a class="btn btn-primary" href="../auth/signup.html">Sign up free &rarr;</a>
+      <a class="btn btn-ghost" href="../auth/login.html">Already have an account? Sign in</a>
+    </div>
+  </div>
+
+</main>
+<script>
+/* ── data-tag all filterable items ── */
+(function() {
+  /* vid cards */
+  var vidCards = document.querySelectorAll('.vid-card');
+  vidCards[0] && (vidCards[0].dataset.subject='Records Management', vidCards[0].dataset.duration='under-10', vidCards[0].dataset.type='explainer', vidCards[0].dataset.level='basic', vidCards[0].dataset.tag='popular', vidCards[0].dataset.fos='Information Science');
+  vidCards[1] && (vidCards[1].dataset.subject='Data Management', vidCards[1].dataset.duration='under-10', vidCards[1].dataset.type='explainer', vidCards[1].dataset.level='basic', vidCards[1].dataset.tag='new', vidCards[1].dataset.fos='Data Governance');
+  vidCards[2] && (vidCards[2].dataset.subject='Knowledge Management', vidCards[2].dataset.duration='under-10', vidCards[2].dataset.type='explainer', vidCards[2].dataset.level='basic', vidCards[2].dataset.tag='popular', vidCards[2].dataset.fos='Information Science');
+  vidCards[3] && (vidCards[3].dataset.subject='Information Architecture', vidCards[3].dataset.duration='under-10', vidCards[3].dataset.type='explainer', vidCards[3].dataset.level='basic', vidCards[3].dataset.tag='featured', vidCards[3].dataset.fos='Digital Preservation');
+
+  /* course cards */
+  var crsCards = document.querySelectorAll('article.crs');
+  crsCards[0] && (crsCards[0].dataset.subject='Data Management', crsCards[0].dataset.duration='over-60', crsCards[0].dataset.type='course', crsCards[0].dataset.level='practitioner', crsCards[0].dataset.tag='featured', crsCards[0].dataset.fos='Data Governance');
+  crsCards[1] && (crsCards[1].dataset.subject='Knowledge Management', crsCards[1].dataset.duration='30-60', crsCards[1].dataset.type='course', crsCards[1].dataset.level='basic', crsCards[1].dataset.tag='new', crsCards[1].dataset.fos='Information Science');
+  crsCards[2] && (crsCards[2].dataset.subject='Data Governance', crsCards[2].dataset.duration='30-60', crsCards[2].dataset.type='course', crsCards[2].dataset.level='practitioner', crsCards[2].dataset.tag='popular', crsCards[2].dataset.fos='Compliance and Risk');
+
+  var allCards = Array.from(vidCards).concat(Array.from(crsCards));
+
+  /* section counts */
+  var vidCountEl = document.querySelector('#free-videos + .vid-grid') ? document.querySelector('#free-videos ~ .vid-grid') : null;
+  var sectionCounts = document.querySelectorAll('.v-section-count');
+
+  function applyFilters() {
+    var q = document.querySelector('.v-search input').value.toLowerCase().trim();
+    var selects = document.querySelectorAll('.v-filters .v-filter');
+    var cat = selects[0] ? selects[0].value : 'Category';
+    var dur = selects[1] ? selects[1].value : 'Duration';
+    var diff = selects[2] ? selects[2].value : 'Difficulty level';
+    var ltype = selects[3] ? selects[3].value : 'Learning type';
+    var subj = selects[4] ? selects[4].value : 'Subject';
+    var fos = selects[5] ? selects[5].value : 'Field of Study';
+    var skill = selects[6] ? selects[6].value : 'Skill Level';
+    var tag = selects[7] ? selects[7].value : 'Tags';
+    var completion = selects[8] ? selects[8].value : 'Completion status';
+
+    var shownVid = 0, shownCrs = 0;
+    allCards.forEach(function(c) {
+      var show = true;
+      var txt = c.textContent.toLowerCase();
+      if (q && txt.indexOf(q) === -1) show = false;
+      if (show && cat !== 'Category') {
+        var catMap = { 'Courses': 'course', 'Standalone lessons': 'standalone', 'Explainer videos': 'explainer', 'Learning paths': 'path' };
+        if (catMap[cat] && c.dataset.type !== catMap[cat]) show = false;
+      }
+      if (show && dur !== 'Duration') {
+        var durMap = { 'Under 10 min': 'under-10', '10-30 min': '10-30', '30-60 min': '30-60', 'Over 1 hour': 'over-60' };
+        if (durMap[dur] && c.dataset.duration !== durMap[dur]) show = false;
+      }
+      if (show && diff !== 'Difficulty level') {
+        var diffMap = { 'Basic': 'basic', 'Practitioner': 'practitioner', 'Strategist': 'strategist' };
+        if (diffMap[diff] && c.dataset.level !== diffMap[diff]) show = false;
+      }
+      if (show && ltype !== 'Learning type') {
+        var ltMap = { 'Course': 'course', 'Standalone lesson': 'standalone', 'Explainer video': 'explainer' };
+        if (ltMap[ltype] && c.dataset.type !== ltMap[ltype]) show = false;
+      }
+      if (show && subj !== 'Subject') {
+        if (c.dataset.subject !== subj) show = false;
+      }
+      if (show && fos !== 'Field of Study') {
+        if (c.dataset.fos !== fos) show = false;
+      }
+      if (show && skill !== 'Skill Level') {
+        var skMap = { 'Basic': 'basic', 'Practitioner': 'practitioner', 'Strategist': 'strategist' };
+        if (skMap[skill] && c.dataset.level !== skMap[skill]) show = false;
+      }
+      if (show && tag !== 'Tags') {
+        if (c.dataset.tag !== tag.toLowerCase()) show = false;
+      }
+      /* completion status: visitors have no progress data — hide all results to prompt sign-up */
+      if (show && completion !== 'Completion status') show = false;
+
+      c.style.display = show ? '' : 'none';
+      if (show) {
+        if (c.classList.contains('vid-card')) shownVid++;
+        else shownCrs++;
+      }
+    });
+
+    /* update section counts */
+    if (sectionCounts[0]) sectionCounts[0].textContent = shownVid + ' video' + (shownVid !== 1 ? 's' : '');
+    if (sectionCounts[1]) sectionCounts[1].textContent = shownCrs + ' course' + (shownCrs !== 1 ? 's' : '');
+
+    /* show sign-up nudge when completion status filter is active */
+    var nudge = document.getElementById('completion-nudge');
+    if (nudge) nudge.style.display = (completion !== 'Completion status') ? 'block' : 'none';
+  }
+
+  document.querySelector('.v-search input').addEventListener('input', applyFilters);
+  document.querySelectorAll('.v-filters .v-filter').forEach(function(s) { s.addEventListener('change', applyFilters); });
+
+  /* ── wishlist heart: toggle saved state ── */
+  document.querySelectorAll('.crs-ic[title="Save to wishlist"]').forEach(function(btn) {
+    btn.removeAttribute('onclick');
+    var saved = false;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      saved = !saved;
+      btn.style.color = saved ? 'var(--c-clay,#B8523E)' : '';
+      btn.querySelector('svg') && (btn.querySelector('svg').setAttribute('fill', saved ? 'currentColor' : 'none'));
+      btn.title = saved ? 'Saved to wishlist' : 'Save to wishlist';
+    });
+  });
+
+  /* ── share button ── */
+  document.querySelectorAll('.crs-ic[title="Share"]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var title = btn.closest('article') ? btn.closest('article').querySelector('.crs-title').textContent : 'Course';
+      if (navigator.share) { navigator.share({ title: title, url: location.href }).catch(function(){}); }
+      else {
+        navigator.clipboard ? navigator.clipboard.writeText(location.href) : null;
+        btn.title = 'Link copied';
+        setTimeout(function() { btn.title = 'Share'; }, 1600);
+      }
+    });
+  });
+
+  /* ── course card body click: navigate to course preview ── */
+  document.querySelectorAll('article.crs').forEach(function(art) {
+    art.style.cursor = 'pointer';
+    art.addEventListener('click', function(e) {
+      if (e.target.closest('.crs-acts') || e.target.closest('.crs-enrol-lock')) return;
+      location.href = '../learning/course-preview.html';
+    });
+  });
+
+  /* ── nav links ── */
+  var vnav = document.querySelector('.vnav-signin');
+  /* already linked via href */
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

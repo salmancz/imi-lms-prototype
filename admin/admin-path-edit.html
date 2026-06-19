@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create career path · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .form-shell { max-width: 880px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 14px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .section-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 20px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  }
+
+  .req { color: var(--accent); font-weight: 700; }
+
+  .field .hint {
+    font-size: 12px; color: var(--ink-mute); margin-top: 6px; line-height: 1.45;
+  }
+  .field .hint.inline {
+    display: inline; margin: 0; font-size: 11px;
+    text-transform: none; letter-spacing: 0; font-weight: 500;
+  }
+  .field textarea.input {
+    height: auto; min-height: 32px; padding: 10px 14px;
+    line-height: 1.5; resize: vertical;
+  }
+  .field select.input { padding-right: 30px; }
+
+  .persona-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .persona-opt {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 13.5px; color: var(--ink); cursor: pointer;
+  }
+  .persona-opt input { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+
+  .course-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 16px; border-bottom: 1px solid var(--line);
+    transition: background 0.18s;
+  }
+  .course-row:last-child { border-bottom: none; }
+  .course-row:hover { background: var(--paper-2); }
+
+  .course-drag {
+    color: var(--ink-faint); font-size: 15px; cursor: grab; line-height: 1;
+  }
+  .course-num {
+    font-family: var(--font-label); font-variant-numeric: tabular-nums;
+    font-size: 12px; font-weight: 700; color: var(--ink-mute); min-width: 18px;
+  }
+  .course-title { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+  .btn-remove {
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent); padding: 5px 10px; border-radius: var(--r-pill);
+    transition: background 0.15s;
+  }
+  .btn-remove:hover { background: var(--c-clay-wash); }
+
+  .course-duration {
+    font-size: 12px; color: var(--ink-mute); font-family: var(--font-label);
+    font-variant-numeric: tabular-nums; min-width: 60px; text-align: right;
+  }
+
+  .toggle-mand {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border: 1px solid var(--line); border-radius: var(--r-pill);
+    padding: 4px 10px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    color: var(--ink-mute); white-space: nowrap;
+  }
+  .toggle-mand.is-mandatory {
+    background: var(--c-clay-wash); border-color: var(--accent); color: var(--accent);
+  }
+
+  .form-foot {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 24px; flex-wrap: wrap;
+  }
+  .form-foot .spacer { flex: 1; }
+
+  .save-note {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-top: 22px; padding: 14px 18px;
+    background: var(--c-honey-wash); border: 1px solid rgba(201,155,46,0.20);
+    border-radius: var(--r-md);
+    font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+  }
+  .save-note svg { width: 17px; height: 17px; color: var(--c-honey); flex-shrink: 0; margin-top: 1px; }
+  .save-note strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" onclick="event.preventDefault()">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='admin-courses.html'"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link is-active" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="form-shell">
+      <a class="back-link" href="admin-learning-paths.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Career Paths
+      </a>
+
+      <div class="page-head" style="margin-bottom:22px;display:block">
+        <div class="eyebrow">Career paths</div>
+        <h1 class="page-title">Create <em>career path</em></h1>
+        <p class="page-sub">Define a guided sequence of courses, set the audience and access level, then submit for SME review.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="section-eyebrow">Career path administrative requirements</div>
+
+          <div class="grid-2-eq">
+            <div class="field">
+              <label>Career path name <span class="req">*</span></label>
+              <input class="input" placeholder="e.g. CDMP Pathway">
+              <div class="hint">Unique and understandable to learners and admins</div>
+            </div>
+            <div class="field">
+              <label>Subject / Field <span class="req">*</span></label>
+              <select class="input">
+                <option>IT</option>
+                <option>Finance</option>
+                <option>Healthcare</option>
+                <option>Marketing</option>
+                <option>Data Science</option>
+                <option>Records Management</option>
+                <option>Knowledge Management</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Description <span class="req">*</span></label>
+            <textarea class="input" style="min-height:84px" placeholder="Purpose and expected learning outcome of the path"></textarea>
+          </div>
+
+          <div class="grid-2-eq">
+            <div class="field">
+              <label>Persona mapping <span class="req">*</span></label>
+              <div class="persona-stack">
+                <label class="persona-opt"><input type="checkbox"> Visitor</label>
+                <label class="persona-opt"><input type="checkbox" checked> Learner / Member</label>
+                <label class="persona-opt"><input type="checkbox" checked> Registered User</label>
+                <label class="persona-opt"><input type="checkbox"> Corporate user</label>
+              </div>
+              <div class="hint">Audience segments that can view this path</div>
+            </div>
+            <div class="field">
+              <label>Difficulty level <span class="req">*</span></label>
+              <select class="input">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>What is included <span class="hint inline">(optional)</span></label>
+            <textarea class="input" style="min-height:64px" placeholder="Path benefits: number of courses, lessons, downloadable resources, hands-on projects, certificates earned, support"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Learning outcome <span class="req">*</span></label>
+            <textarea class="input" style="min-height:64px" placeholder="Specific, measurable, learner-focused statement of what learner can do upon completion"></textarea>
+          </div>
+
+          <div class="grid-2-eq">
+            <div class="field">
+              <label>Estimated duration <span class="req">*</span></label>
+              <input class="input" placeholder="e.g. 40 hours (or auto-calculated)">
+              <div class="hint">Aggregate of constituent course durations</div>
+            </div>
+            <div class="field">
+              <label>Instructor <span class="req">*</span></label>
+              <input class="input" value="IMI">
+              <div class="hint">Default is IMI; replace per PATH-14</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Status <span class="req">*</span></label>
+            <select class="input" style="max-width:320px">
+              <option>Draft</option>
+              <option>Active</option>
+              <option>Archived</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="card-head">
+          <div class="card-title">Courses in <em>this path</em></div>
+          <button class="btn btn-ghost btn-sm" id="btn-add-course">+ Add course</button>
+        </div>
+        <div class="card-body flush">
+          <div class="course-row">
+            <span class="course-drag">&#x2807;</span>
+            <span class="course-num">1</span>
+            <span class="chip">Course</span>
+            <span class="course-title">Data Quality Foundations</span>
+            <button class="toggle-mand is-mandatory" title="Toggle mandatory / optional">Mandatory</button>
+            <span class="course-duration">8 hrs</span>
+            <button class="btn-remove" onclick="this.closest('.course-row').remove()">Remove</button>
+          </div>
+          <div class="course-row">
+            <span class="course-drag">&#x2807;</span>
+            <span class="course-num">2</span>
+            <span class="chip">Course</span>
+            <span class="course-title">Metadata Management Essentials</span>
+            <button class="toggle-mand is-mandatory" title="Toggle mandatory / optional">Mandatory</button>
+            <span class="course-duration">6 hrs</span>
+            <button class="btn-remove" onclick="this.closest('.course-row').remove()">Remove</button>
+          </div>
+          <div class="course-row">
+            <span class="course-drag">&#x2807;</span>
+            <span class="course-num">3</span>
+            <span class="chip">Course</span>
+            <span class="course-title">Data Governance Principles</span>
+            <button class="toggle-mand" title="Toggle mandatory / optional">Optional</button>
+            <span class="course-duration">5 hrs</span>
+            <button class="btn-remove" onclick="this.closest('.course-row').remove()">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-foot">
+        <a class="btn btn-ghost" href="admin-learning-paths.html">Cancel</a>
+        <button class="btn btn-ghost btn-sm" onclick="location.href='../learning/career-path.html'">Preview</button>
+        <div class="spacer"></div>
+        <button class="btn btn-primary" id="btn-save-path">Save and submit for review &rarr;</button>
+      </div>
+
+      <div class="save-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        <span><strong>Version history:</strong> Each save creates a version snapshot. Path edits go through SME review before going live.</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Add course picker modal -->
+<div id="modal-add-course" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.32);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--paper);border-radius:var(--r-lg);padding:28px 32px;min-width:480px;max-width:560px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.18);position:relative;">
+    <div style="font-family:var(--font-serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px;">Add course to path</div>
+    <div style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;">Select a published course to add to this learning path.</div>
+    <input id="modal-course-search" class="input" placeholder="Search courses..." style="margin-bottom:14px;">
+    <div id="modal-course-list" style="border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;max-height:280px;overflow-y:auto;"></div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
+      <button class="btn btn-ghost" data-close="modal-add-course">Cancel</button>
+      <button class="btn btn-primary" id="btn-modal-add-confirm">Add selected</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var COURSES = [
+    'Data Quality Foundations','Records Retention 101','Data Governance Essentials',
+    'Metadata Management Practicum','Information Lifecycle Management',
+    'Knowledge Management Fundamentals','ERM Compliance Checklist',
+    'Data Stewardship: Role and Practice','Records Classification Scheme',
+    'Data Governance Policy Essentials','Retention Schedule Basics'
+  ];
+  var selectedCourse = null;
+
+  function renderCourseList(filter){
+    var list = document.getElementById('modal-course-list');
+    var items = COURSES.filter(function(c){ return !filter || c.toLowerCase().indexOf(filter.toLowerCase()) > -1; });
+    list.innerHTML = items.map(function(c,i){
+      return '<div class="modal-course-item" data-course="'+c+'" style="padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:500;color:var(--ink);transition:background 0.15s;">'+c+'</div>';
+    }).join('') || '<div style="padding:16px;color:var(--ink-mute);font-size:13px;">No courses found</div>';
+    list.querySelectorAll('.modal-course-item').forEach(function(item){
+      item.addEventListener('mouseenter', function(){ this.style.background='var(--paper-2)'; });
+      item.addEventListener('mouseleave', function(){ this.style.background=this.classList.contains('is-selected')?'var(--c-honey-wash)':''; });
+      item.addEventListener('click', function(){
+        list.querySelectorAll('.modal-course-item').forEach(function(x){ x.classList.remove('is-selected'); x.style.background=''; x.style.fontWeight='500'; });
+        this.classList.add('is-selected');
+        this.style.background='var(--c-honey-wash)';
+        this.style.fontWeight='700';
+        selectedCourse = this.dataset.course;
+      });
+    });
+  }
+
+  function openModal(){
+    selectedCourse = null;
+    document.getElementById('modal-course-search').value='';
+    renderCourseList('');
+    var modal = document.getElementById('modal-add-course');
+    modal.style.display='flex';
+  }
+
+  function closeModal(){
+    document.getElementById('modal-add-course').style.display='none';
+  }
+
+  document.getElementById('btn-add-course').addEventListener('click', openModal);
+
+  document.getElementById('modal-course-search').addEventListener('input', function(){
+    renderCourseList(this.value);
+  });
+
+  document.querySelector('[data-close="modal-add-course"]').addEventListener('click', closeModal);
+
+  document.getElementById('modal-add-course').addEventListener('click', function(e){
+    if(e.target === this) closeModal();
+  });
+
+  document.getElementById('btn-modal-add-confirm').addEventListener('click', function(){
+    if(!selectedCourse){ alert('Please select a course first.'); return; }
+    var tbody = document.querySelector('.card-body.flush .course-row:last-child');
+    var rows = document.querySelectorAll('.course-row');
+    var num = rows.length + 1;
+    var newRow = document.createElement('div');
+    newRow.className = 'course-row';
+    newRow.innerHTML = '<span class="course-drag">&#x2807;</span>'
+      +'<span class="course-num">'+num+'</span>'
+      +'<span class="chip">Course</span>'
+      +'<span class="course-title">'+selectedCourse+'</span>'
+      +'<button class="toggle-mand is-mandatory" title="Toggle mandatory / optional">Mandatory</button>'
+      +'<span class="course-duration">- hrs</span>'
+      +'<button class="btn-remove" onclick="this.closest(\'.course-row\').remove()">Remove</button>';
+    newRow.querySelector('.toggle-mand').addEventListener('click', function(){
+      var mandatory = !this.classList.contains('is-mandatory');
+      this.classList.toggle('is-mandatory', mandatory);
+      this.textContent = mandatory ? 'Mandatory' : 'Optional';
+    });
+    var container = document.querySelector('.card-body.flush');
+    container.appendChild(newRow);
+    closeModal();
+  });
+
+  document.querySelectorAll('.toggle-mand').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var mandatory = !this.classList.contains('is-mandatory');
+      this.classList.toggle('is-mandatory', mandatory);
+      this.textContent = mandatory ? 'Mandatory' : 'Optional';
+    });
+  });
+
+  document.getElementById('btn-save-path').addEventListener('click', function(){
+    var nameInput = document.querySelector('.form-shell input.input');
+    if(nameInput && !nameInput.value.trim()){ nameInput.focus(); nameInput.style.borderColor='var(--accent)'; nameInput.placeholder='Path name is required'; return; }
+    window.imiToast('Path submitted for review');
+    setTimeout(function(){ location.href='admin-learning-paths.html'; }, 1800);
+  });
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

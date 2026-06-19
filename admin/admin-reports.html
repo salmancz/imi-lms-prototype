@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports &amp; Analytics · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- KPI override: flat cards with left accent stripe ---- */
+  .kpi-flat {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s var(--tn), box-shadow 0.25s, border-color 0.2s;
+  }
+  .kpi-flat:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-card);
+  }
+  .kpi-flat::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+  .kpi-flat.f-honey::before { background: var(--c-honey); }
+  .kpi-flat.f-sage::before  { background: var(--c-sage); }
+  .kpi-flat.f-clay::before  { background: var(--c-clay); }
+  .kpi-flat.f-ink::before   { background: var(--ink); }
+  .kf-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .kf-label svg { width: 14px; height: 14px; }
+  .kf-value {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .kf-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+  .kf-delta.up   { color: var(--c-sage); }
+  .kf-delta.down { color: var(--c-clay); }
+
+  /* ---- report cards ---- */
+  .reports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 1080px) { .reports-grid { grid-template-columns: 1fr; } }
+
+  .report-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .report-card .rc-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .report-card .rc-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .report-card .rc-icon svg { width: 18px; height: 18px; }
+  .report-card .rc-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .report-card .rc-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .report-card .rc-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .report-card.is-p2 { opacity: 0.72; }
+
+  .section-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 32px 0 14px;
+  }
+
+  .filter-select {
+    height: 38px;
+    padding: 0 34px 0 14px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: var(--r-pill);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232A1108' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    cursor: pointer;
+  }
+  .filter-select:focus { outline: none; border-color: var(--ink-mute); }
+
+  /* ---- analytics section ---- */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .analytics-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 720px)  { .analytics-grid { grid-template-columns: 1fr; } }
+
+  /* ---- solid chart bars (override shared) ---- */
+  .chart-bars .bar          { background: var(--c-honey); }
+  .chart-bars .bar.honey    { background: var(--c-honey); }
+  .chart-bars .bar.sage     { background: var(--c-sage); }
+  .chart-bars .bar.clay     { background: var(--c-clay); }
+  .chart-bars .bar.ink      { background: var(--ink); }
+  .chart-bars .bar.muted    { background: var(--surface-3); opacity: 0.6; }
+  .chart-bars .bar          { opacity: 1; }
+
+  /* ---- bar chart card ---- */
+  .bar-chart-wrap { padding: 20px 22px 14px; }
+  .bar-chart-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .bar-chart-sub {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* ---- SVG donut (pie segments via SVG stroke-dasharray) ---- */
+  .donut-card-body {
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .donut-wrap { position: relative; flex-shrink: 0; }
+  .donut-svg { display: block; }
+  .donut-center-txt {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+  }
+  .donut-center-txt .dv { font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1; }
+  .donut-center-txt .dl { font-family: var(--font-label); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+  .donut-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .donut-legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .donut-legend-label { flex: 1; min-width: 0; }
+  .donut-legend-pct {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- sparkline ---- */
+  .sparkline-row { display: flex; flex-direction: column; gap: 0; }
+  .sparkline-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sparkline-item:last-child { border-bottom: none; }
+  .sparkline-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    min-width: 130px;
+  }
+  .sparkline-svg { flex: 1; height: 32px; }
+  .sparkline-tail {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 80px;
+    justify-content: flex-end;
+  }
+  .sparkline-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .sparkline-arrow { font-size: 16px; font-weight: 700; line-height: 1; }
+  .sparkline-arrow.up   { color: var(--c-sage); }
+  .sparkline-arrow.down { color: var(--c-clay); }
+  .sparkline-delta {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+  }
+  .sparkline-delta.up   { color: var(--c-sage); }
+  .sparkline-delta.down { color: var(--c-clay); }
+
+  /* ---- score gauge ---- */
+  .gauge-card-body {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .gauge-wrap { position: relative; width: 140px; height: 80px; overflow: visible; }
+  .gauge-wrap svg { overflow: visible; }
+  .gauge-score-row { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .gauge-score-num {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .gauge-score-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .gauge-passfail {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .gauge-passfail.pass { background: var(--c-sage-wash); color: var(--c-sage-text); border: 1.5px solid rgba(126,155,111,0.40); }
+  .gauge-passfail.fail { background: var(--c-danger-wash); color: var(--c-danger); border: 1.5px solid rgba(193,42,28,0.30); }
+  .gauge-passfail svg { width: 12px; height: 12px; }
+  .gauge-ticks {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 160px;
+    padding: 0 4px;
+  }
+  .gauge-ticks span { font-family: var(--font-label); font-size: 9.5px; color: var(--ink-mute); letter-spacing: 0.04em; }
+
+  /* ---- top-performers table ---- */
+  .kpi-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1280px) { .kpi-grid-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 720px)  { .kpi-grid-4 { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..."></div>
+  <div class="topbar-actions">
+    <span class="role-pill">SUPER ADMIN</span>
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Overview</span></a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Users</span><span class="badge">487</span></a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Roles</span></a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Courses</span><span class="badge">47</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Corporate</span><span class="badge">23</span></a>
+      <a href="admin-reports.html" class="sidebar-link is-active" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Audit Log</span></a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Reports &amp; analytics</div>
+        <h1 class="page-title">Reports <em>&amp; analytics</em></h1>
+        <p class="page-sub">Track learner progress, course completion, quiz performance, and user growth.</p>
+      </div>
+      <div class="page-actions">
+        <select class="filter-select" aria-label="Date range">
+          <option>Last 30 days</option>
+          <option>Last 7 days</option>
+          <option>Last 90 days</option>
+          <option>This year</option>
+          <option>Custom</option>
+        </select>
+        <button type="button" class="btn btn-primary" id="export-all-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export all (CSV / Excel)
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI strip -->
+    <div class="kpi-grid-4">
+      <div class="kpi-flat f-honey">
+        <div class="kf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 1 18"/><polyline points="16 7 22 7 22 13"/></svg>
+          Total enrollments
+        </div>
+        <div class="kf-value">8,420</div>
+        <div class="kf-delta up">&#x2191; 12.4% vs prev period</div>
+      </div>
+      <div class="kpi-flat f-sage">
+        <div class="kf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Total users
+        </div>
+        <div class="kf-value">12,847</div>
+        <div class="kf-delta up">&#x2191; 9.3% vs prev period</div>
+      </div>
+      <div class="kpi-flat f-clay">
+        <div class="kf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Course Completed %
+        </div>
+        <div class="kf-value">57.6%</div>
+        <div class="kf-delta up">&#x2191; 15.1% vs prev period</div>
+      </div>
+      <div class="kpi-flat f-ink">
+        <div class="kf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Active learners
+        </div>
+        <div class="kf-value">2,418</div>
+        <div class="kf-delta up">&#x2191; 4.0% vs prev period</div>
+      </div>
+    </div>
+
+    <!-- Analytics charts section -->
+    <div class="section-label">Analytics overview</div>
+    <div class="analytics-grid">
+
+      <!-- Bar chart: enrollments per month -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Monthly enrollments</span>
+          <span class="chip t-honey">Last 6 months</span>
+        </div>
+        <div class="bar-chart-wrap">
+          <div class="chart-bars" style="height:140px; gap:6px;">
+            <div class="bar honey" style="height:52%" title="Jan: 1,210"></div>
+            <div class="bar honey" style="height:61%" title="Feb: 1,420"></div>
+            <div class="bar honey" style="height:45%" title="Mar: 1,050"></div>
+            <div class="bar honey" style="height:78%" title="Apr: 1,820"></div>
+            <div class="bar honey" style="height:68%" title="May: 1,580"></div>
+            <div class="bar honey" style="height:92%" title="Jun: 2,140"></div>
+          </div>
+          <div class="chart-meta">
+            <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-dot" style="background:var(--c-honey)"></span>Enrollments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut chart: Course Completed breakdown (SVG stroke-dasharray segments) -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Course Completed</span>
+          <span class="chip t-sage">By status</span>
+        </div>
+        <div class="donut-card-body">
+          <div class="donut-wrap">
+            <!-- SVG donut: segments drawn with stroke-dasharray on a circle, no CSS gradient -->
+            <!-- Circle circumference at r=46: 2*pi*46 = 289.0 -->
+            <!-- Segments: Completed 36% = 104, In progress 28% = 81, Not started 25% = 72, Dropped 11% = 32 -->
+            <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120" aria-label="Course completion status donut chart">
+              <circle cx="60" cy="60" r="46" fill="none" stroke="var(--surface-3)" stroke-width="18"/>
+              <!-- Completed (sage) 36% of 289 = 104, offset starts at -72.25 (top) -->
+              <circle cx="60" cy="60" r="46" fill="none" stroke="var(--c-sage)" stroke-width="18"
+                stroke-dasharray="104 289" stroke-dashoffset="72.25" stroke-linecap="butt" transform="rotate(-90 60 60)"/>
+              <!-- In progress (honey) 28% = 81, offset = 72.25 - 104 = -31.75 -->
+              <circle cx="60" cy="60" r="46" fill="none" stroke="var(--c-honey)" stroke-width="18"
+                stroke-dasharray="81 289" stroke-dashoffset="-31.75" stroke-linecap="butt" transform="rotate(-90 60 60)"/>
+              <!-- Not started (clay) 25% = 72, offset = -31.75 - 81 = -112.75 -->
+              <circle cx="60" cy="60" r="46" fill="none" stroke="var(--c-clay)" stroke-width="18"
+                stroke-dasharray="72 289" stroke-dashoffset="-112.75" stroke-linecap="butt" transform="rotate(-90 60 60)"/>
+              <!-- Dropped (surface-3) 11% = 32, offset = -112.75 - 72 = -184.75 -->
+              <circle cx="60" cy="60" r="46" fill="none" stroke="var(--surface-3)" stroke-width="18"
+                stroke-dasharray="32 289" stroke-dashoffset="-184.75" stroke-linecap="butt" transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="donut-center-txt">
+              <div class="dv">57%</div>
+              <div class="dl">Done</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="donut-legend-item">
+              <span class="donut-legend-swatch" style="background:var(--c-sage)"></span>
+              <span class="donut-legend-label">Completed</span>
+              <span class="donut-legend-pct">36%</span>
+            </div>
+            <div class="donut-legend-item">
+              <span class="donut-legend-swatch" style="background:var(--c-honey)"></span>
+              <span class="donut-legend-label">In progress</span>
+              <span class="donut-legend-pct">28%</span>
+            </div>
+            <div class="donut-legend-item">
+              <span class="donut-legend-swatch" style="background:var(--c-clay)"></span>
+              <span class="donut-legend-label">Not started</span>
+              <span class="donut-legend-pct">25%</span>
+            </div>
+            <div class="donut-legend-item">
+              <span class="donut-legend-swatch" style="background:var(--surface-3)"></span>
+              <span class="donut-legend-label">Dropped</span>
+              <span class="donut-legend-pct">11%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score gauge -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Platform health score</span>
+          <span class="chip t-info">Composite</span>
+        </div>
+        <div class="gauge-card-body">
+          <div class="gauge-wrap">
+            <svg width="140" height="80" viewBox="0 0 140 80" aria-label="Platform health gauge: 78 out of 100">
+              <path d="M10,70 A60,60 0 0,1 130,70" fill="none" stroke="var(--surface-3)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M10,70 A60,60 0 0,1 130,70" fill="none" stroke="var(--c-sage)" stroke-width="12" stroke-linecap="round"
+                    stroke-dasharray="188.5" stroke-dashoffset="41.5"/>
+            </svg>
+          </div>
+          <div class="gauge-ticks">
+            <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+          </div>
+          <div class="gauge-score-row">
+            <div class="gauge-score-num">78</div>
+            <div class="gauge-score-label">out of 100</div>
+          </div>
+          <div class="gauge-passfail pass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Pass
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sparklines: key metrics trend -->
+    <div class="section-label">Metric trends (30-day sparklines)</div>
+    <div class="card" style="margin-bottom:28px;">
+      <div class="sparkline-row">
+
+        <div class="sparkline-item">
+          <span class="sparkline-label">New enrollments</span>
+          <svg class="sparkline-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,24 28,20 56,22 84,15 112,18 140,10 168,8 200,4"
+              fill="none" stroke="var(--c-sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sparkline-tail">
+            <span class="sparkline-val">2,140</span>
+            <span class="sparkline-arrow up">&#x2191;</span>
+            <span class="sparkline-delta up">+18%</span>
+          </div>
+        </div>
+
+        <div class="sparkline-item">
+          <span class="sparkline-label">Course Completed</span>
+          <svg class="sparkline-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,10 28,13 56,11 84,16 112,14 140,18 168,16 200,20"
+              fill="none" stroke="var(--c-clay)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sparkline-tail">
+            <span class="sparkline-val">57.6%</span>
+            <span class="sparkline-arrow down">&#x2193;</span>
+            <span class="sparkline-delta down">-3%</span>
+          </div>
+        </div>
+
+        <div class="sparkline-item">
+          <span class="sparkline-label">Quiz pass rate</span>
+          <svg class="sparkline-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,22 28,19 56,16 84,14 112,11 140,9 168,7 200,5"
+              fill="none" stroke="var(--c-sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sparkline-tail">
+            <span class="sparkline-val">82.3%</span>
+            <span class="sparkline-arrow up">&#x2191;</span>
+            <span class="sparkline-delta up">+6%</span>
+          </div>
+        </div>
+
+        <div class="sparkline-item">
+          <span class="sparkline-label">Active learners</span>
+          <svg class="sparkline-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,26 28,22 56,25 84,20 112,22 140,17 168,19 200,14"
+              fill="none" stroke="var(--c-sage)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sparkline-tail">
+            <span class="sparkline-val">2,418</span>
+            <span class="sparkline-arrow up">&#x2191;</span>
+            <span class="sparkline-delta up">+4%</span>
+          </div>
+        </div>
+
+        <div class="sparkline-item">
+          <span class="sparkline-label">SME review time</span>
+          <svg class="sparkline-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+            <polyline points="0,8 28,12 56,10 84,16 112,20 140,18 168,22 200,26"
+              fill="none" stroke="var(--c-clay)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="sparkline-tail">
+            <span class="sparkline-val">4.2 days</span>
+            <span class="sparkline-arrow down">&#x2193;</span>
+            <span class="sparkline-delta down">+22%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Available reports -->
+    <div class="section-label">Available reports</div>
+    <div class="reports-grid">
+
+      <a href="admin-report-detail.html?rtype=course" class="card report-card" data-rtype="course">
+        <div class="rc-head">
+          <div class="list-icon t-sage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">Course report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Enrollments, completion rate, course-level analytics. Filterable by date, role, corporate tenant.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+      <a href="admin-report-detail.html?rtype=user" class="card report-card" data-rtype="user">
+        <div class="rc-head">
+          <div class="list-icon t-honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">User report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Courses enrolled, progress percentage, learner status, country. Per-learner view filterable by date and role.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+      <a href="admin-report-detail.html?rtype=quiz" class="card report-card" data-rtype="quiz">
+        <div class="rc-head">
+          <div class="list-icon t-clay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">Quiz report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Scores, pass/fail rates, and performance patterns per quiz and course. Identifies learner knowledge gaps.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+      <a href="admin-report-detail.html?rtype=cert" class="card report-card" data-rtype="cert">
+        <div class="rc-head">
+          <div class="list-icon t-sage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">Certificate issuance report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Issued certificates by course, by month, with revocation log. Required for audit compliance.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+      <a href="#" class="card report-card is-p2" onclick="return false;" aria-disabled="true" data-rtype="revenue">
+        <div class="rc-head">
+          <div class="list-icon" style="background:var(--paper-2);color:var(--ink-faint);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">Revenue report (P2)</div>
+          </div>
+          <span class="chip t-empty">P2</span>
+        </div>
+        <div class="rc-desc">Subscriptions, renewals, churn, ARPU, MRR. Available with payment integration in Phase 2.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm" style="opacity:0.5;">Locked</span>
+        </div>
+      </a>
+
+      <a href="admin-report-detail.html?rtype=sme" class="card report-card" data-rtype="sme">
+        <div class="rc-head">
+          <div class="list-icon t-honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">SME workload report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Pending reviews per SME, avg approval time, rejection rate, top blockers.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+      <a href="admin-report-detail.html?rtype=corp" class="card report-card" data-rtype="corp">
+        <div class="rc-head">
+          <div class="list-icon t-clay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div class="rc-title">Corporate tenant report</div>
+          </div>
+          <span class="chip t-sage">CSV &middot; Excel</span>
+        </div>
+        <div class="rc-desc">Per-tenant learner activity, license utilization, completion rates. Shareable with corp admins.</div>
+        <div class="rc-foot">
+          <span class="btn btn-ghost btn-sm">Open report &rarr;</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Top performers table (from v8 exemplar) -->
+    <div class="section-label" style="margin-top:32px;">Top performers by tenant</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Corporate <em>tenant activity</em></span>
+        <a href="../corporate/corp-list.html" class="card-link">View all &rarr;</a>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Seats</th>
+              <th>Active</th>
+              <th>Course Completed (30d)</th>
+              <th>Avg score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Petroleum Development Oman</td>
+              <td>487 / 500</td>
+              <td>412 (85%)</td>
+              <td>284</td>
+              <td>81%</td>
+              <td><span class="chip t-sage dot">Excellent</span></td>
+            </tr>
+            <tr>
+              <td>Ministry of Energy</td>
+              <td>118 / 120</td>
+              <td>104 (88%)</td>
+              <td>62</td>
+              <td>78%</td>
+              <td><span class="chip t-sage dot">Excellent</span></td>
+            </tr>
+            <tr>
+              <td>Bank Muscat</td>
+              <td>72 / 80</td>
+              <td>54 (75%)</td>
+              <td>38</td>
+              <td>74%</td>
+              <td><span class="chip t-honey dot">Good</span></td>
+            </tr>
+            <tr>
+              <td>OMRAN Group</td>
+              <td>42 / 60</td>
+              <td>28 (67%)</td>
+              <td>14</td>
+              <td>71%</td>
+              <td><span class="chip t-clay dot">Needs attention</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  /* ---- toast ---- */
+  function toast(msg, type){
+    var t=document.createElement('div');
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-family:var(--font-sans);font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px);max-width:340px;';
+    if(type==='error') t.style.background='var(--c-clay)';
+    if(type==='success') t.style.background='var(--c-sage)';
+    t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(function(){t.style.opacity='1';t.style.transform='translateY(0)';},10);
+    setTimeout(function(){t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(function(){t.remove();},300);},3200);
+  }
+
+  /* ---- topbar search ---- */
+  var topSearch = document.querySelector('.topbar .search input');
+  if(topSearch){
+    topSearch.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        var q = encodeURIComponent(topSearch.value.trim());
+        if(q) window.location.href='admin-users.html?q='+q;
+      }
+    });
+  }
+
+  /* ---- topbar icon buttons ---- */
+  document.querySelectorAll('.topbar .icon-btn').forEach(function(btn){
+    if(btn.closest('a')) return;
+    var title = btn.getAttribute('title')||'';
+    btn.addEventListener('click', function(){
+      if(title==='Notifications') window.location.href='../profile/notifications.html';
+      else if(title==='Help') window.location.href='../profile/help-center.html';
+    });
+  });
+
+  /* ---- KPI data per date range ---- */
+  var KPI_DATA = {
+    'Last 7 days':  { enrol:'1,820', users:'2,341', compl:'61.2%', active:'412', eb:['38%','44%','32%','51%','48%','62%','70%'] },
+    'Last 30 days': { enrol:'8,420', users:'12,847', compl:'57.6%', active:'2,418', eb:['52%','61%','45%','78%','68%','92%'] },
+    'Last 90 days': { enrol:'24,100', users:'12,847', compl:'62.4%', active:'3,102', eb:['48%','55%','71%','80%','74%','88%','90%','76%','83%'] },
+    'This year':    { enrol:'41,820', users:'12,847', compl:'68.1%', active:'4,210', eb:['40%','55%','50%','65%','58%','72%','80%','75%','82%','88%','90%','94%'] },
+    'Custom':       { enrol:'8,420', users:'12,847', compl:'57.6%', active:'2,418', eb:['52%','61%','45%','78%','68%','92%'] },
+  };
+
+  function updateKPIs(range){
+    var d = KPI_DATA[range] || KPI_DATA['Last 30 days'];
+    var vals = document.querySelectorAll('.kf-value');
+    if(vals[0]) vals[0].textContent=d.enrol;
+    if(vals[1]) vals[1].textContent=d.users;
+    if(vals[2]) vals[2].textContent=d.compl;
+    if(vals[3]) vals[3].textContent=d.active;
+    /* update bar chart */
+    var bars = document.querySelectorAll('.chart-bars .bar');
+    bars.forEach(function(b,i){ b.style.height = d.eb[i] || '50%'; });
+  }
+
+  var rangeSel = document.querySelector('select[aria-label="Date range"]');
+  if(rangeSel){
+    rangeSel.addEventListener('change', function(){
+      updateKPIs(rangeSel.value);
+      toast('Dashboard updated for: '+rangeSel.value);
+    });
+  }
+
+  /* ---- report card search/filter (add a small search above the grid) ---- */
+  var reportsGrid = document.querySelector('.reports-grid');
+  if(reportsGrid){
+    var rfWrap=document.createElement('div');
+    rfWrap.style.cssText='display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;';
+    var rfInput=document.createElement('input');
+    rfInput.placeholder='Search reports...';
+    rfInput.style.cssText='height:36px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);font-size:13px;color:var(--ink);font-family:var(--font-sans);flex:1;max-width:260px;';
+    rfWrap.appendChild(rfInput);
+    reportsGrid.parentNode.insertBefore(rfWrap, reportsGrid);
+
+    var reportCards = Array.from(document.querySelectorAll('.report-card'));
+    rfInput.addEventListener('input', function(){
+      var q = rfInput.value.toLowerCase().trim();
+      var shown = 0;
+      reportCards.forEach(function(card){
+        var title = (card.querySelector('.rc-title')||{}).textContent||'';
+        var desc  = (card.querySelector('.rc-desc') ||{}).textContent||'';
+        var vis = !q || title.toLowerCase().includes(q) || desc.toLowerCase().includes(q);
+        card.style.display = vis ? '' : 'none';
+        if(vis) shown++;
+      });
+    });
+  }
+
+  /* ---- export all button: real CSV blob download ---- */
+  var exportBtn = document.getElementById('export-all-btn');
+  if(exportBtn){
+    exportBtn.addEventListener('click', function(){
+      var range = (document.querySelector('select[aria-label="Date range"]') || {}).value || 'Last 30 days';
+      var rows = [
+        ['Metric','Value','Period','Delta'],
+        ['Total Enrollments','8420',range,'+12.4%'],
+        ['Total Users','12847',range,'+9.3%'],
+        ['Course Completion','57.6%',range,'+15.1%'],
+        ['Active Learners','2418',range,'+4.0%'],
+        ['Quiz Pass Rate','82.3%',range,'+6.0%'],
+        ['SME Review Time','4.2 days',range,'+22.0%'],
+      ];
+      var csv = rows.map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(','); }).join('\n');
+      var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'imi-platform-report-'+range.replace(/\s+/g,'-').toLowerCase()+'.csv';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      toast('Export started: imi-platform-report.csv', 'success');
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

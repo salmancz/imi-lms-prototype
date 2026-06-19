@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>License Utilization · IMI Corporate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+/* ---- date filter ---- */
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-label);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.date-filter select {
+  font-family: var(--font-label);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  border: 1.5px solid var(--border, var(--line-strong));
+  border-radius: 6px;
+  padding: 4px 28px 4px 8px;
+  background: var(--surface, var(--paper)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") right 6px center / 14px no-repeat;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* ---- larger KPI tickers for this page ---- */
+.kpi-xl .kpi-value {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.kpi-xl .kpi-value em {
+  font-size: 18px;
+}
+.kpi-xl .kpi-label {
+  font-size: 11px;
+}
+
+/* ---- chart section ---- */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.charts-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ---- solid bar charts ---- */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 140px;
+  padding: 8px 0 0;
+}
+.bar-chart .bc-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.bar-chart .bc-col .bc-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  /* NO gradient - solid only */
+  background: var(--c-sage);
+  transition: opacity 0.18s;
+  min-height: 4px;
+}
+.bar-chart .bc-col .bc-bar:hover { opacity: 0.82; }
+.bar-chart .bc-col .bc-bar.honey { background: var(--c-honey); }
+.bar-chart .bc-col .bc-bar.clay  { background: var(--c-clay); }
+.bar-chart .bc-col .bc-bar.ink   { background: var(--ink); }
+.bar-chart .bc-col .bc-label {
+  font-family: var(--font-label);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.bar-chart .bc-col .bc-val {
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.bar-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.bar-legend .bl-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+.bar-legend .bl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ---- grouped bar chart ---- */
+.bar-chart-grouped {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 140px;
+  padding: 8px 0 0;
+}
+.bar-chart-grouped .bcg-group {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 100%;
+  justify-content: center;
+}
+.bar-chart-grouped .bcg-group .bcg-bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-height: 4px;
+  transition: opacity 0.18s;
+}
+.bar-chart-grouped .bcg-group .bcg-bar:hover { opacity: 0.80; }
+.bar-chart-grouped .bcg-group .bcg-bar.enrolled { background: var(--c-honey); }
+.bar-chart-grouped .bcg-group .bcg-bar.completed { background: var(--c-sage); }
+.bar-chart-grouped .bcg-label {
+  font-family: var(--font-label);
+  font-size: 9px;
+  color: var(--ink-mute);
+  text-align: center;
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+.bar-chart-grouped-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.bar-chart-grouped-labels {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+.bar-chart-grouped-labels .bcg-lbl {
+  flex: 1;
+  font-family: var(--font-label);
+  font-size: 9px;
+  color: var(--ink-mute);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* ---- donut chart (solid segments, no gradients) ---- */
+.donut-solid {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--c-sage)  0deg 219deg,
+    var(--c-honey) 219deg 295deg,
+    var(--c-clay)  295deg 338deg,
+    var(--surface-3) 338deg 360deg
+  );
+  position: relative;
+  flex-shrink: 0;
+}
+.donut-solid::after {
+  content: "";
+  position: absolute;
+  inset: 20px;
+  background: var(--paper);
+  border-radius: 50%;
+}
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+  text-align: center;
+}
+.donut-center .dc-val  { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+.donut-center .dc-lbl  { font-family: var(--font-label); font-size: 9px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+}
+.donut-legend .dl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.donut-legend .dl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.donut-legend .dl-name {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.donut-legend .dl-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.donut-legend .dl-pct {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-family: var(--font-label);
+  min-width: 34px;
+  text-align: right;
+}
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ---- sparklines ---- */
+.sparkline-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.sparkline {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+}
+.sparkline .sp-bar {
+  width: 5px;
+  border-radius: 2px 2px 0 0;
+  /* solid colors only */
+}
+.sparkline .sp-bar.up   { background: var(--c-sage); }
+.sparkline .sp-bar.down { background: var(--c-clay); }
+.sparkline .sp-bar.mid  { background: var(--surface-3); }
+.spark-arrow {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+.spark-arrow.up   { color: var(--c-sage-text); }
+.spark-arrow.down { color: var(--c-clay); }
+.spark-val {
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: var(--font-label);
+}
+.spark-val.up   { color: var(--c-sage-text); }
+.spark-val.down { color: var(--c-clay); }
+
+/* ---- score gauge ---- */
+.gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.gauge-svg-wrap {
+  position: relative;
+  width: 140px;
+  height: 80px;
+  overflow: visible;
+}
+.gauge-value-block {
+  text-align: center;
+}
+.gauge-score {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+}
+.gauge-label-sub {
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 2px;
+}
+.gauge-pass {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.gauge-pass.pass { background: var(--c-sage-wash); color: var(--c-sage-text); border: 1.5px solid rgba(126,155,111,0.5); }
+.gauge-pass.fail { background: var(--c-danger-wash); color: var(--c-danger); border: 1.5px solid rgba(193,42,28,0.4); }
+.gauge-pass.pass::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c-sage); }
+.gauge-pass.fail::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c-danger); }
+
+/* ---- utilization table ---- */
+.util-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.util-progress .progress { flex: 1; height: 5px; }
+.util-progress .up-pct {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- page summary row ---- */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+/* ---- chart card footer ---- */
+.chart-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 22px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: 0.05em;
+}
+
+/* ---- section gap ---- */
+.section-gap { margin-bottom: 20px; }
+
+/* ---- score threshold line label ---- */
+.threshold-hint {
+  font-family: var(--font-label);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-top: 2px;
+}
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <div><span class="brand-text">IMI</span><span class="brand-sub">Corporate</span></div>
+  </div>
+  <div class="search"><input placeholder="Search team, groups, courses..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Dashboard</span></a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span><span class="badge">487</span></a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Groups</span><span class="badge">12</span></a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Assignments</span><span class="badge">24</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="corp-license-utilization.html" class="sidebar-link is-active" data-nav="licenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Licenses</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Tenant &middot; Petroleum Development Oman</div>
+        <h1 class="page-title">License <em>utilization</em></h1>
+        <p class="page-sub">Seat usage, enrollment activity, and learning progress across your tenant.</p>
+      </div>
+      <div class="page-actions">
+        <div class="date-filter">
+          <label for="date-preset">Period:</label>
+          <select id="date-preset">
+            <option>Last 30 days</option>
+            <option>Last 90 days</option>
+            <option>Last 6 months</option>
+            <option selected>Last 12 months</option>
+          </select>
+        </div>
+        <a class="btn btn-ghost" href="#" id="export-xls-btn">&#8615; Export Excel</a>
+        <a class="btn btn-primary" href="#" id="export-csv-btn">&#8615; Export CSV</a>
+      </div>
+    </div>
+
+    <!-- KPI Summary Row: larger tickers -->
+    <div class="summary-row">
+      <div class="kpi kpi-xl t-honey">
+        <div class="kpi-label">
+          <span>Seats allocated</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="kpi-value">500</div>
+        <div class="kpi-delta flat">Of total licence pool</div>
+      </div>
+      <div class="kpi kpi-xl t-sage">
+        <div class="kpi-label">
+          <span>Active learners</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kpi-value">412<em>/ 500</em></div>
+        <div class="kpi-delta up">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +38 vs last period
+        </div>
+      </div>
+      <div class="kpi kpi-xl">
+        <div class="kpi-label">
+          <span>Courses Completed</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="kpi-value">1,847</div>
+        <div class="kpi-delta up">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +214 this period
+        </div>
+      </div>
+      <div class="kpi kpi-xl t-clay">
+        <div class="kpi-label">
+          <span>Unused seats</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="kpi-value">88</div>
+        <div class="kpi-delta down">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          17.6% of seats idle
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 1: Enrollment vs Completion bar chart + Donut chart -->
+    <div class="charts-row section-gap">
+
+      <!-- Grouped bar: Enrolled vs Completed by month -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Enrollment vs <em>Courses Completed</em></div>
+          <span class="chip t-sage dot">Last 12 months</span>
+        </div>
+        <div class="card-body">
+          <div class="bar-chart-grouped-wrap">
+            <div class="bar-chart-grouped">
+              <!-- Jun -->
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:60px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:44px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jun</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:72px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:55px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jul</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:68px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:50px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Aug</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:80px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:62px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Sep</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:90px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:74px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Oct</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:88px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:70px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Nov</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:76px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:58px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Dec</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:95px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:78px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jan</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:102px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:84px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Feb</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:110px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:92px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Mar</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:116px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:98px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Apr</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
+                <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
+                  <div class="bcg-bar enrolled" style="height:120px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
+                  <div class="bcg-bar completed" style="height:108px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
+                </div>
+                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">May</span>
+              </div>
+            </div>
+          </div>
+          <div class="bar-legend" style="margin-top:14px;">
+            <div class="bl-item"><div class="bl-dot" style="background:var(--c-honey);"></div>Enrolled</div>
+            <div class="bl-item"><div class="bl-dot" style="background:var(--c-sage);"></div>Courses Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donut chart: seat status breakdown -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Seat <em>status</em></div>
+          <span class="chip t-honey dot">500 total</span>
+        </div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <div class="donut-solid">
+              <div class="donut-center">
+                <div>
+                  <div class="dc-val">82%</div>
+                  <div class="dc-lbl">Used</div>
+                </div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="dl-row">
+                <div class="dl-dot" style="background:var(--c-sage);"></div>
+                <span class="dl-name">Active</span>
+                <span class="dl-val">412</span>
+                <span class="dl-pct">82.4%</span>
+              </div>
+              <div class="dl-row">
+                <div class="dl-dot" style="background:var(--c-honey);"></div>
+                <span class="dl-name">Inactive</span>
+                <span class="dl-val">53</span>
+                <span class="dl-pct">10.6%</span>
+              </div>
+              <div class="dl-row">
+                <div class="dl-dot" style="background:var(--c-clay);"></div>
+                <span class="dl-name">Never logged in</span>
+                <span class="dl-val">23</span>
+                <span class="dl-pct">4.6%</span>
+              </div>
+              <div class="dl-row">
+                <div class="dl-dot" style="background:var(--surface-3);"></div>
+                <span class="dl-name">Unassigned</span>
+                <span class="dl-val">12</span>
+                <span class="dl-pct">2.4%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Completion rate bar + Score gauge + Active seats sparkline card -->
+    <div class="charts-row-3 section-gap">
+
+      <!-- Completion rate by group (solid horizontal bars) -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Completion by <em>group</em></div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Leadership Dev</span>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:10px;"></div>
+                    <div class="sp-bar up" style="height:13px;"></div>
+                    <div class="sp-bar up" style="height:11px;"></div>
+                    <div class="sp-bar up" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:20px;"></div>
+                    <div class="sp-bar up" style="height:22px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+8%</span>
+                </div>
+              </div>
+              <div class="util-progress">
+                <div class="progress"><div class="progress-fill sage" style="width:88%;"></div></div>
+                <span class="up-pct">88%</span>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Safety &amp; Compliance</span>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:14px;"></div>
+                    <div class="sp-bar up" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:18px;"></div>
+                    <div class="sp-bar up" style="height:17px;"></div>
+                    <div class="sp-bar up" style="height:21px;"></div>
+                    <div class="sp-bar up" style="height:24px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+5%</span>
+                </div>
+              </div>
+              <div class="util-progress">
+                <div class="progress"><div class="progress-fill sage" style="width:94%;"></div></div>
+                <span class="up-pct">94%</span>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Technical Skills</span>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:18px;"></div>
+                    <div class="sp-bar mid" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:19px;"></div>
+                    <div class="sp-bar up" style="height:17px;"></div>
+                    <div class="sp-bar up" style="height:20px;"></div>
+                    <div class="sp-bar up" style="height:18px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+3%</span>
+                </div>
+              </div>
+              <div class="util-progress">
+                <div class="progress"><div class="progress-fill sage" style="width:74%;"></div></div>
+                <span class="up-pct">74%</span>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Onboarding</span>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar down" style="height:22px;"></div>
+                    <div class="sp-bar down" style="height:20px;"></div>
+                    <div class="sp-bar down" style="height:18px;"></div>
+                    <div class="sp-bar down" style="height:16px;"></div>
+                    <div class="sp-bar down" style="height:14px;"></div>
+                    <div class="sp-bar down" style="height:10px;"></div>
+                  </div>
+                  <span class="spark-arrow down">&#8595;</span>
+                  <span class="spark-val down">-12%</span>
+                </div>
+              </div>
+              <div class="util-progress">
+                <div class="progress"><div class="progress-fill clay" style="width:58%;"></div></div>
+                <span class="up-pct">58%</span>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Finance &amp; Reporting</span>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar down" style="height:20px;"></div>
+                    <div class="sp-bar down" style="height:17px;"></div>
+                    <div class="sp-bar down" style="height:15px;"></div>
+                    <div class="sp-bar mid" style="height:16px;"></div>
+                    <div class="sp-bar down" style="height:13px;"></div>
+                    <div class="sp-bar down" style="height:11px;"></div>
+                  </div>
+                  <span class="spark-arrow down">&#8595;</span>
+                  <span class="spark-val down">-7%</span>
+                </div>
+              </div>
+              <div class="util-progress">
+                <div class="progress"><div class="progress-fill honey" style="width:65%;"></div></div>
+                <span class="up-pct">65%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engagement score gauge -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Engagement <em>score</em></div>
+          <span class="chip t-sage dot">This period</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:24px;">
+          <div class="gauge-wrap">
+            <div class="gauge-svg-wrap">
+              <svg width="140" height="80" viewBox="0 0 140 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- track arc (flat neutral) -->
+                <path d="M10 70 A60 60 0 0 1 130 70" stroke="var(--surface-3)" stroke-width="12" stroke-linecap="round" fill="none"/>
+                <!-- score fill: 78% of 188.5px half-circle arc = ~147px -->
+                <path d="M10 70 A60 60 0 0 1 130 70" stroke="var(--c-sage)" stroke-width="12" stroke-linecap="round" fill="none"
+                  stroke-dasharray="147 50" stroke-dashoffset="0"/>
+                <!-- threshold marker at 50% -->
+                <line x1="70" y1="10" x2="70" y2="18" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+                <text x="70" y="7" text-anchor="middle" font-family="var(--font-label)" font-size="8" fill="var(--ink-mute)" letter-spacing="0.04em">PASS</text>
+              </svg>
+            </div>
+            <div class="gauge-value-block">
+              <div class="gauge-score">78</div>
+              <div class="gauge-label-sub">out of 100</div>
+            </div>
+            <div class="gauge-pass pass">Pass</div>
+            <div class="threshold-hint">Threshold: 50 to pass</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:8px;">
+            <div style="text-align:center;padding:10px;background:var(--paper-2);border-radius:var(--r-sm);border:1px solid var(--line);">
+              <div style="font-size:11px;font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Avg. time/week</div>
+              <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">2.4 h</div>
+            </div>
+            <div style="text-align:center;padding:10px;background:var(--paper-2);border-radius:var(--r-sm);border:1px solid var(--line);">
+              <div style="font-size:11px;font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Login frequency</div>
+              <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">3.1 x</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active seats sparkline trend card -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Active seats <em>trend</em></div>
+        </div>
+        <div class="card-body">
+          <!-- Monthly active seat bar chart (solid, single color) -->
+          <div class="bar-chart" style="height:120px;gap:5px;padding:0;">
+            <div class="bc-col">
+              <span class="bc-val">290</span>
+              <div class="bc-bar sage" style="height:42%;"></div>
+              <span class="bc-label">Jun</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">310</span>
+              <div class="bc-bar sage" style="height:45%;"></div>
+              <span class="bc-label">Jul</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">325</span>
+              <div class="bc-bar sage" style="height:47%;"></div>
+              <span class="bc-label">Aug</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">340</span>
+              <div class="bc-bar sage" style="height:49%;"></div>
+              <span class="bc-label">Sep</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">355</span>
+              <div class="bc-bar sage" style="height:52%;"></div>
+              <span class="bc-label">Oct</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">368</span>
+              <div class="bc-bar sage" style="height:54%;"></div>
+              <span class="bc-label">Nov</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">360</span>
+              <div class="bc-bar honey" style="height:52%;"></div>
+              <span class="bc-label">Dec</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">382</span>
+              <div class="bc-bar sage" style="height:56%;"></div>
+              <span class="bc-label">Jan</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">391</span>
+              <div class="bc-bar sage" style="height:57%;"></div>
+              <span class="bc-label">Feb</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">405</span>
+              <div class="bc-bar sage" style="height:59%;"></div>
+              <span class="bc-label">Mar</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val">410</span>
+              <div class="bc-bar sage" style="height:60%;"></div>
+              <span class="bc-label">Apr</span>
+            </div>
+            <div class="bc-col">
+              <span class="bc-val" style="color:var(--c-sage-text);">412</span>
+              <div class="bc-bar sage" style="height:61%;background:var(--c-sage);"></div>
+              <span class="bc-label">May</span>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--font-label);font-size:10.5px;color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Period change</div>
+              <div class="sparkline-wrap">
+                <div class="sparkline">
+                  <div class="sp-bar up" style="height:8px;"></div>
+                  <div class="sp-bar up" style="height:12px;"></div>
+                  <div class="sp-bar up" style="height:10px;"></div>
+                  <div class="sp-bar up" style="height:16px;"></div>
+                  <div class="sp-bar up" style="height:20px;"></div>
+                  <div class="sp-bar up" style="height:24px;"></div>
+                </div>
+                <span class="spark-arrow up">&#8593;</span>
+                <span class="spark-val up">+42 seats</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:var(--font-label);font-size:10.5px;color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Utilization rate</div>
+              <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">82.4%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learner detail table -->
+    <div class="card section-gap">
+      <div class="card-head">
+        <div class="card-title">Learner <em>activity</em></div>
+        <div class="date-filter">
+          <label for="date-preset-2">Period:</label>
+          <select id="date-preset-2">
+            <option>Last 30 days</option>
+            <option>Last 90 days</option>
+            <option>Last 6 months</option>
+            <option selected>Last 12 months</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Enrolled</th>
+              <th>Courses Completed</th>
+              <th>Progress</th>
+              <th>7-day trend</th>
+              <th>Learner status</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fatima Al-Hinai</td>
+              <td>8</td>
+              <td>5</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill sage" style="width:74%;"></div></div>
+                  <span class="up-pct">74%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:8px;"></div>
+                    <div class="sp-bar up" style="height:12px;"></div>
+                    <div class="sp-bar up" style="height:10px;"></div>
+                    <div class="sp-bar up" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:20px;"></div>
+                    <div class="sp-bar up" style="height:22px;"></div>
+                    <div class="sp-bar up" style="height:24px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+6%</span>
+                </div>
+              </td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Mariam Al-Said</td>
+              <td>6</td>
+              <td>3</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill sage" style="width:61%;"></div></div>
+                  <span class="up-pct">61%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:10px;"></div>
+                    <div class="sp-bar up" style="height:14px;"></div>
+                    <div class="sp-bar up" style="height:18px;"></div>
+                    <div class="sp-bar up" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:20px;"></div>
+                    <div class="sp-bar up" style="height:22px;"></div>
+                    <div class="sp-bar up" style="height:24px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+4%</span>
+                </div>
+              </td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Ahmed Al-Balushi</td>
+              <td>11</td>
+              <td>9</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill sage" style="width:88%;"></div></div>
+                  <span class="up-pct">88%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar up" style="height:12px;"></div>
+                    <div class="sp-bar up" style="height:16px;"></div>
+                    <div class="sp-bar up" style="height:20px;"></div>
+                    <div class="sp-bar up" style="height:18px;"></div>
+                    <div class="sp-bar up" style="height:22px;"></div>
+                    <div class="sp-bar up" style="height:24px;"></div>
+                    <div class="sp-bar up" style="height:24px;"></div>
+                  </div>
+                  <span class="spark-arrow up">&#8593;</span>
+                  <span class="spark-val up">+11%</span>
+                </div>
+              </td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Salem Al-Kindi</td>
+              <td>5</td>
+              <td>2</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill honey" style="width:52%;"></div></div>
+                  <span class="up-pct">52%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar down" style="height:20px;"></div>
+                    <div class="sp-bar down" style="height:18px;"></div>
+                    <div class="sp-bar mid" style="height:16px;"></div>
+                    <div class="sp-bar down" style="height:14px;"></div>
+                    <div class="sp-bar down" style="height:12px;"></div>
+                    <div class="sp-bar down" style="height:10px;"></div>
+                    <div class="sp-bar down" style="height:8px;"></div>
+                  </div>
+                  <span class="spark-arrow down">&#8595;</span>
+                  <span class="spark-val down">-3%</span>
+                </div>
+              </td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Yusuf Al-Habsi</td>
+              <td>4</td>
+              <td>1</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill honey" style="width:43%;"></div></div>
+                  <span class="up-pct">43%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar down" style="height:22px;"></div>
+                    <div class="sp-bar down" style="height:18px;"></div>
+                    <div class="sp-bar down" style="height:16px;"></div>
+                    <div class="sp-bar down" style="height:14px;"></div>
+                    <div class="sp-bar down" style="height:12px;"></div>
+                    <div class="sp-bar down" style="height:10px;"></div>
+                    <div class="sp-bar down" style="height:8px;"></div>
+                  </div>
+                  <span class="spark-arrow down">&#8595;</span>
+                  <span class="spark-val down">-9%</span>
+                </div>
+              </td>
+              <td><span class="chip t-honey dot">Inactive</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Hassan Al-Riyami</td>
+              <td>3</td>
+              <td>0</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill clay" style="width:21%;"></div></div>
+                  <span class="up-pct">21%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar down" style="height:18px;"></div>
+                    <div class="sp-bar down" style="height:14px;"></div>
+                    <div class="sp-bar down" style="height:12px;"></div>
+                    <div class="sp-bar down" style="height:10px;"></div>
+                    <div class="sp-bar down" style="height:8px;"></div>
+                    <div class="sp-bar down" style="height:6px;"></div>
+                    <div class="sp-bar down" style="height:4px;"></div>
+                  </div>
+                  <span class="spark-arrow down">&#8595;</span>
+                  <span class="spark-val down">-14%</span>
+                </div>
+              </td>
+              <td><span class="chip t-honey dot">Inactive</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Layla Al-Maskari</td>
+              <td>2</td>
+              <td>0</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill clay" style="width:10%;"></div></div>
+                  <span class="up-pct">10%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar mid" style="height:6px;"></div>
+                    <div class="sp-bar mid" style="height:8px;"></div>
+                    <div class="sp-bar mid" style="height:6px;"></div>
+                    <div class="sp-bar mid" style="height:7px;"></div>
+                    <div class="sp-bar mid" style="height:6px;"></div>
+                    <div class="sp-bar mid" style="height:5px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                  </div>
+                  <span class="spark-arrow" style="color:var(--ink-mute);">&#8594;</span>
+                  <span class="spark-val" style="color:var(--ink-mute);">Flat</span>
+                </div>
+              </td>
+              <td><span class="chip t-honey dot">Inactive</span></td>
+              <td>Oman</td>
+            </tr>
+            <tr>
+              <td>Omar Al-Rashidi</td>
+              <td>1</td>
+              <td>0</td>
+              <td>
+                <div class="util-progress">
+                  <div class="progress" style="width:100px;"><div class="progress-fill clay" style="width:0%;"></div></div>
+                  <span class="up-pct">0%</span>
+                </div>
+              </td>
+              <td>
+                <div class="sparkline-wrap">
+                  <div class="sparkline">
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                    <div class="sp-bar mid" style="height:4px;"></div>
+                  </div>
+                  <span class="spark-arrow" style="color:var(--ink-mute);">&#8594;</span>
+                  <span class="spark-val" style="color:var(--ink-mute);">No activity</span>
+                </div>
+              </td>
+              <td><span class="chip t-clay dot">Not started</span></td>
+              <td>Oman</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  /* ── toast helper ── */
+  function showToast(msg) {
+    var t = document.getElementById('imi-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'imi-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._tid);
+    t._tid = setTimeout(function () { t.style.opacity = '0'; }, 3000);
+  }
+
+  /* ── topbar search ── */
+  var srch = document.querySelector('.search input');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'oa-team.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── period select updates chip label ── */
+  var periodSels = document.querySelectorAll('#date-preset, #date-preset-2');
+  periodSels.forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      showToast('Report updated: ' + this.value);
+      var chips = document.querySelectorAll('.chip.t-sage.dot, .chip.t-honey.dot');
+      chips.forEach(function (c) {
+        if (c.textContent.indexOf('months') !== -1 || c.textContent.indexOf('days') !== -1 || c.textContent.indexOf('Last') !== -1) {
+          c.textContent = sel.value;
+        }
+      });
+    });
+  });
+
+  /* ── export buttons ── */
+  var xlsBtn = document.getElementById('export-xls-btn');
+  var csvBtn = document.getElementById('export-csv-btn');
+  if (xlsBtn) xlsBtn.onclick = function (e) {
+    e.preventDefault();
+    showToast('Excel export queued — check your downloads.');
+  };
+  if (csvBtn) csvBtn.onclick = function (e) {
+    e.preventDefault();
+    var csv = 'User,Enrolled,Completed,Progress,Status,Country\n' +
+      'Fatima Al-Hinai,8,5,74%,Active,Oman\n' +
+      'Mariam Al-Said,6,3,61%,Active,Oman\n' +
+      'Ahmed Al-Balushi,11,9,88%,Active,Oman';
+    var a = document.createElement('a');
+    a.href = 'data:text/csv,' + encodeURIComponent(csv);
+    a.download = 'license-utilization.csv';
+    a.click();
+  };
+
+  /* ── table rows navigate to learner detail ── */
+  var rows = document.querySelectorAll('.tbl tbody tr');
+  rows.forEach(function (row) {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function () {
+      location.href = 'corp-learner-detail.html';
+    });
+  });
+})();
+</script>
+</body>
+</html>

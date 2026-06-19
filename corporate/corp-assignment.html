@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assign Courses · IMI Corporate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- Assignment-specific layout ---- */
+  .assign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 1080px) { .assign-grid { grid-template-columns: 1fr; } }
+
+  /* Step header inside a card */
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .step-num {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    background: var(--c-clay-wash);
+    border: 1px solid rgba(184, 101, 78, 0.22);
+    border-radius: var(--r-pill);
+    padding: 3px 10px;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  /* Radio options */
+  .radio-line {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .radio-opt.is-on { color: var(--ink); font-weight: 600; }
+  .radio-opt input {
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  /* Summary bar */
+  .summary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 24px;
+    margin-top: 20px;
+    box-shadow: var(--shadow-xs);
+  }
+  .summary-text {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .summary-text strong { color: var(--ink); font-weight: 700; }
+
+  /* Field label helper */
+  .field-hint {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 6px;
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+
+  /* Input row */
+  .input-with-chips { margin-bottom: 0; }
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  /* Date field narrower */
+  .date-col { max-width: 280px; }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="corp-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search team, groups, courses...">
+  </div>
+  <div class="topbar-actions">
+    <a href="corp-admin-notification.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<!-- App shell -->
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span><span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span><span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link is-active" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span><span class="badge">24</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Corporate &middot; Assignments</div>
+        <h1 class="page-title">Assign courses to <em>users</em></h1>
+        <p class="page-sub">Push courses to individuals or groups with deadlines and tracking.</p>
+      </div>
+    </div>
+
+    <!-- Step 1 + 2 side by side -->
+    <div class="assign-grid">
+
+      <!-- Step 1: Select courses -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-head" style="margin-bottom:0">
+            <span class="step-num">Step 1</span>
+            <span class="step-title">Select courses</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field input-with-chips">
+            <label>Course(s)</label>
+            <input class="input" id="course-search" placeholder="Search courses...">
+            <div id="course-dropdown" style="display:none;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-top:4px;max-height:160px;overflow-y:auto;position:relative;z-index:10;">
+              <div class="assign-option" data-value="CDMP Practitioner" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">CDMP Practitioner</div>
+              <div class="assign-option" data-value="Records Retention" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Retention</div>
+              <div class="assign-option" data-value="Data Governance Essentials" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Data Governance Essentials</div>
+              <div class="assign-option" data-value="ISO 30401 KM Standard" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">ISO 30401 KM Standard</div>
+              <div class="assign-option" data-value="Records Management Fundamentals" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Management Fundamentals</div>
+            </div>
+            <div class="chips-row" id="course-chips">
+              <span class="chip t-clay" data-course="CDMP Practitioner">CDMP Practitioner <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
+              <span class="chip t-clay" data-course="Records Retention">Records Retention <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
+            </div>
+            <p class="field-hint" id="course-count-hint">2 courses selected</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Select assignees -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-head" style="margin-bottom:0">
+            <span class="step-num">Step 2</span>
+            <span class="step-title">Select assignees</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tabs" id="assignee-tabs">
+            <button class="is" type="button" onclick="switchAssigneeTab(0,this)">By user</button>
+            <button type="button" onclick="switchAssigneeTab(1,this)">By group</button>
+            <button type="button" onclick="switchAssigneeTab(2,this)">By group</button>
+            <button type="button" onclick="switchAssigneeTab(3,this)">All corporate users</button>
+          </div>
+
+          <!-- tab panel 0: by user -->
+          <div id="assignee-panel-0">
+            <div class="field input-with-chips">
+              <label>Users</label>
+              <input class="input" id="user-search" placeholder="Search users...">
+              <div id="user-dropdown" style="display:none;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-top:4px;max-height:160px;overflow-y:auto;position:relative;z-index:10;">
+                <div class="user-option" data-value="Layla A." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Layla Al-Hashimi</div>
+                <div class="user-option" data-value="Ahmed S." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Ahmed Al-Said</div>
+                <div class="user-option" data-value="Fatma H." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Fatma Al-Hajri</div>
+                <div class="user-option" data-value="Tariq B." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Tariq Al-Balushi</div>
+              </div>
+              <div class="chips-row" id="user-chips">
+                <span class="chip t-sage" data-user="Layla A.">Layla A. <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
+                <span class="chip t-sage" data-user="Ahmed S.">Ahmed S. <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
+                <span class="chip" data-user="+12 more">+12 more <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
+              </div>
+              <p class="field-hint" id="user-count-hint">14 users selected</p>
+            </div>
+          </div>
+
+          <!-- tab panel 1: by group -->
+          <div id="assignee-panel-1" style="display:none;">
+            <div class="field">
+              <label>Groups</label>
+              <select class="input" id="group-select-assign" multiple style="height:120px;">
+                <option selected>IT Team (42)</option>
+                <option selected>Data Analytics (31)</option>
+                <option>Records Team (18)</option>
+                <option>Operations (56)</option>
+                <option>Compliance (14)</option>
+              </select>
+              <p class="field-hint">Hold Ctrl / Cmd to select multiple groups</p>
+            </div>
+          </div>
+
+          <!-- tab panel 2: by group -->
+          <div id="assignee-panel-2" style="display:none;">
+            <div class="field">
+              <label>Group</label>
+              <select class="input" id="dept-select-assign">
+                <option>Engineering Team</option>
+                <option>IT Team</option>
+                <option>Finance</option>
+                <option>Operations</option>
+                <option>Compliance</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- tab panel 3: all corporate users -->
+          <div id="assignee-panel-3" style="display:none;">
+            <p style="font-size:13.5px;color:var(--ink-soft);padding:14px 0 0;">Assignment will be sent to <strong>all 487 active corporate users</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Step 3: Assignment type and deadline -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-head">
+        <div class="step-head" style="margin-bottom:0">
+          <span class="step-num">Step 3</span>
+          <span class="step-title">Assignment type &amp; target completion date</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label>Assignment type</label>
+          <div class="radio-line">
+            <label class="radio-opt is-on">
+              <input type="radio" name="atype" checked> Mandatory
+            </label>
+            <label class="radio-opt">
+              <input type="radio" name="atype"> Optional
+            </label>
+          </div>
+        </div>
+        <div class="date-col">
+          <div class="field" style="margin-bottom:0">
+            <label>Target completion date <span style="font-weight:400;color:var(--ink-mute)">(optional)</span></label>
+            <input type="date" value="2026-06-30">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary + action -->
+    <div class="summary-bar">
+      <p class="summary-text" id="assign-summary">
+        <strong>14 users</strong> will receive <strong>2 courses</strong> &middot; target completion <strong>30 Jun 2026</strong>
+      </p>
+      <button class="btn btn-primary" id="btn-send-assignments" type="button">Send assignments &rarr;</button>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+
+<script>
+(function () {
+  function toast(msg, then) {
+    var t = document.getElementById('imi-toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+      if (then) setTimeout(then, 220);
+    }, 1800);
+  }
+
+  /* ── assignee tab switch ── */
+  window.switchAssigneeTab = function (idx, btn) {
+    for (var i = 0; i < 4; i++) {
+      var p = document.getElementById('assignee-panel-' + i);
+      if (p) p.style.display = (i === idx) ? '' : 'none';
+    }
+    document.querySelectorAll('#assignee-tabs button').forEach(function (b) { b.classList.remove('is'); });
+    btn.classList.add('is');
+    updateSummary();
+  };
+
+  /* ── course search + add ── */
+  var courseSearch = document.getElementById('course-search');
+  var courseDropdown = document.getElementById('course-dropdown');
+  var courseChips = document.getElementById('course-chips');
+
+  if (courseSearch) {
+    courseSearch.addEventListener('focus', function () {
+      if (courseDropdown) { filterDropdown(courseDropdown, ''); courseDropdown.style.display = ''; }
+    });
+    courseSearch.addEventListener('input', function () {
+      if (courseDropdown) { filterDropdown(courseDropdown, courseSearch.value); courseDropdown.style.display = ''; }
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.input-with-chips')) {
+        if (courseDropdown) courseDropdown.style.display = 'none';
+        if (userDropdown) userDropdown.style.display = 'none';
+      }
+    });
+  }
+
+  if (courseDropdown) {
+    courseDropdown.addEventListener('click', function (e) {
+      var opt = e.target.closest('.assign-option');
+      if (!opt) return;
+      var val = opt.dataset.value;
+      if (!document.querySelector('[data-course="' + val + '"]')) {
+        var chip = document.createElement('span');
+        chip.className = 'chip t-clay';
+        chip.dataset.course = val;
+        chip.innerHTML = val + ' <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span>';
+        courseChips.appendChild(chip);
+      }
+      courseDropdown.style.display = 'none';
+      courseSearch.value = '';
+      updateCourseCount();
+      updateSummary();
+    });
+  }
+
+  if (courseChips) {
+    courseChips.addEventListener('click', function (e) {
+      if (e.target.classList.contains('chip-x')) {
+        var chip = e.target.closest('.chip');
+        if (chip) { chip.remove(); updateCourseCount(); updateSummary(); }
+      }
+    });
+  }
+
+  function updateCourseCount() {
+    var n = document.querySelectorAll('#course-chips .chip').length;
+    var el = document.getElementById('course-count-hint');
+    if (el) el.textContent = n + ' course' + (n !== 1 ? 's' : '') + ' selected';
+  }
+
+  /* ── user search + add ── */
+  var userSearch = document.getElementById('user-search');
+  var userDropdown = document.getElementById('user-dropdown');
+  var userChips = document.getElementById('user-chips');
+
+  if (userSearch) {
+    userSearch.addEventListener('focus', function () {
+      if (userDropdown) { filterDropdown(userDropdown, ''); userDropdown.style.display = ''; }
+    });
+    userSearch.addEventListener('input', function () {
+      if (userDropdown) { filterDropdown(userDropdown, userSearch.value); userDropdown.style.display = ''; }
+    });
+  }
+
+  if (userDropdown) {
+    userDropdown.addEventListener('click', function (e) {
+      var opt = e.target.closest('.user-option');
+      if (!opt) return;
+      var val = opt.dataset.value;
+      if (!document.querySelector('[data-user="' + val + '"]')) {
+        var chip = document.createElement('span');
+        chip.className = 'chip t-sage';
+        chip.dataset.user = val;
+        chip.innerHTML = val + ' <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span>';
+        userChips.appendChild(chip);
+      }
+      userDropdown.style.display = 'none';
+      userSearch.value = '';
+      updateUserCount();
+      updateSummary();
+    });
+  }
+
+  if (userChips) {
+    userChips.addEventListener('click', function (e) {
+      if (e.target.classList.contains('chip-x')) {
+        var chip = e.target.closest('.chip');
+        if (chip) { chip.remove(); updateUserCount(); updateSummary(); }
+      }
+    });
+  }
+
+  function updateUserCount() {
+    var n = document.querySelectorAll('#user-chips .chip').length;
+    var allChip = document.querySelector('#user-chips .chip[data-user="+12 more"]');
+    var display = n;
+    if (allChip) display = n - 1 + 12;
+    var el = document.getElementById('user-count-hint');
+    if (el) el.textContent = display + ' users selected';
+  }
+
+  /* ── shared dropdown filter ── */
+  function filterDropdown(dd, q) {
+    var lower = q.toLowerCase();
+    dd.querySelectorAll('[class$="-option"],[class*="-option "],.assign-option,.user-option').forEach(function (opt) {
+      opt.style.display = (!lower || opt.textContent.toLowerCase().includes(lower)) ? '' : 'none';
+    });
+  }
+
+  /* ── update summary bar ── */
+  function updateSummary() {
+    var courses = document.querySelectorAll('#course-chips .chip').length;
+    var users = 14; // static for prototype
+    var el = document.getElementById('assign-summary');
+    if (el) el.innerHTML = '<strong>' + users + ' users</strong> will receive <strong>' + courses + ' course' + (courses !== 1 ? 's' : '') + '</strong>';
+  }
+
+  /* ── send assignments ── */
+  var btnSend = document.getElementById('btn-send-assignments');
+  if (btnSend) {
+    btnSend.addEventListener('click', function () {
+      var courses = document.querySelectorAll('#course-chips .chip').length;
+      if (!courses) { toast('Select at least one course first.'); return; }
+      btnSend.disabled = true;
+      btnSend.textContent = 'Sending...';
+      setTimeout(function () {
+        toast('Assignments sent! Redirecting...', function () {
+          location.href = 'corp-assignment-edit.html';
+        });
+      }, 400);
+    });
+  }
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

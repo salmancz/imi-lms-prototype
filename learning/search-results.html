@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global search · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- search hero bar ---- */
+  .search-field {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .search-field svg {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--ink-mute);
+    pointer-events: none;
+  }
+  .search-field input {
+    width: 100%;
+    height: 52px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    padding: 0 20px 0 50px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    box-shadow: var(--shadow-xs);
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  .search-field input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+  }
+
+  /* ---- results meta ---- */
+  .results-meta {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .results-meta strong { color: var(--ink); font-weight: 700; }
+  .kbd {
+    display: inline-block;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--paper-2);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-xs);
+    padding: 1px 7px;
+    line-height: 1.5;
+  }
+
+  /* ---- result groups ---- */
+  .result-group { margin-bottom: 36px; }
+  .result-group:last-child { margin-bottom: 0; }
+  .group-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  /* ---- canonical .crs grid for courses section ---- */
+  .crs-search-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1200px) { .crs-search-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 780px)  { .crs-search-grid { grid-template-columns: 1fr; } }
+
+  /* ---- lesson / career-path result rows ---- */
+  .result-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.2s var(--tn), border-color 0.2s, box-shadow 0.25s;
+  }
+  .result-row:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .result-media {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    overflow: hidden;
+  }
+  .result-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .result-media svg { width: 22px; height: 22px; }
+  .result-media.t-honey { background: var(--c-honey-wash); color: var(--c-honey); border-color: rgba(201,155,46,0.18); }
+  .result-media.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage);  border-color: rgba(126,155,111,0.18); }
+  .result-media.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay);  border-color: rgba(184,101,78,0.18); }
+
+  .result-info { flex: 1; min-width: 0; }
+  .result-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.005em;
+  }
+  .result-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .result-chevron {
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .result-chevron svg { width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html?q='+encodeURIComponent(this.value.trim())">
+  </div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="../profile/profile.html" class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link is-active" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- Page header -->
+    <div class="page-head" style="margin-bottom:24px">
+      <div class="hero-left">
+        <div class="eyebrow">Course Library</div>
+        <h1 class="hero-title">Search <em>results</em></h1>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div class="search-field" style="max-width:760px;margin-bottom:14px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="sr-input" value="" aria-label="Search" oninput="srUpdateQuery();srFilter();" onkeydown="if(event.key==='Enter'&&this.value.trim()){srUpdateQuery();srFilter();}">
+    </div>
+
+    <p class="results-meta" id="sr-meta"><strong id="sr-count">6 results</strong> for <span id="sr-query">all courses</span> &middot; Press <span class="kbd">/</span> anytime to search</p>
+
+    <!-- Filter tabs -->
+    <div class="tabs" id="sr-tabs">
+      <button class="is tab-btn" data-filter="all">All (6)</button>
+      <button class="tab-btn" data-filter="Courses">Courses (3)</button>
+      <button class="tab-btn" data-filter="Career paths">Career paths (1)</button>
+      <button class="tab-btn" data-filter="Lessons">Lessons (2)</button>
+    </div>
+
+    <!-- COURSES group: canonical .crs cards -->
+    <div class="result-group" data-group="Courses">
+      <div class="group-label">Courses</div>
+      <div class="crs-search-grid">
+
+        <!-- Card 1: Basic / Free -->
+        <article class="crs" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div class="crs-cover">
+            <img src="../img/covers/cover-1.jpg" alt="">
+            <span class="crs-badge crs-level lv-basic">
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Basic
+            </span>
+            <span class="crs-badge crs-dur">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              28 min
+            </span>
+          </div>
+          <div class="crs-body">
+            <div class="crs-type">
+              <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <span class="crs-type-label">Course</span>
+              <span class="chip t-sage dot" style="margin-left:auto;">Free</span>
+            </div>
+            <h3 class="crs-title">Data Retention Schedules</h3>
+            <div class="crs-rule"></div>
+            <div class="crs-foot">
+              <div class="crs-by">
+                <img class="crs-av" src="https://i.pravatar.cc/80?u=sara-lin" alt="">
+                <span class="crs-by-txt">By: <strong>Dr. Sara Lin</strong></span>
+              </div>
+              <div class="crs-acts">
+                <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Data Retention Schedules'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2: Practitioner -->
+        <article class="crs" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div class="crs-cover">
+            <img src="../img/covers/cover-2.jpg" alt="">
+            <span class="crs-badge crs-level lv-practitioner">
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Practitioner
+            </span>
+            <span class="crs-badge crs-dur">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              25 min
+            </span>
+          </div>
+          <div class="crs-body">
+            <div class="crs-type">
+              <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <span class="crs-type-label">Course</span>
+            </div>
+            <h3 class="crs-title">Records Retention Bootcamp: Policies, Compliance &amp; Disposal</h3>
+            <div class="crs-rule"></div>
+            <div class="crs-foot">
+              <div class="crs-by">
+                <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-default" alt="">
+                <span class="crs-by-txt">By: <strong>IMI default</strong></span>
+              </div>
+              <div class="crs-acts">
+                <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Records Retention Bootcamp'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3: Strategist -->
+        <article class="crs" style="cursor:pointer" onclick="location.href='course-detail.html'">
+          <div class="crs-cover">
+            <img src="../img/covers/cover-3.jpg" alt="">
+            <span class="crs-badge crs-level">
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              Strategist
+            </span>
+            <span class="crs-badge crs-dur">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              30 min
+            </span>
+          </div>
+          <div class="crs-body">
+            <div class="crs-type">
+              <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <span class="crs-type-label">Course</span>
+            </div>
+            <h3 class="crs-title">Strategic Records Governance: Enterprise Retention Frameworks for Senior Practitioners</h3>
+            <div class="crs-rule"></div>
+            <div class="crs-foot">
+              <div class="crs-by">
+                <img class="crs-av" src="https://i.pravatar.cc/80?u=rajan-mehta" alt="">
+                <span class="crs-by-txt">By: <strong>Prof. Rajan Mehta</strong></span>
+              </div>
+              <div class="crs-acts">
+                <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Strategic Records Governance'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- LESSONS group: list rows -->
+    <div class="result-group" data-group="Lessons">
+      <div class="group-label">Lessons</div>
+      <div class="result-list">
+
+        <a href="player.html" class="result-row">
+          <div class="result-media t-clay">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </div>
+          <div class="result-info">
+            <div class="result-title">Retention schedules in 90 seconds</div>
+            <div class="result-sub">Standalone explainer &middot; 1 min &middot; Free</div>
+          </div>
+          <span class="result-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </a>
+
+        <a href="player.html" class="result-row">
+          <div class="result-media t-sage">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </div>
+          <div class="result-info">
+            <div class="result-title">ISO 15489 retention rules</div>
+            <div class="result-sub">Standalone explainer &middot; 3 min &middot; Free</div>
+          </div>
+          <span class="result-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- CAREER PATHS group: list rows -->
+    <div class="result-group" data-group="Career paths">
+      <div class="group-label">Career paths</div>
+      <div class="result-list">
+
+        <a href="career-path.html" class="result-row">
+          <div class="result-media t-honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7l10-4 10 4-10 4z"/><path d="M6 9.3v5.2c0 1.3 2.7 2.5 6 2.5s6-1.2 6-2.5V9.3"/><path d="M22 7v6"/></svg>
+          </div>
+          <div class="result-info">
+            <div class="result-title">Records Mgmt Pro</div>
+            <div class="result-sub">4 courses &middot; ~24 hrs &middot; Beginner to Intermediate</div>
+          </div>
+          <span class="result-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+        </a>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+document.addEventListener('click', function() {
+  document.querySelectorAll('.overflow-menu.is-open').forEach(function(m) { m.classList.remove('is-open'); });
+});
+
+var srActiveFilter = 'all';
+
+/* Update the query display text */
+function srUpdateQuery() {
+  var q = document.getElementById('sr-input').value.trim();
+  var qEl = document.getElementById('sr-query');
+  if (qEl) qEl.textContent = q ? '"' + q + '"' : 'all courses';
+}
+
+/* Filter items and update counts */
+function srFilter() {
+  var q = document.getElementById('sr-input').value.toLowerCase().trim();
+  var totals = {};
+  var totalAll = 0;
+
+  /* Pass 1: show/hide each item and tally per group */
+  document.querySelectorAll('.result-group').forEach(function(g) {
+    var grpName = g.dataset.group;
+    var count = 0;
+    g.querySelectorAll('.crs[onclick], .result-row').forEach(function(el) {
+      var text = el.textContent.toLowerCase();
+      var show = !q || text.indexOf(q) !== -1;
+      el.style.display = show ? '' : 'none';
+      if (show) count++;
+    });
+    totals[grpName] = count;
+    totalAll += count;
+    /* Show group only if current tab matches */
+    if (srActiveFilter === 'all') {
+      g.style.display = count > 0 ? '' : 'none';
+    } else {
+      g.style.display = (g.dataset.group === srActiveFilter && count > 0) ? '' : 'none';
+    }
+  });
+
+  /* Update total count */
+  var shown = srActiveFilter === 'all' ? totalAll : (totals[srActiveFilter] || 0);
+  document.getElementById('sr-count').textContent = shown + ' result' + (shown !== 1 ? 's' : '');
+
+  /* Update tab labels with live counts */
+  document.querySelectorAll('#sr-tabs button').forEach(function(btn) {
+    var f = btn.dataset.filter;
+    if (f === 'all') {
+      btn.textContent = 'All (' + totalAll + ')';
+    } else {
+      btn.textContent = f + ' (' + (totals[f] || 0) + ')';
+    }
+  });
+}
+
+/* Tab filtering */
+document.getElementById('sr-tabs').addEventListener('click', function(e) {
+  var btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('#sr-tabs button').forEach(function(b){ b.classList.remove('is'); });
+  btn.classList.add('is');
+  srActiveFilter = btn.dataset.filter;
+  srFilter();
+});
+
+/* Stop card action buttons from triggering card navigation */
+document.querySelectorAll('.crs .crs-ic, .crs .crs-acts button, .crs .crs-acts a').forEach(function(el) {
+  el.addEventListener('click', function(e) { e.stopPropagation(); });
+});
+
+/* / shortcut to focus search */
+document.addEventListener('keydown', function(e) {
+  if (e.key === '/' && document.activeElement !== document.getElementById('sr-input')) {
+    e.preventDefault();
+    document.getElementById('sr-input').focus();
+    document.getElementById('sr-input').select();
+  }
+});
+
+/* Read ?q= from URL on page load */
+(function() {
+  var params = new URLSearchParams(location.search);
+  var q = params.get('q');
+  var inp = document.getElementById('sr-input');
+  if (q && inp) { inp.value = q; }
+  srUpdateQuery();
+  srFilter();
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

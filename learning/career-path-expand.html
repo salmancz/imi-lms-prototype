@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career path (expandable) · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-specific layout: expand-on-click Career path list with a horizontal course chain */
+  .path-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .path-card { padding: 0; overflow: hidden; }
+
+  .path-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 24px;
+    cursor: pointer;
+    background: var(--paper);
+    transition: background 0.18s;
+  }
+  .path-header:hover { background: var(--paper-2); }
+
+  .path-head-info { flex: 1; min-width: 0; }
+  .path-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .path-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .path-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .path-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .path-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-top: 10px; max-width: 640px; }
+
+  /* Subject / field filter bar */
+  .subject-filter { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+  .subject-filter-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .subject-pill {
+    height: 30px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    background: var(--paper);
+    border: 1.5px solid var(--line-strong);
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .subject-pill:hover { background: var(--paper-2); }
+  .subject-pill.is-active { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); }
+
+  /* Learning outcome + instructor blocks inside body */
+  .path-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 28px;
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .path-meta-block .path-meta-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .path-meta-block .path-meta-value { font-size: 13px; color: var(--ink); line-height: 1.5; }
+  .path-instructor { display: flex; align-items: center; gap: 8px; }
+  .path-instructor .ins-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--hero-bg);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .path-head-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
+  .path-completion { text-align: right; }
+  .path-completion-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .path-completion-value {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .path-bar { width: 96px; }
+  .path-chevron {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink-soft);
+    transition: transform 0.25s var(--tn), background 0.18s;
+    flex-shrink: 0;
+  }
+  .path-chevron svg { width: 16px; height: 16px; display: block; }
+  .path-header:hover .path-chevron { background: var(--surface-3); }
+  .path-card.is-open .path-chevron { transform: rotate(180deg); }
+
+  .path-body {
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+    padding: 20px 24px 22px;
+  }
+  .path-card:not(.is-open) .path-body { display: none; }
+
+  .path-section-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  /* Horizontal course chain: sequence + current position + locks */
+  .chain {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chain-node {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 12px 16px;
+    flex: 0 0 auto;
+    max-width: 240px;
+  }
+  .chain-node.is-done {
+    background: var(--c-sage-wash);
+    border-color: rgba(126, 155, 111, 0.22);
+  }
+  .chain-node.is-current {
+    background: var(--c-honey-wash);
+    border-color: rgba(201, 155, 46, 0.30);
+  }
+  .chain-node.is-locked { opacity: 0.7; }
+  .chain-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .chain-mark svg { width: 13px; height: 13px; display: block; }
+  .chain-node.is-done .chain-mark { background: var(--c-sage); color: var(--paper); }
+  .chain-node.is-current .chain-mark { background: var(--c-honey); color: var(--paper); }
+  .chain-node.is-locked .chain-mark,
+  .chain-node.is-upcoming .chain-mark {
+    background: var(--surface-3);
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .chain-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .chain-state {
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+    margin-top: 2px;
+  }
+  .chain-tags { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+  .chain-flag {
+    font-family: var(--font-label);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+  }
+  .chain-flag.is-mandatory { background: var(--c-clay-wash); color: #8C4534; }
+  .chain-flag.is-optional { background: var(--surface-3); color: var(--ink-soft); }
+  .chain-dur {
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .chain-arrow {
+    color: var(--ink-faint);
+    flex: 0 0 auto;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  /* Milestone markers + prerequisite note on the path map */
+  .chain-node.is-milestone { border-color: rgba(201, 155, 46, 0.45); }
+  .milestone-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-label);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+    background: var(--c-honey-wash);
+    padding: 2px 7px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+  }
+  .milestone-flag svg { width: 10px; height: 10px; }
+  .path-prereq {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-top: 14px;
+  }
+  .path-prereq strong { color: var(--ink); font-weight: 600; }
+
+  .path-empty { font-size: 13px; color: var(--ink-soft); }
+  .chip.not-started { background: var(--surface-3); border-color: transparent; color: var(--ink-soft); }
+
+  .share-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--paper);
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink-soft);
+    transition: background 0.18s, color 0.18s, transform 0.2s var(--tn);
+    flex-shrink: 0;
+  }
+  .share-btn svg { width: 16px; height: 16px; }
+  .share-btn:hover { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); transform: translateY(-1px); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link is-active" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="page-head" style="margin-bottom:24px">
+  <div class="hero-left">
+    <div class="eyebrow">Learning</div>
+    <h1 class="hero-title">Career <em>paths</em></h1>
+    <p class="hero-sub">Paths default to collapsed. Click to expand and see the course chain inside.</p>
+  </div>
+  <div class="hero-actions" style="justify-content:flex-end;align-items:flex-start">
+    <button class="share-btn" title="Share career path" aria-label="Share career path" onclick="location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+  </div>
+</div>
+
+<div class="subject-filter">
+  <span class="subject-filter-label">Subject / Field</span>
+  <button class="subject-pill is-active" data-toggle="subject-filter" onclick="filterPaths('All')">All</button>
+  <button class="subject-pill" data-toggle="subject-filter" onclick="filterPaths('Data Science')">Data Science</button>
+  <button class="subject-pill" data-toggle="subject-filter" onclick="filterPaths('IT')">IT</button>
+  <button class="subject-pill" data-toggle="subject-filter" onclick="filterPaths('Finance')">Finance</button>
+  <button class="subject-pill" data-toggle="subject-filter" onclick="filterPaths('Marketing')">Marketing</button>
+</div>
+
+<div class="path-list">
+
+  <!-- Path 1: CDMP Practitioner - in progress, expanded by default with course chain -->
+  <div class="card path-card is-open">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-title">CDMP Practitioner</div>
+        <div class="path-sub">5 courses · ~32 hrs · Intermediate → Advanced</div>
+        <div class="path-tags">
+          <span class="chip t-honey">Data Science</span>
+        </div>
+        <p class="path-desc">A practitioner track that takes you from data management fundamentals to exam readiness, covering quality, metadata, and governance so you can run enterprise data programs with confidence.</p>
+      </div>
+      <div class="path-head-right">
+        <div class="path-completion">
+          <div class="path-completion-label">Completion</div>
+          <div class="path-completion-value">40%</div>
+        </div>
+        <div class="path-bar">
+          <div class="progress" style="height:6px"><div class="progress-fill" style="width:40%;background:var(--c-honey)"></div></div>
+        </div>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-meta-grid">
+        <div class="path-meta-block">
+          <div class="path-meta-label">Learning Outcome</div>
+          <div class="path-meta-value">On completion you will be able to design and govern enterprise data programs, run data quality and metadata initiatives, and pass the CDMP Practitioner exam.</div>
+        </div>
+        <div class="path-meta-block">
+          <div class="path-meta-label">Instructor</div>
+          <div class="path-meta-value path-instructor"><span class="ins-avatar">IMI</span>IMI</div>
+        </div>
+      </div>
+      <div class="path-section-label">Course chain</div>
+      <div class="chain">
+        <div class="chain-node is-done" style="cursor:pointer" onclick="location.href='completed-proof-detail.html'" title="View completed course">
+          <span class="chain-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <div>
+            <div class="chain-name">1. Data Mgmt Foundations</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-current" style="cursor:pointer" onclick="location.href='player.html'" title="Resume course">
+          <span class="chain-mark"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          <div>
+            <div class="chain-name">2. Data Quality</div>
+            <div class="chain-state">In progress</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~7 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone" style="cursor:pointer" onclick="location.href='course-detail.html'" title="View course details">
+          <span class="chain-mark">3</span>
+          <div>
+            <div class="chain-name">Metadata Mgmt</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-optional">Optional</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming" style="cursor:pointer" onclick="location.href='course-detail.html'" title="View course details">
+          <span class="chain-mark">4</span>
+          <div>
+            <div class="chain-name">Data Governance</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~7 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone" style="cursor:pointer" onclick="location.href='course-detail.html'" title="View course details">
+          <span class="chain-mark">5</span>
+          <div>
+            <div class="chain-name">CDMP Practitioner Exam Prep</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="path-prereq"><strong>Prerequisites:</strong> Each course unlocks after the prior mandatory course is completed. Data Mgmt Foundations is the entry course and has no prerequisite.</p>
+    </div>
+  </div>
+
+  <!-- Path 2: Records Mgmt Pro - not started, collapsed -->
+  <div class="card path-card">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-title">Records Mgmt Pro</div>
+        <div class="path-sub">4 courses · ~24 hrs · Beginner → Intermediate</div>
+        <div class="path-tags">
+          <span class="chip t-honey">IT</span>
+        </div>
+        <p class="path-desc">Build the records lifecycle skills organisations need: classification, retention scheduling, and compliant disposition for paper and digital records.</p>
+      </div>
+      <div class="path-head-right">
+        <span class="chip not-started">Not started</span>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-meta-grid">
+        <div class="path-meta-block">
+          <div class="path-meta-label">Learning Outcome</div>
+          <div class="path-meta-value">On completion you will be able to classify records, design retention schedules, and run defensible disposition aligned to organisational and regulatory policy.</div>
+        </div>
+        <div class="path-meta-block">
+          <div class="path-meta-label">Instructor</div>
+          <div class="path-meta-value path-instructor"><span class="ins-avatar">IMI</span>IMI</div>
+        </div>
+      </div>
+      <div class="path-section-label">Course chain</div>
+      <div class="chain">
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">1</span>
+          <div>
+            <div class="chain-name">Records Fundamentals</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">2</span>
+          <div>
+            <div class="chain-name">Classification & Indexing</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone">
+          <span class="chain-mark">3</span>
+          <div>
+            <div class="chain-name">Retention Scheduling</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">4</span>
+          <div>
+            <div class="chain-name">Disposition & Audit</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-optional">Optional</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="path-prereq"><strong>Prerequisites:</strong> Records Fundamentals is the entry course; each later course unlocks after the prior mandatory course is completed.</p>
+    </div>
+  </div>
+
+  <!-- Path 3: Knowledge Lead - not started, collapsed -->
+  <div class="card path-card">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-title">Knowledge Lead</div>
+        <div class="path-sub">6 courses · ~38 hrs · Intermediate → Advanced</div>
+        <div class="path-tags">
+          <span class="chip t-honey">Marketing</span>
+        </div>
+        <p class="path-desc">Lead knowledge management end to end: capture, taxonomy, knowledge sharing culture, and measuring the value your programs deliver to the business.</p>
+      </div>
+      <div class="path-head-right">
+        <span class="chip not-started">Not started</span>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-meta-grid">
+        <div class="path-meta-block">
+          <div class="path-meta-label">Learning Outcome</div>
+          <div class="path-meta-value">On completion you will be able to design knowledge capture systems, build taxonomies, drive a knowledge-sharing culture, and measure program impact.</div>
+        </div>
+        <div class="path-meta-block">
+          <div class="path-meta-label">Instructor</div>
+          <div class="path-meta-value path-instructor"><span class="ins-avatar">IMI</span>IMI</div>
+        </div>
+      </div>
+      <div class="path-section-label">Course chain</div>
+      <div class="chain">
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">1</span>
+          <div>
+            <div class="chain-name">Knowledge Mgmt Basics</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">2</span>
+          <div>
+            <div class="chain-name">Knowledge Capture</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone">
+          <span class="chain-mark">3</span>
+          <div>
+            <div class="chain-name">Taxonomy & Structure</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~7 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">4</span>
+          <div>
+            <div class="chain-name">Sharing Culture</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-optional">Optional</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">5</span>
+          <div>
+            <div class="chain-name">Measuring KM Value</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone">
+          <span class="chain-mark">6</span>
+          <div>
+            <div class="chain-name">KM Leadership Capstone</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~7 hrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="path-prereq"><strong>Prerequisites:</strong> Knowledge Mgmt Basics is the entry course; each later course unlocks after the prior mandatory course is completed.</p>
+    </div>
+  </div>
+
+  <!-- Path 4: IGP, Information Governance Pro - not started, collapsed -->
+  <div class="card path-card">
+    <div class="path-header">
+      <div class="path-head-info">
+        <div class="path-title">IGP, Information Governance Pro</div>
+        <div class="path-sub">5 courses · ~28 hrs · Intermediate → Advanced</div>
+        <div class="path-tags">
+          <span class="chip t-honey">Finance</span>
+        </div>
+        <p class="path-desc">Master information governance: policy frameworks, risk and compliance, privacy controls, and the IGP exam so you can govern information assets across the enterprise.</p>
+      </div>
+      <div class="path-head-right">
+        <span class="chip not-started">Not started</span>
+        <span class="path-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </div>
+    </div>
+    <div class="path-body">
+      <div class="path-meta-grid">
+        <div class="path-meta-block">
+          <div class="path-meta-label">Learning Outcome</div>
+          <div class="path-meta-value">On completion you will be able to build governance frameworks, manage information risk and privacy controls, and pass the IGP certification exam.</div>
+        </div>
+        <div class="path-meta-block">
+          <div class="path-meta-label">Instructor</div>
+          <div class="path-meta-value path-instructor"><span class="ins-avatar">IMI</span>IMI</div>
+        </div>
+      </div>
+      <div class="path-section-label">Course chain</div>
+      <div class="chain">
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">1</span>
+          <div>
+            <div class="chain-name">Info Governance Foundations</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~5 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">2</span>
+          <div>
+            <div class="chain-name">Policy & Frameworks</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone">
+          <span class="chain-mark">3</span>
+          <div>
+            <div class="chain-name">Risk & Compliance</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming">
+          <span class="chain-mark">4</span>
+          <div>
+            <div class="chain-name">Privacy Controls</div>
+            <div class="chain-tags">
+              <span class="chain-flag is-optional">Optional</span>
+              <span class="chain-dur">~5 hrs</span>
+            </div>
+          </div>
+        </div>
+        <span class="chain-arrow">→</span>
+        <div class="chain-node is-upcoming is-milestone">
+          <span class="chain-mark">5</span>
+          <div>
+            <div class="chain-name">IGP Exam Prep</div>
+            <div class="chain-tags">
+              <span class="milestone-flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 8.5 12 2"/></svg> Milestone</span>
+              <span class="chain-flag is-mandatory">Mandatory</span>
+              <span class="chain-dur">~6 hrs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="path-prereq"><strong>Prerequisites:</strong> Info Governance Foundations is the entry course; each later course unlocks after the prior mandatory course is completed.</p>
+    </div>
+  </div>
+
+</div>
+
+  </main>
+</div>
+<script>
+  // Expand/collapse: clicking a path header toggles its course chain.
+  document.querySelectorAll('.path-header').forEach(function (head) {
+    head.addEventListener('click', function () {
+      head.closest('.path-card').classList.toggle('is-open');
+    });
+  });
+
+  // Stop inner body controls from bubbling to path-header expand logic.
+  document.querySelectorAll('.path-body a, .path-body button').forEach(function(el) {
+    el.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
+
+  // Subject/field filter: show only paths whose tag chip matches the selected subject.
+  function filterPaths(subject) {
+    document.querySelectorAll('.subject-pill').forEach(function (pill) {
+      pill.classList.toggle('is-active', pill.textContent.trim() === subject);
+    });
+    var shown = 0;
+    document.querySelectorAll('.path-list .path-card').forEach(function (card) {
+      var tag = card.querySelector('.path-tags .chip');
+      var show = subject === 'All' || (tag && tag.textContent.trim() === subject);
+      card.style.display = show ? '' : 'none';
+      if (show) shown++;
+    });
+  }
+
+  // Toast helper
+  function cpToast(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:600;z-index:9999;pointer-events:none;max-width:360px;text-align:center;';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2600);
+  }
+
+  // Chain nodes: click navigates or toasts based on state and enrolment.
+  document.querySelectorAll('.chain-node').forEach(function(node) {
+    node.style.cursor = 'pointer';
+    // Remove any inline onclick so our listener is the single source of truth
+    node.removeAttribute('onclick');
+    node.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var card = node.closest('.path-card');
+      var isEnrolled = card && !card.querySelector('.path-head-right .chip.not-started');
+      if (node.classList.contains('is-done')) {
+        location.href = 'completed-proof-detail.html';
+      } else if (node.classList.contains('is-current')) {
+        location.href = 'player.html';
+      } else if (!isEnrolled) {
+        cpToast('Enrol in this path first to access course details.');
+      } else if (node.classList.contains('is-locked')) {
+        cpToast('Complete the previous mandatory course to unlock this one.');
+      } else {
+        location.href = 'course-detail.html';
+      }
+    });
+  });
+
+  // Paths 2, 3, 4: add Enrol button inside each not-started body if not already present.
+  document.querySelectorAll('.path-card').forEach(function(card) {
+    var chip = card.querySelector('.path-head-right .chip.not-started');
+    if (!chip) return;
+    var body = card.querySelector('.path-body');
+    if (!body || body.querySelector('.btn-enrol-path')) return;
+    var prereq = body.querySelector('.path-prereq');
+    var btn = document.createElement('a');
+    btn.className = 'btn btn-primary btn-sm btn-enrol-path';
+    btn.href = 'course-detail.html';
+    btn.style.cssText = 'margin-top:14px;display:inline-flex;';
+    btn.textContent = 'Enrol in path';
+    btn.addEventListener('click', function(e){ e.stopPropagation(); });
+    if (prereq) {
+      body.insertBefore(btn, prereq);
+    } else {
+      body.appendChild(btn);
+    }
+  });
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

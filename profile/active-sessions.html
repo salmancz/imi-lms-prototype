@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Sessions &middot; IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-scoped styles only */
+  .sessions-wrap { max-width: 820px; }
+
+  .session-stack { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
+
+  .session-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+  }
+
+  .session-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+  }
+  .session-icon svg { width: 22px; height: 22px; }
+  .session-icon.t-sage {
+    background: var(--c-sage-wash);
+    color: var(--c-sage-text);
+    border-color: rgba(126, 155, 111, 0.22);
+  }
+  .session-icon.t-honey {
+    background: var(--c-honey-wash);
+    color: var(--c-honey-text);
+    border-color: rgba(201, 155, 46, 0.22);
+  }
+
+  .session-info { flex: 1; min-width: 0; }
+
+  .session-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+  }
+
+  .session-meta {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.02em;
+  }
+
+  /* Security notice - flat, no gradient */
+  .security-note {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 24px;
+    padding: 18px 22px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.22);
+    border-radius: var(--r-md);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .security-note .note-icon {
+    flex-shrink: 0;
+    color: var(--c-honey-text);
+    margin-top: 2px;
+  }
+  .security-note .note-icon svg { width: 20px; height: 20px; }
+  .security-note strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search courses, lessons, paths..." id="topbarSearch" onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../learning/search-results.html'">
+  </div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a href="help-center.html" class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="profile.html" class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span><span class="badge">8</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Wishlist</span><span class="badge">12</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Course Completed</span><span class="badge">5</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="settings.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="sessions-wrap">
+
+      <!-- Page header -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px">
+        <div>
+          <div class="eyebrow">Profile &middot; Security</div>
+          <h1 class="page-title">Active <em>sessions</em></h1>
+          <p class="page-sub">Up to 2 devices may be registered, but only one device can be signed in at a time within a single time zone.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="signOutAllBtn" style="color:var(--c-danger);border-color:rgba(193,42,28,0.30);flex-shrink:0">Sign out all other sessions</button>
+      </div>
+
+      <!-- Session list -->
+      <div class="session-stack" id="sessionStack">
+        <div class="card" id="sess-current">
+          <div class="session-card">
+            <div class="session-icon t-sage">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="session-info">
+              <div class="session-name">
+                Chrome 124 &middot; macOS Sequoia
+                <span class="chip t-sage dot">This device</span>
+              </div>
+              <div class="session-meta">Signed in 4 hrs ago &middot; Last active just now</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--c-danger);border-color:rgba(193,42,28,0.30)" id="revokeCurrentBtn" onclick="revokeSession('sess-current','This device')">Sign out</button>
+          </div>
+        </div>
+        <div class="card" id="sess-other">
+          <div class="session-card">
+            <div class="session-icon t-honey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="session-info">
+              <div class="session-name">Safari 17 &middot; iPhone 15</div>
+              <div class="session-meta">Signed in 2 days ago &middot; Last active 6 hrs ago</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--c-danger);border-color:rgba(193,42,28,0.30)" id="revokeOtherBtn" onclick="revokeSession('sess-other','Safari 17 on iPhone 15')">Revoke</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security note -->
+      <div class="security-note">
+        <span class="note-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </span>
+        <div>
+          <strong>One device at a time:</strong> if you sign in on another device, the new login is declined and you will be asked to sign out here first. To switch devices, sign out of this session, then sign in on the other device.
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function() {
+  function showToast(msg, danger) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' +
+      (danger ? 'var(--c-danger)' : 'var(--ink)') +
+      ';color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3200);
+  }
+
+  var signOutAllBtn = document.getElementById('signOutAllBtn');
+  if (signOutAllBtn) {
+    signOutAllBtn.addEventListener('click', function () {
+      var otherSessions = document.querySelectorAll('#sessionStack .card:not(#sess-current)');
+      if (otherSessions.length === 0) {
+        showToast('No other active sessions.', false);
+        return;
+      }
+      otherSessions.forEach(function(card) {
+        card.style.transition = 'opacity 0.3s, transform 0.3s';
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(8px)';
+        setTimeout(function() { card.remove(); }, 320);
+      });
+      signOutAllBtn.disabled = true;
+      signOutAllBtn.textContent = 'Done';
+      setTimeout(function() { showToast('All other sessions signed out.', true); }, 340);
+    });
+  }
+
+  window.revokeSession = function(cardId, label) {
+    if (!confirm('Revoke session: ' + label + '?\n\nThis device will be signed out immediately.')) return;
+    var card = document.getElementById(cardId);
+    if (!card) return;
+    card.style.transition = 'opacity 0.3s, transform 0.3s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(8px)';
+    setTimeout(function() {
+      card.remove();
+      var remaining = document.querySelectorAll('#sessionStack .card').length;
+      if (remaining === 0) {
+        document.getElementById('sessionStack').innerHTML =
+          '<p style="font-size:14px;color:var(--ink-mute);padding:12px 0">No active sessions. <a href="../auth/login.html" style="color:var(--accent)">Sign in again</a></p>';
+      }
+      showToast('Session revoked.', true);
+    }, 320);
+  };
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

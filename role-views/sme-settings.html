@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SME Settings · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .settings-wrap { max-width: 860px; }
+
+  .settings-card { padding: 24px 26px; }
+  .settings-card + .settings-card { margin-top: 18px; }
+
+  .settings-card h4 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 24px;
+  }
+  @media (max-width: 720px) { .field-grid { grid-template-columns: 1fr; } }
+  .field-grid .field { margin-bottom: 0; }
+
+  .settings-card .input:disabled {
+    background: var(--paper-2);
+    color: var(--ink-mute);
+    cursor: not-allowed;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    margin-top: 7px;
+    font-family: var(--font-sans);
+  }
+
+  .pref-list { display: flex; flex-direction: column; gap: 12px; }
+  .pref-check {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .pref-check input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .sec-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+  }
+  .sec-row .sec-text { font-size: 14px; color: var(--ink); }
+  .sec-row .sec-text strong { font-weight: 700; }
+  .sec-divider { height: 1px; background: var(--line); }
+
+  .danger-card {
+    border: 1.5px solid rgba(193, 42, 28, 0.30);
+    background: var(--c-danger-wash);
+  }
+  .danger-card h4 { color: var(--c-danger); }
+  .danger-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .danger-row .danger-copy { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* Reviewer preferences card */
+  .reviewer-pref-card { border: 1.5px solid var(--line-strong); }
+
+  .domain-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .domain-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--paper);
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .domain-chip.active {
+    border-color: var(--ink);
+    color: var(--ink);
+    font-weight: 700;
+    background: var(--paper-2);
+  }
+  .domain-chip .check-mark { font-size: 11px; }
+
+  /* Toggle switch */
+  .toggle-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .toggle-copy { flex: 1; }
+  .toggle-copy strong { font-size: 14px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 4px; }
+  .toggle-copy small { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .toggle-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: var(--ink);
+    position: relative;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+  }
+  .toggle-btn[aria-checked="false"] { background: var(--line-strong); }
+  .toggle-btn::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    transition: right 0.2s;
+  }
+  .toggle-btn[aria-checked="false"]::after { right: auto; left: 3px; }
+  .toggle-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-align: center;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="sme-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Review</span>
+  </a>
+  <div class="search"><input placeholder="Search review queue..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../course-builder/sme-queue.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../course-builder/sme-queue.html#queue" class="sidebar-link" data-nav="queue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Queue</span><span class="badge">5</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#in-progress" class="sidebar-link" data-nav="in-progress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+        <span>In progress</span><span class="badge">1</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#reviewed" class="sidebar-link" data-nav="reviewed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Reviewed</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">DOMAIN</div>
+      <a href="../course-builder/sme-queue.html?domain=km" class="sidebar-link" data-nav="km">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>KM Standards</span>
+      </a>
+      <a href="../course-builder/sme-queue.html?domain=records" class="sidebar-link" data-nav="records">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Records Mgmt</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="sme-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="sme-settings.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="settings-wrap">
+
+      <div class="page-head" style="grid-template-columns:1fr;margin-bottom:24px">
+        <div>
+          <div class="eyebrow">SME &middot; Reviewer role</div>
+          <h1 class="page-title">Account <em>settings</em></h1>
+          <p class="page-sub">Manage your account, preferences and security within IMI Review.</p>
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div class="card settings-card">
+        <h4>Account</h4>
+        <div class="field-grid">
+          <div class="field">
+            <label>Full Name</label>
+            <input class="input" value="Dr. Faris Al-Maamari">
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input class="input" value="faris.almaamari@imi.om" disabled>
+            <p class="hint">Managed by IMI administrator. Contact admin to change.</p>
+          </div>
+          <div class="field">
+            <label>Preferred Language</label>
+            <select class="input">
+              <option selected>English (EN)</option>
+              <option>Arabic (AR)</option>
+              <option>French (FR)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Current Role</label>
+            <input class="input" value="Senior Records Manager, NRAA">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-top:18px" type="button" onclick="saveSettings('Account saved')">Save account</button>
+      </div>
+
+      <!-- Notification preferences -->
+      <div class="card settings-card">
+        <h4>Notification preferences</h4>
+        <div class="pref-list">
+          <label class="pref-check"><input type="checkbox" checked> New course assigned to review queue</label>
+          <label class="pref-check"><input type="checkbox" checked> Author reply to your comment</label>
+          <label class="pref-check"><input type="checkbox" checked id="sla-reminder-chk"> SLA reminder (lead time configurable in Reviewer preferences)</label>
+          <label class="pref-check"><input type="checkbox"> Weekly review summary digest</label>
+          <label class="pref-check"><input type="checkbox"> Platform announcements</label>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-top:18px" type="button" onclick="saveSettings('Notification preferences saved')">Save preferences</button>
+      </div>
+
+      <!-- Security -->
+      <div class="card settings-card">
+        <h4>Security</h4>
+        <div class="sec-row" style="padding-top:0">
+          <span class="sec-text">Active session: <strong>1</strong> (Muscat &middot; Chrome)</span>
+        </div>
+        <div class="sec-divider"></div>
+        <div class="sec-row" style="padding-bottom:0">
+          <span class="sec-text">MFA via OTP: <strong>Required</strong> <span class="chip t-sage dot" style="margin-left:6px">Enforced</span></span>
+        </div>
+      </div>
+
+      <!-- Reviewer preferences (SME-specific) -->
+      <div class="card settings-card reviewer-pref-card">
+        <h4>
+          Reviewer preferences
+          <span class="chip t-sage" style="font-size:10px;font-weight:600">SME only</span>
+        </h4>
+        <p class="hint" style="margin-bottom:18px">Controls how IMI Review routes and reminds you about assigned courses.</p>
+
+        <div class="field" style="margin-bottom:0">
+          <label>Domains of expertise</label>
+          <p class="hint" style="margin-bottom:10px">Courses outside selected domains will not be assigned to you automatically.</p>
+          <div class="domain-chips" id="domain-chips-wrap">
+            <button type="button" class="domain-chip active" onclick="toggleDomainChip(this)"><span class="check-mark">&#10003;</span> Knowledge Management</button>
+            <button type="button" class="domain-chip active" onclick="toggleDomainChip(this)"><span class="check-mark">&#10003;</span> Records Management</button>
+            <button type="button" class="domain-chip active" onclick="toggleDomainChip(this)"><span class="check-mark">&#10003;</span> Data Governance</button>
+            <button type="button" class="domain-chip" onclick="toggleDomainChip(this)"><span class="check-mark" style="visibility:hidden">&#10003;</span> Document Control</button>
+            <button type="button" class="domain-chip" onclick="toggleDomainChip(this)"><span class="check-mark" style="visibility:hidden">&#10003;</span> ISO Standards</button>
+            <button type="button" class="domain-chip" onclick="toggleDomainChip(this)"><span class="check-mark" style="visibility:hidden">&#10003;</span> Content Management</button>
+          </div>
+          <p class="hint" style="margin-top:8px">Checked chips are active. Click to toggle. Contact admin to add domains not listed.</p>
+        </div>
+
+        <div class="sec-divider" style="margin:18px 0"></div>
+
+        <div class="field-grid">
+          <div class="field" style="margin-bottom:0">
+            <label>Max concurrent reviews</label>
+            <input class="input" id="max-concurrent" type="number" min="1" max="10" value="3">
+            <p class="hint">Queue stops accepting new assignments when this limit is reached.</p>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>SLA reminder lead time</label>
+            <select class="input" id="sla-lead-time">
+              <option value="12">12 hours before deadline</option>
+              <option value="24" selected>24 hours before deadline</option>
+              <option value="48">48 hours before deadline</option>
+            </select>
+            <p class="hint">When to send the SLA reminder notification.</p>
+          </div>
+        </div>
+
+        <div class="sec-divider" style="margin:18px 0"></div>
+
+        <div class="toggle-wrap">
+          <div class="toggle-copy">
+            <strong>Auto-decline outside expertise</strong>
+            <small>Automatically decline course submissions that do not match your active domain chips. Admin is notified and the course is re-queued for another reviewer.</small>
+          </div>
+          <div style="flex-shrink:0;text-align:center">
+            <button type="button" class="toggle-btn is-on" id="auto-decline-toggle" aria-checked="true" onclick="toggleAutoDecline(this)"></button>
+            <div class="toggle-label" id="auto-decline-label">ON</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" style="margin-top:20px" type="button" onclick="saveSettings('Reviewer preferences saved')">Save reviewer preferences</button>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="card settings-card danger-card">
+        <h4>Danger zone</h4>
+        <div class="danger-row">
+          <span class="danger-copy">Request account deactivation. All review history is retained for audit purposes.</span>
+          <button class="btn btn-danger btn-sm" id="btn-deactivate" onclick="openDeactivateModal()">Request deactivation</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<style>
+  .imi-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.02em;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;white-space:nowrap}
+  .imi-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .imi-toast.t-sage{background:var(--c-sage)}
+</style>
+<!-- Deactivation confirmation modal -->
+<style>
+  .sme-modal-scrim{position:fixed;inset:0;background:rgba(42,17,8,0.45);backdrop-filter:blur(2px);display:none;place-items:center;padding:40px 24px;z-index:60}
+  .sme-modal-scrim.open{display:grid}
+  .sme-modal-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-card);width:100%;max-width:420px;padding:28px 30px 24px}
+  .sme-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+  .sme-modal-title{font-size:17px;font-weight:700;letter-spacing:-0.01em;color:var(--c-danger)}
+  .sme-modal-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px}
+  .sme-modal-close{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--ink-mute);font-size:18px}
+  .sme-modal-close:hover{background:var(--paper-2);color:var(--ink)}
+  .sme-modal-actions{display:flex;gap:8px;justify-content:flex-end}
+</style>
+<div class="sme-modal-scrim" id="modal-deactivate" role="dialog" aria-modal="true">
+  <div class="sme-modal-card">
+    <div class="sme-modal-head">
+      <div class="sme-modal-title">Request deactivation?</div>
+      <button class="sme-modal-close" id="btn-deactivate-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="sme-modal-body">Your review history will be retained for audit purposes. An administrator will process your request within 5 business days.</p>
+    <div class="sme-modal-actions">
+      <button class="btn btn-ghost btn-sm" id="btn-deactivate-cancel">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="btn-deactivate-confirm" onclick="location.href='../profile/lifecycle-self-deletion.html'">Yes, request deactivation</button>
+    </div>
+  </div>
+</div>
+
+<div id="imi-toast" class="imi-toast"></div>
+<script>
+function showToast(msg,type,duration){var t=document.getElementById('imi-toast');t.textContent=msg;t.className='imi-toast'+(type?' '+type:'');requestAnimationFrame(function(){t.classList.add('show')});setTimeout(function(){t.classList.remove('show')},duration||3000)}
+function saveSettings(msg){showToast(msg,'t-sage')}
+
+function openDeactivateModal() {
+  document.getElementById('modal-deactivate').classList.add('open');
+}
+function closeDeactivateModal() {
+  document.getElementById('modal-deactivate').classList.remove('open');
+}
+document.getElementById('btn-deactivate-close').addEventListener('click', closeDeactivateModal);
+document.getElementById('btn-deactivate-cancel').addEventListener('click', closeDeactivateModal);
+document.getElementById('modal-deactivate').addEventListener('click', function(e) { if (e.target===this) closeDeactivateModal(); });
+
+function toggleDomainChip(btn) {
+  var isActive = btn.classList.toggle('active');
+  var mark = btn.querySelector('.check-mark');
+  if (mark) mark.style.visibility = isActive ? '' : 'hidden';
+}
+
+function toggleAutoDecline(btn) {
+  var on = btn.getAttribute('aria-checked') === 'true';
+  btn.setAttribute('aria-checked', on ? 'false' : 'true');
+  btn.classList.toggle('is-on', !on);
+  var label = document.getElementById('auto-decline-label');
+  if (label) label.textContent = on ? 'OFF' : 'ON';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

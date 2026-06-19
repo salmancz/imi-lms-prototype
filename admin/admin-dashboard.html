@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Super Admin Dashboard · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- page-local overrides only ---- */
+  .kpi-grid-admin {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 1080px) { .kpi-grid-admin { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px)  { .kpi-grid-admin { grid-template-columns: 1fr 1fr; } }
+
+  /* flat stat card - no gradient */
+  .stat-flat {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s var(--tn), box-shadow 0.2s;
+  }
+  .stat-flat:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .stat-flat .sf-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-flat .sf-label svg { width: 14px; height: 14px; color: var(--ink-faint); }
+  .stat-flat .sf-value {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-flat .sf-foot {
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .stat-flat .sf-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .sf-delta.up   { color: var(--c-sage-text); }
+  .sf-delta.down { color: var(--c-clay); }
+
+  /* attention items */
+  .attention-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.18s;
+  }
+  .attention-row:last-child { border-bottom: none; }
+  .attention-row:hover { background: var(--paper-2); }
+  .sev-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--ink-faint);
+  }
+  .sev-dot.bad  { background: var(--accent); }
+  .sev-dot.warn { background: var(--c-honey); }
+  .attention-body { flex: 1; min-width: 0; }
+  .attention-title { font-size: 13.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .attention-sub   { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+
+  /* activity dot */
+  .act-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+    background: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .act-dot.ok { background: var(--c-sage); }
+
+  /* two-column layout: left main, right rail */
+  .admin-body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 1200px) { .admin-body { grid-template-columns: 1fr; } }
+
+  .col-gap { display: flex; flex-direction: column; gap: 20px; }
+
+  /* chart bars (no JS, CSS only) */
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 96px;
+    padding: 0 2px;
+  }
+  .bar {
+    flex: 1;
+    border-radius: 4px 4px 0 0;
+    background: var(--c-honey-soft);
+    transition: background 0.2s;
+    min-height: 4px;
+  }
+  .bar:hover { background: var(--c-honey); }
+  .chart-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-family: var(--font-label);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+  }
+
+  /* top-courses table row completion bar */
+  .tbl-bar-wrap { display: flex; align-items: center; gap: 10px; min-width: 120px; }
+  .tbl-bar-wrap .progress { flex: 1; }
+  .tbl-bar-pct { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* hero card (system health) */
+  .hero-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 22px 24px;
+  }
+  .hero-card .hc-title {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .health-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .health-row:last-child { border-bottom: none; }
+  .health-row .hr-label { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="admin-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." aria-label="Search" onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='admin-users.html'"></div>
+  <div class="topbar-actions">
+    <span class="role-pill">SUPER ADMIN</span>
+    <button class="icon-btn" title="Notifications" onclick="location.href='audit-log.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link is-active" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">System overview</div>
+        <h1 class="page-title">Super Admin <em>dashboard</em></h1>
+        <p class="page-sub">Logged in as Admin. Last login: 2h ago. Five items need your attention today.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="admin-reports.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          Reports
+        </a>
+        <a class="btn btn-primary" href="admin-courses.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New course
+        </a>
+      </div>
+    </div>
+
+    <!-- KPI stat strip -->
+    <div class="kpi-grid-admin">
+      <div class="stat-flat" onclick="location.href='admin-users.html'" title="View user list" role="button" tabindex="0" aria-label="Total users: 14,820 - View user list">
+        <div class="sf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Total users
+        </div>
+        <div class="sf-value">14,820</div>
+        <div class="sf-foot">Overall registered users</div>
+        <div class="sf-delta up">&#8599; 4.2% vs last month</div>
+      </div>
+      <div class="stat-flat" onclick="location.href='admin-users.html'" title="View active users" role="button" tabindex="0" aria-label="Active users: 3,241 - View active users">
+        <div class="sf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          Active users
+        </div>
+        <div class="sf-value">3,241</div>
+        <div class="sf-foot">Currently active</div>
+        <div class="sf-delta up">&#8599; 2.8% vs last week</div>
+      </div>
+      <div class="stat-flat" onclick="location.href='admin-reports.html'" title="View enrolment reports" role="button" tabindex="0" aria-label="Enrollments: 28,904 - View enrolment reports">
+        <div class="sf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 1 18"/><polyline points="16 7 22 7 22 13"/></svg>
+          Enrollments
+        </div>
+        <div class="sf-value">28,904</div>
+        <div class="sf-foot">Total course enrollments</div>
+        <div class="sf-delta up">&#8599; 12.4% vs last month</div>
+      </div>
+      <div class="stat-flat" onclick="location.href='admin-reports.html'" title="View completion reports" role="button" tabindex="0" aria-label="Completion rate: 67% - View completion reports">
+        <div class="sf-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Completion rate
+        </div>
+        <div class="sf-value">67%</div>
+        <div class="sf-foot">Overall completion rate</div>
+        <div class="sf-delta down">&#8601; 1.1% vs prev period</div>
+      </div>
+    </div>
+
+    <!-- Main body: left column + right rail -->
+    <div class="admin-body">
+
+      <!-- Left: attention + chart + top courses -->
+      <div class="col-gap">
+
+        <!-- Needs attention -->
+        <div class="card elev">
+          <div class="card-head">
+            <div class="card-title">Needs your <em>attention</em></div>
+            <span class="chip t-clay">5 items</span>
+          </div>
+          <div class="card-body flush">
+            <div class="attention-row">
+              <span class="sev-dot bad" aria-label="High severity"></span>
+              <div class="attention-body">
+                <div class="attention-title">4 courses awaiting SME review</div>
+                <div class="attention-sub">Oldest waiting 6 days</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="admin-courses.html">Review &rarr;</a>
+            </div>
+            <div class="attention-row">
+              <span class="sev-dot bad" aria-label="High severity"></span>
+              <div class="attention-body">
+                <div class="attention-title">12 corporate invites pending</div>
+                <div class="attention-sub">3 expire today</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="../corporate/corp-list.html">Resolve &rarr;</a>
+            </div>
+            <div class="attention-row">
+              <span class="sev-dot warn" aria-label="Warning"></span>
+              <div class="attention-body">
+                <div class="attention-title">3 certificates expiring in 30 days</div>
+                <div class="attention-sub">Across 2 tenants</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="admin-certificates.html">Renew workflow &rarr;</a>
+            </div>
+            <div class="attention-row">
+              <span class="sev-dot warn" aria-label="Warning"></span>
+              <div class="attention-body">
+                <div class="attention-title">1 SME has not logged in for 30 days</div>
+                <div class="attention-sub">Dr. Faris Al-Maamari</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="admin-users.html">Re-assign reviews &rarr;</a>
+            </div>
+            <div class="attention-row">
+              <span class="sev-dot" aria-label="Low severity"></span>
+              <div class="attention-body">
+                <div class="attention-title">2 corporate tenants under 40% seat utilization</div>
+                <div class="attention-sub">Galfar, Royal Oman Police</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="../corporate/corp-list.html">Email tenant admin &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enrollments chart -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Enrollments <em>over time</em></div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="chip">Daily &middot; 30d</span>
+              <a class="card-link" href="admin-reports.html">DETAILS &rarr;</a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-bars" aria-label="Enrollment trend bar chart">
+              <div class="bar" style="height:42%"></div>
+              <div class="bar" style="height:58%"></div>
+              <div class="bar" style="height:51%"></div>
+              <div class="bar" style="height:67%"></div>
+              <div class="bar" style="height:72%"></div>
+              <div class="bar" style="height:48%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:63%"></div>
+              <div class="bar" style="height:78%"></div>
+              <div class="bar" style="height:71%"></div>
+              <div class="bar" style="height:84%"></div>
+              <div class="bar" style="height:69%"></div>
+              <div class="bar" style="height:82%"></div>
+              <div class="bar" style="height:91%"></div>
+              <div class="bar" style="height:76%"></div>
+              <div class="bar" style="height:88%"></div>
+              <div class="bar" style="height:79%"></div>
+              <div class="bar" style="height:94%"></div>
+              <div class="bar" style="height:85%"></div>
+              <div class="bar" style="height:97%"></div>
+              <div class="bar" style="height:72%"></div>
+              <div class="bar" style="height:86%"></div>
+              <div class="bar" style="height:90%"></div>
+              <div class="bar" style="height:78%"></div>
+              <div class="bar" style="height:82%"></div>
+              <div class="bar" style="height:88%"></div>
+            </div>
+            <div class="chart-meta"><span>MAY 18</span><span>MAY 25</span><span>JUN 1</span><span>TODAY</span></div>
+          </div>
+        </div>
+
+        <!-- Top courses table -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Top <em>courses</em></div>
+            <a class="card-link" href="admin-courses.html">ALL 47 &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Enrolled</th>
+                  <th>Completion</th>
+                  <th>Trend</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>KM Foundations</td>
+                  <td>523</td>
+                  <td>
+                    <div class="tbl-bar-wrap">
+                      <div class="progress"><div class="progress-fill sage" style="width:82%"></div></div>
+                      <span class="tbl-bar-pct">82%</span>
+                    </div>
+                  </td>
+                  <td><span class="chip t-sage">+18%</span></td>
+                </tr>
+                <tr>
+                  <td>Records Management</td>
+                  <td>412</td>
+                  <td>
+                    <div class="tbl-bar-wrap">
+                      <div class="progress"><div class="progress-fill sage" style="width:74%"></div></div>
+                      <span class="tbl-bar-pct">74%</span>
+                    </div>
+                  </td>
+                  <td><span class="chip t-sage">+12%</span></td>
+                </tr>
+                <tr>
+                  <td>Data Governance</td>
+                  <td>351</td>
+                  <td>
+                    <div class="tbl-bar-wrap">
+                      <div class="progress"><div class="progress-fill" style="width:70%;background:var(--c-honey)"></div></div>
+                      <span class="tbl-bar-pct">70%</span>
+                    </div>
+                  </td>
+                  <td><span class="chip t-sage">+8%</span></td>
+                </tr>
+                <tr>
+                  <td>ISO 30401</td>
+                  <td>284</td>
+                  <td>
+                    <div class="tbl-bar-wrap">
+                      <div class="progress"><div class="progress-fill" style="width:68%;background:var(--c-honey)"></div></div>
+                      <span class="tbl-bar-pct">68%</span>
+                    </div>
+                  </td>
+                  <td><span class="chip t-clay">-3%</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- end left col -->
+
+      <!-- Right rail -->
+      <div class="col-gap">
+
+        <!-- System health -->
+        <div class="hero-card">
+          <div class="eyebrow" style="margin-bottom:10px">System health</div>
+          <div class="hc-title">All systems<br><em>operational.</em></div>
+          <div>
+            <div class="health-row">
+              <span class="hr-label">Email delivery</span>
+              <span class="chip t-sage">99.8%</span>
+            </div>
+            <div class="health-row">
+              <span class="hr-label">API p95 latency</span>
+              <span class="chip t-sage">142ms</span>
+            </div>
+            <div class="health-row">
+              <span class="hr-label">Database</span>
+              <span class="chip t-sage">healthy</span>
+            </div>
+            <div class="health-row">
+              <span class="hr-label">Storage</span>
+              <span class="chip">42 of 500 GB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Recent <em>activity</em></div>
+            <a class="card-link" href="audit-log.html">AUDIT &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <span class="act-dot ok"></span>
+              <div class="list-body">
+                <div class="list-title">SME approved 3 courses</div>
+                <div class="list-sub">Dr. Faris</div>
+              </div>
+              <span class="list-meta">2H AGO</span>
+            </div>
+            <div class="list-row">
+              <span class="act-dot"></span>
+              <div class="list-body">
+                <div class="list-title">28 users bulk-imported</div>
+                <div class="list-sub">Bank Muscat corp</div>
+              </div>
+              <span class="list-meta">5H AGO</span>
+            </div>
+            <div class="list-row">
+              <span class="act-dot"></span>
+              <div class="list-body">
+                <div class="list-title">Course published: KM Mapping</div>
+                <div class="list-sub">A. Khalfan</div>
+              </div>
+              <span class="list-meta">1D AGO</span>
+            </div>
+            <div class="list-row">
+              <span class="act-dot ok"></span>
+              <div class="list-body">
+                <div class="list-title">Certificate issued: Layla A. (CDMP Practitioner)</div>
+                <div class="list-sub">Cert #IMI-2026-08814</div>
+              </div>
+              <span class="list-meta">1D AGO</span>
+            </div>
+            <div class="list-row">
+              <span class="act-dot"></span>
+              <div class="list-body">
+                <div class="list-title">Tenant onboarded: Royal Oman Police (40 seats)</div>
+                <div class="list-sub">Org Admin: Col. Al-Harthi</div>
+              </div>
+              <span class="list-meta">2D AGO</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end right rail -->
+
+    </div><!-- end admin-body -->
+
+  </main>
+</div>
+
+<script>
+(function(){
+  /* Ad strip close */
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(e){
+    e.stopPropagation();
+    var strip = document.querySelector('.ad-strip');
+    if(strip){ strip.style.transition='opacity 0.2s'; strip.style.opacity='0'; setTimeout(function(){strip.style.display='none';},220); }
+  });
+
+  /* KPI card keyboard nav */
+  document.querySelectorAll('.stat-flat[role="button"]').forEach(function(card){
+    card.addEventListener('keydown', function(e){
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.click(); }
+    });
+  });
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

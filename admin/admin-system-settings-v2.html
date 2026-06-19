@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System settings · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── settings-specific ── */
+  .set-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+  @media (max-width: 760px) { .set-grid { grid-template-columns: 1fr; } }
+  .set-grid .field { margin-bottom: 0; }
+
+  .input[disabled] { opacity: 0.55; cursor: not-allowed; background: var(--paper-2); }
+
+  .panel-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+  }
+
+  .drop-zone {
+    height: 78px;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--r-sm);
+    background: var(--paper-2);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+  }
+  .drop-zone:hover { background: var(--surface-3); border-color: var(--ink-mute); }
+
+  .swatch-field { display: flex; align-items: center; gap: 10px; }
+  .swatch { width: 32px; height: 32px; border-radius: var(--r-sm); border: 1px solid var(--line-strong); flex-shrink: 0; cursor: pointer; }
+
+  .test-line { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--c-sage-text); font-weight: 600; }
+
+  /* tab panes */
+  .tab-pane { display: none; flex-direction: column; gap: 22px; }
+  .tab-pane.is-active { display: flex; }
+
+  /* toggle row */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 16px;
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-body { flex: 1; min-width: 0; }
+  .toggle-label { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .toggle-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* pill toggle */
+  .pill-toggle { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+  .pill-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .pill-track {
+    position: absolute; inset: 0;
+    background: var(--surface-3);
+    border-radius: 100px;
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pill-track::after {
+    content: "";
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 16px; height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(42,17,8,0.18);
+    transition: transform 0.2s var(--tn);
+  }
+  .pill-toggle input:checked + .pill-track { background: var(--c-sage); border-color: var(--c-sage); }
+  .pill-toggle input:checked + .pill-track::after { transform: translateX(18px); }
+
+  /* section divider inside card */
+  .card-section-head {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    margin-top: 8px;
+  }
+  .card-section-head:first-child { margin-top: 0; }
+
+  /* logo preview box */
+  .logo-preview {
+    height: 80px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .logo-preview img { max-height: 50px; max-width: 160px; object-fit: contain; display: block; }
+
+  /* two-col card body */
+  .card-body-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 880px) { .card-body-cols { grid-template-columns: 1fr; } }
+
+  /* action footer inside card */
+  .card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+
+  /* info callout */
+  .info-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201,155,46,0.30);
+    border-radius: var(--r-sm);
+    font-size: 12.5px;
+    color: var(--c-honey-text);
+    line-height: 1.5;
+  }
+  .info-callout svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." aria-label="Search"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help" aria-label="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-system-settings-v2.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+      <a href="admin-password-reset.html" class="sidebar-link" data-nav="pwreset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Reset Passwords</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Platform configuration</div>
+        <h1 class="page-title">System <em>settings</em></h1>
+        <p class="page-sub">All platform-wide configuration. Changes take effect immediately and are audit-logged.</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost btn-sm" onclick="(function(btn){var orig=btn.textContent;btn.textContent='Discarded';if(window.imiToast)window.imiToast('Changes discarded');setTimeout(function(){btn.textContent=orig;},1400);})(this)">Discard</button>
+        <a class="btn btn-primary" href="#" onclick="return imiSave(this,event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save changes
+        </a>
+      </div>
+    </div>
+
+    <!-- Settings tabs -->
+    <div class="tabs" id="settings-tabs" role="tablist" aria-label="Settings sections">
+      <button class="is" data-tab="general" onclick="switchTab(this)" role="tab" aria-selected="true" aria-controls="pane-general">General</button>
+      <button data-tab="email" onclick="switchTab(this)" role="tab" aria-selected="false" aria-controls="pane-email">Email Server</button>
+      <button onclick="if(confirm('Navigate to OTP / MFA configuration?')){location.href='otp-configuration.html';}" role="tab" aria-label="OTP / MFA settings">OTP / MFA</button>
+      <button data-tab="session" onclick="switchTab(this)" role="tab" aria-selected="false" aria-controls="pane-session">Session Policy</button>
+      <button data-tab="branding" onclick="switchTab(this)" role="tab" aria-selected="false" aria-controls="pane-branding">Branding</button>
+      <button data-tab="password-policy" onclick="switchTab(this)" role="tab" aria-selected="false" aria-controls="pane-password-policy">Password Policy</button>
+    </div>
+
+    <!-- PANE: General -->
+    <div class="tab-pane is-active" id="pane-general" role="tabpanel">
+
+      <div class="card elev">
+        <div class="card-head">
+          <div class="card-title">General <em>settings</em></div>
+          <span class="chip t-sage dot">Live</span>
+        </div>
+        <div class="card-body">
+          <div class="set-grid">
+            <div class="field">
+              <label>Platform name</label>
+              <input class="input" value="IMI Learning Platform" aria-label="Platform name">
+            </div>
+            <div class="field">
+              <label>Default language</label>
+              <select class="input" aria-label="Default language">
+                <option>English</option>
+                <option>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Default timezone</label>
+              <select class="input" aria-label="Default timezone">
+                <option>Asia/Muscat (GMT+4)</option>
+              <option>Asia/Dubai (GMT+4)</option><option>Asia/Riyadh (GMT+3)</option><option>Europe/London (GMT+0)</option><option>UTC</option></select>
+            </div>
+            <div class="field">
+              <label>Support email (public)</label>
+              <input class="input" value="support@imi.om" aria-label="Support email">
+            </div>
+            <div class="field">
+              <label>Privacy policy URL</label>
+              <input class="input" value="https://imi.om/privacy" aria-label="Privacy policy URL">
+            </div>
+            <div class="field">
+              <label>Terms URL</label>
+              <input class="input" value="https://imi.om/terms" aria-label="Terms URL">
+            </div>
+            <div class="field">
+              <label>Min enrollment age</label>
+              <input class="input" value="16" aria-label="Minimum enrollment age">
+            </div>
+            <div class="field">
+              <label>Currency (P2)</label>
+              <select class="input" disabled aria-label="Currency" aria-disabled="true">
+                <option>OMR</option>
+              <option>USD</option><option>EUR</option><option>AED</option><option>SAR</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <button class="btn btn-ghost btn-sm" onclick="imiDiscard(this)">Reset defaults</button>
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save General</a>
+        </div>
+      </div>
+
+      <!-- Feature toggles -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Feature <em>toggles</em></div>
+          <span class="chip">Platform-wide</span>
+        </div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Learner self-registration</div>
+              <div class="toggle-desc">Allow new users to register without an admin invitation.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Learner self-registration">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Social login (Google / LinkedIn)</div>
+              <div class="toggle-desc">Allow learners to sign in with their Google or LinkedIn accounts.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Social login">
+              <input type="checkbox">
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Maintenance mode</div>
+              <div class="toggle-desc">Shows a maintenance page to all learners. Admins can still log in.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Maintenance mode">
+              <input type="checkbox">
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Discussion forums</div>
+              <div class="toggle-desc">Enable per-course learner discussion threads.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Discussion forums">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Leaderboards</div>
+              <div class="toggle-desc">Show ranked leaderboards on the learner dashboard.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Leaderboards">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">New releases section</div>
+              <div class="toggle-desc">Show a "New releases" section on the learner home page highlighting recently published courses.</div>
+            </div>
+            <label class="pill-toggle" aria-label="New releases section">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Trending section</div>
+              <div class="toggle-desc">Show a "Trending" section on the learner home page based on enrollment activity in the past 30 days.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Trending section">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANE: Email Server -->
+    <div class="tab-pane" id="pane-email" role="tabpanel">
+
+      <div class="card elev">
+        <div class="card-head">
+          <div class="card-title">Email <em>server</em></div>
+          <span class="chip t-honey dot">Configured</span>
+        </div>
+        <div class="card-body">
+          <div class="set-grid">
+            <div class="field">
+              <label>SMTP host</label>
+              <input class="input" value="smtp.mailgun.org" aria-label="SMTP host">
+            </div>
+            <div class="field">
+              <label>SMTP port</label>
+              <input class="input" value="587" aria-label="SMTP port">
+            </div>
+            <div class="field">
+              <label>SMTP username</label>
+              <input class="input" value="postmaster@imi.om" aria-label="SMTP username">
+            </div>
+            <div class="field">
+              <label>SMTP password</label>
+              <input class="input" type="password" value="hunter2" aria-label="SMTP password">
+            </div>
+            <div class="field">
+              <label>From name</label>
+              <input class="input" value="IMI Learning" aria-label="From name">
+            </div>
+            <div class="field">
+              <label>From address</label>
+              <input class="input" value="noreply@imi.om" aria-label="From address">
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <div class="toggle-row" style="padding-top:0">
+              <div class="toggle-body">
+                <div class="toggle-label">Enable TLS / STARTTLS</div>
+                <div class="toggle-desc">Encrypt the connection to the SMTP server.</div>
+              </div>
+              <label class="pill-toggle" aria-label="Enable TLS">
+                <input type="checkbox" checked>
+                <span class="pill-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <span class="test-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Last test passed 2 hours ago
+          </span>
+          <button class="btn btn-ghost btn-sm" onclick="return imiSave(this,event)">Send test email</button>
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save SMTP</a>
+        </div>
+      </div>
+
+      <!-- Email notifications -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Notification <em>triggers</em></div>
+          <span class="chip">System emails</span>
+        </div>
+        <div class="card-body">
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-body">
+              <div class="toggle-label">Welcome email on registration</div>
+              <div class="toggle-desc">Send a welcome email when a new learner registers.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Welcome email">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Course Completed notification</div>
+              <div class="toggle-desc">Email the learner when they complete a course.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Course Completed notification">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Weekly digest</div>
+              <div class="toggle-desc">Send a weekly summary of learning activity to enrolled learners.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Weekly digest">
+              <input type="checkbox">
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Admin alerts (errors / warnings)</div>
+              <div class="toggle-desc">Email administrators on system errors and security warnings.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Admin alerts">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANE: Session Policy -->
+    <div class="tab-pane" id="pane-session" role="tabpanel">
+
+      <div class="card elev">
+        <div class="card-head">
+          <div class="card-title">Session <em>policy</em></div>
+          <span class="chip t-sage dot">Active</span>
+        </div>
+        <div class="card-body">
+          <div class="set-grid">
+            <div class="field">
+              <label>Session timeout (minutes)</label>
+              <input class="input" value="60" aria-label="Session timeout in minutes">
+            </div>
+            <div class="field">
+              <label>Max concurrent sessions</label>
+              <input class="input" value="3" aria-label="Maximum concurrent sessions">
+            </div>
+            <div class="field">
+              <label>Idle lock after (minutes)</label>
+              <input class="input" value="30" aria-label="Idle lock timeout">
+            </div>
+            <div class="field">
+              <label>Password reset token expiry (hours)</label>
+              <input class="input" value="24" aria-label="Password reset token expiry">
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <div class="toggle-row" style="padding-top:0">
+              <div class="toggle-body">
+                <div class="toggle-label">Force logout on password change</div>
+                <div class="toggle-desc">Immediately invalidate all active sessions when a user changes their password.</div>
+              </div>
+              <label class="pill-toggle" aria-label="Force logout on password change">
+                <input type="checkbox" checked>
+                <span class="pill-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-body">
+                <div class="toggle-label">Remember device (30 days)</div>
+                <div class="toggle-desc">Allow users to skip MFA on trusted devices for up to 30 days.</div>
+              </div>
+              <label class="pill-toggle" aria-label="Remember device">
+                <input type="checkbox">
+                <span class="pill-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-body">
+                <div class="toggle-label">Log all session activity</div>
+                <div class="toggle-desc">Record login, logout, and page-access events to the audit log.</div>
+              </div>
+              <label class="pill-toggle" aria-label="Log all session activity">
+                <input type="checkbox" checked>
+                <span class="pill-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save Session Policy</a>
+        </div>
+      </div>
+
+      <!-- IP allowlist -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">IP <em>allowlist</em></div>
+          <span class="chip t-clay">Admin only</span>
+        </div>
+        <div class="card-body">
+          <div class="info-callout" style="margin-bottom:18px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            When the allowlist is enabled, only listed IPs can access the Admin portal. Learner access is unaffected.
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label>Allowed IP addresses (one per line)</label>
+            <textarea class="input" rows="4" aria-label="Allowed IP addresses" placeholder="e.g. 203.0.113.0/24">192.168.1.0/24
+10.0.0.0/8</textarea>
+          </div>
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-body">
+              <div class="toggle-label">Enable IP allowlist</div>
+              <div class="toggle-desc">Restrict admin portal access to the IPs listed above.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Enable IP allowlist">
+              <input type="checkbox">
+              <span class="pill-track"></span>
+            </label>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save Allowlist</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANE: Branding -->
+    <div class="tab-pane" id="pane-branding" role="tabpanel">
+
+      <div class="card elev">
+        <div class="card-head">
+          <div class="card-title">Brand <em>assets</em></div>
+          <span class="chip">Visual identity</span>
+        </div>
+        <div class="card-body">
+          <div class="card-body-cols">
+            <div>
+              <div class="card-section-head">Platform logo</div>
+              <div class="logo-preview" style="margin-bottom:10px">
+                <img src="../img/imi-mark-ink.png" alt="Current logo" style="max-height:42px;max-width:140px;object-fit:contain;">
+              </div>
+              <div class="drop-zone" role="button" tabindex="0" aria-label="Upload new logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;margin-bottom:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Drop PNG/SVG here or click to upload</span>
+              </div>
+            </div>
+            <div>
+              <div class="card-section-head">Favicon</div>
+              <div class="logo-preview" style="margin-bottom:10px;height:60px">
+                <img src="../img/imi-mark-ink.png" alt="Current favicon" style="max-height:28px;max-width:28px;object-fit:contain;">
+              </div>
+              <div class="drop-zone" role="button" tabindex="0" aria-label="Upload new favicon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;margin-bottom:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>ICO or 32x32 PNG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand colors -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Brand <em>colors</em></div>
+          <span class="chip">Theme tokens</span>
+        </div>
+        <div class="card-body">
+          <div class="set-grid">
+            <div class="field">
+              <label>Primary accent</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#B8523E" aria-hidden="true"></div>
+                <input class="input" value="#B8523E" aria-label="Primary accent color">
+              </div>
+            </div>
+            <div class="field">
+              <label>Highlight / hero background</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#FCF7AE" aria-hidden="true"></div>
+                <input class="input" value="#FCF7AE" aria-label="Hero background color">
+              </div>
+            </div>
+            <div class="field">
+              <label>Page background</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#F2EDE3" aria-hidden="true"></div>
+                <input class="input" value="#F2EDE3" aria-label="Page background color">
+              </div>
+            </div>
+            <div class="field">
+              <label>Paper / card background</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#FDFCFA" aria-hidden="true"></div>
+                <input class="input" value="#FDFCFA" aria-label="Card background color">
+              </div>
+            </div>
+            <div class="field">
+              <label>Ink / body text</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#2A1108" aria-hidden="true"></div>
+                <input class="input" value="#2A1108" aria-label="Body text color">
+              </div>
+            </div>
+            <div class="field">
+              <label>Honey (progress / KPI)</label>
+              <div class="swatch-field">
+                <div class="swatch" style="background:#C99B2E" aria-hidden="true"></div>
+                <input class="input" value="#C99B2E" aria-label="Honey accent color">
+              </div>
+            </div>
+          </div>
+          <div class="info-callout" style="margin-top:18px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            Color changes apply to the learner-facing portal only. The admin portal always uses the default cream theme.
+          </div>
+        </div>
+        <div class="card-foot">
+          <button class="btn btn-ghost btn-sm" onclick="imiDiscard(this)">Reset to defaults</button>
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save Branding</a>
+        </div>
+      </div>
+
+      <!-- Platform copy -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Platform <em>copy</em></div>
+          <span class="chip">Text customization</span>
+        </div>
+        <div class="card-body">
+          <div class="set-grid">
+            <div class="field">
+              <label>Login page headline</label>
+              <input class="input" value="Welcome back to IMI Learning" aria-label="Login page headline">
+            </div>
+            <div class="field">
+              <label>Login page sub-headline</label>
+              <input class="input" value="Continue your professional journey." aria-label="Login sub-headline">
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <label>Platform tagline (shown in footer)</label>
+              <input class="input" value="Empowering professionals across Oman." aria-label="Platform tagline">
+            </div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save Copy</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PANE: Password Policy -->
+    <div class="tab-pane" id="pane-password-policy" role="tabpanel">
+
+      <div class="card elev">
+        <div class="card-head">
+          <div class="card-title">Password <em>policy</em></div>
+          <span class="chip t-sage dot">Active</span>
+        </div>
+        <div class="card-body">
+
+          <!-- Complexity -->
+          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Complexity requirements</div>
+
+          <div class="set-grid" style="margin-bottom:20px">
+            <div class="field">
+              <label for="pw-min-length">Minimum length (characters)</label>
+              <input id="pw-min-length" class="input" type="number" min="6" max="64" value="10" aria-label="Minimum password length">
+            </div>
+            <div class="field" style="grid-column:1/-1">
+              <!-- toggles for character types -->
+            </div>
+          </div>
+
+          <div class="toggle-row" style="padding-top:0">
+            <div class="toggle-body">
+              <div class="toggle-label">Require uppercase letter</div>
+              <div class="toggle-desc">Password must contain at least one A-Z character.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Require uppercase">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Require lowercase letter</div>
+              <div class="toggle-desc">Password must contain at least one a-z character.</div>
+            </div>
+            <label class="pill-toggle" aria-label="Require lowercase">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Require number</div>
+              <div class="toggle-desc">Password must contain at least one digit (0-9).</div>
+            </div>
+            <label class="pill-toggle" aria-label="Require number">
+              <input type="checkbox" checked>
+              <span class="pill-track"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-body">
+              <div class="toggle-label">Require special character</div>
+              <div class="toggle-desc">Password must include at least one symbol (!, @, #, $, ...).</div>
+            </div>
+            <label class="pill-toggle" aria-label="Require special character">
+              <input type="checkbox">
+              <span class="pill-track"></span>
+            </label>
+          </div>
+
+          <div style="height:1px;background:var(--line);margin:20px 0 16px"></div>
+          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Expiry &amp; reuse</div>
+
+          <div class="set-grid">
+            <div class="field">
+              <label for="pw-expiry">Password expiry (days)</label>
+              <input id="pw-expiry" class="input" type="number" min="0" max="365" value="90" aria-label="Password expiry in days">
+              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Set to 0 to disable expiry.</div>
+            </div>
+            <div class="field">
+              <label for="pw-history">Password history / reuse prevention (count)</label>
+              <input id="pw-history" class="input" type="number" min="0" max="24" value="5" aria-label="Number of previous passwords that cannot be reused">
+              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Prevents reuse of last N passwords. Set to 0 to disable.</div>
+            </div>
+            <div class="field">
+              <label for="pw-lockout">Max failed login attempts before lockout</label>
+              <input id="pw-lockout" class="input" type="number" min="1" max="20" value="5" aria-label="Failed attempts before account lockout">
+              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Account locks after this many consecutive failures. Admins can unlock from user detail.</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-foot">
+          <button class="btn btn-ghost btn-sm" onclick="imiDiscard(this)">Reset to defaults</button>
+          <a class="btn btn-primary btn-sm" href="#" onclick="return imiSave(this,event)">Save Password Policy</a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function switchTab(btn) {
+    var tabs = document.querySelectorAll('#settings-tabs button');
+    var panes = document.querySelectorAll('.tab-pane');
+    var target = btn.getAttribute('data-tab');
+    if (!target) return;
+    tabs.forEach(function(t) {
+      t.classList.remove('is');
+      t.setAttribute('aria-selected', 'false');
+    });
+    panes.forEach(function(p) { p.classList.remove('is-active'); });
+    btn.classList.add('is');
+    btn.setAttribute('aria-selected', 'true');
+    var pane = document.getElementById('pane-' + target);
+    if (pane) pane.classList.add('is-active');
+  }
+
+  function imiSave(el, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!el) return;
+    var orig = el.textContent.trim();
+    el.textContent = 'Saved';
+    el.classList.add('is-saved');
+    if (window.imiToast) window.imiToast(orig.replace(/^Save\s*/i,'') + ' saved');
+    setTimeout(function() { el.textContent = orig; el.classList.remove('is-saved'); }, 1800);
+    return false;
+  }
+
+  function imiDiscard(el) {
+    var form = el ? el.closest('.card') : null;
+    if (!form) return;
+    form.querySelectorAll('input:not([disabled]),select:not([disabled]),textarea:not([disabled])').forEach(function(f) { f.blur(); });
+    var orig = el.textContent;
+    el.textContent = 'Discarded';
+    if (window.imiToast) window.imiToast('Changes discarded');
+    setTimeout(function() { el.textContent = orig; }, 1400);
+  }
+
+  var adClose = document.querySelector('.ad-close');
+  if (adClose) adClose.addEventListener('click', function() {
+    var strip = document.querySelector('.ad-strip');
+    if (strip) { strip.style.transition='opacity .2s'; strip.style.opacity='0'; setTimeout(function(){ strip.style.display='none'; },200); }
+  });
+
+  /* ── topbar search → admin-users ── */
+  var tbSearch = document.querySelector('.topbar .search input');
+  if (tbSearch) tbSearch.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) location.href = 'admin-users.html';
+  });
+
+  /* ── drop-zones: open file picker ── */
+  document.querySelectorAll('.drop-zone').forEach(function(dz) {
+    dz.addEventListener('click', function() {
+      var inp = document.createElement('input');
+      inp.type = 'file';
+      var lbl = dz.querySelector('span') ? dz.querySelector('span').textContent : '';
+      inp.accept = lbl.indexOf('ICO') > -1 ? '.ico,.png' : '.png,.svg,.jpg,.jpeg';
+      inp.addEventListener('change', function() {
+        if (inp.files && inp.files[0]) {
+          dz.querySelector('span').textContent = inp.files[0].name + ' ready';
+          imiSave(dz);
+        }
+      });
+      inp.click();
+    });
+    dz.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') dz.click(); });
+  });
+
+  /* ── color swatch: sync to input ── */
+  document.querySelectorAll('.swatch').forEach(function(sw) {
+    sw.addEventListener('click', function() {
+      var inp = sw.nextElementSibling;
+      if (!inp) return;
+      var picker = document.createElement('input');
+      picker.type = 'color';
+      picker.value = sw.style.background || '#000000';
+      picker.addEventListener('input', function() {
+        sw.style.background = picker.value;
+        inp.value = picker.value;
+      });
+      picker.click();
+    });
+  });
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

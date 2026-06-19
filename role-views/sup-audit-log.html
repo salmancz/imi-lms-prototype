@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My audit log · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+/* ── audit filters ── */
+.audit-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.audit-filters .input { height: 36px; width: auto; }
+.audit-filters .f-date { width: 160px; font-size: 13px; }
+.audit-filters .f-type { width: 210px; font-size: 13px; }
+.audit-filters .f-search {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.audit-filters .f-search::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+  background-size: contain;
+  pointer-events: none;
+}
+.audit-filters .f-search .input {
+  width: 100%;
+  padding-left: 38px;
+}
+
+/* ── mono / reason in table ── */
+.tbl td .mono {
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.tbl td .reason {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+/* action-type chips */
+.chip-otp      { border-color: rgba(80,130,155,0.55); color: #3E6B82; }
+.chip-unlock   { border-color: rgba(126,155,111,0.60); color: var(--c-sage-text); }
+.chip-reverify { border-color: rgba(201,155,46,0.55); color: var(--c-honey-text); }
+.chip-cert     { border-color: rgba(184,101,78,0.55); color: #8C4534; }
+.chip-impers-start { border-color: rgba(201,155,46,0.55); color: var(--c-honey-text); background: rgba(201,155,46,0.06); }
+.chip-impers-end   { border-color: rgba(126,155,111,0.60); color: var(--c-sage-text); }
+
+/* paired impersonation rows get a subtle tint */
+tr.impers-row { background: var(--paper-2); }
+
+/* outcome chips */
+.chip-ok {
+  border-color: rgba(126,155,111,0.60);
+  color: var(--c-sage-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.chip-ok::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-sage);
+  flex-shrink: 0;
+}
+
+/* stat strip */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+@media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .stat-strip { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="support-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Support</span>
+  </a>
+  <div class="search">
+    <input id="topbar-search" placeholder="Lookup by email, name, ID...">
+  </div>
+  <div class="topbar-actions">
+    <span class="role-pill">SUPPORT ENG</span>
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SE" alt="SE"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="support-home.html#open" class="sidebar-link" data-nav="tickets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Tickets</span>
+        <span class="badge">14</span>
+      </a>
+      <a href="support-home.html#resolved" class="sidebar-link" data-nav="resolved">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Resolved</span>
+        <span class="badge">428</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">LOOKUP</div>
+      <a href="sup-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span>
+      </a>
+      <a href="sup-audit-log.html" class="sidebar-link is-active" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="../admin/admin-certificates.html" class="sidebar-link" data-nav="certificates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        <span>Certificates</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Hero / page header -->
+    <div class="page-head" style="margin-bottom:28px">
+      <div>
+        <div class="eyebrow">IMI Support &middot; My own support actions &middot; Read-only</div>
+        <h1 class="page-title">My support <em>actions</em></h1>
+        <p class="page-sub">Every action you performed on user accounts. Read-only, retained per policy.</p>
+      </div>
+      <div class="page-actions" style="justify-content:flex-end;align-self:center">
+        <button class="btn btn-ghost btn-sm" id="btn-export-log" onclick="exportLog()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export my log
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI stat strip -->
+    <div class="stat-strip">
+      <div class="stat-flat">
+        <div class="stat-label">Actions this period</div>
+        <div class="stat-value">10 <span class="stat-dot"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">OTPs resent</div>
+        <div class="stat-value" style="color:var(--c-honey-text)">2</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Accounts unlocked</div>
+        <div class="stat-value" style="color:var(--c-sage-text)">3</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Certs reissued</div>
+        <div class="stat-value" style="color:var(--c-clay)">1</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="audit-filters">
+      <input id="f-date-start" class="input f-date" type="date" value="2026-05-01" aria-label="Start date">
+      <input id="f-date-end" class="input f-date" type="date" value="2026-05-19" aria-label="End date">
+      <select id="f-type" class="input f-type" aria-label="Action type">
+        <option value="">All action types</option>
+        <option value="otp resent">OTP resent</option>
+        <option value="account unlocked">Account unlocked</option>
+        <option value="profile re-verify">Profile re-verify</option>
+        <option value="certificate reissued">Certificate reissued</option>
+        <option value="impersonation started">Impersonation started</option>
+        <option value="impersonation ended">Impersonation ended</option>
+      </select>
+      <div class="f-search">
+        <input id="f-email" class="input" placeholder="Filter by user email" aria-label="Filter by user email">
+      </div>
+    </div>
+
+    <!-- Audit log table -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Recent <em>actions</em> <span id="log-count">(8 shown)</span></div>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>User affected</th>
+              <th>Action</th>
+              <th>Reason</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body">
+            <tr data-date="2026-05-19" data-email="layla.alhashimi@example.om" data-type="otp resent">
+              <td><span class="mono">2026-05-19 09:14</span></td>
+              <td>layla.alhashimi@example.om</td>
+              <td><span class="chip chip-otp">OTP resent</span></td>
+              <td><span class="reason">User could not receive OTP on first login</span></td>
+              <td><span class="chip chip-ok">Sent</span></td>
+            </tr>
+            <tr data-date="2026-05-19" data-email="ahmed.rashidi@corp.om" data-type="account unlocked">
+              <td><span class="mono">2026-05-19 08:52</span></td>
+              <td>ahmed.rashidi@corp.om</td>
+              <td><span class="chip chip-unlock">Account unlocked</span></td>
+              <td><span class="reason">Locked after 3 failed OTP attempts, user confirmed identity</span></td>
+              <td><span class="chip chip-ok">Unlocked</span></td>
+            </tr>
+            <tr class="impers-row" data-date="2026-05-19" data-email="noor.habsi@imi.om" data-type="impersonation started">
+              <td><span class="mono">2026-05-19 08:30</span></td>
+              <td>noor.habsi@imi.om</td>
+              <td><span class="chip chip-impers-start">Impersonation started</span></td>
+              <td><span class="reason">Verifying profile completion issue on behalf of learner</span></td>
+              <td><span class="chip t-honey dot">Active</span></td>
+            </tr>
+            <tr class="impers-row" data-date="2026-05-19" data-email="noor.habsi@imi.om" data-type="impersonation ended">
+              <td><span class="mono">2026-05-19 08:58</span></td>
+              <td>noor.habsi@imi.om</td>
+              <td><span class="chip chip-impers-end">Impersonation ended</span></td>
+              <td><span class="reason">Verifying profile completion issue on behalf of learner</span></td>
+              <td><span class="chip chip-ok">Ended (28 min)</span></td>
+            </tr>
+            <tr data-date="2026-05-18" data-email="fatima.blooshi@edu.om" data-type="certificate reissued">
+              <td><span class="mono">2026-05-18 15:10</span></td>
+              <td>fatima.blooshi@edu.om</td>
+              <td><span class="chip chip-cert">Certificate reissued</span></td>
+              <td><span class="reason">Certificate PDF not delivered after completion; learner request #T-1039</span></td>
+              <td><span class="chip chip-ok">Reissued</span></td>
+            </tr>
+            <tr data-date="2026-05-18" data-email="yusuf.khalfan@corp.om" data-type="profile re-verify">
+              <td><span class="mono">2026-05-18 11:33</span></td>
+              <td>yusuf.khalfan@corp.om</td>
+              <td><span class="chip chip-reverify">Profile re-verify</span></td>
+              <td><span class="reason">Documents not matching; asked user to re-upload ID</span></td>
+              <td><span class="chip chip-ok">Email sent</span></td>
+            </tr>
+            <tr data-date="2026-05-17" data-email="tariq.albalushi@corp.om" data-type="account unlocked">
+              <td><span class="mono">2026-05-17 14:05</span></td>
+              <td>tariq.albalushi@corp.om</td>
+              <td><span class="chip chip-unlock">Account unlocked</span></td>
+              <td><span class="reason">Ticket #T-1034: locked after repeated wrong OTP</span></td>
+              <td><span class="chip chip-ok">Unlocked</span></td>
+            </tr>
+            <tr data-date="2026-05-17" data-email="sami.alhinai@imi.om" data-type="otp resent">
+              <td><span class="mono">2026-05-17 10:48</span></td>
+              <td>sami.alhinai@imi.om</td>
+              <td><span class="chip chip-otp">OTP resent</span></td>
+              <td><span class="reason">OTP not received, user on new device</span></td>
+              <td><span class="chip chip-ok">Sent</span></td>
+            </tr>
+            <tr data-date="2026-05-16" data-email="layla.alhashimi@example.om" data-type="profile re-verify">
+              <td><span class="mono">2026-05-16 09:22</span></td>
+              <td>layla.alhashimi@example.om</td>
+              <td><span class="chip chip-reverify">Profile re-verify</span></td>
+              <td><span class="reason">Photo upload failing; asked user to retry with smaller file</span></td>
+              <td><span class="chip chip-ok">Email sent</span></td>
+            </tr>
+            <tr data-date="2026-05-15" data-email="omar.salimi@example.om" data-type="account unlocked">
+              <td><span class="mono">2026-05-15 16:44</span></td>
+              <td>omar.salimi@example.om</td>
+              <td><span class="chip chip-unlock">Account unlocked</span></td>
+              <td><span class="reason">Account flagged by system; user verified via support ticket</span></td>
+              <td><span class="chip chip-ok">Unlocked</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row between mt-lg" style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);letter-spacing:0.08em">
+      <span id="pager-info">SHOWING 1-8 OF 8 ACTIONS</span>
+      <div class="row gap">
+        <button class="btn btn-ghost btn-sm" id="btn-prev" onclick="changePage(-1)">Previous</button>
+        <button class="btn btn-ghost btn-sm" id="btn-next" onclick="changePage(1)">Next</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  var PAGE_SIZE = 8;
+  var currentPage = 1;
+
+  var MON_MAP = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+  function toISO(val) {
+    var m = (val || '').match(/^(\d{1,2})\s+(\w{3})\s+(\d{4})$/);
+    if (!m) return val || '';
+    return m[3] + '-' + String(MON_MAP[m[2]] || 0).padStart(2,'0') + '-' + String(parseInt(m[1],10)).padStart(2,'0');
+  }
+
+  function getFilteredRows() {
+    var dateStart = toISO(document.getElementById('f-date-start').value);
+    var dateEnd = toISO(document.getElementById('f-date-end').value);
+    var type = document.getElementById('f-type').value.toLowerCase();
+    var email = document.getElementById('f-email').value.toLowerCase().trim();
+    var rows = Array.from(document.querySelectorAll('#audit-body tr'));
+    return rows.filter(function(row) {
+      var rDate = row.getAttribute('data-date') || '';
+      var rEmail = (row.getAttribute('data-email') || '').toLowerCase();
+      var rType = (row.getAttribute('data-type') || '').toLowerCase();
+      var matchDate = (!dateStart || rDate >= dateStart) && (!dateEnd || rDate <= dateEnd);
+      var matchType = !type || rType === type;
+      var matchEmail = !email || rEmail.indexOf(email) !== -1;
+      return matchDate && matchType && matchEmail;
+    });
+  }
+
+  function applyFilters() {
+    currentPage = 1;
+    renderPage();
+  }
+
+  function renderPage() {
+    var filtered = getFilteredRows();
+    var total = filtered.length;
+    var allRows = Array.from(document.querySelectorAll('#audit-body tr'));
+
+    // hide all first
+    allRows.forEach(function(r) { r.style.display = 'none'; });
+
+    var start = (currentPage - 1) * PAGE_SIZE;
+    var end = Math.min(start + PAGE_SIZE, total);
+    var pageRows = filtered.slice(start, end);
+    pageRows.forEach(function(r) { r.style.display = ''; });
+
+    // update count label
+    var countEl = document.getElementById('log-count');
+    if (total === 0) {
+      countEl.textContent = '(no results)';
+    } else {
+      countEl.textContent = '(' + (start + 1) + '-' + end + ' of ' + total + ')';
+    }
+
+    // update pager info
+    var pagerEl = document.getElementById('pager-info');
+    pagerEl.textContent = total === 0 ? 'NO RESULTS' : 'SHOWING ' + (start + 1) + '-' + end + ' OF ' + total + ' ACTIONS';
+
+    // update prev/next buttons
+    var prevBtn = document.getElementById('btn-prev');
+    var nextBtn = document.getElementById('btn-next');
+    prevBtn.disabled = currentPage <= 1;
+    prevBtn.style.opacity = currentPage <= 1 ? '0.4' : '';
+    nextBtn.disabled = end >= total;
+    nextBtn.style.opacity = end >= total ? '0.4' : '';
+  }
+
+  function changePage(dir) {
+    var filtered = getFilteredRows();
+    var total = filtered.length;
+    var maxPage = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    currentPage = Math.min(maxPage, Math.max(1, currentPage + dir));
+    renderPage();
+  }
+
+  document.getElementById('f-date-start').addEventListener('change', applyFilters);
+  document.getElementById('f-date-end').addEventListener('change', applyFilters);
+  document.getElementById('f-type').addEventListener('change', applyFilters);
+  document.getElementById('f-email').addEventListener('input', applyFilters);
+
+  function exportLog() {
+    var btn = document.getElementById('btn-export-log');
+    var orig = btn.innerHTML;
+    btn.textContent = 'Exporting...';
+    setTimeout(function() {
+      btn.innerHTML = orig;
+      if (window.imiToast) { imiToast('Audit log exported as CSV.'); } else { showToast('Audit log exported as CSV.'); }
+    }, 1500);
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2800);
+  }
+
+  // topbar search navigates to user lookup
+  document.getElementById('topbar-search').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'sup-users.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  // initial render
+  renderPage();
+</script>
+<div class="toast" id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);font-size:13px;font-family:var(--font-sans);padding:10px 20px;border-radius:var(--r-pill);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;white-space:nowrap;z-index:99"></div>
+<style>.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}</style>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

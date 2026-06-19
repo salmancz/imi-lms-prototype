@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications · IMI Corporate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+/* ---- notification list ---- */
+.note-list { display: flex; flex-direction: column; }
+
+.note-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.18s;
+  position: relative;
+}
+.note-row:last-child { border-bottom: none; }
+.note-row.unread { background: var(--paper-2); }
+.note-row:hover { background: var(--bg-alt); }
+
+/* dot column */
+.note-dot-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5px;
+  flex-shrink: 0;
+}
+.note-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.note-dot.bad  { background: var(--accent); }
+.note-dot.warn { background: var(--c-honey); }
+.note-dot.ok   { background: var(--c-sage); }
+.note-dot.read { background: var(--ink-faint); }
+
+/* icon column */
+.note-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.note-icon svg { width: 18px; height: 18px; }
+.note-icon.bad  { background: var(--c-clay-wash); color: var(--accent); }
+.note-icon.warn { background: var(--c-honey-wash); color: var(--c-honey); }
+.note-icon.ok   { background: var(--c-sage-wash); color: var(--c-sage); }
+.note-icon.read { background: var(--paper-2); color: var(--ink-faint); border: 1px solid var(--line); }
+
+/* body */
+.note-body { flex: 1; min-width: 0; }
+.note-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; line-height: 1.35; }
+.note-row.unread .note-title { color: var(--ink-deep); }
+.note-desc { font-size: 13px; color: var(--ink-soft); margin-top: 4px; line-height: 1.5; }
+
+/* meta + action column */
+.note-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.note-time {
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.note-action {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  border-bottom: 1.5px solid var(--line-strong);
+  padding-bottom: 1px;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.note-action:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---- filter tabs ---- */
+.note-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--line);
+  margin: 0;
+  padding: 0 22px;
+  background: var(--paper-2);
+}
+.note-tabs button {
+  height: 38px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: var(--font-label);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+.note-tabs button.is { color: var(--ink); border-bottom-color: var(--ink); }
+.note-tabs button:not(.is):hover { color: var(--ink-soft); border-bottom-color: var(--line-strong); }
+
+/* ---- stats row ---- */
+.note-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+@media (max-width: 720px) { .note-stats { grid-template-columns: 1fr; } }
+
+/* unread indicator badge */
+.unread-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #FAF6F0;
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* empty-state placeholder */
+.note-empty {
+  padding: 56px 24px;
+  text-align: center;
+  display: none;
+}
+.note-empty.visible { display: block; }
+.note-empty .ne-icon { font-size: 36px; margin-bottom: 12px; }
+.note-empty .ne-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.note-empty .ne-sub { font-size: 13px; color: var(--ink-soft); }
+
+/* pill-toggle (matches admin-settings.html pattern) */
+.pill-toggle { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+.pill-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.pill-track {
+  position: absolute; inset: 0;
+  background: var(--surface-3);
+  border-radius: 100px;
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pill-track::after {
+  content: "";
+  position: absolute;
+  left: 3px; top: 3px;
+  width: 16px; height: 16px;
+  background: var(--paper);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(42,17,8,0.18);
+  transition: transform 0.2s var(--tn);
+}
+.pill-toggle input:checked + .pill-track { background: var(--c-sage); border-color: var(--c-sage); }
+.pill-toggle input:checked + .pill-track::after { transform: translateX(18px); }
+.pill-toggle input:focus-visible + .pill-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* toggle-row for preferences card */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+}
+.toggle-row + .toggle-row { border-top: 1px solid var(--line); }
+.toggle-row .tr-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+.toggle-row .tr-sub {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 3px;
+  line-height: 1.55;
+}
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Corporate</span>
+  </div>
+  <div class="search"><input placeholder="Search team, groups, courses..." type="search"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help" aria-label="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span><span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span><span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span><span class="badge">24</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- page header -->
+    <div class="page-head" style="grid-template-columns:1fr;margin-bottom:24px">
+      <div class="row between" style="width:100%;align-items:flex-end">
+        <div>
+          <div class="eyebrow">Notification Center</div>
+          <h1 class="page-title">Your <em>notifications</em></h1>
+          <p class="page-sub">Stay on top of assignments, team activity, and catalog updates.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm" onclick="document.querySelectorAll('.note-row.unread').forEach(function(r){r.classList.remove('unread')});document.querySelectorAll('.note-dot.bad,.note-dot.warn').forEach(function(d){d.className='note-dot read'});document.querySelectorAll('.note-icon.bad,.note-icon.warn').forEach(function(ic){ic.className='note-icon read'});this.disabled=true;">Mark all read</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- stat summary row -->
+    <div class="note-stats">
+      <div class="stat-flat">
+        <div class="stat-label">Unread</div>
+        <div class="stat-value">2<span class="stat-dot" style="background:var(--accent);margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">This Week</div>
+        <div class="stat-value">4</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Total</div>
+        <div class="stat-value">4</div>
+      </div>
+    </div>
+
+    <!-- notification card -->
+    <div class="card" style="max-width:880px">
+      <div class="card-head">
+        <div class="card-title" style="display:flex;align-items:center">
+          Notifications
+          <span class="unread-badge" aria-label="2 unread">2</span>
+        </div>
+      </div>
+
+      <!-- filter tabs -->
+      <div class="note-tabs" role="tablist" aria-label="Notification filters">
+        <button class="is" role="tab" aria-selected="true" onclick="filterNotes('all', this)">All</button>
+        <button role="tab" aria-selected="false" onclick="filterNotes('unread', this)">Unread</button>
+        <button role="tab" aria-selected="false" onclick="filterNotes('system', this)">System</button>
+        <button role="tab" aria-selected="false" onclick="filterNotes('catalog', this)">Catalog</button>
+      </div>
+
+      <div class="card-body flush">
+        <div class="note-list" id="note-list">
+
+          <!-- unread: overdue assignment (bad) -->
+          <div class="note-row unread" data-category="system">
+            <div class="note-dot-col">
+              <span class="note-dot bad" aria-label="Urgent"></span>
+            </div>
+            <div class="note-icon bad" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div class="note-body">
+              <div class="note-title">Overdue: Ahmed Al-Rashid</div>
+              <div class="note-desc">Knowledge Mapping assignment is 21 days overdue. Deadline was May 1.</div>
+            </div>
+            <div class="note-side">
+              <span class="note-time">2h ago</span>
+              <a href="corp-assignment.html" class="note-action">View assignment</a>
+            </div>
+          </div>
+
+          <!-- unread: pending activations (warn) -->
+          <div class="note-row unread" data-category="system">
+            <div class="note-dot-col">
+              <span class="note-dot warn" aria-label="Warning"></span>
+            </div>
+            <div class="note-icon warn" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="note-body">
+              <div class="note-title">3 users haven't activated their accounts</div>
+              <div class="note-desc">Invited over 7 days ago. Resend invites from Team page.</div>
+            </div>
+            <div class="note-side">
+              <span class="note-time">1d ago</span>
+              <a href="oa-team.html" class="note-action">Go to Team</a>
+            </div>
+          </div>
+
+          <!-- read: new course in catalog (ok) -->
+          <div class="note-row" data-category="catalog">
+            <div class="note-dot-col">
+              <span class="note-dot ok" aria-label="Info"></span>
+            </div>
+            <div class="note-icon ok" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <div class="note-body">
+              <div class="note-title">New course available: ISO 15489 Advanced</div>
+              <div class="note-desc">A new course was added to your assigned catalog.</div>
+            </div>
+            <div class="note-side">
+              <span class="note-time">3d ago</span>
+            </div>
+          </div>
+
+          <!-- read: monthly report (read) -->
+          <div class="note-row" data-category="system">
+            <div class="note-dot-col">
+              <span class="note-dot read" aria-label="Read"></span>
+            </div>
+            <div class="note-icon read" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            </div>
+            <div class="note-body">
+              <div class="note-title">Monthly completion report ready</div>
+              <div class="note-desc">April 2026 report is ready to export.</div>
+            </div>
+            <div class="note-side">
+              <span class="note-time">1w ago</span>
+              <a href="corp-reporting.html" class="note-action">View report</a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- empty state (shown when filter yields 0 results) -->
+        <div class="note-empty" id="note-empty">
+          <div class="ne-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--ink-faint)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </div>
+          <div class="ne-title">No notifications here</div>
+          <div class="ne-sub">Switch to All to see everything.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email alert preferences -->
+    <div class="card" style="max-width:880px;margin-top:18px">
+      <div class="card-head">
+        <span class="card-title">Email <em>alert preferences</em></span>
+      </div>
+      <div class="card-body">
+        <div class="toggle-row">
+          <div>
+            <div class="tr-title">Email me when my account time zone changes</div>
+            <div class="tr-sub">Receive an email confirmation whenever your account time zone is updated.</div>
+          </div>
+          <label class="pill-toggle" aria-label="Email alert for time zone changes">
+            <input type="checkbox" id="corp-toggle-tz-email" checked onchange="onCorpTzToggleChange(this)">
+            <span class="pill-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function showCorpToast(msg) {
+  var t = document.getElementById('corp-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'corp-toast';
+    t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;background:var(--c-sage-wash);color:var(--c-sage-text);border:1px solid var(--c-sage);';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+  clearTimeout(t._to);
+  t._to = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 2800);
+}
+
+function onCorpTzToggleChange(chk) {
+  showCorpToast(chk.checked ? 'Time zone email alerts enabled' : 'Time zone email alerts disabled');
+}
+
+/* ── topbar search ── */
+document.addEventListener('DOMContentLoaded', function () {
+  var srch = document.querySelector('.search input');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'oa-team.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── Clicking a notification row marks it read ── */
+  document.querySelectorAll('.note-row').forEach(function (row) {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return; /* let action links navigate */
+      if (row.classList.contains('unread')) {
+        row.classList.remove('unread');
+        var dot = row.querySelector('.note-dot');
+        if (dot) dot.className = 'note-dot read';
+        var icon = row.querySelector('.note-icon');
+        if (icon) icon.className = 'note-icon read';
+        updateUnreadCount();
+      }
+    });
+  });
+
+  function updateUnreadCount() {
+    var unread = document.querySelectorAll('.note-row.unread').length;
+    var badge = document.querySelector('.unread-badge');
+    if (badge) badge.textContent = unread;
+    var statVal = document.querySelector('.stat-flat .stat-value');
+    if (statVal) statVal.textContent = unread;
+    if (unread === 0) {
+      var markBtn = document.querySelector('.btn-ghost[onclick*="Mark all read"]');
+      if (markBtn) markBtn.disabled = true;
+    }
+  }
+});
+
+function filterNotes(cat, btn) {
+  document.querySelectorAll('.note-tabs button').forEach(function(b) {
+    b.classList.remove('is');
+    b.setAttribute('aria-selected', 'false');
+  });
+  btn.classList.add('is');
+  btn.setAttribute('aria-selected', 'true');
+
+  var rows = document.querySelectorAll('#note-list .note-row');
+  var visible = 0;
+  rows.forEach(function(row) {
+    var show = (cat === 'all') ||
+               (cat === 'unread' && row.classList.contains('unread')) ||
+               (row.dataset.category === cat);
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  var empty = document.getElementById('note-empty');
+  empty.classList.toggle('visible', visible === 0);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

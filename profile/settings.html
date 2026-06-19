@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .set-wrap { max-width: 820px; margin: 0 auto; }
+  .set-head { margin-bottom: 28px; }
+  .set-head .page-sub { margin-top: 6px; }
+  .set-head .page-sub a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; font-weight: 600; }
+
+  .set-stack { display: flex; flex-direction: column; gap: 18px; }
+  .set-card .card-body { padding: 22px 24px 24px; }
+  .set-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 720px) { .set-grid-2 { grid-template-columns: 1fr; } }
+  .field-block .field { margin-bottom: 0; }
+  .field-block .input { height: 40px; }
+  .field-hint {
+    font-family: var(--font-label); font-size: 11px; letter-spacing: 0.03em;
+    color: var(--ink-mute); margin-top: 7px;
+  }
+  .input[disabled], select.input { color: var(--ink); }
+  .input[disabled] { background: var(--paper-2); cursor: not-allowed; }
+
+  .set-sessions { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .set-sessions .sess-text { font-size: 14px; color: var(--ink-soft); }
+  .set-sessions .sess-text strong { color: var(--ink); font-weight: 700; }
+  .set-divider { height: 1px; background: var(--line); margin: 18px 0; }
+  .set-note { font-size: 12px; color: var(--ink-mute); line-height: 1.6; }
+
+  /* Notification preferences grid */
+  .notif-scroll { overflow-x: auto; margin: 0 -4px; }
+  .notif-tbl { min-width: 480px; }
+  .notif-tbl th:not(:first-child),
+  .notif-tbl td:not(:first-child) { text-align: center; width: 92px; }
+  .notif-tbl tr.locked td { background: var(--paper-2); }
+  .notif-tbl tr.locked td:first-child { color: var(--ink); font-weight: 600; }
+  .notif-tbl input[type="checkbox"] {
+    width: 17px; height: 17px; accent-color: var(--accent);
+    cursor: pointer; vertical-align: middle;
+  }
+  .notif-tbl input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.45; }
+  .notif-foot { font-size: 12px; color: var(--ink-mute); line-height: 1.6; margin-top: 14px; }
+
+  /* Danger zone - clay border only, solid fill from token */
+  .card.danger { border-color: rgba(193, 42, 28, 0.32); background: var(--c-danger-wash); }
+  .card.danger .card-title { color: var(--c-danger); }
+  .danger-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+  .danger-row .d-text { font-size: 13px; color: var(--ink-soft); }
+  .danger-otp {
+    background: rgba(250, 246, 240, 0.6);
+    border: 1px dashed rgba(193, 42, 28, 0.40);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+  }
+  .danger-otp p { font-size: 12px; color: var(--c-danger); line-height: 1.65; }
+  .danger-otp strong { font-weight: 700; }
+
+  .help-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .help-row .h-text { font-size: 14px; color: var(--ink-soft); }
+
+  .field-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .field-label-row label { margin-bottom: 0; }
+  .field-change {
+    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--accent-deep);
+    text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+  }
+  .field-change:hover { color: var(--ink); }
+
+  /* Section card header (matches .card-head from shared.css, inlined for form sections) */
+  .set-section-head {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* pill-toggle (matches admin-settings.html pattern) */
+  .pill-toggle { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+  .pill-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .pill-track {
+    position: absolute; inset: 0;
+    background: var(--surface-3);
+    border-radius: 100px;
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pill-track::after {
+    content: "";
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 16px; height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(42,17,8,0.18);
+    transition: transform 0.2s var(--tn);
+  }
+  .pill-toggle input:checked + .pill-track { background: var(--c-sage); border-color: var(--c-sage); }
+  .pill-toggle input:checked + .pill-track::after { transform: translateX(18px); }
+  .pill-toggle input:focus-visible + .pill-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* toggle-row (matches admin-settings.html pattern) */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 0;
+  }
+  .toggle-row + .toggle-row { border-top: 1px solid var(--line); }
+  .toggle-row .tr-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .toggle-row .tr-sub {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 3px;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="settings.html" class="sidebar-link is-active" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="set-wrap">
+
+      <div class="set-head">
+        <div class="eyebrow">Account</div>
+        <h1 class="page-title">Settings <em>&amp; Preferences</em></h1>
+        <p class="page-sub">Manage your account, notifications and security. <a href="help-center.html">Need help?</a></p>
+      </div>
+
+      <div class="set-stack">
+
+        <!-- Account -->
+        <div class="card set-card">
+          <div class="card-head">
+            <span class="card-title">Account</span>
+          </div>
+          <div class="card-body">
+            <div class="set-grid-2">
+              <div class="field-block">
+                <div class="field">
+                  <div class="field-label-row">
+                    <label>Email</label>
+                    <a class="field-change" href="../auth/otp.html">Change</a>
+                  </div>
+                  <input class="input" value="salman@webinnoventix.com" disabled>
+                </div>
+                <div class="field-hint">Changing email requires OTP verification</div>
+              </div>
+              <div class="field-block">
+                <div class="field">
+                  <label>Language</label>
+                  <select class="input" id="lang-select">
+                    <option>English</option>
+                    <option>Arabic</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:18px">
+              <button type="button" class="btn btn-primary btn-sm" id="save-account-btn" onclick="saveAccountPrefs()">Save changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="card set-card">
+          <div class="card-head">
+            <span class="card-title">Security</span>
+          </div>
+          <div class="card-body">
+            <div class="set-sessions">
+              <span class="sess-text">Active sessions: <strong>2</strong> (Muscat &middot; Chrome, Mobile &middot; Safari)</span>
+              <a class="btn btn-ghost btn-sm" href="active-sessions.html">View all &rarr;</a>
+            </div>
+            <div class="set-divider"></div>
+            <p class="set-note">Authentication: Email + OTP (no passwords). All sessions are secured by one-time codes.</p>
+          </div>
+        </div>
+
+        <!-- Notification preferences -->
+        <div class="card set-card">
+          <div class="card-head">
+            <span class="card-title">Notification <em>preferences</em></span>
+          </div>
+          <div class="card-body">
+            <div class="notif-scroll">
+              <table class="tbl notif-tbl">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>In-app</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Course enrollment confirmation</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked></td>
+                  </tr>
+                  <tr>
+                    <td>Course Completed</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked disabled title="Required transactional email"></td>
+                  </tr>
+                  <tr>
+                    <td>Certificate ready</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked></td>
+                  </tr>
+                  <tr>
+                    <td>Quiz result</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox"></td>
+                  </tr>
+                  <tr>
+                    <td>Deadline reminder (assigned courses)</td>
+                    <td><input type="checkbox" checked></td>
+                    <td><input type="checkbox" checked></td>
+                  </tr>
+                  <tr>
+                    <td>Inactivity reminder (2 weeks and 1 month)</td>
+                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox"></td>
+                  </tr>
+                  <tr class="locked">
+                    <td>Security alerts (cannot disable)</td>
+                    <td><input type="checkbox" checked disabled></td>
+                    <td><input type="checkbox" checked disabled></td>
+                  </tr>
+                  <tr class="locked">
+                    <td>Account changes (cannot disable)</td>
+                    <td><input type="checkbox" checked disabled></td>
+                    <td><input type="checkbox" checked disabled></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="notif-foot">Security and account-change notifications cannot be disabled. The course-completion email is a required transactional message and stays on.</p>
+            <div class="set-divider"></div>
+            <div class="toggle-row">
+              <div>
+                <div class="tr-title">Email me when my account time zone changes</div>
+                <div class="tr-sub">Receive an email confirmation whenever your account time zone is updated.</div>
+              </div>
+              <label class="pill-toggle" aria-label="Email alert for time zone changes">
+                <input type="checkbox" id="toggle-tz-email" checked onchange="onTzToggleChange(this)">
+                <span class="pill-track"></span>
+              </label>
+            </div>
+            <div class="set-divider"></div>
+            <div class="field-block" style="max-width:320px">
+              <div class="field">
+                <label>Notification frequency</label>
+                <select class="input" id="notif-freq">
+                  <option>Immediate</option>
+                  <option>Daily digest</option>
+                  <option>Weekly digest</option>
+                </select>
+              </div>
+              <div class="field-hint">Controls how often grouped notifications are delivered to you</div>
+            </div>
+            <div style="margin-top:18px">
+              <button type="button" class="btn btn-primary btn-sm" id="save-notif-btn" onclick="saveNotifPrefs()">Save preferences</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit an Idea -->
+        <div class="card set-card">
+          <div class="card-head">
+            <span class="card-title">Ideas <em>&amp; Feedback</em></span>
+          </div>
+          <div class="card-body">
+            <div class="help-row">
+              <span class="h-text">Have a suggestion for a new feature or course? Share it with the IMI team.</span>
+              <a class="btn btn-primary btn-sm" href="submit-idea.html">Submit an idea &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="card danger set-card">
+          <div class="card-head">
+            <span class="card-title">Danger zone</span>
+          </div>
+          <div class="card-body">
+            <div class="danger-row">
+              <span class="d-text">Delete account &middot; all data permanently removed in 30 days</span>
+              <a class="btn btn-danger btn-sm" href="lifecycle-self-deletion.html">Request deletion</a>
+            </div>
+            <div class="danger-otp">
+              <p><strong>Deletion requires OTP verification.</strong> After clicking "Request deletion", we'll send a one-time code to your email. Enter it to confirm. This action cannot be undone.</p>
+              <p style="margin-top:10px"><strong>Note for certified members:</strong> If you hold a local certification, your certified record is retained permanently by membership number to support verification, even after your account is deleted.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Help & Support -->
+        <div class="card set-card">
+          <div class="card-head">
+            <span class="card-title">Help <em>&amp; Support</em></span>
+          </div>
+          <div class="card-body">
+            <div class="help-row">
+              <span class="h-text">Need assistance with your account?</span>
+              <a class="btn btn-ghost btn-sm" href="help-center.html">Contact support &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  function showToast(msg, type) {
+    var t = document.getElementById('settings-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'settings-toast';
+      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.background = type === 'ok' ? 'var(--c-sage-wash)' : 'var(--ink)';
+    t.style.color = type === 'ok' ? 'var(--c-sage-text)' : 'var(--paper)';
+    t.style.border = type === 'ok' ? '1px solid var(--c-sage)' : '1px solid transparent';
+    t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+    clearTimeout(t._to);
+    t._to = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 2800);
+  }
+
+  function saveAccountPrefs() {
+    var btn = document.getElementById('save-account-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    setTimeout(function () { btn.textContent = 'Save changes'; btn.disabled = false; showToast('Account preferences saved', 'ok'); }, 600);
+  }
+
+  function saveNotifPrefs() {
+    var btn = document.getElementById('save-notif-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    setTimeout(function () { btn.textContent = 'Save preferences'; btn.disabled = false; showToast('Notification preferences saved', 'ok'); }, 600);
+  }
+
+  function onTzToggleChange(chk) {
+    showToast(chk.checked ? 'Time zone email alerts enabled' : 'Time zone email alerts disabled', 'ok');
+  }
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

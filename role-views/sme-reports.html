@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SME Reports · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── page-specific ──────────────────────────────────── */
+  .rep-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .rep-status .s-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .rep-status .s-dot.ok   { background: var(--c-sage); }
+  .rep-status .s-dot.warn { background: var(--c-honey); }
+  .rep-status .s-dot.draft { background: var(--ink-faint); }
+
+  .col-num {
+    color: var(--ink);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .rep-empty { color: var(--ink-faint); }
+
+  /* date-range filter row */
+  .rep-filter {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .rep-filter .field { margin-bottom: 0; }
+  .rep-filter .field label { margin-bottom: 6px; }
+  .rep-filter .input  { width: auto; min-width: 150px; }
+  .rep-range-sep {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    padding-bottom: 7px;
+  }
+  .rep-range-note {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    padding-bottom: 7px;
+  }
+
+  /* stat strip -- flat 4-up grid */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .stat-strip { grid-template-columns: 1fr 1fr; } }
+
+  /* progress bar inside table cell */
+  .tbl-prog { display: flex; align-items: center; gap: 10px; }
+  .tbl-prog .progress { flex: 1; }
+  .tbl-prog .pct-lbl {
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 32px;
+  }
+
+  /* right-rail donut legend */
+  .donut-legend { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; font-size: 13px; }
+  .donut-legend .dl-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .donut-legend .dl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .donut-legend .dl-label { flex: 1; color: var(--ink-soft); }
+  .donut-legend .dl-val { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  /* export strip above table */
+  .export-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .export-row .section-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── ad strip ──────────────────────────────────────── -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- ── topbar ─────────────────────────────────────────── -->
+<header class="topbar">
+  <a class="brand" href="sme-reports.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Review</span>
+  </a>
+  <div class="search"><input placeholder="Search reports..." id="topbar-search-rep" onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='sme-reports.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <span class="role-pill">SME REVIEWER</span>
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── app shell ──────────────────────────────────────── -->
+<div class="app">
+
+  <!-- sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../course-builder/sme-queue.html#queue" class="sidebar-link" data-nav="queue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Queue</span><span class="badge">5</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#in-progress" class="sidebar-link" data-nav="in-progress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+        <span>In progress</span><span class="badge">1</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#reviewed" class="sidebar-link" data-nav="reviewed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Reviewed</span><span class="badge">47</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">DOMAIN</div>
+      <a href="../course-builder/sme-queue.html?domain=km" class="sidebar-link" data-nav="km">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>KM Standards</span>
+      </a>
+      <a href="../course-builder/sme-queue.html?domain=records" class="sidebar-link" data-nav="records">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Records Mgmt</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="sme-reports.html" class="sidebar-link is-active" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="sme-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- main -->
+  <main>
+
+    <!-- ── hero ──────────────────────────────────────── -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">IMI Review &middot; Course performance report</div>
+        <h1 class="page-title">Course <em>reports</em></h1>
+        <p class="page-sub">Course performance and learner outcomes for content you reviewed.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="exportReportCSV();return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </a>
+        <a class="btn btn-ghost" href="#" onclick="exportReportExcel();return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Excel
+        </a>
+      </div>
+    </div>
+
+    <!-- ── date filter ───────────────────────────────── -->
+    <div class="rep-filter">
+      <div class="field">
+        <label for="rep-from">From</label>
+        <input class="input" type="date" id="rep-from" value="2025-06-11">
+      </div>
+      <span class="rep-range-sep">to</span>
+      <div class="field">
+        <label for="rep-to">To</label>
+        <input class="input" type="date" id="rep-to" value="2026-06-11">
+      </div>
+      <span class="rep-range-note">Maximum range: 1 year</span>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="applyDateFilter()">Apply</button>
+    </div>
+
+    <!-- ── stat strip ────────────────────────────────── -->
+    <div class="stat-strip">
+
+      <div class="stat-flat">
+        <div class="stat-label">Total users</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+          2,841
+        </div>
+      </div>
+
+      <div class="stat-flat">
+        <div class="stat-label">Active users</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-sage)"></span>
+          1,962
+        </div>
+      </div>
+
+      <div class="stat-flat">
+        <div class="stat-label">Enrollments</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-clay)"></span>
+          3,104
+        </div>
+      </div>
+
+      <div class="stat-flat">
+        <div class="stat-label">Completion percentage</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--ink-soft)"></span>
+          73%
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── main content: table + right rail ──────────── -->
+    <div class="grid-2">
+
+      <!-- left: course performance table -->
+      <div class="col">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Course <em>performance</em></div>
+            <span class="chip t-ink">4 courses</span>
+          </div>
+          <div class="card-body flush">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Status</th>
+                  <th>Enrollments</th>
+                  <th>Completion rate</th>
+                  <th>Avg quiz score</th>
+                  <th>Quiz pass rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Knowledge Mapping</td>
+                  <td><span class="rep-status"><span class="s-dot ok"></span>Published</span></td>
+                  <td class="col-num">1,204</td>
+                  <td>
+                    <div class="tbl-prog">
+                      <div class="progress" style="min-width:60px"><div class="progress-fill" style="width:78%;background:var(--c-sage)"></div></div>
+                      <span class="pct-lbl">78%</span>
+                    </div>
+                  </td>
+                  <td class="col-num">81%</td>
+                  <td class="col-num">86%</td>
+                </tr>
+                <tr>
+                  <td>Records Retention 101</td>
+                  <td><span class="rep-status"><span class="s-dot ok"></span>Published</span></td>
+                  <td class="col-num">198</td>
+                  <td>
+                    <div class="tbl-prog">
+                      <div class="progress" style="min-width:60px"><div class="progress-fill" style="width:68%;background:var(--c-honey)"></div></div>
+                      <span class="pct-lbl">68%</span>
+                    </div>
+                  </td>
+                  <td class="col-num">76%</td>
+                  <td class="col-num">74%</td>
+                </tr>
+                <tr>
+                  <td>ISO 15489 Module</td>
+                  <td><span class="rep-status"><span class="s-dot ok"></span>Published</span></td>
+                  <td class="col-num">642</td>
+                  <td>
+                    <div class="tbl-prog">
+                      <div class="progress" style="min-width:60px"><div class="progress-fill" style="width:71%;background:var(--c-sage)"></div></div>
+                      <span class="pct-lbl">71%</span>
+                    </div>
+                  </td>
+                  <td class="col-num">79%</td>
+                  <td class="col-num">80%</td>
+                </tr>
+                <tr>
+                  <td>Data Governance Foundations</td>
+                  <td><span class="rep-status"><span class="s-dot warn"></span>In review</span></td>
+                  <td class="rep-empty">-</td>
+                  <td class="rep-empty">-</td>
+                  <td class="rep-empty">-</td>
+                  <td class="rep-empty">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- right rail -->
+      <div class="col gap-lg">
+
+        <!-- completion overview donut -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Completion <em>overview</em></div>
+          </div>
+          <div class="card-body" style="display:flex;flex-direction:column;align-items:center">
+            <div style="position:relative;display:grid;place-items:center;margin-bottom:4px">
+              <div class="donut" style="background:conic-gradient(var(--c-sage) 0deg 281deg, var(--c-honey) 281deg 317deg, var(--surface-3) 317deg 360deg)"></div>
+              <div class="donut-center">
+                <div>
+                  <div class="donut-value">73%</div>
+                  <div class="donut-label">COMPLETE</div>
+                </div>
+              </div>
+            </div>
+            <div class="donut-legend" style="width:100%;max-width:200px">
+              <div class="dl-row">
+                <span class="dl-dot" style="background:var(--c-sage)"></span>
+                <span class="dl-label">Completed</span>
+                <span class="dl-val">73%</span>
+              </div>
+              <div class="dl-row">
+                <span class="dl-dot" style="background:var(--c-honey)"></span>
+                <span class="dl-label">In progress</span>
+                <span class="dl-val">10%</span>
+              </div>
+              <div class="dl-row">
+                <span class="dl-dot" style="background:var(--surface-3)"></span>
+                <span class="dl-label">Not started</span>
+                <span class="dl-val">17%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- top performing course -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Top <em>performer</em></div>
+          </div>
+          <div class="card-body" style="padding-top:0">
+            <div class="crs" style="border:none;box-shadow:none;border-radius:0;background:transparent">
+              <div class="crs-cover" style="border-radius:var(--r-md);overflow:hidden;margin-bottom:14px">
+                <img src="../img/covers/cover-1.jpg" alt="Knowledge Mapping cover">
+                <span class="crs-badge crs-level">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" class="star"/></svg>
+                  Strategist
+                </span>
+                <span class="crs-badge crs-dur">5 h</span>
+              </div>
+              <div style="padding:0">
+                <div class="crs-type">
+                  <div class="crs-type-ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  </div>
+                  <span class="crs-type-label">Course</span>
+                </div>
+                <h3 class="crs-title">Knowledge Mapping</h3>
+                <div class="crs-rule"></div>
+                <div style="display:flex;gap:16px;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute)">
+                  <span><span style="color:var(--ink);font-size:14px;font-family:var(--font-sans);font-weight:800;letter-spacing:-0.01em">1,204</span> enrolled</span>
+                  <span><span style="color:var(--c-sage);font-size:14px;font-family:var(--font-sans);font-weight:800;letter-spacing:-0.01em">78%</span> complete</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<style>
+  .imi-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.02em;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;white-space:nowrap}
+  .imi-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .imi-toast.t-sage{background:var(--c-sage)}
+</style>
+<div id="imi-toast" class="imi-toast"></div>
+<script>
+function showToast(msg,type,duration){var t=document.getElementById('imi-toast');t.textContent=msg;t.className='imi-toast'+(type?' '+type:'');requestAnimationFrame(function(){t.classList.add('show')});setTimeout(function(){t.classList.remove('show')},duration||3000)}
+
+var REP_DATA = [
+  {course:'Knowledge Mapping',     status:'Published', enroll:1204, comp:78, quiz:81, pass:86, date:'2025-06-01'},
+  {course:'Records Retention 101', status:'Published', enroll:198,  comp:68, quiz:76, pass:74, date:'2025-08-15'},
+  {course:'ISO 15489 Module',      status:'Published', enroll:642,  comp:71, quiz:79, pass:80, date:'2025-11-20'},
+  {course:'Data Governance Foundations', status:'In review', enroll:0, comp:0, quiz:0, pass:0, date:'2026-04-01'}
+];
+
+function applyDateFilter() {
+  var from = document.getElementById('rep-from').value;
+  var to   = document.getElementById('rep-to').value;
+  var fromD = from ? new Date(from) : null;
+  var toD   = to   ? new Date(to)   : null;
+  var tbody = document.querySelector('.tbl tbody');
+  if (!tbody) return;
+  var rows = tbody.querySelectorAll('tr');
+  var shown = 0;
+  rows.forEach(function(r, i) {
+    var d = REP_DATA[i];
+    if (!d) return;
+    var rd = new Date(d.date);
+    var ok = (!fromD || rd >= fromD) && (!toD || rd <= toD);
+    r.style.display = ok ? '' : 'none';
+    if (ok) shown++;
+  });
+  var chip = document.querySelector('.card-head .chip.t-ink');
+  if (chip) chip.textContent = shown + ' course' + (shown !== 1 ? 's' : '');
+  showToast('Filter applied: ' + shown + ' course' + (shown !== 1 ? 's' : '') + ' shown', 't-sage');
+}
+
+function exportReportCSV() {
+  var rows = [['Course','Status','Enrollments','Completion rate','Avg quiz score','Quiz pass rate'],
+    ['Knowledge Mapping','Published','1204','78%','81%','86%'],
+    ['Records Retention 101','Published','198','68%','76%','74%'],
+    ['ISO 15489 Module','Published','642','71%','79%','80%'],
+    ['Data Governance Foundations','In review','-','-','-','-']];
+  var csv = rows.map(function(r){return r.map(function(c){return '"'+c+'"';}).join(',');}).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sme-course-report.csv';
+  a.click();
+  showToast('CSV downloading...', 't-sage');
+}
+
+function exportReportExcel() {
+  var rows = [['Course','Status','Enrollments','Completion rate','Avg quiz score','Quiz pass rate'],
+    ['Knowledge Mapping','Published','1204','78%','81%','86%'],
+    ['Records Retention 101','Published','198','68%','76%','74%'],
+    ['ISO 15489 Module','Published','642','71%','79%','80%'],
+    ['Data Governance Foundations','In review','-','-','-','-']];
+  var tsv = rows.map(function(r){return r.join('\t');}).join('\n');
+  var blob = new Blob([tsv], {type:'application/vnd.ms-excel'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'sme-course-report.xls';
+  a.click();
+  showToast('Excel downloading...', 't-sage');
+}
+
+(function() {
+  var params = new URLSearchParams(location.search);
+  var from = params.get('from'), to = params.get('to');
+  if (from) { var el = document.getElementById('rep-from'); if (el) el.value = from; }
+  if (to)   { var el = document.getElementById('rep-to');   if (el) el.value = to;   }
+  if (from || to) applyDateFilter();
+  var q = params.get('q');
+  if (q) {
+    var inp = document.getElementById('topbar-search-rep');
+    if (inp) inp.value = q;
+    var tbody = document.querySelector('.tbl tbody');
+    if (tbody) {
+      var rows = tbody.querySelectorAll('tr');
+      rows.forEach(function(r) {
+        var text = (r.cells[0] ? r.cells[0].textContent : '').toLowerCase();
+        r.style.display = text.indexOf(q.toLowerCase()) !== -1 ? '' : 'none';
+      });
+    }
+  }
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

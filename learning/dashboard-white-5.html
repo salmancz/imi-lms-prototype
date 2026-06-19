@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · White V5 · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Credential Map */
+  .cred-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 14px; }
+  @media (max-width: 1280px) { .cred-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 900px)  { .cred-grid { grid-template-columns: repeat(2, 1fr); } }
+  .pillar-card { background: var(--paper); border: 1px solid var(--line); border-top: 3px solid var(--line-strong); border-radius: var(--r-md); padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 14px; transition: transform 0.25s var(--tn), box-shadow 0.25s, border-color 0.2s; }
+  .pillar-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-sm); }
+  .pillar-card.is-certified { border-top-color: var(--c-sage); }
+  .pillar-card.is-progress, .pillar-card.is-renew { border-top-color: var(--c-honey); }
+  .pillar-card.is-empty { border-top-color: var(--line-strong); }
+  .pillar-mark { width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: var(--r-xs); display: grid; place-items: center; font-family: var(--font-label); font-size: 11px; font-weight: 700; color: var(--ink); letter-spacing: 0.04em; }
+  .pillar-mark.muted { border-color: var(--ink-faint); border-style: dashed; color: var(--ink-mute); }
+  .pillar-body { display: flex; flex-direction: column; gap: 4px; }
+  .pillar-cred { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .pillar-issued { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .pillar-status-active { font-size: 12px; font-weight: 600; color: var(--c-sage-text); margin-top: 2px; }
+  .pillar-link { font-family: var(--font-label); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); border-bottom: 1.5px solid var(--ink); padding-bottom: 1px; align-self: flex-start; }
+  .pillar-link.renew { color: var(--c-honey-text); border-color: var(--c-honey-text); }
+  .pillar-link:hover { color: var(--accent); border-color: var(--accent); }
+  .cred-summary { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.05em; color: var(--ink-soft); padding: 4px 2px 0; }
+  .cred-summary strong { color: var(--ink); font-weight: 700; }
+  .section-eyebrow { font-family: var(--font-label); font-size: 10px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+
+  /* Profile completion ring (minimal conic) */
+  .profile-minimal { display: flex; align-items: center; gap: 18px; }
+  .profile-ring-wrap { position: relative; width: 64px; height: 64px; flex-shrink: 0; }
+  .profile-ring-svg { width: 64px; height: 64px; transform: rotate(-90deg); }
+  .profile-ring-svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+  .ring-track { stroke: var(--bg-alt); }
+  .ring-value { stroke: var(--c-sage); }
+  .profile-ring-pct { position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; font-weight: 800; color: var(--ink); font-family: var(--font-label); }
+  .profile-text { flex: 1; min-width: 0; }
+  .profile-text .p-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .profile-text .p-missing { font-size: 12px; color: var(--ink-mute); margin-bottom: 9px; line-height: 1.5; }
+  .profile-ring-note { font-family: var(--font-label); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--c-sage-text); background: var(--c-sage-wash); padding: 2px 8px; border-radius: var(--r-pill); display: inline-block; }
+
+  /* Recommended grid of canonical .crs cards */
+  .crs-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 1200px) { .crs-grid-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 860px)  { .crs-grid-3 { grid-template-columns: 1fr; } }
+
+  .cl-thumb { width: 56px; height: 56px; border-radius: var(--r-md); overflow: hidden; flex-shrink: 0; background: var(--paper-2); border: 1px solid var(--line); }
+  .cl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pct-tag { font-family: var(--font-label); font-size: 12px; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+  .renewal-card { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: var(--r-md); padding: 18px 22px; display: flex; align-items: center; gap: 20px; }
+  .renewal-card .renewal-body { flex: 1; min-width: 0; }
+
+  /* Recent activity */
+  .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+  .activity-item:last-child { border-bottom: 0; }
+  .activity-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-sage); flex-shrink: 0; margin-top: 6px; }
+  .activity-dot.pending { background: var(--ink-faint); }
+</style>
+<style id="white-variant">:root{--bg:#F4F1EA;--paper:#FFFFFF;--paper-2:#FAF8F3;}.white-badge{position:fixed;top:62px;right:18px;z-index:300;background:var(--ink);color:#FBF7EF;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:.05em;padding:7px 13px;border-radius:100px;box-shadow:0 6px 16px -4px rgba(42,17,8,.45);}.page-head{background:#FFFFFF;border:1px solid var(--line);border-radius:18px;padding:26px 28px;margin-bottom:26px;}</style>
+</head>
+<body>
+<div class="white-badge">WHITE V5 &middot; White hero band on light page</div>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link is-active" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <!-- Hero: editorial quote + stats + daily featured (v8 learner-home structure) -->
+    <div class="page-head" style="margin-bottom:30px">
+      <div class="hero-left">
+        <div class="eyebrow">Learning dashboard</div>
+        <h1 class="hero-title"><strong>Salman</strong>, <em>knowledge whispers where noise cannot reach. Pause, listen, and grow.</em></h1>
+        <div class="hero-actions">
+          <a class="btn btn-ghost btn-sm" href="catalog.html">Browse catalog</a>
+          <a class="btn btn-primary btn-sm" href="player.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continue learning</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="hs-label">Enrolled</span><span class="hs-value">8</span></div>
+          <div class="hero-stat"><span class="hs-label">Completed</span><span class="hs-value">5 <span class="hs-trend up">&#8599; 12%</span></span></div>
+          <div class="hero-stat"><span class="hs-label">Avg score</span><span class="hs-value">84% <span class="hs-trend up">&#8599; 3%</span></span></div>
+          <div class="hero-stat"><span class="hs-label">Pillars</span><span class="hs-value">2 <span style="font-size:13px;font-weight:500;color:var(--ink-mute)">of 5</span></span></div>
+        </div>
+      </div>
+      <div class="daily-card daily-card-compact">
+        <div class="daily-head">
+          <span class="eyebrow">3 min today</span>
+          <span class="daily-streak">&#128293; 14</span>
+        </div>
+        <div class="daily-title">Quick lesson: <em>Records lifecycle in one minute</em></div>
+        <a class="btn btn-primary btn-sm" href="player.html">Watch now &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Credential Map (IMI portfolio across 5 pillars) -->
+    <div class="mb-lg">
+      <div class="row between mb">
+        <div class="row gap-lg" style="align-items:baseline">
+          <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.01em">Credential <em style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-soft)">Map</em></h2>
+          <span class="section-eyebrow">Your portfolio across IM's 5 pillars</span>
+        </div>
+        <a class="card-link" href="career-path.html">VIEW FULL PATH MAP &rarr;</a>
+      </div>
+      <div class="cred-grid">
+        <div class="pillar-card is-certified">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:10px">Data Management</div>
+            <div class="pillar-mark" style="margin-bottom:12px">DM</div>
+            <span class="chip t-sage dot">CERTIFIED</span>
+          </div>
+          <div class="pillar-body">
+            <div class="pillar-cred">CDMP Practitioner</div>
+            <div class="pillar-issued">Issued Mar 2026</div>
+            <div class="pillar-status-active">Active</div>
+          </div>
+        </div>
+        <div class="pillar-card is-progress">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:10px">Knowledge Management</div>
+            <div class="pillar-mark" style="margin-bottom:12px">KM</div>
+            <span class="chip t-progress dot">IN PROGRESS</span>
+          </div>
+          <div class="pillar-body">
+            <div class="pillar-cred">Knowledge Mapping</div>
+            <div class="row gap" style="margin-top:6px">
+              <div class="progress" style="flex:1"><div class="progress-fill" style="width:33%;background:var(--c-honey)"></div></div>
+              <span class="pct-tag">33%</span>
+            </div>
+          </div>
+        </div>
+        <div class="pillar-card is-renew">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:10px">Records Management</div>
+            <div class="pillar-mark" style="margin-bottom:12px">RM</div>
+            <span class="chip t-honey dot">CERTIFIED</span>
+          </div>
+          <div class="pillar-body">
+            <div class="pillar-cred">IGP</div>
+            <div class="pillar-issued">Issued Jan 2026</div>
+            <a class="pillar-link renew" href="course-detail.html" style="margin-top:6px">Renew &rarr; 60 days</a>
+          </div>
+        </div>
+        <div class="pillar-card is-empty">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:10px">Document Management</div>
+            <div class="pillar-mark muted" style="margin-bottom:12px">DcM</div>
+            <span class="chip t-empty dot">NOT STARTED</span>
+          </div>
+          <div class="pillar-body">
+            <a class="pillar-link" href="catalog.html">Start path &rarr;</a>
+          </div>
+        </div>
+        <div class="pillar-card is-empty">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:10px">Content Management</div>
+            <div class="pillar-mark muted" style="margin-bottom:12px">CM</div>
+            <span class="chip t-empty dot">NOT STARTED</span>
+          </div>
+          <div class="pillar-body">
+            <a class="pillar-link" href="catalog.html">Start path &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div class="cred-summary"><strong>2 of 5 pillars certified</strong> &nbsp;&middot;&nbsp; 1 in progress &nbsp;&middot;&nbsp; 2 unexplored</div>
+    </div>
+
+    <!-- Main + right rail -->
+    <div class="grid-2">
+      <div class="col gap-lg">
+
+        <!-- Continue learning -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Continue <em>learning</em></div>
+            <a class="card-link" href="my-learning.html">VIEW ALL &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <div class="cl-thumb"><img src="../img/A02-01.png" alt=""></div>
+              <div class="list-body">
+                <div class="pillar-issued" style="margin-bottom:3px">Knowledge Management</div>
+                <div class="list-title">Knowledge Mapping</div>
+                <div class="list-sub">Lesson 4 of 9 &middot; Concept mapping techniques</div>
+                <div class="row gap" style="margin-top:10px;max-width:420px">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:33%;background:var(--c-honey)"></div></div>
+                  <span class="pct-tag">33%</span>
+                </div>
+              </div>
+              <a class="btn btn-primary btn-sm" href="player.html">Resume &rarr;</a>
+            </div>
+            <div class="list-row">
+              <div class="cl-thumb"><img src="../img/A05-03.png" alt=""></div>
+              <div class="list-body">
+                <div class="pillar-issued" style="margin-bottom:3px">Data Management</div>
+                <div class="list-title">Data Governance Essentials</div>
+                <div class="list-sub">Module 2 of 5 &middot; last accessed 3 days ago</div>
+                <div class="row gap" style="margin-top:10px;max-width:420px">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:28%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">28%</span>
+                </div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="player.html">Resume &rarr;</a>
+            </div>
+            <div class="list-row">
+              <div class="cl-thumb"><img src="../img/A07-01.png" alt=""></div>
+              <div class="list-body">
+                <div class="pillar-issued" style="margin-bottom:3px">Records Management</div>
+                <div class="list-title">Records Management Fundamentals</div>
+                <div class="list-sub">Module 1 of 5 &middot; started yesterday</div>
+                <div class="row gap" style="margin-top:10px;max-width:420px">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:8%;background:var(--c-clay)"></div></div>
+                  <span class="pct-tag">8%</span>
+                </div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="player.html">Resume &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certification renewal banner -->
+        <div class="renewal-card">
+          <div class="renewal-body">
+            <div class="list-title" style="font-size:14px;margin-bottom:4px">CDMP Practitioner renews Sep 2026</div>
+            <div class="list-sub" style="margin-bottom:12px">Continue building your portfolio</div>
+            <div class="row gap" style="max-width:380px">
+              <div class="progress" style="flex:1"><div class="progress-fill" style="width:70%;background:var(--c-honey)"></div></div>
+              <span class="pct-tag" style="min-width:64px;text-align:right">28 / 40 pts</span>
+            </div>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="catalog.html" style="white-space:nowrap;flex-shrink:0">Browse courses &rarr;</a>
+        </div>
+
+        <!-- Recommended for you (canonical .crs course cards) -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Recommended <em>for you</em></div>
+            <a class="card-link" href="catalog.html">VIEW ALL &rarr;</a>
+          </div>
+          <div class="card-body">
+            <div class="crs-grid-3">
+              <article class="crs">
+                <div class="crs-cover">
+                  <img src="../img/covers/cover-3.jpg" alt="">
+                  <span class="crs-badge crs-level lv-basic"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Basic</span>
+                  <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>25 min</span>
+                </div>
+                <div class="crs-body">
+                  <div class="crs-type"><span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><span class="crs-type-label">Course</span></div>
+                  <h3 class="crs-title">Document Lifecycle Foundations</h3>
+                  <div class="crs-rule"></div>
+                  <div class="crs-foot">
+                    <div class="crs-by"><img class="crs-av" src="https://i.pravatar.cc/80?u=a-khalfan" alt=""><span class="crs-by-txt">By: <strong>Dr. A. Khalfan</strong></span></div>
+                    <div class="crs-acts">
+                      <button class="crs-ic" title="Share" onclick="navigator.share ? navigator.share({title:'Document Lifecycle Foundations'}).catch(function(){}) : alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                      <button class="crs-ic" title="Save to wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                      <button class="crs-ic" title="View details" onclick="location.href='course-detail.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <article class="crs">
+                <div class="crs-cover">
+                  <img src="../img/covers/cover-1.jpg" alt="">
+                  <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+                  <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>28 min</span>
+                </div>
+                <div class="crs-body">
+                  <div class="crs-type"><span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><span class="crs-type-label">Course</span></div>
+                  <h3 class="crs-title">Enterprise Content Strategy</h3>
+                  <div class="crs-rule"></div>
+                  <div class="crs-foot">
+                    <div class="crs-by"><img class="crs-av" src="https://i.pravatar.cc/80?u=j-miller" alt=""><span class="crs-by-txt">By: <strong>Prof. J. Miller</strong></span></div>
+                    <div class="crs-acts">
+                      <button class="crs-ic" title="Share" onclick="navigator.share ? navigator.share({title:'Enterprise Content Strategy'}).catch(function(){}) : alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                      <button class="crs-ic" title="Save to wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                      <button class="crs-ic" title="View details" onclick="location.href='course-detail.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <article class="crs">
+                <div class="crs-cover">
+                  <img src="../img/covers/cover-2.jpg" alt="">
+                  <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+                  <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>22 min</span>
+                </div>
+                <div class="crs-body">
+                  <div class="crs-type"><span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><span class="crs-type-label">Course</span></div>
+                  <h3 class="crs-title">Information Architecture 101</h3>
+                  <div class="crs-rule"></div>
+                  <div class="crs-foot">
+                    <div class="crs-by"><img class="crs-av" src="https://i.pravatar.cc/80?u=s-alfarsi" alt=""><span class="crs-by-txt">By: <strong>Dr. S. Al-Farsi</strong></span></div>
+                    <div class="crs-acts">
+                      <button class="crs-ic" title="Share" onclick="navigator.share ? navigator.share({title:'Information Architecture 101'}).catch(function(){}) : alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                      <button class="crs-ic" title="Save to wishlist" onclick="location.href='wishlist.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                      <button class="crs-ic" title="View details" onclick="location.href='course-detail.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col gap-lg">
+
+        <!-- Year highlight -->
+        <div class="hero-card">
+          <div class="eyebrow" style="color:var(--ink-soft);margin-bottom:14px">YOUR YEAR &middot; 2026</div>
+          <div style="font-family:var(--font-serif);font-style:italic;font-size:30px;line-height:1.2;margin-bottom:14px">Five courses<br>completed.</div>
+          <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px">On pace for your annual goal of twelve courses by year-end. Keep going.</p>
+          <div class="row" style="gap:10px;font-size:12px;color:var(--ink-soft);font-family:var(--font-label);letter-spacing:0.08em"><span>5 of 12</span><span>&middot;</span><span>7 months left</span></div>
+        </div>
+
+        <!-- Profile completion -->
+        <div class="card">
+          <div class="card-body">
+            <div class="profile-minimal">
+              <div class="profile-ring-wrap">
+                <svg class="profile-ring-svg" viewBox="0 0 72 72">
+                  <circle class="ring-track" cx="36" cy="36" r="29" stroke-dasharray="182.2" stroke-dashoffset="0"/>
+                  <circle class="ring-value" cx="36" cy="36" r="29" stroke-dasharray="182.2" stroke-dashoffset="58.3"/>
+                </svg>
+                <div class="profile-ring-pct">68%</div>
+              </div>
+              <div class="profile-text">
+                <div class="p-title">Profile completion</div>
+                <div class="p-missing">Missing: Phone number &middot; Work history &middot; Skills</div>
+                <div class="row gap" style="align-items:center;flex-wrap:wrap;gap:10px">
+                  <span class="profile-ring-note">Unlocks course completion proofs</span>
+                  <a class="btn btn-ghost btn-sm" href="../profile/profile-completion-gate.html">Complete profile &rarr;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Career path -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Career <em>path</em></div><a class="card-link" href="career-path.html">VIEW &rarr;</a></div>
+          <div class="card-body">
+            <div class="path-row">
+              <div class="path-info">
+                <div class="path-name">Knowledge Management Practitioner</div>
+                <div class="path-meta">Tier 2 of 3 &middot; 8 of 12 courses</div>
+              </div>
+              <div class="path-pct">67%</div>
+            </div>
+            <div class="progress" style="margin-top:10px"><div class="progress-fill" style="width:67%;background:var(--c-honey)"></div></div>
+            <div class="path-next">NEXT &middot; <strong>Advanced KM Practices</strong></div>
+          </div>
+        </div>
+
+        <!-- Badges earned -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Badges <em>earned</em></div><a class="card-link" href="../profile/profile.html">ALL &rarr;</a></div>
+          <div class="card-body">
+            <div class="badges-row">
+              <div class="badge-medal tier-gold">&#9733;</div>
+              <div class="badge-medal tier-silver">&#127894;</div>
+              <div class="badge-medal tier-bronze">&#127894;</div>
+              <div class="badge-medal tier-locked">&#128274;</div>
+              <div class="badge-medal tier-locked">&#128274;</div>
+            </div>
+            <div class="badges-foot">3 of 12 earned &middot; Next: <strong>Daily 21</strong></div>
+          </div>
+        </div>
+
+        <!-- Upcoming deadlines -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Upcoming <em>deadlines</em></div></div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <div style="width:48px;text-align:center;flex-shrink:0">
+                <div style="font-size:20px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">28</div>
+                <div style="font-family:var(--font-label);font-size:9.5px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">May</div>
+              </div>
+              <div class="list-body">
+                <div class="list-title">ISO 30401 &middot; Module 5 quiz</div>
+                <div class="list-sub">6 days &middot; required for next module</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="quiz.html">Start</a>
+            </div>
+            <div class="list-row">
+              <div style="width:48px;text-align:center;flex-shrink:0">
+                <div style="font-size:20px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">15</div>
+                <div style="font-family:var(--font-label);font-size:9.5px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">Jun</div>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Records Mgmt assignment</div>
+                <div class="list-sub">Required by PDO &middot; 24 days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div class="card">
+          <div class="card-head"><div class="card-title">Recent <em>activity</em></div></div>
+          <div class="card-body flush">
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div class="list-body">
+                <div class="list-title" style="font-size:13px">Lesson completed</div>
+                <div class="list-sub">Knowledge Mapping &middot; Lesson 3</div>
+              </div>
+              <span class="list-meta">2h ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div class="list-body">
+                <div class="list-title" style="font-size:13px">Assessment passed</div>
+                <div class="list-sub">Module 3 &middot; 82%</div>
+              </div>
+              <span class="list-meta">Yesterday</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <div class="list-body">
+                <div class="list-title" style="font-size:13px">Credential issued</div>
+                <div class="list-sub">CDMP Practitioner</div>
+              </div>
+              <span class="list-meta">3d ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot pending"></div>
+              <div class="list-body">
+                <div class="list-title" style="font-size:13px">Course enrolled</div>
+                <div class="list-sub">Knowledge Mapping</div>
+              </div>
+              <span class="list-meta">5d ago</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

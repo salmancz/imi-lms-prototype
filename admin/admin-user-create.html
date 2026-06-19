@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Admin User · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .form-wrap {
+    max-width: 680px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .back-link svg { width: 14px; height: 14px; }
+
+  .req { color: var(--accent); font-weight: 700; }
+
+  /* Form fields with larger touch targets */
+  .field {
+    margin-bottom: 20px;
+  }
+  .field label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .field .input {
+    width: 100%;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: var(--r-sm);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .field .input::placeholder { color: var(--ink-mute); }
+  .field .input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.05);
+    background: var(--paper);
+  }
+
+  /* Role selection list */
+  .role-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .field .role-list label.role-opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    margin-bottom: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--paper);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .role-opt:hover { border-color: var(--line-strong); background: var(--paper-2); }
+  .role-opt span { display: inline; }
+  .role-opt input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .hint {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Invite info note */
+  .invite-note {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.22);
+    border-radius: var(--r-md);
+  }
+  .invite-note .note-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    background: rgba(250, 246, 240, 0.72);
+    display: grid;
+    place-items: center;
+    color: var(--c-honey-text);
+    flex-shrink: 0;
+  }
+  .invite-note .note-icon svg { width: 17px; height: 17px; }
+  .invite-note .note-body {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .invite-note .note-body strong { color: var(--ink); font-weight: 700; }
+  .invite-note .note-title {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+    margin-bottom: 5px;
+  }
+
+  /* Card section divider */
+  .card-section + .card-section {
+    border-top: 1px solid var(--line);
+    padding-top: 22px;
+    margin-top: 4px;
+  }
+  .card-section-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="admin-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='admin-users.html'">
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='audit-log.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link is-active" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span>
+        <span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span>
+        <span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span>
+        <span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="form-wrap">
+
+      <a class="back-link" href="admin-users.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Users
+      </a>
+
+      <div style="margin-bottom:28px">
+        <div class="eyebrow">User management &middot; Super admin only</div>
+        <h1 class="page-title">Create <em>admin user</em></h1>
+        <p class="page-sub">Add a new administrator and assign the roles that define what they can manage across IMI Learning.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+
+          <div class="card-section">
+            <div class="card-section-label">Identity</div>
+
+            <div class="field">
+              <label>Full name <span class="req">*</span></label>
+              <input id="field-name" class="input" type="text" placeholder="Dr. Faris Al-Maamari" autocomplete="name">
+            </div>
+
+            <div class="field">
+              <label>Email address <span class="req">*</span></label>
+              <input id="field-email" class="input" type="email" placeholder="faris@imi.om" autocomplete="email">
+            </div>
+
+          </div>
+
+          <div class="card-section">
+            <div class="card-section-label">Roles</div>
+
+            <div class="field" style="margin-bottom:0">
+              <label>Assign roles <span class="req">*</span></label>
+              <div class="role-list">
+                <label class="role-opt">
+                  <input type="checkbox">
+                  <span>Subject Matter Expert (SME)</span>
+                </label>
+                <label class="role-opt">
+                  <input type="checkbox">
+                  <span>Content Developer (Moderator)</span>
+                </label>
+                <label class="role-opt">
+                  <input type="checkbox">
+                  <span>System Support Engineer</span>
+                </label>
+                <label class="role-opt">
+                  <input type="checkbox">
+                  <span>System Super Administrator</span>
+                </label>
+              </div>
+              <p class="hint">Users can have multiple roles. Permissions are the union of all assigned roles.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="invite-note">
+        <div class="note-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+        </div>
+        <div class="note-body">
+          <div class="note-title">Invite flow</div>
+          Creating an admin user sends an email with a one-time setup link. The system issues a time-bound OTP on each login; no password is required.
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn btn-ghost" href="admin-users.html">Cancel</a>
+        <button class="btn btn-primary" id="btn-create-invite" onclick="imiCreateUser()">Create and send invite &rarr;</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+/* ---- Ad strip close ---- */
+(function(){
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(e){
+    e.stopPropagation();
+    var strip = document.querySelector('.ad-strip');
+    if(strip){ strip.style.transition='opacity 0.2s'; strip.style.opacity='0'; setTimeout(function(){strip.style.display='none';},220); }
+  });
+})();
+
+/* ---- Form validation + submit ---- */
+function imiCreateUser() {
+  var name = (document.getElementById('field-name').value||'').trim();
+  var email = (document.getElementById('field-email').value||'').trim();
+  var roles = document.querySelectorAll('.role-list input[type=checkbox]:checked');
+
+  /* clear previous errors */
+  document.querySelectorAll('.field-error').forEach(function(e){ e.remove(); });
+  document.querySelectorAll('.input.is-error').forEach(function(i){ i.classList.remove('is-error'); });
+
+  var errors = [];
+
+  if(!name){
+    errors.push('Full name is required.');
+    var inp = document.getElementById('field-name');
+    inp.classList.add('is-error');
+    inp.style.borderColor='var(--c-danger,#c0392b)';
+    setTimeout(function(){ inp.style.borderColor=''; inp.classList.remove('is-error'); }, 2500);
+  }
+  if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    errors.push('A valid email address is required.');
+    var inp2 = document.getElementById('field-email');
+    inp2.classList.add('is-error');
+    inp2.style.borderColor='var(--c-danger,#c0392b)';
+    setTimeout(function(){ inp2.style.borderColor=''; inp2.classList.remove('is-error'); }, 2500);
+  }
+  if(!roles.length){
+    errors.push('Assign at least one role.');
+    document.querySelectorAll('.role-opt').forEach(function(opt){
+      opt.style.borderColor='var(--c-danger,#c0392b)';
+      setTimeout(function(){ opt.style.borderColor=''; }, 2500);
+    });
+  }
+
+  if(errors.length){
+    imiToast(errors[0], 'warn');
+    return;
+  }
+
+  /* Success: show toast then navigate */
+  var btn = document.getElementById('btn-create-invite');
+  btn.disabled = true;
+  btn.textContent = 'Sending invite...';
+  imiToast('Invite sent to ' + email + '. Navigating to user profile.', 'ok');
+  setTimeout(function(){ location.href='admin-user-detail.html'; }, 1600);
+}
+
+/* ---- Toast helper ---- */
+function imiToast(msg, type) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;z-index:999;max-width:360px;box-shadow:0 4px 20px rgba(0,0,0,0.18);transition:opacity 0.3s;' +
+    (type==='ok'?'background:#2a1108;color:#faf6f0;':'background:#c0392b;color:#fff;');
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); },320); }, 3000);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup error: under-age · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* top strip */
+  .sa-top {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img { height: 28px; width: auto; display: block; }
+  .sa-brand-text {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sa-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* centered layout */
+  .sa-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .sa-main { width: 100%; max-width: 460px; }
+
+  /* auth card */
+  .auth-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 44px 40px 36px;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* centered logo lockup */
+  .auth-lockup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .auth-lockup img { height: 38px; width: auto; display: block; }
+
+  /* error icon */
+  .err-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 2px solid var(--accent);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 20px;
+    color: var(--accent);
+  }
+  .err-icon svg { width: 26px; height: 26px; }
+
+  /* heading block */
+  .err-title {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .err-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .err-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 28px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* actions */
+  .err-actions { display: flex; flex-direction: column; gap: 10px; }
+  .btn-full {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    height: 46px;
+    font-size: 14px;
+  }
+
+  /* footer note */
+  .err-foot {
+    font-family: var(--font-label);
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 20px;
+    text-align: center;
+    line-height: 1.55;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- top navigation strip -->
+<div class="sa-top">
+  <a class="sa-brand" href="login.html">
+    <img src="../img/imi-mark-ink.png" alt="IMI">
+    <span class="sa-brand-text">IMI</span>
+    <span class="sa-brand-sub">Learning</span>
+  </a>
+</div>
+
+<!-- centered auth card -->
+<div class="sa-wrap">
+  <main class="sa-main">
+
+    <div class="auth-card" role="alertdialog" aria-labelledby="err-title">
+
+      <!-- logo lockup -->
+      <a class="auth-lockup" href="login.html">
+        <img src="../img/imi-logo.png" alt="IMI">
+      </a>
+
+      <!-- error icon -->
+      <div class="err-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      </div>
+
+      <!-- heading -->
+      <h1 class="err-title" id="err-title">You must be 16 or older to <em>sign up</em></h1>
+      <p class="err-lead">IMI's professional certification platform is intended for working professionals. Per IMI's eligibility requirements, minimum age is 16.</p>
+
+      <!-- actions -->
+      <div class="err-actions">
+        <a class="btn btn-primary btn-full" href="signup.html">Update date of birth</a>
+        <a class="btn btn-ghost btn-full" href="../learning/dashboard.html">Back to home</a>
+      </div>
+
+      <!-- footer note -->
+      <p class="err-foot">Minimum age is verified by your date of birth or education completion year.</p>
+
+    </div><!-- /auth-card -->
+
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Public credential profile · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+
+  /* ── public nav (no sidebar; mirrors dashboard topbar aesthetic) ── */
+  .vnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+    height: 52px;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .vnav-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .vnav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .vnav-links a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s var(--tn);
+  }
+  .vnav-links a:hover { color: var(--ink); }
+  .vnav-cta { display: flex; align-items: center; gap: 14px; }
+  .vnav-signin {
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .vnav-signin:hover { color: var(--accent); }
+
+  /* ── page wrapper ── */
+  .vmain { max-width: 1200px; margin: 0 auto; padding: 40px; }
+  .pp { max-width: 860px; margin: 0 auto; }
+
+  /* ── hero / identity block ── */
+  .pp-hero {
+    text-align: center;
+    padding: 12px 0 36px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  .pp-avatar-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--surface-3);
+    border: 2px solid var(--line-strong);
+    overflow: hidden;
+    margin: 0 auto 18px;
+  }
+  .pp-avatar-wrap svg { width: 32px; height: 32px; color: var(--ink-soft); }
+  .pp-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 33px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .pp-meta {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+  }
+  .pp-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+  /* ── section heading ── */
+  .pp-sec { margin-bottom: 44px; }
+  .pp-sec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .pp-sec-title {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .pp-sec-sub {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: -8px 0 18px;
+  }
+
+  /* ── credential cards (flat badge icons, no gradients) ── */
+  .cred-card { padding: 22px; display: flex; flex-direction: column; }
+  .cred-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+    font-family: var(--font-label);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border: 1.5px solid var(--line-strong);
+  }
+  .cred-badge.g1 { background: var(--c-honey-wash); color: var(--c-honey-text); border-color: rgba(201,155,46,0.30); }
+  .cred-badge.g2 { background: var(--c-sage-wash); color: var(--c-sage-text); border-color: rgba(126,155,111,0.30); }
+  .cred-badge.g3 { background: var(--c-clay-wash); color: #8C4534; border-color: rgba(184,101,78,0.30); }
+  .cred-name {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .cred-course { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 8px; line-height: 1.4; }
+  .cred-date {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
+  .cred-verify {
+    margin-top: 16px;
+    font-family: var(--font-label);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    word-break: break-all;
+    line-height: 1.5;
+  }
+  .cred-verify:hover { color: var(--accent); }
+  .pp-footnote {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-align: center;
+    margin-top: 18px;
+  }
+
+  /* ── competency table ── */
+  .comp-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 160px;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+  }
+  .comp-row:last-of-type { border-bottom: 1px solid var(--line); }
+  .comp-head { padding: 0 0 4px; border-top: none; }
+  .comp-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .comp-pillar { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .comp-pillar.dim { color: var(--ink-mute); }
+  .comp-level { font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-bottom: 7px; }
+  .comp-level.dim { color: var(--ink-mute); }
+  .comp-bar { display: flex; align-items: center; gap: 12px; }
+  .comp-bar .progress { flex: 1; }
+  .comp-bar .pct {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 34px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .comp-bar .pct.dim { color: var(--ink-mute); }
+  .comp-cred { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .comp-cred.dim { color: var(--ink-mute); }
+
+  /* ── skills ── */
+  .skill-wrap { display: flex; flex-wrap: wrap; gap: 9px; }
+  .skill-chip { height: 30px; padding: 0 16px; font-size: 12.5px; }
+
+  /* ── recent learning activity timeline ── */
+  .act-timeline { display: flex; flex-direction: column; }
+  .act-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+  }
+  .act-row:last-of-type { border-bottom: 1px solid var(--line); }
+  .act-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+    background: var(--ink-faint);
+  }
+  .act-dot.ok   { background: var(--c-sage); }
+  .act-dot.warn { background: var(--c-honey); }
+  .act-body { flex: 1; min-width: 0; }
+  .act-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 3px;
+    text-decoration: none;
+  }
+  a.act-title:hover { color: var(--accent); text-decoration: underline; }
+  .act-sub { font-size: 12px; color: var(--ink-soft); }
+  .act-when {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* ── endorsements (Phase 2, subtle) ── */
+  .pp-sec.is-phase2 { opacity: 0.62; }
+  .endorse-card { padding: 20px; background: var(--paper-2); }
+  .endorse-name { font-weight: 700; font-size: 14px; color: var(--ink); margin-bottom: 4px; }
+  .endorse-role {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .endorse-quote { font-size: 13px; color: var(--ink-soft); line-height: 1.5; font-style: italic; }
+  .phase2-note {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    margin-top: 14px;
+  }
+
+  /* ── Career Snapshot CTA (flat, no gradient) ── */
+  .snapshot-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 26px 30px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.28);
+    border-radius: var(--r-lg);
+  }
+  .snapshot-title { font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 6px; }
+  .snapshot-copy { font-size: 13px; color: var(--ink-soft); line-height: 1.5; max-width: 520px; }
+
+  /* ── host footer ── */
+  .pp-host {
+    margin-top: 44px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    line-height: 1.6;
+  }
+  .pp-host a { color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); }
+
+  @media (max-width: 760px) {
+    .comp-row { grid-template-columns: 1fr; gap: 8px; }
+    .snapshot-card { flex-direction: column; align-items: flex-start; }
+    .vnav-links { display: none; }
+    .vmain { padding: 24px 20px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="vnav">
+  <a class="vnav-brand" href="../learning/visitor-catalog.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <nav class="vnav-links">
+    <a href="../learning/visitor-catalog.html">Browse certifications</a>
+    <a href="../learning/completed-proof-detail.html">Verify any credential</a>
+    <a href="../learning/visitor-catalog.html">About IMI</a>
+  </nav>
+  <div class="vnav-cta">
+    <a class="vnav-signin" href="../auth/login.html">Sign in to claim your profile</a>
+  </div>
+</header>
+
+<main class="vmain">
+<div class="pp">
+
+  <!-- identity -->
+  <section class="pp-hero">
+    <div class="pp-avatar-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <h1 class="pp-name">Salman Ali</h1>
+    <div class="pp-meta">Member since Jan 2026 &nbsp;&middot;&nbsp; 3 active credentials</div>
+    <div class="pp-actions">
+      <a class="btn btn-primary btn-sm" href="../learning/completed-proof-detail.html">Verify on IMI &rarr;</a>
+      <button class="btn btn-ghost btn-sm" id="shareProfileBtn" onclick="shareProfile()">Share</button>
+      <a class="btn btn-ghost btn-sm" href="https://www.linkedin.com" target="_blank" rel="noopener">Connect on LinkedIn &nearr;</a>
+    </div>
+  </section>
+
+  <!-- verified credentials -->
+  <section class="pp-sec">
+    <div class="pp-sec-head">
+      <div class="pp-sec-title">Verified IMI credentials</div>
+      <span class="chip t-sage dot">3 active</span>
+    </div>
+    <div class="grid-3">
+
+      <div class="card cred-card">
+        <div class="cred-badge g1">CDMP</div>
+        <div class="cred-name">CDMP Practitioner</div>
+        <div class="cred-course">Course: Data Management Practitioner Program</div>
+        <div class="cred-date">Completed Mar 2026</div>
+        <div style="margin-top:14px"><span class="chip t-sage dot">Active</span></div>
+        <a class="cred-verify" href="../learning/completed-proof-detail.html">Verify &rarr; imi.om/verify/IMI-CDMP-P-2026-04821</a>
+      </div>
+
+      <div class="card cred-card">
+        <div class="cred-badge g2">IGP</div>
+        <div class="cred-name">Information Governance Professional</div>
+        <div class="cred-course">Course: Information Governance Fundamentals</div>
+        <div class="cred-date">Completed Jan 2026</div>
+        <div style="margin-top:14px"><span class="chip t-sage dot">Active</span></div>
+        <a class="cred-verify" href="../learning/completed-proof-detail.html">Verify &rarr; imi.om/verify/IMI-IGP-2026-00917</a>
+      </div>
+
+      <div class="card cred-card">
+        <div class="cred-badge g3">CIP</div>
+        <div class="cred-name">Certified Information Professional</div>
+        <div class="cred-course">Course: Certified Information Professional Program</div>
+        <div class="cred-date">Completed Nov 2025</div>
+        <div style="margin-top:14px"><span class="chip t-sage dot">Active</span></div>
+        <a class="cred-verify" href="../learning/completed-proof-detail.html">Verify &rarr; imi.om/verify/IMI-CIP-2025-03344</a>
+      </div>
+
+    </div>
+    <div class="pp-footnote">All credentials independently verifiable at imi.om/verify.</div>
+  </section>
+
+  <!-- competency snapshot -->
+  <section class="pp-sec">
+    <div class="pp-sec-title">Competency snapshot</div>
+    <div class="pp-sec-sub">Attested across the 5 IM pillars by active IMI credentials</div>
+
+    <div class="comp-row comp-head">
+      <div class="comp-label">Pillar</div>
+      <div class="comp-label">Competency</div>
+      <div class="comp-label">Attesting credential</div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-pillar">Data Management</div>
+      <div>
+        <div class="comp-level">Advanced</div>
+        <div class="comp-bar">
+          <div class="progress"><div class="progress-fill honey" style="width:75%"></div></div>
+          <span class="pct">75%</span>
+        </div>
+      </div>
+      <div class="comp-cred">CDMP Practitioner</div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-pillar">Records Management</div>
+      <div>
+        <div class="comp-level">Intermediate</div>
+        <div class="comp-bar">
+          <div class="progress"><div class="progress-fill sage" style="width:50%"></div></div>
+          <span class="pct">50%</span>
+        </div>
+      </div>
+      <div class="comp-cred">IGP</div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-pillar">Information Architecture</div>
+      <div>
+        <div class="comp-level">Intermediate</div>
+        <div class="comp-bar">
+          <div class="progress"><div class="progress-fill clay" style="width:50%"></div></div>
+          <span class="pct">50%</span>
+        </div>
+      </div>
+      <div class="comp-cred">CIP</div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-pillar dim">Knowledge Management</div>
+      <div>
+        <div class="comp-level dim">Beginner</div>
+        <div class="comp-bar">
+          <div class="progress"><div class="progress-fill" style="width:20%;background:var(--line-strong)"></div></div>
+          <span class="pct dim">20%</span>
+        </div>
+      </div>
+      <div class="comp-cred dim">No credential yet</div>
+    </div>
+
+    <div class="comp-row">
+      <div class="comp-pillar dim">Content Management</div>
+      <div>
+        <div class="comp-level dim">Beginner</div>
+        <div class="comp-bar">
+          <div class="progress"><div class="progress-fill" style="width:15%;background:var(--line-strong)"></div></div>
+          <span class="pct dim">15%</span>
+        </div>
+      </div>
+      <div class="comp-cred dim">No credential yet</div>
+    </div>
+  </section>
+
+  <!-- skills -->
+  <section class="pp-sec">
+    <div class="pp-sec-title" style="margin-bottom:16px">Skills</div>
+    <div class="skill-wrap">
+      <span class="chip skill-chip">Data Governance</span>
+      <span class="chip skill-chip">DAMA-DMBOK</span>
+      <span class="chip skill-chip">ISO 15489</span>
+      <span class="chip skill-chip">Records Retention</span>
+      <span class="chip skill-chip">Information Architecture</span>
+      <span class="chip skill-chip">Metadata Management</span>
+    </div>
+  </section>
+
+  <!-- recent learning activity -->
+  <section class="pp-sec">
+    <div class="pp-sec-title" style="margin-bottom:18px">Recent learning activity</div>
+    <div class="act-timeline">
+
+      <div class="act-row">
+        <div class="act-dot ok"></div>
+        <div class="act-body">
+          <div class="act-title">Completed: Data Quality Foundations</div>
+          <div class="act-sub">Module completion</div>
+        </div>
+        <div class="act-when">Apr 2026</div>
+      </div>
+
+      <div class="act-row">
+        <div class="act-dot ok"></div>
+        <div class="act-body">
+          <a class="act-title" href="../learning/completed-proof-detail.html">Earned: CDMP Practitioner</a>
+          <div class="act-sub">Credential issued &middot; ID: IMI-CDMP-P-2026-04821</div>
+        </div>
+        <div class="act-when">Mar 2026</div>
+      </div>
+
+      <div class="act-row">
+        <div class="act-dot ok"></div>
+        <div class="act-body">
+          <a class="act-title" href="../learning/completed-proof-detail.html">Earned: Information Governance Professional</a>
+          <div class="act-sub">Credential issued &middot; ID: IMI-IGP-2026-00917</div>
+        </div>
+        <div class="act-when">Jan 2026</div>
+      </div>
+
+      <div class="act-row">
+        <div class="act-dot warn"></div>
+        <div class="act-body">
+          <div class="act-title">In progress: Knowledge Mapping</div>
+          <div class="act-sub">Module in progress</div>
+        </div>
+        <div class="act-when"><span class="chip t-honey" style="font-size:10.5px;height:22px;padding:0 10px">In progress</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- endorsements (Phase 2) -->
+  <section class="pp-sec is-phase2">
+    <div class="pp-sec-head">
+      <div class="pp-sec-title">Endorsed by colleagues</div>
+      <span class="chip t-empty">Phase 2</span>
+    </div>
+    <div class="grid-3">
+      <div class="card endorse-card">
+        <div class="endorse-name">Dr. Nadia A.</div>
+        <div class="endorse-role">CDMP Master</div>
+        <div class="endorse-quote">"Exceptional command of data governance frameworks in complex enterprise environments."</div>
+      </div>
+      <div class="card endorse-card">
+        <div class="endorse-name">Tariq Al-Balushi</div>
+        <div class="endorse-role">CDMP Practitioner</div>
+        <div class="endorse-quote">"Strong ability to apply IM principles across cross-functional projects."</div>
+      </div>
+      <div class="card endorse-card">
+        <div class="endorse-name">Layla M.</div>
+        <div class="endorse-role">IGP</div>
+        <div class="endorse-quote">"Reliable, detail-oriented professional with deep records management knowledge."</div>
+      </div>
+    </div>
+    <div class="phase2-note">Endorsements available in Phase 2.</div>
+  </section>
+
+  <!-- career snapshot PDF -->
+  <section class="pp-sec">
+    <div class="card snapshot-card">
+      <div>
+        <div class="snapshot-title">Career Snapshot</div>
+        <div class="snapshot-copy">One-page PDF of all credentials + skills + verify links. Designed for performance reviews and job applications.</div>
+      </div>
+      <a class="btn btn-primary btn-sm" onclick="window.print(); return false;" href="#" style="flex-shrink:0">Download Career Snapshot PDF &rarr;</a>
+    </div>
+  </section>
+
+  <!-- host footer -->
+  <div class="pp-host">
+    This profile is hosted by IMI &middot; The Information Management Institute.<br>
+    Verify credentials at <a href="public-profile.html">imi.om/verify</a>.
+  </div>
+
+</div>
+</main>
+<script>
+function shareProfile() {
+  var url  = 'https://imi.om/profile/salman-ali';
+  var text = 'Verified IMI credentials for Salman Ali';
+  if (navigator.share) {
+    navigator.share({ title: text, url: url }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(url).then(function() {
+      var btn = document.getElementById('shareProfileBtn');
+      var orig = btn.textContent;
+      btn.textContent = 'Link copied!';
+      setTimeout(function(){ btn.textContent = orig; }, 2200);
+    });
+  }
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

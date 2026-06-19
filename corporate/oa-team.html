@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team &middot; IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── Seat-utilisation progress bar inside KPI ── */
+  .seat-kpi .seat-bar { height: 6px; margin-top: 12px; }
+
+  /* ── Stat strip (4 flat KPI cards) ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .stat-strip { grid-template-columns: 1fr; } }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .filter-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .filter-search { width: 240px; max-width: 100%; }
+
+  .filter-select {
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: var(--r-pill);
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border 0.18s, background 0.18s;
+    white-space: nowrap;
+  }
+  .filter-select:hover { border-color: var(--line-strong); background: #fff; }
+
+  /* ── Progress cell (table) ── */
+  .progress-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 130px;
+  }
+  .progress-cell .progress { flex: 1; min-width: 70px; }
+  .progress-cell .pct {
+    font-size: 11.5px;
+    font-weight: 700;
+    width: 30px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+  }
+
+  /* ── Table helpers ── */
+  .last-active {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .manage-link {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 1.5px solid var(--line-strong);
+    padding-bottom: 1px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .manage-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── Status chip dot ── */
+  .status-chip .ico {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-chip .ico.ok   { background: var(--c-sage); }
+  .status-chip .ico.warn { background: var(--c-honey); }
+  .status-chip .ico.bad  { background: var(--accent); }
+
+  /* ── Table footer ── */
+  .table-foot {
+    margin-top: 14px;
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ── Member name + email stacked cell ── */
+  .member-name  { font-weight: 600; font-size: 13.5px; color: var(--ink); }
+  .member-email { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; }
+
+  /* ── Seat utilisation accent bar color ── */
+  .progress-fill.seat { background: var(--c-sage); }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <a class="brand" href="corp-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search team, groups, courses..." onkeydown="if(event.key==='Enter'&&this.value.trim()){document.getElementById('member-search').value=this.value.trim();filterTeam();}">
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" id="help-btn-team" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link is-active" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span>
+        <span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span>
+        <span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span>
+        <span class="badge">24</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">IMI Corporate &middot; Corporate Admin &middot; Team view</div>
+        <h1 class="page-title">My <em>team</em></h1>
+        <p class="page-sub">Members of Bank Muscat on IMI. Manage seats, roles and access for everyone in your organisation.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost btn-sm" href="corp-submit-idea.html">Submit an idea</a>
+        <button class="btn btn-ghost btn-sm" id="export-csv-btn" onclick="exportTeamCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <a class="btn btn-primary" href="corp-invite.html">Invite people &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Stat strip (4 flat KPI cards, no gradients) -->
+    <div class="stat-strip">
+
+      <!-- Seats used -->
+      <div class="stat-flat seat-kpi">
+        <div class="stat-label">Seats used</div>
+        <div class="stat-value">
+          320
+          <span style="font-size:15px;font-weight:500;color:var(--ink-mute);letter-spacing:0">&thinsp;/ 400</span>
+        </div>
+        <div class="progress seat-bar">
+          <div class="progress-fill seat" style="width:80%"></div>
+        </div>
+      </div>
+
+      <!-- Active -->
+      <div class="stat-flat">
+        <div class="stat-label">Active</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-sage)"></span>
+          287
+        </div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:6px;letter-spacing:0.04em">logged in last 30 days</div>
+      </div>
+
+      <!-- Invited -->
+      <div class="stat-flat">
+        <div class="stat-label">Invited</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+          33
+        </div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:6px;letter-spacing:0.04em">invite not yet accepted</div>
+      </div>
+
+      <!-- Inactive -->
+      <div class="stat-flat">
+        <div class="stat-label">Inactive</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-clay)"></span>
+          12
+        </div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:6px;letter-spacing:0.04em">no login in 6 months</div>
+      </div>
+
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <div class="search filter-search">
+          <input id="member-search" placeholder="Search by name or email" oninput="filterTeam()">
+        </div>
+        <div class="ui-filter-wrap" style="position:relative">
+          <button class="filter-select" id="status-filter-btn" onclick="toggleFilterMenu('status-menu',this,event)">Status &#9662;</button>
+          <div id="status-menu" class="ui-select-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:200;min-width:140px;opacity:1;visibility:visible;transform:none">
+            <div class="ui-select-option is-selected" data-val="" onclick="setFilter('status','',this)">All statuses</div>
+            <div class="ui-select-option" data-val="Active" onclick="setFilter('status','Active',this)">Active</div>
+            <div class="ui-select-option" data-val="Invited" onclick="setFilter('status','Invited',this)">Invited</div>
+            <div class="ui-select-option" data-val="Suspended" onclick="setFilter('status','Suspended',this)">Suspended</div>
+          </div>
+        </div>
+        <div class="ui-filter-wrap" style="position:relative">
+          <button class="filter-select" id="role-filter-btn" onclick="toggleFilterMenu('role-menu',this,event)">Role &#9662;</button>
+          <div id="role-menu" class="ui-select-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:200;min-width:160px;opacity:1;visibility:visible;transform:none">
+            <div class="ui-select-option is-selected" data-val="" onclick="setFilter('role','',this)">All roles</div>
+            <div class="ui-select-option" data-val="Corporate User" onclick="setFilter('role','Corporate User',this)">Corporate User</div>
+            <div class="ui-select-option" data-val="Corporate Admin" onclick="setFilter('role','Corporate Admin',this)">Corporate Admin</div>
+          </div>
+        </div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="corp-invite.html">Invite people &rarr;</a>
+    </div>
+
+    <!-- Team table -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Team members <span class="chip" id="member-count-chip" style="margin-left:8px">10 of 320</span></div>
+        <div class="row gap-sm">
+          <button class="btn btn-ghost btn-sm" id="add-to-group-btn" onclick="openBulkModal('group')">Add to group</button>
+          <button class="btn btn-ghost btn-sm" id="assign-course-btn" onclick="openBulkModal('course')">Assign course</button>
+        </div>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Courses assigned</th>
+              <th>Progress</th>
+              <th>Last active</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-status="Active" data-role="Corporate User" data-name="Layla Al-Hashimi" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Layla Al-Hashimi</div>
+              </td>
+              <td class="member-email">layla.hashimi@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>4</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill sage" style="width:82%"></div></div>
+                  <span class="pct">82%</span>
+                </div>
+              </td>
+              <td><span class="last-active">Today</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate User" data-name="Tariq Al-Balushi" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Tariq Al-Balushi</div>
+              </td>
+              <td class="member-email">tariq.balushi@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>3</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill sage" style="width:67%"></div></div>
+                  <span class="pct">67%</span>
+                </div>
+              </td>
+              <td><span class="last-active">Yesterday</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate User" data-name="Fatma Al-Hajri" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Fatma Al-Hajri</div>
+              </td>
+              <td class="member-email">fatma.hajri@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>2</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill honey" style="width:50%"></div></div>
+                  <span class="pct">50%</span>
+                </div>
+              </td>
+              <td><span class="last-active">3 days ago</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate Admin" data-name="Ahmed Al-Said" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Ahmed Al-Said</div>
+              </td>
+              <td class="member-email">ahmed.said@bankmuscat.om</td>
+              <td><span class="chip t-ink">Corporate Admin</span></td>
+              <td>5</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill sage" style="width:91%"></div></div>
+                  <span class="pct">91%</span>
+                </div>
+              </td>
+              <td><span class="last-active">Today</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate User" data-name="Noor Al-Rashdi" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Noor Al-Rashdi</div>
+              </td>
+              <td class="member-email">noor.rashdi@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>2</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill clay" style="width:25%"></div></div>
+                  <span class="pct">25%</span>
+                </div>
+              </td>
+              <td><span class="last-active">1 week ago</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Invited" data-role="Corporate User" data-name="Khalid Al-Farsi" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Khalid Al-Farsi</div>
+              </td>
+              <td class="member-email">khalid.farsi@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>1</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="pct">0%</span>
+                </div>
+              </td>
+              <td><span class="last-active">Invited</span></td>
+              <td><span class="chip t-honey status-chip"><span class="ico warn"></span>Invited</span></td>
+              <td style="white-space:nowrap">
+                <button class="btn btn-ghost btn-sm resend-invite-btn" data-name="Khalid Al-Farsi" data-ui-act="1" onclick="event.stopPropagation();resendInvite(this,'Khalid Al-Farsi')" style="font-size:11px;padding:0 10px;height:28px">Resend invite</button>
+              </td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate User" data-name="Maryam Al-Lawati" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Maryam Al-Lawati</div>
+              </td>
+              <td class="member-email">maryam.lawati@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>3</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill honey" style="width:44%"></div></div>
+                  <span class="pct">44%</span>
+                </div>
+              </td>
+              <td><span class="last-active">2 weeks ago</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Invited" data-role="Corporate User" data-name="Salim Al-Maamari" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Salim Al-Maamari</div>
+              </td>
+              <td class="member-email">salim.maamari@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>2</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill" style="width:0%"></div></div>
+                  <span class="pct">0%</span>
+                </div>
+              </td>
+              <td><span class="last-active">Invited</span></td>
+              <td><span class="chip t-honey status-chip"><span class="ico warn"></span>Invited</span></td>
+              <td style="white-space:nowrap">
+                <button class="btn btn-ghost btn-sm resend-invite-btn" data-name="Salim Al-Maamari" data-ui-act="1" onclick="event.stopPropagation();resendInvite(this,'Salim Al-Maamari')" style="font-size:11px;padding:0 10px;height:28px">Resend invite</button>
+              </td>
+            </tr>
+            <tr data-status="Suspended" data-role="Corporate User" data-name="Huda Al-Zadjali" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Huda Al-Zadjali</div>
+              </td>
+              <td class="member-email">huda.zadjali@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>4</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill clay" style="width:10%"></div></div>
+                  <span class="pct">10%</span>
+                </div>
+              </td>
+              <td><span class="last-active">8 months ago</span></td>
+              <td><span class="chip t-clay status-chip"><span class="ico bad"></span>Suspended</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+            <tr data-status="Active" data-role="Corporate User" data-name="Rashid Al-Kindi" onclick="location.href='corp-learner-detail.html'" style="cursor:pointer">
+              <td>
+                <div class="member-name">Rashid Al-Kindi</div>
+              </td>
+              <td class="member-email">rashid.kindi@bankmuscat.om</td>
+              <td><span class="chip">Corporate User</span></td>
+              <td>3</td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress"><div class="progress-fill sage" style="width:58%"></div></div>
+                  <span class="pct">58%</span>
+                </div>
+              </td>
+              <td><span class="last-active">5 days ago</span></td>
+              <td><span class="chip t-sage status-chip"><span class="ico ok"></span>Active</span></td>
+              <td><a class="manage-link" href="corp-learner-detail.html">Manage</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="table-foot">
+      <span id="team-foot-count">Showing 10 of 320 members. Use filters to narrow results.</span>
+      <div class="row gap-sm">
+        <button class="btn btn-ghost btn-sm" id="team-prev-btn" disabled onclick="teamPage(-1)">&#9664; Previous</button>
+        <span style="font-size:12px;color:var(--ink-mute);padding:0 4px" id="team-page-indicator">Page 1</span>
+        <button class="btn btn-ghost btn-sm" id="team-next-btn" onclick="teamPage(1)">Next &#9654;</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Bulk action modal -->
+<div id="bulk-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;display:none;align-items:center;justify-content:center">
+  <div style="background:var(--paper);border-radius:var(--r-lg);padding:28px 32px;max-width:440px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,0.18)">
+    <h3 id="bulk-modal-title" style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--ink)">Add to group</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:20px">Select a group to assign the selected members to.</p>
+    <div class="form-row" style="margin-bottom:18px">
+      <label class="form-label">Group</label>
+      <select class="form-input" id="bulk-target-select">
+        <option>Records Team (41 members)</option>
+        <option>Data Analytics (26 members)</option>
+        <option>Compliance (58 members)</option>
+        <option>Operations (278 members)</option>
+        <option>Risk Management (22 members)</option>
+      </select>
+    </div>
+    <div class="row gap-sm" style="justify-content:flex-end">
+      <button class="btn btn-ghost btn-sm" id="bulk-modal-cancel" onclick="document.getElementById('bulk-modal').style.display='none'">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="bulkConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>
+<div id="team-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)"></div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  /* ad-strip close */
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(){ document.querySelector('.ad-strip').style.display='none'; });
+
+  /* help toast */
+  var helpBtn = document.getElementById('help-btn-team');
+  if(helpBtn){
+    helpBtn.addEventListener('click', function(){
+      showToast('Help centre coming soon.');
+    });
+  }
+
+  /* close filter menus on outside click */
+  document.addEventListener('click', function(e){
+    ['status-menu','role-menu'].forEach(function(id){
+      var m = document.getElementById(id);
+      if(m && !m.parentElement.contains(e.target)){
+        m.style.display='none';
+      }
+    });
+    ['status-filter-btn','role-filter-btn'].forEach(function(id){
+      var btn = document.getElementById(id);
+      if(btn && !btn.closest('.ui-filter-wrap').contains(e.target)){
+        btn.classList.remove('is-open');
+      }
+    });
+  });
+})();
+
+function resendInvite(btn, name) {
+  btn.classList.add('is-loading');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  showToast('Sending invite to ' + name + '...');
+  setTimeout(function () {
+    btn.textContent = 'Sent';
+    btn.classList.remove('is-loading');
+    btn.classList.add('is-sent');
+    btn.style.color = 'var(--c-sage-text)';
+    var row = btn.closest('tr');
+    if (row) {
+      var chip = row.querySelector('.status-chip');
+      if (chip) {
+        chip.classList.remove('t-honey');
+        chip.classList.add('t-sage');
+        chip.innerHTML = '<span class="ico ok"></span>Resent';
+      }
+    }
+    showToast('Invite resent to ' + name + '.');
+    setTimeout(function () {
+      btn.textContent = 'Resend invite';
+      btn.disabled = false;
+      btn.classList.remove('is-sent');
+      btn.style.color = '';
+    }, 4000);
+  }, 900);
+}
+
+var _filterStatus = '', _filterRole = '';
+
+function toggleFilterMenu(menuId, btn, ev){
+  var menu = document.getElementById(menuId);
+  var wasOpen = menu.style.display === 'block';
+  ['status-filter-btn','role-filter-btn'].forEach(function(id){
+    var b = document.getElementById(id);
+    if(b) b.classList.remove('is-open');
+  });
+  ['status-menu','role-menu'].forEach(function(id){
+    var m = document.getElementById(id);
+    if(m) m.style.display='none';
+  });
+  if(!wasOpen){
+    menu.style.display='block';
+    btn.classList.add('is-open');
+  }
+  if(ev && ev.stopPropagation) ev.stopPropagation();
+  return false;
+}
+
+function setFilter(type, val, optEl){
+  if(type==='status'){
+    _filterStatus = val;
+    var btn = document.getElementById('status-filter-btn');
+    btn.innerHTML = (val||'Status') + ' &#9662;';
+    document.getElementById('status-menu').style.display='none';
+  } else {
+    _filterRole = val;
+    var btn = document.getElementById('role-filter-btn');
+    btn.innerHTML = (val||'Role') + ' &#9662;';
+    document.getElementById('role-menu').style.display='none';
+  }
+  document.querySelectorAll('#status-menu .ui-select-option, #role-menu .ui-select-option').forEach(function(o){
+    if(o.parentElement.id === (type==='status'?'status-menu':'role-menu')){
+      o.classList.toggle('is-selected', o === optEl);
+    }
+  });
+  _teamPage = 0;
+  filterTeam();
+}
+
+var _teamPage = 0;
+var _teamPageSize = 10;
+
+function filterTeam(){
+  var q = (document.getElementById('member-search').value||'').toLowerCase();
+  var rows = Array.from(document.querySelectorAll('.tbl tbody tr'));
+  var visible = rows.filter(function(r){
+    var name = (r.dataset.name||'').toLowerCase();
+    var status = r.dataset.status||'';
+    var role = r.dataset.role||'';
+    var matchQ = !q || name.includes(q);
+    var matchS = !_filterStatus || status === _filterStatus;
+    var matchR = !_filterRole || role === _filterRole;
+    return matchQ && matchS && matchR;
+  });
+  rows.forEach(function(r){ r.style.display='none'; });
+  var start = _teamPage * _teamPageSize;
+  var end = start + _teamPageSize;
+  var pageRows = visible.slice(start, end);
+  pageRows.forEach(function(r){ r.style.display=''; });
+  var chip = document.getElementById('member-count-chip');
+  if(chip) chip.textContent = pageRows.length + ' of ' + visible.length;
+  var foot = document.getElementById('team-foot-count');
+  if(foot) foot.textContent = 'Showing ' + pageRows.length + ' of ' + visible.length + ' members.';
+  var pi = document.getElementById('team-page-indicator');
+  var totalPages = Math.max(1, Math.ceil(visible.length / _teamPageSize));
+  if(pi) pi.textContent = 'Page ' + (_teamPage+1) + ' of ' + totalPages;
+  var prev = document.getElementById('team-prev-btn');
+  var next = document.getElementById('team-next-btn');
+  if(prev) prev.disabled = (_teamPage === 0);
+  if(next) next.disabled = (end >= visible.length);
+}
+
+function teamPage(dir){
+  _teamPage += dir;
+  filterTeam();
+}
+
+function openBulkModal(type){
+  var modal = document.getElementById('bulk-modal');
+  var title = document.getElementById('bulk-modal-title');
+  var sel = document.getElementById('bulk-target-select');
+  if(type==='group'){
+    title.textContent = 'Add to group';
+    sel.innerHTML = '<option>Records Team (41 members)</option><option>Data Analytics (26 members)</option><option>Compliance (58 members)</option><option>Operations (278 members)</option><option>Risk Management (22 members)</option>';
+  } else {
+    title.textContent = 'Assign course';
+    sel.innerHTML = '<option>CDMP Practitioner</option><option>Records Retention 101</option><option>Data Quality Foundations</option><option>KYC Refresher</option><option>Info Architecture 101</option>';
+  }
+  modal.style.display='flex';
+}
+
+function bulkConfirm(){
+  var sel = document.getElementById('bulk-target-select');
+  document.getElementById('bulk-modal').style.display='none';
+  showToast('Done. Members assigned to "' + sel.value.split(' (')[0] + '".');
+}
+
+function showToast(msg){
+  var t = document.getElementById('team-toast');
+  t.textContent = msg;
+  t.style.display='block';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(function(){ t.style.display='none'; }, 3000);
+}
+
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var q = params.get('q');
+  if(q){
+    var inp = document.getElementById('member-search');
+    if(inp){ inp.value = q; }
+  }
+})();
+
+filterTeam();
+
+function exportTeamCSV(){
+  var rows = Array.from(document.querySelectorAll('.tbl tbody tr'));
+  var lines = ['Name,Email,Role,Status'];
+  rows.forEach(function(r){
+    var name = r.dataset.name||'';
+    var emailEl = r.querySelector('.member-email');
+    var email = emailEl ? emailEl.textContent.trim() : '';
+    var role = r.dataset.role||'';
+    var status = r.dataset.status||'';
+    lines.push([name,email,role,status].join(','));
+  });
+  var blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'bank-muscat-team.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Exported ' + (rows.length) + ' members as CSV.');
+}
+</script>
+</body>
+</html>

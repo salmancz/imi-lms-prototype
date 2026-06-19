@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account locked · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; }
+
+  /* ---- standalone auth shell ---- */
+  .sa-top { padding: 24px 40px; }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img { height: 28px; width: auto; display: block; }
+  .sa-wrap { display: flex; align-items: flex-start; justify-content: center; padding: 32px 20px 80px; }
+  .sa-main { width: 100%; max-width: 480px; }
+
+  /* ---- lock card ---- */
+  .lock-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 44px 40px 36px;
+    text-align: center;
+  }
+
+  /* IMI logo lockup inside the card */
+  .lock-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .lock-logo img {
+    height: 36px;
+    width: auto;
+    display: block;
+  }
+
+  /* lock icon circle */
+  .lock-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 1.5px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 20px;
+    color: var(--accent);
+  }
+  .lock-icon svg { width: 30px; height: 30px; }
+
+  /* eyebrow */
+  .lock-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+
+  .lock-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .lock-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  .lock-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* meta block */
+  .lock-meta {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+  .lock-meta .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .lock-meta .row + .row { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .lock-meta .ml-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+  .lock-meta .ml-value {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .lock-meta .ml-value.mute { color: var(--ink-soft); font-weight: 500; }
+
+  .lock-help {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  /* full-width button */
+  .btn-full {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+
+  .lock-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 24px 0 20px;
+  }
+
+  .lock-foot {
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .lock-foot a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .lock-foot a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="sa-top">
+  <a class="sa-brand" href="../learning/dashboard.html" aria-label="IMI home">
+    <img src="../img/imi-logo.png" alt="IMI">
+  </a>
+</div>
+
+<div class="sa-wrap">
+  <main class="sa-main">
+    <div class="lock-card" role="alertdialog" aria-labelledby="lock-title">
+
+      <div class="lock-logo">
+        <img src="../img/imi-logo.png" alt="IMI">
+      </div>
+
+      <div class="lock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+
+      <p class="lock-eyebrow">Security notice</p>
+      <h2 class="lock-title" id="lock-title">Account temporarily <em>locked</em></h2>
+      <p class="lock-lead">You've entered an incorrect verification code 3 times. For your security, this account is locked for 24 hours.</p>
+
+      <div class="lock-meta">
+        <div class="row">
+          <span class="ml-label">Unlock in</span>
+          <span class="ml-value" id="lock-remaining">23 hrs 47 min</span>
+        </div>
+        <div class="row">
+          <span class="ml-label">Unlocks at</span>
+          <span class="ml-value mute" id="lock-at">2026-05-23 19:42 GMT+4</span>
+        </div>
+      </div>
+
+      <p class="lock-help">Contact support for help.</p>
+
+      <a class="btn btn-ghost btn-full" href="../profile/help-center.html">Contact support</a>
+
+      <div class="lock-divider"></div>
+
+      <p class="lock-foot"><a href="login.html">Back to sign in</a></p>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var LOCK_KEY = 'imi_lock_until';
+  var stored = localStorage.getItem(LOCK_KEY);
+  var unlockAt = stored ? parseInt(stored, 10) : Date.now() + (23 * 3600 + 47 * 60) * 1000;
+  if (!stored) localStorage.setItem(LOCK_KEY, unlockAt);
+  var remEl = document.getElementById('lock-remaining');
+  var atEl = document.getElementById('lock-at');
+  var d = new Date(unlockAt);
+  atEl.textContent = d.toLocaleString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+  function update() {
+    var rem = Math.max(0, Math.floor((unlockAt - Date.now()) / 1000));
+    var h = Math.floor(rem / 3600);
+    var m = Math.floor((rem % 3600) / 60);
+    if (rem === 0) { remEl.textContent = 'Unlocked'; return; }
+    remEl.textContent = h > 0 ? h + ' hr ' + m + ' min' : m + ' min';
+  }
+  update();
+  setInterval(update, 30000);
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

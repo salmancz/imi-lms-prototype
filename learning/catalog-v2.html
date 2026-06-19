@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full Catalog · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- catalog-v2: full flat grid layout ---- */
+  .cat-layout {
+    display: grid;
+    grid-template-columns: 248px minmax(0,1fr);
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .cat-layout { grid-template-columns: 1fr; } }
+
+  /* Filter rail */
+  .cat-filters {
+    position: sticky; top: 88px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 22px 22px 24px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+  .cat-filters-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .cat-filters-head .ttl {
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .cat-filters-head .reset { font-size: 12px; color: var(--accent); font-weight: 600; }
+  .cat-fgroup + .cat-fgroup { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--line); }
+  .cat-fgroup h5 {
+    font-family: var(--font-label);
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-soft); margin-bottom: 12px;
+  }
+  .cat-check {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13.5px; color: var(--ink-soft);
+    padding: 5px 0; cursor: pointer;
+    transition: color 0.15s;
+  }
+  .cat-check:hover { color: var(--ink); }
+  .cat-check input { width: 15px; height: 15px; accent-color: var(--ink); flex-shrink: 0; cursor: pointer; }
+  .cat-check .ct { flex: 1; }
+  .cat-check .cn { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.02em; }
+
+  /* Active filters */
+  .cat-active {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .cat-active .lbl {
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .chip-x { cursor: pointer; }
+  .chip-x .x { margin-left: 5px; font-weight: 700; color: var(--ink-mute); }
+  .chip-clear {
+    height: 22px; padding: 0 12px; border-radius: var(--r-pill);
+    border: 1.5px solid rgba(184,82,62,0.40); background: transparent;
+    font-family: var(--font-label); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--accent); cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .chip-clear:hover { background: var(--c-clay-wash); border-color: var(--accent); }
+
+  /* Result bar */
+  .cat-result-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 26px; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .cat-result-bar .cnt { font-size: 13px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; }
+  .cat-sort {
+    height: 32px; padding: 0 32px 0 14px; border-radius: var(--r-pill);
+    border: 1px solid var(--line); background: var(--paper);
+    font-size: 12.5px; color: var(--ink); cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 13px;
+  }
+
+  /* Empty state */
+  .cat-empty {
+    text-align: center; padding: 60px 20px;
+    display: none;
+  }
+  .cat-empty.visible { display: block; }
+  .cat-empty .icon { font-size: 40px; margin-bottom: 14px; color: var(--ink-mute); }
+  .cat-empty h3 { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .cat-empty p { font-size: 14px; color: var(--ink-mute); font-family: var(--font-label); }
+
+  /* Full grid - flat, no sections */
+  .cat-grid-full {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 900px) { .cat-grid-full { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .cat-grid-full { grid-template-columns: 1fr; } }
+
+  /* Smaller card overrides for denser grid */
+  .cat-grid-full .crs-title { font-size: 15px; }
+  .cat-grid-full .crs-body { padding: 14px 16px 12px; }
+  .cat-grid-full .crs-badge { height: 22px; font-size: 10.5px; padding: 0 9px; }
+  .cat-grid-full .crs-by-txt { font-size: 12.5px; }
+  .cat-grid-full .crs-av { width: 30px; height: 30px; }
+  .cat-grid-full .crs-ic { width: 30px; height: 30px; }
+  .cat-grid-full .crs-ic svg { width: 13px; height: 13px; }
+
+  /* Video card */
+  .cc-vid-cover {
+    position: relative;
+    height: 130px;
+    background: var(--bg-alt);
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .cc-vid-cover img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .cc-vid-cover .play-btn {
+    position: relative; z-index: 2;
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--paper); border: 1px solid var(--line);
+    display: grid; place-items: center; color: var(--ink);
+    box-shadow: var(--shadow-sm);
+  }
+  .cc-vid-cover .play-btn svg { width: 14px; height: 14px; margin-left: 2px; }
+  .cc-vid-body { padding: 12px 16px 14px; display: flex; flex-direction: column; flex: 1; }
+  .cc-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 5px;
+  }
+  .cc-vid-title {
+    font-size: 13.5px; font-weight: 700; letter-spacing: -0.005em;
+    line-height: 1.3; color: var(--ink); margin-bottom: 8px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .cc-vid-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line);
+    font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.03em;
+  }
+  .cc-price-free { color: var(--c-sage-text); font-weight: 700; }
+  .cc-vid {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
+    overflow: hidden; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+    transition: transform 0.3s var(--tn), box-shadow 0.3s var(--tn), border-color 0.2s;
+  }
+  .cc-vid:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: var(--line-strong); }
+
+  /* Career path cards */
+  .cp {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 16px 18px;
+    transition: border-color 0.2s, transform 0.2s var(--tn), box-shadow 0.25s;
+    cursor: pointer;
+  }
+  .cp:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-xs); }
+  .cp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+  .cp-name { font-size: 14px; font-weight: 700; letter-spacing: -0.005em; color: var(--ink); }
+  .cp-heart { color: var(--ink-mute); cursor: pointer; transition: color 0.15s; flex-shrink: 0; }
+  .cp-heart:hover { color: var(--accent); }
+  .cp-heart svg { width: 17px; height: 17px; }
+  .cp-meta { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.03em; margin-bottom: 12px; }
+  .cp-bar-row { display: flex; align-items: center; gap: 12px; }
+  .cp-pct { font-family: var(--font-label); font-size: 11.5px; font-weight: 700; color: var(--ink-soft); min-width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Pagination */
+  .cat-pag {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .cat-pag .info { font-size: 12.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; }
+  .cat-pag-nav { display: flex; align-items: center; gap: 6px; }
+  .pag-btn {
+    min-width: 34px; height: 34px; padding: 0 10px; border-radius: var(--r-sm);
+    border: 1px solid var(--line); background: var(--paper);
+    font-size: 13px; font-weight: 600; color: var(--ink-soft);
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+    cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .pag-btn svg { width: 14px; height: 14px; }
+  .pag-btn:hover { background: var(--paper-2); color: var(--ink); border-color: var(--line-strong); }
+  .pag-btn.is { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); }
+  .pag-ell { padding: 0 4px; color: var(--ink-mute); }
+
+  /* Back to catalog link */
+  .cat-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-label); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--ink-soft);
+    text-decoration: none; margin-bottom: 18px;
+    transition: color 0.15s;
+  }
+  .cat-back:hover { color: var(--accent); }
+  .cat-back svg { width: 14px; height: 14px; }
+
+  /* Sticky tabs row */
+  .cat-tabs-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 20px;
+  }
+  .cat-tabs-row .tabs { flex: 1; overflow-x: auto; }
+
+  /* Make whole course card clickable */
+  .crs { cursor: pointer; }
+  .cc-vid-wrap { background: none !important; border: none !important; border-radius: 0 !important; padding: 0 !important; box-shadow: none !important; }
+  .cc-vid-wrap:hover { transform: none !important; box-shadow: none !important; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &#8594;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&#215;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link is-active" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <a class="cat-back" href="catalog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to catalog
+    </a>
+
+    <div class="eyebrow">LEARNING HUB</div>
+    <h1 class="page-title">Full <em>Catalog</em></h1>
+    <p class="page-sub" id="v2-subtitle">All 20 items: 9 courses, 6 videos, 3 career paths, 2 master courses</p>
+
+    <div class="cat-layout" style="margin-top:30px">
+
+      <!-- Filter rail -->
+      <aside class="cat-filters" id="v2-filters">
+        <div class="cat-filters-head">
+          <span class="ttl">Filters</span>
+          <a class="reset" href="#" id="v2-reset-btn" onclick="v2Reset();return false">Reset all</a>
+        </div>
+
+        <!-- Category -->
+        <div class="cat-fgroup">
+          <h5>Category</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="category" data-filter-value="course"><span class="ct">Courses</span><span class="cn" id="cnt-cat-course">9</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="category" data-filter-value="explainer-video"><span class="ct">Explainer videos</span><span class="cn" id="cnt-cat-video">6</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="category" data-filter-value="career-path"><span class="ct">Career paths</span><span class="cn" id="cnt-cat-cp">3</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="category" data-filter-value="master"><span class="ct">Master content</span><span class="cn" id="cnt-cat-master">2</span></label>
+        </div>
+
+        <!-- Duration -->
+        <div class="cat-fgroup">
+          <h5>Duration</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="duration" data-filter-value="under2h"><span class="ct">Under 2h</span><span class="cn" id="cnt-dur-under2h">17</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="duration" data-filter-value="2-5h"><span class="ct">2 to 5h</span><span class="cn" id="cnt-dur-2to5h">2</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="duration" data-filter-value="5h+"><span class="ct">5h+</span><span class="cn" id="cnt-dur-5h">3</span></label>
+        </div>
+
+        <!-- Difficulty -->
+        <div class="cat-fgroup">
+          <h5>Difficulty</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="difficulty" data-filter-value="basic"><span class="ct">Beginner</span><span class="cn" id="cnt-dif-basic">8</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="difficulty" data-filter-value="practitioner"><span class="ct">Intermediate</span><span class="cn" id="cnt-dif-prac">7</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="difficulty" data-filter-value="strategist"><span class="ct">Advanced</span><span class="cn" id="cnt-dif-strat">5</span></label>
+        </div>
+
+        <!-- Learning type -->
+        <div class="cat-fgroup">
+          <h5>Learning type</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="ltype" data-filter-value="course"><span class="ct">Course</span><span class="cn">11</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="ltype" data-filter-value="explainer-video"><span class="ct">Explainer video</span><span class="cn">6</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="ltype" data-filter-value="career-path"><span class="ct">Career path</span><span class="cn">3</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="ltype" data-filter-value="standalone"><span class="ct">Standalone lesson</span><span class="cn">0</span></label>
+        </div>
+
+        <!-- Subject -->
+        <div class="cat-fgroup">
+          <h5>Subject</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="subject" data-filter-value="data-governance"><span class="ct">Data governance</span><span class="cn">7</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="subject" data-filter-value="records-management"><span class="ct">Records management</span><span class="cn">5</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="subject" data-filter-value="information-architecture"><span class="ct">Information architecture</span><span class="cn">3</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="subject" data-filter-value="knowledge-management"><span class="ct">Knowledge management</span><span class="cn">5</span></label>
+        </div>
+
+        <!-- Field of Study -->
+        <div class="cat-fgroup">
+          <h5>Field of Study</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="field" data-filter-value="information-management"><span class="ct">Information management</span><span class="cn">12</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="field" data-filter-value="risk-compliance"><span class="ct">Risk &amp; compliance</span><span class="cn">5</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="field" data-filter-value="digital-archiving"><span class="ct">Digital archiving</span><span class="cn">8</span></label>
+        </div>
+
+        <!-- Skill Level -->
+        <div class="cat-fgroup">
+          <h5>Skill Level</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="skill" data-filter-value="foundation"><span class="ct">Foundation</span><span class="cn">8</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="skill" data-filter-value="practitioner"><span class="ct">Practitioner</span><span class="cn">7</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="skill" data-filter-value="expert"><span class="ct">Expert</span><span class="cn">5</span></label>
+        </div>
+
+        <!-- Completion status -->
+        <div class="cat-fgroup">
+          <h5>Completion status</h5>
+          <label class="cat-check"><input type="checkbox" data-filter-group="status" data-filter-value="not-started"><span class="ct">Not started</span><span class="cn">10</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="status" data-filter-value="in-progress"><span class="ct">In progress</span><span class="cn">3</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="status" data-filter-value="completed"><span class="ct">Completed</span><span class="cn">1</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="status" data-filter-value="enrolled"><span class="ct">Enrolled</span><span class="cn">2</span></label>
+          <label class="cat-check"><input type="checkbox" data-filter-group="status" data-filter-value="wishlist"><span class="ct">On wishlist</span><span class="cn">4</span></label>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div>
+        <!-- Tabs -->
+        <div class="cat-tabs-row">
+          <div class="tabs" id="v2-tabs">
+            <button class="is tab-btn" data-view="all">All (20)</button>
+            <button class="tab-btn" data-view="enrolled">Enrolled (2)</button>
+            <button class="tab-btn" data-view="in-progress">In progress (3)</button>
+            <button class="tab-btn" data-view="completed">Completed (1)</button>
+            <button class="tab-btn" data-view="wishlist">Wishlist (4)</button>
+          </div>
+        </div>
+
+        <!-- Active filters -->
+        <div class="cat-active" id="v2-active-chips">
+          <span class="lbl">Active:</span>
+          <button class="chip-clear" id="v2-btn-clear" onclick="v2Reset()" style="display:none">Clear all</button>
+        </div>
+
+        <!-- Result bar -->
+        <div class="cat-result-bar">
+          <span class="cnt" id="v2-count">Showing all 20 items</span>
+          <select class="cat-sort" id="v2-sort" aria-label="Sort items">
+            <option value="newest">Sort: Newest</option>
+            <option value="popular">Most popular</option>
+            <option value="az">A to Z</option>
+            <option value="shortest">Shortest first</option>
+          </select>
+        </div>
+
+        <!-- Flat grid of all items -->
+        <div class="cat-grid-full" id="v2-grid">
+
+          <!-- 1: Data Quality Foundations (course, cdmp, practitioner, data-governance, under2h, not-started) -->
+          <article class="crs" data-status="not-started" data-level="practitioner" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-type="course" data-views="289" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="Data Quality Foundations">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>28 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · CDMP</span>
+              </div>
+              <h3 class="crs-title">Data Quality Foundations</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-cdmp1" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 6 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();navigator.share?navigator.share({title:'Data Quality Foundations'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2: Data Governance Intro (course, cdmp, basic, data-governance, under2h, enrolled) -->
+          <article class="crs" data-status="enrolled" data-level="basic" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-type="course" data-views="412" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-2.jpg" alt="Data Governance Intro">
+              <span class="crs-badge crs-level lv-basic"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Basic</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>22 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · CDMP</span>
+              </div>
+              <h3 class="crs-title">Data Governance Intro</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=nadia-a" alt="">
+                  <span class="crs-by-txt">By: <strong>Dr. Nadia A.</strong> · 8 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3: Records Retention (course, igp, basic, records-management, under2h, in-progress) -->
+          <article class="crs" data-status="in-progress" data-level="basic" data-subject="records-management" data-duration="under2h" data-path="igp" data-type="course" data-views="198" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-3.jpg" alt="Records Retention">
+              <span class="crs-badge crs-level lv-basic"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Basic</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>18 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · IGP</span>
+              </div>
+              <h3 class="crs-title">Records Retention</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-igp1" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 4 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4: Info Architecture 101 (course, cip, strategist, information-architecture, under2h, not-started) -->
+          <article class="crs" data-status="not-started" data-level="strategist" data-subject="information-architecture" data-duration="under2h" data-path="cip" data-type="course" data-views="521" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="Info Architecture 101">
+              <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · CIP</span>
+              </div>
+              <h3 class="crs-title">Info Architecture 101</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-cip1" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 10 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5: Knowledge Mapping (course, kmp, practitioner, knowledge-management, under2h, enrolled) -->
+          <article class="crs" data-status="enrolled" data-level="practitioner" data-subject="knowledge-management" data-duration="under2h" data-path="kmp" data-type="course" data-views="376" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-2.jpg" alt="Knowledge Mapping">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>26 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · KMP</span>
+              </div>
+              <h3 class="crs-title">Knowledge Mapping</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=faris-a" alt="">
+                  <span class="crs-by-txt">By: <strong>Dr. Faris A.</strong> · 9 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 6: ISO 15489 Deep Dive (course, erm, strategist, records-management, under2h, in-progress) -->
+          <article class="crs" data-status="in-progress" data-level="strategist" data-subject="records-management" data-duration="under2h" data-path="erm" data-type="course" data-views="267" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-3.jpg" alt="ISO 15489 Deep Dive">
+              <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · ERM</span>
+              </div>
+              <h3 class="crs-title">ISO 15489 Deep Dive</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-erm1" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 12 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 7: Data Quality Foundations v2 (course, cdmp, practitioner, data-governance, under2h, completed) -->
+          <article class="crs" data-status="completed" data-level="practitioner" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-type="course" data-views="345" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="Data Quality Foundations">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>28 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · CDMP</span>
+              </div>
+              <h3 class="crs-title">Data Quality Foundations</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-dq2" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 6 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="View certificate" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 8: Records Retention wishlist (course, igp, basic, records-management, under2h, wishlist) -->
+          <article class="crs" data-status="wishlist" data-level="basic" data-subject="records-management" data-duration="under2h" data-path="igp" data-type="course" data-views="213" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-2.jpg" alt="Records Retention">
+              <span class="crs-badge crs-level lv-basic"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Basic</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>18 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · IGP</span>
+              </div>
+              <h3 class="crs-title">Records Retention</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-igp2" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 4 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 9: Knowledge Mapping wishlist (course, kmp, practitioner, knowledge-management, under2h, wishlist) -->
+          <article class="crs" data-status="wishlist" data-level="practitioner" data-subject="knowledge-management" data-duration="under2h" data-path="kmp" data-type="course" data-views="178" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-3.jpg" alt="Knowledge Mapping">
+              <span class="crs-badge crs-level lv-practitioner"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Practitioner</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>26 min</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Course · KMP</span>
+              </div>
+              <h3 class="crs-title">Knowledge Mapping</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=faris-a2" alt="">
+                  <span class="crs-by-txt">By: <strong>Dr. Faris A.</strong> · 9 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 10: What is Data Governance? (explainer-video, cdmp, basic, data-governance, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-level="basic" data-views="893" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="What is Data Governance?">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Explainer · 2 min</div>
+                <div class="cc-vid-title">What is Data Governance?</div>
+                <div class="cc-vid-meta"><span>IMI · Standalone video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 11: Records vs Archives (explainer-video, igp, basic, records-management, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="records-management" data-duration="under2h" data-path="igp" data-level="basic" data-views="654" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="Records vs Archives: Key Differences">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Explainer · 3 min</div>
+                <div class="cc-vid-title">Records vs Archives: Key Differences</div>
+                <div class="cc-vid-meta"><span>IMI · Standalone video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 12: What is metadata management (explainer-video, cip, basic, information-architecture, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="information-architecture" data-duration="under2h" data-path="cip" data-level="basic" data-views="431" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="What is metadata management?">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Explainer · 90s</div>
+                <div class="cc-vid-title">What is metadata management?</div>
+                <div class="cc-vid-meta"><span>IMI · Standalone video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 13: IMI Platform Walkthrough (explainer-video, cdmp, basic, data-governance, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-level="basic" data-views="507" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="IMI Platform Walkthrough">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Product · 4 min</div>
+                <div class="cc-vid-title">IMI Platform Walkthrough</div>
+                <div class="cc-vid-meta"><span>IMI · Product video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 14: How to earn proof of completion (explainer-video, cdmp, basic, data-governance, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-level="basic" data-views="334" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="How to earn your proof of completion">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Product · 3 min</div>
+                <div class="cc-vid-title">How to earn your proof of completion</div>
+                <div class="cc-vid-meta"><span>IMI · Product video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 15: Career paths explained (explainer-video, cdmp, basic, data-governance, under2h, not-started) -->
+          <article class="crs cc-vid-wrap" data-status="not-started" data-type="explainer-video" data-subject="data-governance" data-duration="under2h" data-path="cdmp" data-level="basic" data-views="256" onclick="location.href='course-detail.html'">
+            <a class="cc-vid" href="course-detail.html" onclick="event.stopPropagation()">
+              <div class="cc-vid-cover">
+                <img src="../img/video-thumb.png" alt="Career paths explained">
+                <span class="play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+              </div>
+              <div class="cc-vid-body">
+                <div class="cc-eyebrow">Product · 5 min</div>
+                <div class="cc-vid-title">Career paths explained</div>
+                <div class="cc-vid-meta"><span>IMI · Product video</span><span class="cc-price-free">Free</span></div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 16: CDMP Master Practicum (master, cdmp, strategist, data-governance, 2-5h, not-started) -->
+          <article class="crs" data-status="not-started" data-level="strategist" data-subject="data-governance" data-duration="2-5h" data-path="cdmp" data-type="master" data-views="162" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-1.jpg" alt="CDMP Master Practicum">
+              <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3h</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Master · CDMP</span>
+              </div>
+              <h3 class="crs-title">CDMP Master Practicum</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-master1" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 12 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 17: Knowledge Leadership Programme (master, kmp, strategist, knowledge-management, 2-5h, wishlist) -->
+          <article class="crs" data-status="wishlist" data-level="strategist" data-subject="knowledge-management" data-duration="2-5h" data-path="kmp" data-type="master" data-views="98" onclick="location.href='course-detail.html'">
+            <div class="crs-cover">
+              <img src="../img/covers/cover-2.jpg" alt="Knowledge Leadership Programme">
+              <span class="crs-badge crs-level"><svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Strategist</span>
+              <span class="crs-badge crs-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>4h</span>
+            </div>
+            <div class="crs-body">
+              <div class="crs-type">
+                <span class="crs-type-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+                <span class="crs-type-label">Master · KMP</span>
+              </div>
+              <h3 class="crs-title">Knowledge Leadership Programme</h3>
+              <div class="crs-rule"></div>
+              <div class="crs-foot">
+                <div class="crs-by">
+                  <img class="crs-av" src="https://i.pravatar.cc/80?u=imi-master2" alt="">
+                  <span class="crs-by-txt">By: <strong>IMI</strong> · 10 lessons</span>
+                </div>
+                <div class="crs-acts">
+                  <button class="crs-ic" title="Share" onclick="event.stopPropagation();location.href='../profile/share-modal.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+                  <button class="crs-ic" title="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+                  <a href="course-detail.html" class="crs-ic" title="Enrol" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 18: CDMP Practitioner career path (career-path, cdmp, practitioner, data-governance, 5h+, in-progress) -->
+          <div class="cp crs" data-status="in-progress" data-type="career-path" data-path="cdmp" data-level="practitioner" data-subject="data-governance" data-duration="5h+" data-views="312" onclick="location.href='career-path.html'">
+            <div class="cp-head">
+              <div class="cp-name">CDMP Practitioner</div>
+              <button class="cp-heart crs-ic" aria-label="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></button>
+            </div>
+            <div class="cp-meta">5 courses · ~32 hrs · Intermediate</div>
+            <div class="cp-bar-row">
+              <div class="progress" style="flex:1"><div class="progress-fill honey" style="width:40%"></div></div>
+              <span class="cp-pct">40%</span>
+            </div>
+          </div>
+
+          <!-- 19: Records Mgmt Pro career path (career-path, igp, basic, records-management, 5h+, not-started) -->
+          <div class="cp crs" data-status="not-started" data-type="career-path" data-path="igp" data-level="basic" data-subject="records-management" data-duration="5h+" data-views="187" onclick="location.href='career-path.html'">
+            <div class="cp-head">
+              <div class="cp-name">Records Mgmt Pro</div>
+              <button class="cp-heart crs-ic" aria-label="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></button>
+            </div>
+            <div class="cp-meta">4 courses · ~24 hrs · Beginner</div>
+            <span class="chip">Not started</span>
+          </div>
+
+          <!-- 20: Knowledge Lead career path (career-path, kmp, practitioner, knowledge-management, 5h+, wishlist) -->
+          <div class="cp crs" data-status="wishlist" data-type="career-path" data-path="kmp" data-level="practitioner" data-subject="knowledge-management" data-duration="5h+" data-views="144" onclick="location.href='career-path.html'">
+            <div class="cp-head">
+              <div class="cp-name">Knowledge Lead</div>
+              <button class="cp-heart crs-ic" aria-label="Save to wishlist" data-wishlist><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></button>
+            </div>
+            <div class="cp-meta">6 courses · ~38 hrs · Intermediate</div>
+            <span class="chip">Wishlist</span>
+          </div>
+
+        </div>
+
+        <!-- Empty state -->
+        <div class="cat-empty" id="v2-empty">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="48" height="48"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          </div>
+          <h3>No items match your filters</h3>
+          <p>Try adjusting or <button onclick="v2Reset()" style="background:none;border:none;color:var(--accent);font-weight:600;cursor:pointer;font-size:inherit;padding:0">clearing all filters</button> to see more.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="cat-pag" id="v2-pag">
+          <span class="info" id="v2-pag-info">Showing 1-12 of 20 items</span>
+          <div class="cat-pag-nav" id="v2-pag-nav"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  var PAGE_SIZE = 12;
+  var currentPage = 1;
+  var activeTab = 'all';
+  var sortVal = 'newest';
+
+  function getAllCards() {
+    return Array.from(document.querySelectorAll('#v2-grid .crs[data-status]'));
+  }
+
+  function matchesTab(card) {
+    if (activeTab === 'all') return true;
+    return card.dataset.status === activeTab;
+  }
+
+  function matchesFilters(card) {
+    var allChecked = Array.from(document.querySelectorAll('#v2-filters input[type=checkbox]:checked'));
+    if (allChecked.length === 0) return true;
+
+    var cType    = (card.dataset.type    || '').toLowerCase();
+    var cLevel   = (card.dataset.level   || '').toLowerCase();
+    var cSubject = (card.dataset.subject || '').toLowerCase();
+    var cDur     = (card.dataset.duration|| '').toLowerCase();
+    var cStatus  = (card.dataset.status  || '').toLowerCase();
+
+    function labelMatch(group, val) {
+      if (group === 'category') {
+        if (val === 'course')          return cType === 'course';
+        if (val === 'explainer-video') return cType === 'explainer-video';
+        if (val === 'career-path')     return cType === 'career-path';
+        if (val === 'master')          return cType === 'master';
+      }
+      if (group === 'duration') {
+        return cDur === val;
+      }
+      if (group === 'difficulty') {
+        return cLevel === val;
+      }
+      if (group === 'ltype') {
+        if (val === 'course')          return cType === 'course' || cType === 'master';
+        if (val === 'explainer-video') return cType === 'explainer-video';
+        if (val === 'career-path')     return cType === 'career-path';
+        if (val === 'standalone')      return cType === 'standalone';
+      }
+      if (group === 'subject') {
+        return cSubject === val;
+      }
+      if (group === 'field') {
+        if (val === 'information-management') return cSubject === 'data-governance' || cSubject === 'knowledge-management';
+        if (val === 'risk-compliance')        return cSubject === 'records-management';
+        if (val === 'digital-archiving')      return cSubject === 'records-management' || cSubject === 'information-architecture';
+      }
+      if (group === 'skill') {
+        if (val === 'foundation')   return cLevel === 'basic';
+        if (val === 'practitioner') return cLevel === 'practitioner';
+        if (val === 'expert')       return cLevel === 'strategist';
+      }
+      if (group === 'status') {
+        if (val === 'not-started') return cStatus === 'not-started';
+        if (val === 'in-progress') return cStatus === 'in-progress';
+        if (val === 'completed')   return cStatus === 'completed';
+        if (val === 'enrolled')    return cStatus === 'enrolled';
+        if (val === 'wishlist')    return cStatus === 'wishlist';
+      }
+      return true;
+    }
+
+    /* Group by data-filter-group: AND between groups, OR within group */
+    var groups = {};
+    allChecked.forEach(function(cb) {
+      var g = cb.getAttribute('data-filter-group');
+      var v = cb.getAttribute('data-filter-value');
+      if (!groups[g]) groups[g] = [];
+      groups[g].push(v);
+    });
+
+    return Object.keys(groups).every(function(grp) {
+      return groups[grp].some(function(val) { return labelMatch(grp, val); });
+    });
+  }
+
+  function getFiltered() {
+    return getAllCards().filter(function(c) {
+      return matchesTab(c) && matchesFilters(c);
+    });
+  }
+
+  function sortCards(cards) {
+    return cards.slice().sort(function(a, b) {
+      if (sortVal === 'az') {
+        var ta = ((a.querySelector('.crs-title,.cc-vid-title,.cp-name')||{}).textContent||'').trim();
+        var tb = ((b.querySelector('.crs-title,.cc-vid-title,.cp-name')||{}).textContent||'').trim();
+        return ta.localeCompare(tb);
+      }
+      if (sortVal === 'popular') {
+        return parseInt(b.dataset.views||'0',10) - parseInt(a.dataset.views||'0',10);
+      }
+      if (sortVal === 'shortest') {
+        var dur = function(c) {
+          var badge = c.querySelector('.crs-dur');
+          if (!badge) return 9999;
+          var m = badge.textContent.match(/(\d+)/);
+          return m ? parseInt(m[1],10) : 9999;
+        };
+        return dur(a) - dur(b);
+      }
+      return 0;
+    });
+  }
+
+  function applyChips() {
+    var checked = Array.from(document.querySelectorAll('#v2-filters input[type=checkbox]:checked'));
+    var container = document.getElementById('v2-active-chips');
+    Array.from(container.querySelectorAll('.chip-x')).forEach(function(c){c.remove();});
+    var clearBtn = document.getElementById('v2-btn-clear');
+    checked.forEach(function(cb) {
+      var label = cb.closest('label');
+      var text = label.querySelector('.ct').textContent.trim();
+      var chip = document.createElement('span');
+      chip.className = 'chip chip-x';
+      chip.innerHTML = text + ' <span class="x">&#215;</span>';
+      chip.addEventListener('click', function() {
+        cb.checked = false;
+        applyFilters();
+      });
+      container.insertBefore(chip, clearBtn);
+    });
+    clearBtn.style.display = checked.length > 0 ? '' : 'none';
+  }
+
+  function applyFilters() {
+    currentPage = 1;
+    renderPage();
+    applyChips();
+  }
+
+  function renderPage() {
+    var filtered = sortCards(getFiltered());
+    var total = filtered.length;
+    var startIdx = (currentPage - 1) * PAGE_SIZE;
+    var pageCards = filtered.slice(startIdx, startIdx + PAGE_SIZE);
+
+    /* Hide all, show page slice */
+    getAllCards().forEach(function(c) { c.style.display = 'none'; });
+    pageCards.forEach(function(c) { c.style.display = ''; });
+
+    /* Count label */
+    var countEl = document.getElementById('v2-count');
+    if (total === 0) {
+      countEl.textContent = 'No items match your filters';
+    } else {
+      var end = Math.min(startIdx + PAGE_SIZE, total);
+      countEl.textContent = 'Showing ' + (startIdx + 1) + '-' + end + ' of ' + total + ' item' + (total === 1 ? '' : 's');
+    }
+
+    /* Empty state */
+    var emptyEl = document.getElementById('v2-empty');
+    emptyEl.classList.toggle('visible', total === 0);
+
+    /* Pagination */
+    renderPagination(total);
+  }
+
+  function renderPagination(total) {
+    var nav = document.getElementById('v2-pag-nav');
+    var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    nav.innerHTML = '';
+
+    var prevBtn = document.createElement('button');
+    prevBtn.className = 'pag-btn';
+    prevBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Prev';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
+    prevBtn.addEventListener('click', function() {
+      if (currentPage > 1) { currentPage--; renderPage(); }
+    });
+    nav.appendChild(prevBtn);
+
+    for (var i = 1; i <= Math.min(totalPages, 5); i++) {
+      (function(pg) {
+        var btn = document.createElement('button');
+        btn.className = 'pag-btn' + (pg === currentPage ? ' is' : '');
+        btn.textContent = pg;
+        btn.addEventListener('click', function() { currentPage = pg; renderPage(); });
+        nav.appendChild(btn);
+      })(i);
+    }
+    if (totalPages > 5) {
+      var ell = document.createElement('span');
+      ell.className = 'pag-ell'; ell.textContent = '...';
+      nav.appendChild(ell);
+      (function(pg) {
+        var btn = document.createElement('button');
+        btn.className = 'pag-btn'; btn.textContent = pg;
+        btn.addEventListener('click', function() { currentPage = pg; renderPage(); });
+        nav.appendChild(btn);
+      })(totalPages);
+    }
+
+    var nextBtn = document.createElement('button');
+    nextBtn.className = 'pag-btn';
+    nextBtn.innerHTML = 'Next <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.style.opacity = currentPage === totalPages ? '0.4' : '1';
+    nextBtn.addEventListener('click', function() {
+      if (currentPage < totalPages) { currentPage++; renderPage(); }
+    });
+    nav.appendChild(nextBtn);
+
+    document.getElementById('v2-pag-info').textContent =
+      total === 0 ? '' : 'Showing ' + ((currentPage-1)*PAGE_SIZE+1) + '-' + Math.min(currentPage*PAGE_SIZE, total) + ' of ' + total + ' items';
+  }
+
+  window.v2Reset = function() {
+    document.querySelectorAll('#v2-filters input[type=checkbox]').forEach(function(cb){ cb.checked = false; });
+    document.querySelectorAll('#v2-tabs button').forEach(function(b){ b.classList.remove('is'); });
+    document.querySelector('#v2-tabs [data-view="all"]').classList.add('is');
+    activeTab = 'all';
+    document.getElementById('v2-sort').value = 'newest';
+    sortVal = 'newest';
+    currentPage = 1;
+    applyFilters();
+  };
+
+  /* Tab clicks */
+  document.getElementById('v2-tabs').addEventListener('click', function(e) {
+    var btn = e.target.closest('button');
+    if (!btn || !btn.dataset.view) return;
+    document.querySelectorAll('#v2-tabs button').forEach(function(b){ b.classList.remove('is'); });
+    btn.classList.add('is');
+    activeTab = btn.dataset.view;
+    currentPage = 1;
+    applyFilters();
+  });
+
+  /* Sort */
+  document.getElementById('v2-sort').addEventListener('change', function() {
+    sortVal = this.value;
+    currentPage = 1;
+    applyFilters();
+  });
+
+  /* Checkboxes */
+  document.querySelectorAll('#v2-filters input[type=checkbox]').forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      currentPage = 1;
+      applyFilters();
+    });
+  });
+
+  /* Stop card clicks from action buttons */
+  document.querySelectorAll('#v2-grid .crs-ic, #v2-grid .crs-acts button').forEach(function(btn) {
+    btn.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
+
+  /* Initial render */
+  document.getElementById('v2-btn-clear').style.display = 'none';
+  applyFilters();
+})();
+</script>
+</body>
+</html>

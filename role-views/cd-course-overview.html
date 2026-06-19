@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Mapping Fundamentals · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- back link ---- */
+  .co-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .co-back:hover { color: var(--ink); }
+  .co-back svg { width: 14px; height: 14px; }
+
+  /* ---- meta line ---- */
+  .co-meta {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .co-meta .sep { color: var(--ink-faint); }
+
+  /* ---- alert banner ---- */
+  .co-banner {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.28);
+    border-left: 3px solid var(--c-honey);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .co-banner .bn-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(201, 155, 46, 0.22);
+    color: var(--c-honey-text);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .co-banner .bn-icon svg { width: 16px; height: 16px; }
+  .co-banner .bn-copy { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+  .co-banner .bn-copy a {
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 1px;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  /* ---- stat strip (flat, no gradient) ---- */
+  .co-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 900px) { .co-stats { grid-template-columns: repeat(2, 1fr); } }
+
+  /* ---- body columns ---- */
+  .co-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) { .co-body { grid-template-columns: 1fr; } }
+
+  /* ---- course structure rows ---- */
+  .struct-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.18s;
+  }
+  .struct-row:last-child { border-bottom: none; }
+  .struct-row:hover { background: var(--paper-2); }
+  .struct-row.is-flagged { background: var(--c-honey-wash); }
+  .struct-row.is-flagged:hover { background: var(--c-honey-wash); }
+  .struct-num {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    min-width: 22px;
+    font-variant-numeric: tabular-nums;
+  }
+  .struct-title { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .struct-dur {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .struct-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .struct-dot.ok { background: var(--c-sage); }
+  .struct-dot.warn { background: var(--c-honey); }
+  .flag-pill {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+    background: rgba(201, 155, 46, 0.18);
+    border: 1px solid rgba(201, 155, 46, 0.40);
+    padding: 3px 9px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+  }
+  .struct-row.assessment {
+    background: var(--paper-2);
+    border-top: 1px solid var(--line-strong);
+  }
+  .struct-row.assessment:hover { background: var(--paper-2); }
+  .struct-row.assessment .struct-title { font-weight: 700; }
+  .struct-meta-sm {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+
+  /* ---- info cards (right rail) ---- */
+  .info-card { padding: 20px 22px; }
+  .info-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+
+  /* ---- submission timeline ---- */
+  .timeline { display: flex; flex-direction: column; }
+  .tl-step { display: flex; gap: 12px; }
+  .tl-rail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .tl-node {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .tl-node.ok { background: var(--c-sage); }
+  .tl-node.warn { background: var(--c-honey); }
+  .tl-line { width: 1px; flex: 1; min-height: 14px; background: var(--line-strong); margin: 4px 0; }
+  .tl-content { padding-bottom: 16px; }
+  .tl-step:last-child .tl-content { padding-bottom: 0; }
+  .tl-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .tl-title.current { font-weight: 700; }
+  .tl-sub { font-size: 13px; color: var(--ink-mute); margin-top: 2px; }
+
+  /* ---- SME info ---- */
+  .sme-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .sme-domain { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+  .sme-turn {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-mute);
+    margin-top: 8px;
+  }
+
+  /* ---- quick stats placeholder ---- */
+  .stats-empty { font-size: 14px; color: var(--ink-mute); line-height: 1.55; }
+
+  /* ---- section title above card ---- */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="content-dev-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <span class="role-pill">CONTENT DEV</span>
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="content-dev-home.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="content-dev-home.html#my-courses" class="sidebar-link is-active" data-nav="my-courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Courses</span><span class="badge">12</span>
+      </a>
+      <a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Drafts</span><span class="badge">3</span>
+      </a>
+      <a href="content-dev-home.html#published" class="sidebar-link" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Published</span><span class="badge">9</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>SME Reviews</span><span class="badge">2</span>
+      </a>
+      <a href="cd-feedback.html#qa" class="sidebar-link" data-nav="qa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Learner Q&amp;A</span><span class="badge">8</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="../course-builder/cb-reports.html" class="sidebar-link" data-nav="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="cd-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- Back link -->
+    <a href="content-dev-home.html" class="co-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      My workspace
+    </a>
+
+    <!-- Page header -->
+    <div class="page-head" style="margin-bottom:24px;">
+      <div>
+        <div class="eyebrow">Course hub</div>
+        <h1 class="page-title">Knowledge <em>Mapping</em> Fundamentals</h1>
+        <div class="row gap-sm" style="flex-wrap:wrap;margin:14px 0 0;">
+          <span class="chip">In: Knowledge Management Track</span>
+          <span class="chip t-honey dot">Rejected</span>
+          <span class="chip">v3 draft</span>
+        </div>
+        <div class="co-meta">
+          <span>Created Jan 2026</span><span class="sep">&middot;</span>
+          <span>Last edited 2h ago</span><span class="sep">&middot;</span>
+          <span>Domain: Knowledge Management</span>
+        </div>
+      </div>
+      <div class="page-actions" style="flex-wrap:wrap;align-items:flex-start;">
+        <a class="btn btn-primary" href="../course-builder/course-builder-1.html">
+          Edit in Course Builder
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="cd-feedback.html">View SME feedback (1 required)</a>
+        <a class="btn btn-ghost" href="cd-course-preview.html">Preview as learner</a>
+      </div>
+    </div>
+
+    <!-- Alert banner -->
+    <div class="co-banner">
+      <div class="bn-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="bn-copy">
+        1 required change from Dr. Faris must be resolved before this course can be resubmitted for review.<a href="cd-feedback.html">Resolve feedback &rarr;</a>
+      </div>
+    </div>
+
+    <!-- KPI stat strip -->
+    <div class="co-stats">
+      <div class="stat-flat">
+        <div class="stat-label">Total modules</div>
+        <div class="stat-value">9 <span class="stat-dot"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Total duration</div>
+        <div class="stat-value" style="font-size:24px;">190<em style="font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--ink-soft);margin-left:3px;">min</em></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Open feedback</div>
+        <div class="stat-value" style="color:var(--c-honey-text);">1 <span class="stat-dot" style="background:var(--c-honey);"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Submission version</div>
+        <div class="stat-value" style="font-size:24px;">v3</div>
+      </div>
+    </div>
+
+    <!-- Body: left structure + right rail -->
+    <div class="co-body">
+
+      <!-- LEFT: course structure -->
+      <div>
+        <div class="section-head">
+          <span class="section-eyebrow">Course structure</span>
+        </div>
+        <div class="card">
+          <div class="struct-row">
+            <span class="struct-num">01</span>
+            <span class="struct-title">What is knowledge mapping</span>
+            <span class="chip">Video</span>
+            <span class="struct-dur">12 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">02</span>
+            <span class="struct-title">Tacit vs explicit knowledge</span>
+            <span class="chip">Video</span>
+            <span class="struct-dur">18 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row is-flagged">
+            <span class="struct-num">03</span>
+            <span class="struct-title">Knowledge audits</span>
+            <span class="chip">Video</span>
+            <span class="struct-dur">45 min</span>
+            <span class="struct-dot warn"></span>
+            <span class="flag-pill">Has open feedback</span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">04</span>
+            <span class="struct-title">Mapping frameworks</span>
+            <span class="chip">PDF</span>
+            <span class="struct-dur">20 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">05</span>
+            <span class="struct-title">Implementation approaches</span>
+            <span class="chip">Video</span>
+            <span class="struct-dur">30 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">06</span>
+            <span class="struct-title">Measurement and outcomes</span>
+            <span class="chip">Text</span>
+            <span class="struct-dur">15 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">07</span>
+            <span class="struct-title">GCC and regional case studies</span>
+            <span class="chip">Video</span>
+            <span class="struct-dur">22 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">08</span>
+            <span class="struct-title">Common pitfalls</span>
+            <span class="chip">Text</span>
+            <span class="struct-dur">10 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row">
+            <span class="struct-num">09</span>
+            <span class="struct-title">Knowledge transfer strategies</span>
+            <span class="chip">PDF</span>
+            <span class="struct-dur">18 min</span>
+            <span class="struct-dot ok"></span>
+          </div>
+          <div class="struct-row assessment">
+            <span class="struct-num">--</span>
+            <span class="struct-title">Assessment</span>
+            <span class="struct-meta-sm">12 questions &middot; pass mark 70%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: stacked info cards -->
+      <div class="col gap-lg">
+
+        <div class="card info-card">
+          <div class="info-label">Submission status</div>
+          <div class="timeline">
+            <div class="tl-step">
+              <div class="tl-rail"><span class="tl-node ok"></span><span class="tl-line"></span></div>
+              <div class="tl-content">
+                <div class="tl-title">v1 submitted 12 Jan</div>
+                <div class="tl-sub">Rejected 15 Jan</div>
+              </div>
+            </div>
+            <div class="tl-step">
+              <div class="tl-rail"><span class="tl-node ok"></span><span class="tl-line"></span></div>
+              <div class="tl-content">
+                <div class="tl-title">v2 submitted 2 Feb</div>
+                <div class="tl-sub">Approved</div>
+              </div>
+            </div>
+            <div class="tl-step">
+              <div class="tl-rail"><span class="tl-node warn"></span></div>
+              <div class="tl-content">
+                <div class="tl-title current">v3 in progress (current)</div>
+                <div class="tl-sub">1 required change open</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card info-card">
+          <div class="info-label">Assigned SME</div>
+          <div class="sme-name">Dr. Faris Al-Maamari</div>
+          <div class="sme-domain">Knowledge Management domain</div>
+          <div class="sme-turn">Avg turnaround: 1.2 days</div>
+        </div>
+
+        <div class="card info-card" style="background:var(--paper-2);">
+          <div class="info-label">Quick stats</div>
+          <div class="stats-empty">Not yet published. Analytics available after publish.</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function() {
+  /* struct rows: click any row to go to the learner preview of that module */
+  document.querySelectorAll('.struct-row').forEach(function(row) {
+    if (row.classList.contains('assessment')) {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function() {
+        location.href = 'cd-course-preview.html';
+      });
+    } else {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function() {
+        location.href = 'cd-course-preview.html';
+      });
+    }
+  });
+
+  /* topbar search: Enter navigates to overview */
+  var searchInput = document.querySelector('.search input');
+  if (searchInput) {
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var q = searchInput.value.trim();
+        if (q) {
+          location.href = 'cd-course-overview.html';
+        }
+      }
+    });
+  }
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

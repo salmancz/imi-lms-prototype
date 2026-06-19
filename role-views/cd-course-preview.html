@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course preview · Knowledge Mapping Fundamentals · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .preview-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--ink);
+    color: var(--hero-bg);
+    border-radius: var(--r-md);
+    padding: 14px 22px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .preview-banner .pb-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .preview-banner .pb-tag {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--hero-bg);
+    white-space: nowrap;
+  }
+  .preview-banner .pb-sep { opacity: 0.4; }
+  .preview-banner .pb-copy {
+    font-size: 13px;
+    color: rgba(252, 247, 174, 0.82);
+    line-height: 1.45;
+  }
+  .preview-banner .pb-exit {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hero-bg);
+    white-space: nowrap;
+    border-bottom: 1.5px solid rgba(252, 247, 174, 0.55);
+    padding-bottom: 1px;
+  }
+  .preview-banner .pb-exit:hover { border-bottom-color: var(--hero-bg); }
+
+  .cp-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .cp-grid { grid-template-columns: 1fr; } }
+
+  .cp-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+
+  .cp-instructor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    margin-bottom: 30px;
+  }
+  .cp-instructor .avatar { width: 42px; height: 42px; font-size: 14px; }
+  .cp-instructor .ci-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .cp-instructor .ci-role { font-size: 12.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
+
+  .cp-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .cp-section-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .cp-section + .cp-section { margin-top: 36px; }
+
+  .cp-learn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 28px;
+    list-style: none;
+  }
+  @media (max-width: 640px) { .cp-learn-grid { grid-template-columns: 1fr; } }
+  .cp-learn-grid li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .cp-learn-grid li svg { width: 16px; height: 16px; color: var(--c-sage); flex-shrink: 0; margin-top: 2px; }
+
+  .cp-lesson {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cp-lesson:last-child { border-bottom: none; }
+  .cp-lesson.is-final { background: var(--paper-2); }
+  .cp-lesson .cl-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .cp-lesson .cl-main { display: flex; align-items: center; gap: 13px; min-width: 0; }
+  .cp-lesson .cl-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .cp-lesson.is-final .cl-title { color: var(--ink-soft); }
+  .cp-lesson .cl-meta { font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 2px; }
+
+  .cp-review { display: flex; gap: 13px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .cp-review:last-child { border-bottom: none; }
+  .cp-review .cr-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c-sage); flex-shrink: 0; margin-top: 7px;
+  }
+  .cp-review .cr-body { flex: 1; min-width: 0; }
+  .cp-review .cr-name { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .cp-review .cr-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 3px; }
+  .cp-review .cr-when {
+    font-family: var(--font-label); font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.06em; white-space: nowrap;
+  }
+
+  .cp-enrol {
+    position: sticky;
+    top: 96px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .cp-price { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .cp-price-sub { font-size: 13px; color: var(--ink-mute); margin: 4px 0 18px; }
+
+  .btn.full { width: 100%; justify-content: center; }
+  .btn.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .cp-disabled-note {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .cp-divider { height: 1px; background: var(--line); margin: 20px 0; }
+
+  .cp-earn {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px;
+  }
+  .cp-earn-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .cp-earn-row { display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: center; }
+  .cp-seal {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid var(--c-honey);
+    background: var(--c-honey-wash);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-label);
+    font-size: 7.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    color: var(--c-honey-text);
+    text-align: center;
+  }
+  .cp-earn-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .cp-earn-meta { font-size: 11.5px; color: var(--ink-mute); line-height: 1.5; margin-top: 3px; }
+
+  /* ---- share modal ---- */
+  .share-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42,17,8,0.45);
+    z-index: 1200;
+    align-items: center;
+    justify-content: center;
+  }
+  .share-overlay.is-open { display: flex; }
+  .share-modal {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 28px 28px 24px;
+    width: 400px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 16px 48px -8px rgba(42,17,8,0.3);
+    position: relative;
+  }
+  .share-modal h3 {
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 6px;
+  }
+  .share-modal p { font-size: 13px; color: var(--ink-soft); margin: 0 0 20px; }
+  .share-url-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+    overflow: hidden;
+  }
+  .share-url-row .share-link { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .share-close-btn {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .share-close-btn:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---- preview lesson modal ---- */
+  .lesson-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42,17,8,0.55);
+    z-index: 1200;
+    align-items: center;
+    justify-content: center;
+  }
+  .lesson-overlay.is-open { display: flex; }
+  .lesson-modal {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 0;
+    width: 640px;
+    max-width: calc(100vw - 32px);
+    max-height: 85vh;
+    overflow: hidden;
+    box-shadow: 0 16px 48px -8px rgba(42,17,8,0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .lesson-modal-head {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .lesson-modal-head h3 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .lesson-modal-head .lm-meta {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    margin-top: 5px;
+  }
+  .lesson-video-stub {
+    background: var(--ink);
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .lesson-video-stub .lv-play {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: rgba(252,247,238,0.15);
+    border: 2px solid rgba(252,247,238,0.5);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .lesson-video-stub .lv-play:hover { background: rgba(252,247,238,0.28); }
+  .lesson-video-stub .lv-play svg { width: 24px; height: 24px; color: #FBF7EF; margin-left: 3px; }
+  .lesson-video-stub .lv-label {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(252,247,238,0.7);
+    text-transform: uppercase;
+  }
+  .lesson-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+  .lesson-modal-body p { font-size: 14px; color: var(--ink-soft); line-height: 1.65; margin: 0 0 14px; }
+  .lesson-modal-foot {
+    padding: 16px 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">·</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+<header class="topbar">
+  <a href="content-dev-home.html" class="brand"><img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI"><span class="brand-text">IMI</span><span class="brand-sub">Studio</span></a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="content-dev-home.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="content-dev-home.html#my-courses" class="sidebar-link is-active" data-nav="my-courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Courses</span><span class="badge">12</span></a>
+<a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Drafts</span><span class="badge">3</span></a>
+<a href="content-dev-home.html#published" class="sidebar-link" data-nav="published"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Published</span><span class="badge">9</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">FEEDBACK</div>
+<a href="cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>SME Reviews</span><span class="badge">2</span></a>
+<a href="cd-feedback.html#qa" class="sidebar-link" data-nav="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span>Learner Q&A</span><span class="badge">8</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">INSIGHTS</div>
+<a href="../course-builder/cb-reports.html" class="sidebar-link" data-nav="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Analytics</span></a>
+<a href="cd-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="page-head">
+  <div>
+    <div class="eyebrow">Knowledge Management Path</div>
+    <h1 class="page-title">Course <em>preview</em></h1>
+    <p class="page-sub">Viewing Knowledge Mapping Fundamentals exactly as a learner would, without leaving your workspace.</p>
+  </div>
+  <div class="page-actions">
+    <a class="btn btn-ghost" href="cd-course-overview.html">← Course overview</a>
+  </div>
+</div>
+
+<div class="preview-banner">
+  <div class="pb-left">
+    <span class="pb-tag">Preview mode</span>
+    <span class="pb-sep">|</span>
+    <span class="pb-copy">You are viewing Knowledge Mapping Fundamentals as a learner would see it.</span>
+  </div>
+  <a class="pb-exit" href="cd-course-overview.html">Exit preview →</a>
+</div>
+
+<div class="cp-grid">
+
+  <!-- LEFT: course content -->
+  <div>
+    <div class="eyebrow">Knowledge Management Path</div>
+    <h2 class="page-title" style="margin-bottom:10px">Knowledge Mapping Fundamentals</h2>
+    <p class="page-sub" style="margin-bottom:20px">Learn to design, build and maintain knowledge maps that capture tacit expertise and make it accessible across teams. Based on ISO 30401 and KMP body of knowledge.</p>
+
+    <div class="cp-chips">
+      <span class="chip">9 lessons</span>
+      <span class="chip">3.5 hours</span>
+      <span class="chip">Intermediate</span>
+      <span class="chip t-honey">Course Completed on finish</span>
+      <span class="chip t-sage dot">214 enrolled</span>
+    </div>
+
+    <!-- Instructor -->
+    <div class="cp-instructor">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="ci-name">Aisha Khalfan</div>
+        <div class="ci-role">Knowledge Management Specialist · IMI</div>
+      </div>
+    </div>
+
+    <!-- What you'll learn -->
+    <div class="cp-section">
+      <h3 class="cp-section-title">What you'll <em>learn</em></h3>
+      <ul class="cp-learn-grid">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Knowledge mapping core concepts</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Tacit vs explicit knowledge</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Audit and gap analysis methods</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Mapping frameworks (mind, concept, systems)</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>GCC regional implementation approaches</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Common pitfalls and how to avoid them</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Measurement and learning outcomes</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Knowledge transfer strategies</li>
+      </ul>
+    </div>
+
+    <!-- Syllabus -->
+    <div class="cp-section">
+      <h3 class="cp-section-title">Curriculum · <em>9 lessons</em></h3>
+      <div class="card">
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">1</div><div><div class="cl-title">What is knowledge mapping</div><div class="cl-meta">Video · 12 min</div></div></div>
+          <span class="chip t-sage dot">Free preview</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">2</div><div><div class="cl-title">Tacit vs explicit knowledge</div><div class="cl-meta">Video · 18 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">3</div><div><div class="cl-title">Knowledge audits</div><div class="cl-meta">Video · 45 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">4</div><div><div class="cl-title">Mapping frameworks</div><div class="cl-meta">PDF · 20 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">5</div><div><div class="cl-title">Implementation approaches</div><div class="cl-meta">Video · 30 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">6</div><div><div class="cl-title">Measurement and outcomes</div><div class="cl-meta">Text · 15 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">7</div><div><div class="cl-title">GCC and regional case studies</div><div class="cl-meta">Video · 22 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">8</div><div><div class="cl-title">Common pitfalls</div><div class="cl-meta">Text · 10 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson">
+          <div class="cl-main"><div class="cl-num">9</div><div><div class="cl-title">Knowledge transfer strategies</div><div class="cl-meta">PDF · 18 min</div></div></div>
+          <span class="chip">Locked</span>
+        </div>
+        <div class="cp-lesson is-final">
+          <div class="cl-main"><div class="cl-num">✓</div><div><div class="cl-title">Final assessment</div><div class="cl-meta">12 questions · pass mark 70%</div></div></div>
+          <span class="chip">After all lessons</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: enrol card -->
+  <aside>
+    <div class="cp-enrol">
+      <div class="cp-price">Free</div>
+      <p class="cp-price-sub">Included in IMI membership</p>
+
+      <button class="btn btn-primary full is-disabled" disabled>Enrol now</button>
+      <div class="cp-disabled-note">Enrolment disabled in preview</div>
+
+      <div style="margin-top:14px">
+        <button class="btn btn-ghost full is-disabled" disabled>Add to Wishlist</button>
+      </div>
+
+      <div style="margin-top:10px">
+        <button class="btn btn-ghost full" id="share-btn" onclick="openShareModal()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share course</button>
+      </div>
+
+      <div class="cp-divider"></div>
+
+      <div class="cp-earn">
+        <div class="cp-earn-label">Earn on completion</div>
+        <div class="cp-earn-row">
+          <div class="cp-seal">IMI<br>SEAL</div>
+          <div>
+            <div class="cp-earn-name">KMP Foundation certification</div>
+            <div class="cp-earn-meta">Verifiable at imi.om/verify</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+  </main>
+</div>
+
+<!-- Share modal -->
+<div class="share-overlay" id="share-overlay" onclick="if(event.target===this)closeShareModal()">
+  <div class="share-modal" role="dialog" aria-modal="true" aria-label="Share course">
+    <button class="share-close-btn" onclick="closeShareModal()" aria-label="Close">&times;</button>
+    <h3>Share this course</h3>
+    <p>Copy the link below to share Knowledge Mapping Fundamentals with others.</p>
+    <div class="share-url-row">
+      <span class="share-link">https://imi.om/courses/knowledge-mapping-fundamentals</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" id="copy-link-btn" onclick="copyShareLink()">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy link
+      </button>
+      <button class="btn btn-ghost" onclick="closeShareModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Free lesson preview modal -->
+<div class="lesson-overlay" id="lesson-overlay" onclick="if(event.target===this)closeLessonModal()">
+  <div class="lesson-modal" role="dialog" aria-modal="true" aria-label="Free preview lesson">
+    <div class="lesson-modal-head">
+      <div>
+        <h3>What is knowledge mapping</h3>
+        <div class="lm-meta">Lesson 1 &middot; Video &middot; 12 min &middot; Free preview</div>
+      </div>
+      <button class="share-close-btn" onclick="closeLessonModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="lesson-video-stub">
+      <div class="lv-play" onclick="window.imiToast && window.imiToast('Video playback available in full product')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+      <span class="lv-label">Preview · 12 min</span>
+    </div>
+    <div class="lesson-modal-body">
+      <p>In this introductory lesson, you will explore the foundational concept of knowledge mapping: what it is, why organisations use it, and how it connects to broader knowledge management frameworks.</p>
+      <p>By the end of this lesson, you will be able to define knowledge mapping, distinguish it from related practices like process mapping and mind mapping, and explain its role within ISO 30401.</p>
+    </div>
+    <div class="lesson-modal-foot">
+      <button class="btn btn-ghost" onclick="closeLessonModal()">Close preview</button>
+      <button class="btn btn-primary" onclick="window.imiToast && window.imiToast('Enrolment available outside preview mode');closeLessonModal()">Enrol to access all lessons</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openShareModal() {
+  document.getElementById('share-overlay').classList.add('is-open');
+}
+function closeShareModal() {
+  document.getElementById('share-overlay').classList.remove('is-open');
+}
+function copyShareLink() {
+  var url = 'https://imi.om/courses/knowledge-mapping-fundamentals';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      var btn = document.getElementById('copy-link-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.innerHTML = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy link'; }, 1800);
+      window.imiToast && window.imiToast('Link copied to clipboard');
+    }).catch(function() { window.imiToast && window.imiToast('Copy: ' + url); });
+  } else {
+    window.imiToast && window.imiToast('Link: imi.om/courses/knowledge-mapping-fundamentals');
+  }
+  closeShareModal();
+}
+function openLessonModal() {
+  document.getElementById('lesson-overlay').classList.add('is-open');
+}
+function closeLessonModal() {
+  document.getElementById('lesson-overlay').classList.remove('is-open');
+}
+
+(function() {
+  /* curriculum lessons: free preview opens a modal; locked ones show toast; assessment navigates */
+  document.querySelectorAll('.cp-lesson').forEach(function(row) {
+    var badge = row.querySelector('.chip');
+    var isFree = badge && badge.textContent.indexOf('Free') !== -1;
+    var isFinal = row.classList.contains('is-final');
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function() {
+      if (isFinal) {
+        window.imiToast && window.imiToast('Assessment unlocks after completing all 9 lessons.');
+        return;
+      }
+      if (isFree) {
+        openLessonModal();
+      } else {
+        window.imiToast && window.imiToast('Enrol to unlock this lesson.');
+      }
+    });
+  });
+
+  /* Escape key closes modals */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeShareModal();
+      closeLessonModal();
+    }
+  });
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

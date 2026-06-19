@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificates from courses I approved · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .ro-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 14px 18px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.20);
+    border-radius: var(--r-md);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+  .ro-note svg { width: 17px; height: 17px; color: var(--c-honey-text); flex-shrink: 0; margin-top: 2px; }
+  .ro-note strong { color: var(--ink); font-weight: 700; }
+
+  /* Flat KPI row - 4 columns, no gradients */
+  .kpi-row-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .kpi-row-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .kpi-row-4 { grid-template-columns: 1fr 1fr; } }
+
+  .kpi-flat {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.2s var(--tn);
+  }
+  .kpi-flat:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+  .kpi-flat .kf-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .kpi-flat .kf-icon svg { width: 18px; height: 18px; }
+  .kpi-flat .kf-icon.honey { background: var(--c-honey-wash); color: var(--c-honey); }
+  .kpi-flat .kf-icon.sage  { background: var(--c-sage-wash);  color: var(--c-sage);  }
+  .kpi-flat .kf-icon.clay  { background: var(--c-clay-wash);  color: var(--c-clay);  }
+  .kpi-flat .kf-icon.peach { background: #FFE3D0; color: #D17B4E; }
+  .kpi-flat .kf-body { flex: 1; min-width: 0; }
+  .kpi-flat .kf-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .kpi-flat .kf-value {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-flat .kf-value em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .filter-bar .input { width: 168px; }
+
+  /* Table column styles */
+  .cert-tbl td.col-mono,
+  .cert-tbl th.col-mono { font-family: var(--font-label); }
+  .cert-tbl td.col-mono { font-size: 12.5px; color: var(--ink-soft); letter-spacing: 0.02em; }
+  .cert-tbl td.col-count { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+
+  .table-foot {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+<header class="topbar">
+  <a class="brand" href="../course-builder/sme-queue.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Review</span>
+  </a>
+  <div class="search"><input placeholder="Search review queue..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../course-builder/sme-queue.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../course-builder/sme-queue.html#queue" class="sidebar-link" data-nav="queue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Queue</span><span class="badge">5</span></a>
+      <a href="../course-builder/sme-queue.html#in-progress" class="sidebar-link" data-nav="in-progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg><span>In progress</span><span class="badge">1</span></a>
+      <a href="../course-builder/sme-queue.html#reviewed" class="sidebar-link is-active" data-nav="reviewed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Reviewed</span><span class="badge">47</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">DOMAIN</div>
+      <a href="../course-builder/sme-queue.html?domain=km" class="sidebar-link" data-nav="km" onclick="document.querySelectorAll('.cert-tbl tbody tr').forEach(function(r){r.style.display=(['KMP','KM'].some(function(p){return r.cells[4]&&r.cells[4].textContent.trim().startsWith(p)})?'':'none')});return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>KM Standards</span></a>
+      <a href="../course-builder/sme-queue.html?domain=records" class="sidebar-link" data-nav="records" onclick="document.querySelectorAll('.cert-tbl tbody tr').forEach(function(r){r.style.display=(['ERM','IGP'].some(function(p){return r.cells[4]&&r.cells[4].textContent.trim().startsWith(p)})?'':'none')});return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Records Mgmt</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="sme-reports.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="sme-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">SME &middot; Reviewer impact</div>
+        <h1 class="page-title">Certificates from <em>courses I approved</em></h1>
+        <p class="page-sub">Credentials traceable to courses you reviewed and approved for publication.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="(function(){var rows=document.querySelectorAll('.cert-tbl tbody tr');var lines=['Course,Approved on,Issued count,Last cert,Path,My verdict'];rows.forEach(function(r){if(r.style.display!=='none'){var cells=Array.from(r.cells).map(function(c){return '\"'+c.textContent.trim()+'\"'});lines.push(cells.join(','))}});var blob=new Blob([lines.join('\n')],{type:'text/csv'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sme-certificates.csv';a.click()})();return false;">Export CSV</a>
+      </div>
+    </div>
+
+    <div class="ro-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span><strong>SMEs do not issue certificates.</strong> This view traces the credential impact of your reviews. Certificate administration belongs to Super Admin.</span>
+    </div>
+
+    <div class="kpi-row-4">
+      <div class="kpi-flat">
+        <div class="kf-icon honey">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="kf-body">
+          <div class="kf-label">Courses I approved</div>
+          <div class="kf-value">38</div>
+        </div>
+      </div>
+      <div class="kpi-flat">
+        <div class="kf-icon sage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </div>
+        <div class="kf-body">
+          <div class="kf-label">Certificates issued</div>
+          <div class="kf-value">4,021</div>
+        </div>
+      </div>
+      <div class="kpi-flat">
+        <div class="kf-icon clay">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="kf-body">
+          <div class="kf-label">Approval-to-publish rate</div>
+          <div class="kf-value">96<em>%</em></div>
+        </div>
+      </div>
+      <div class="kpi-flat">
+        <div class="kf-icon peach">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="kf-body">
+          <div class="kf-label">Avg review time</div>
+          <div class="kf-value">1.2<em>d</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <select class="input" id="filt-path" onchange="applyCertFilters()"><option value="">Career path</option><option value="CDMP">Data Management</option><option value="KMP">Knowledge Management</option><option value="ERM">Records Management</option><option value="IGP">Information Governance</option></select>
+      <select class="input" id="filt-verdict" onchange="applyCertFilters()"><option value="">My verdict</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option><option value="Needs changes">Needs changes</option></select>
+      <select class="input" id="filt-date" onchange="applyCertFilters()"><option value="">Date range</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="365">This year</option></select>
+      <button class="btn btn-ghost btn-sm" onclick="clearCertFilters()">Clear</button>
+    </div>
+    <div id="cert-filter-count" style="font-family:var(--font-label);font-size:12px;color:var(--ink-mute);margin-bottom:10px;display:none"></div>
+
+    <div class="card mb">
+      <table class="tbl cert-tbl">
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Approved on</th>
+            <th>Issued count</th>
+            <th>Last cert</th>
+            <th>Path</th>
+            <th>My verdict</th>
+          </tr>
+        </thead>
+        <tbody id="cert-tbody">
+          <tr data-path="KMP" data-verdict="Approved" data-date="2026-05-10">
+            <td>Knowledge Mapping Fundamentals</td>
+            <td class="col-mono">2026-05-10</td>
+            <td class="col-count">312</td>
+            <td class="col-mono">2026-05-18</td>
+            <td class="col-mono">KMP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="ERM" data-verdict="Approved" data-date="2026-04-28">
+            <td>Records Lifecycle Management</td>
+            <td class="col-mono">2026-04-28</td>
+            <td class="col-count">540</td>
+            <td class="col-mono">2026-05-17</td>
+            <td class="col-mono">ERM</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="ERM" data-verdict="Approved" data-date="2026-04-15">
+            <td>ISO 15489 Deep Dive</td>
+            <td class="col-mono">2026-04-15</td>
+            <td class="col-count">876</td>
+            <td class="col-mono">2026-05-19</td>
+            <td class="col-mono">ERM</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="IGP" data-verdict="Approved" data-date="2026-04-02">
+            <td>Information Architecture Overview</td>
+            <td class="col-mono">2026-04-02</td>
+            <td class="col-count">203</td>
+            <td class="col-mono">2026-05-16</td>
+            <td class="col-mono">IGP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="CDMP" data-verdict="Approved" data-date="2026-03-20">
+            <td>Data Governance Foundations</td>
+            <td class="col-mono">2026-03-20</td>
+            <td class="col-count">628</td>
+            <td class="col-mono">2026-05-18</td>
+            <td class="col-mono">CDMP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="KMP" data-verdict="Approved" data-date="2026-03-08">
+            <td>Knowledge Systems Intro</td>
+            <td class="col-mono">2026-03-08</td>
+            <td class="col-count">445</td>
+            <td class="col-mono">2026-05-15</td>
+            <td class="col-mono">KMP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="IGP" data-verdict="Approved" data-date="2026-02-19">
+            <td>Document Control Essentials</td>
+            <td class="col-mono">2026-02-19</td>
+            <td class="col-count">391</td>
+            <td class="col-mono">2026-05-12</td>
+            <td class="col-mono">IGP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+          <tr data-path="CDMP" data-verdict="Approved" data-date="2026-02-04">
+            <td>Metadata and Classification Basics</td>
+            <td class="col-mono">2026-02-04</td>
+            <td class="col-count">626</td>
+            <td class="col-mono">2026-05-10</td>
+            <td class="col-mono">CDMP</td>
+            <td><span class="chip t-sage dot">Approved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-foot">Showing 8 of 38 approved courses. Certificates are issued by IMI system automatically on Course Completed.</p>
+
+  </main>
+</div>
+<script>
+function applyCertFilters() {
+  var path = document.getElementById('filt-path').value;
+  var verdict = document.getElementById('filt-verdict').value;
+  var dateRange = parseInt(document.getElementById('filt-date').value, 10);
+  var cutoff = dateRange ? new Date(Date.now() - dateRange * 86400000) : null;
+  var rows = document.querySelectorAll('#cert-tbody tr');
+  var shown = 0;
+  rows.forEach(function(r) {
+    var pathOk = !path || r.dataset.path === path;
+    var verdictOk = !verdict || r.dataset.verdict === verdict;
+    var dateOk = !cutoff || new Date(r.dataset.date) >= cutoff;
+    var show = pathOk && verdictOk && dateOk;
+    r.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  var countEl = document.getElementById('cert-filter-count');
+  if (countEl) { countEl.style.display = 'block'; countEl.textContent = 'Showing ' + shown + ' of ' + rows.length + ' courses'; }
+  var foot = document.querySelector('.table-foot');
+  if (foot) foot.textContent = 'Showing ' + shown + ' of 38 approved courses. Certificates are issued by IMI system automatically on Course Completed.';
+}
+
+function clearCertFilters() {
+  ['filt-path','filt-verdict','filt-date'].forEach(function(id) { var el = document.getElementById(id); if (el) el.selectedIndex = 0; });
+  document.querySelectorAll('#cert-tbody tr').forEach(function(r) { r.style.display = ''; });
+  var countEl = document.getElementById('cert-filter-count');
+  if (countEl) { countEl.style.display = 'none'; }
+  var foot = document.querySelector('.table-foot');
+  if (foot) foot.textContent = 'Showing 8 of 38 approved courses. Certificates are issued by IMI system automatically on Course Completed.';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

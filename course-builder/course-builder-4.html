@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course builder · Step 4 Review · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── Builder step strip ── */
+  .builder-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .b-step {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-mute);
+  }
+  .b-step .b-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--paper-2);
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+  }
+  .b-step.done { color: var(--ink); border-color: var(--line); }
+  .b-step.done .b-num {
+    background: var(--c-sage-wash);
+    color: var(--c-sage-text);
+    border-color: rgba(126,155,111,0.22);
+  }
+  .b-step.is { color: var(--ink); border-color: var(--line-strong); box-shadow: var(--shadow-xs); }
+  .b-step.is .b-num { background: var(--ink); color: var(--hero-bg); border-color: transparent; }
+
+  /* ── Review main / rail layout ── */
+  .review-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) { .review-grid { grid-template-columns: 1fr; } }
+
+  /* ── Pre-submission checklist rows ── */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .check-row:last-child { border-bottom: none; }
+  .check-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .check-dot.ok   { background: var(--c-sage); }
+  .check-dot.warn { background: var(--c-honey); }
+  .check-body { flex: 1; min-width: 0; }
+  .check-body strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+    letter-spacing: -0.005em;
+  }
+  .check-body p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ── Submit rail card ── */
+  .submit-card { padding: 22px 24px 24px; }
+  .submit-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .submit-card .req { color: var(--accent); }
+  .lock-note { font-size: 11.5px; color: var(--ink-mute); margin-top: 12px; line-height: 1.5; }
+
+  /* ── Completeness checklist ── */
+  .compliance {
+    margin-top: 24px;
+    background: var(--paper-2);
+  }
+  .compliance .card-body { padding: 18px 22px 22px; }
+  .compliance-list { display: flex; flex-direction: column; gap: 11px; }
+  .compliance-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .compliance-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .compliance-mark.ok    { background: var(--c-sage-wash);  color: var(--c-sage-text); }
+  .compliance-mark.warn  { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .compliance-mark.block { background: var(--c-clay-wash);  color: #8C4534; }
+  .compliance-foot { font-size: 11.5px; color: var(--ink-mute); margin-top: 16px; line-height: 1.5; }
+
+  /* ── Ask AI placeholder ── */
+  .ask-ai {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 12px 16px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    color: var(--ink-mute);
+    font-size: 12.5px;
+    opacity: 0.7;
+  }
+  .ask-ai svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .ask-ai .ai-pill {
+    margin-left: auto;
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: var(--r-pill);
+  }
+
+  /* ── Disabled button state ── */
+  .btn.is-disabled {
+    background: var(--paper-2);
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  /* ── Blocker gate note ── */
+  .gate-note {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #8C4534;
+    line-height: 1.4;
+  }
+  .gate-note svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ── Blockers summary banner (flat, no gradient) ── */
+  .blockers-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--c-clay-wash);
+    border: 1px solid rgba(184,101,78,0.22);
+    border-radius: var(--r-md);
+    margin-bottom: 24px;
+  }
+  .blockers-banner .bb-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid rgba(184,101,78,0.22);
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .blockers-banner .bb-icon svg { width: 18px; height: 18px; }
+  .blockers-banner .bb-body { flex: 1; min-width: 0; }
+  .blockers-banner .bb-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+    letter-spacing: -0.005em;
+  }
+  .blockers-banner .bb-sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="../role-views/content-dev-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../role-views/content-dev-home.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#my-courses" class="sidebar-link is-active" data-nav="my-courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Courses</span><span class="badge">12</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Drafts</span><span class="badge">3</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#published" class="sidebar-link" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Published</span><span class="badge">9</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="../role-views/cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>SME Reviews</span><span class="badge">2</span>
+      </a>
+      <a href="../role-views/cd-feedback.html#qa" class="sidebar-link" data-nav="qa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Learner Q&amp;A</span><span class="badge">8</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="cb-reports.html" class="sidebar-link" data-nav="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="../role-views/cd-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Course builder &middot; Step 4 of 4</div>
+        <h1 class="page-title">Review &amp; <em>publish</em></h1>
+        <p class="page-sub">Final completeness check before you hand off. Confirm the basics, then submit for SME review.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="course-builder-3.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </a>
+        <button class="btn btn-primary is-disabled" id="submitHeaderBtn" type="button" disabled aria-disabled="true" title="Resolve all blockers before submitting" onclick="handleSubmit()">
+          Submit for SME review
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step progress strip -->
+    <div class="builder-steps">
+      <a class="b-step done" href="course-builder-1.html" style="text-decoration:none;color:inherit"><div class="b-num">&#x2713;</div>Info</a>
+      <a class="b-step done" href="course-builder-2.html" style="text-decoration:none;color:inherit"><div class="b-num">&#x2713;</div>Lessons</a>
+      <a class="b-step done" href="course-builder-3.html" style="text-decoration:none;color:inherit"><div class="b-num">&#x2713;</div>Assessment</a>
+      <div class="b-step is"><div class="b-num">4</div>Review</div>
+    </div>
+
+    <!-- Blocker summary banner -->
+    <div class="blockers-banner">
+      <div class="bb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+      </div>
+      <div class="bb-body">
+        <div class="bb-title">3 blockers must be resolved before submission</div>
+        <div class="bb-sub">Missing transcript on M3 L2 &middot; Persona assignment incomplete &middot; No SME reviewer assigned</div>
+      </div>
+    </div>
+
+    <!-- Main review layout -->
+    <div class="review-grid">
+
+      <!-- Left column: checklists -->
+      <div>
+        <!-- Pre-submission checklist -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Pre-submission <em>checklist</em></div>
+            <span class="chip t-sage dot">4 of 5 clear</span>
+          </div>
+          <div class="card-body flush">
+            <div class="check-row">
+              <span class="check-dot ok"></span>
+              <div class="check-body">
+                <strong>Basic info complete</strong>
+                <p>Title, description, tags, thumbnail.</p>
+              </div>
+            </div>
+            <div class="check-row">
+              <span class="check-dot ok"></span>
+              <div class="check-body">
+                <strong>5 lessons added</strong>
+                <p>4 video, 1 text &middot; 170 min total.</p>
+              </div>
+            </div>
+            <div class="check-row">
+              <span class="check-dot ok"></span>
+              <div class="check-body">
+                <strong>10 quiz questions</strong>
+                <p>MCQ, True/False, Image, 1 Essay. Pass mark 70%.</p>
+              </div>
+            </div>
+            <div class="check-row">
+              <span class="check-dot warn"></span>
+              <div class="check-body">
+                <strong>2 lessons missing PDF attachments</strong>
+                <p>Optional &middot; can submit anyway.</p>
+              </div>
+            </div>
+            <div class="check-row">
+              <span class="check-dot ok"></span>
+              <div class="check-body">
+                <strong>Skills + outcomes filled</strong>
+                <p>3 skills, 6 outcomes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completeness checklist -->
+        <div class="card compliance">
+          <div class="card-head">
+            <div class="card-title">Completeness <em>checklist</em></div>
+          </div>
+          <div class="card-body">
+            <div class="compliance-list">
+              <div class="compliance-item">
+                <span class="compliance-mark ok">&#x2713;</span>
+                All 5 modules have at least 3 lessons
+              </div>
+              <div class="compliance-item">
+                <span class="compliance-mark ok">&#x2713;</span>
+                Quiz exists per module + final assessment
+              </div>
+              <div class="compliance-item">
+                <span class="compliance-mark ok">&#x2713;</span>
+                Cover image uploaded (1280x720)
+              </div>
+              <div class="compliance-item">
+                <span class="compliance-mark ok">&#x2713;</span>
+                Description &ge; 200 chars + learning outcomes listed
+              </div>
+              <div class="compliance-item">
+                <span class="compliance-mark ok">&#x2713;</span>
+                Subtitles on all 4 video lessons (WCAG 2.1 AA)
+              </div>
+              <div class="compliance-item" id="blocker-transcript">
+                <span class="compliance-mark block" id="bm-transcript">&times;</span>
+                <span style="flex:1">Transcript missing on 1 video lesson (M3 L2)</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px;flex-shrink:0" onclick="fixBlocker('transcript')">Fix</button>
+              </div>
+              <div class="compliance-item" id="blocker-persona">
+                <span class="compliance-mark block" id="bm-persona">&times;</span>
+                <span style="flex:1">Persona assignment incomplete (Learner only, missing Corp User access)</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px;flex-shrink:0" onclick="fixBlocker('persona')">Fix</button>
+              </div>
+              <div class="compliance-item" id="blocker-sme">
+                <span class="compliance-mark block" id="bm-sme">&times;</span>
+                <span style="flex:1">SME reviewer not yet assigned</span>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 10px;flex-shrink:0" onclick="fixBlocker('sme')">Fix</button>
+              </div>
+            </div>
+            <p class="compliance-foot" id="complianceFoot">3 blockers must be resolved before submission.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right rail: submit card -->
+      <aside>
+        <div class="card">
+          <div class="submit-card">
+            <h4>Submit for SME review</h4>
+            <div class="field">
+              <label>Assign SME reviewer <span class="req">*</span></label>
+              <input class="input" id="smeReviewerInput" placeholder="Dr. Faris Al-Maamari" oninput="checkSubmitReady()">
+            </div>
+            <button class="btn btn-primary is-disabled" id="submitRailBtn" type="button" disabled aria-disabled="true" style="width:100%;justify-content:center" onclick="handleSubmit()">
+              Submit for review
+            </button>
+            <p class="gate-note" id="railGateNote">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+              3 blockers must be resolved before submission.
+            </p>
+            <p class="lock-note">Course will be locked from edits until SME approves or rejects.</p>
+            <div class="ask-ai">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Ask a question about this course
+              <span class="ai-pill">Soon</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- Confirm Submit Modal -->
+<div id="submitModal" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px">
+  <div style="position:absolute;inset:0;background:rgba(42,17,8,0.45)" onclick="document.getElementById('submitModal').style.display='none'"></div>
+  <div style="position:relative;width:100%;max-width:460px;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:28px 30px">
+    <div style="font-family:var(--font-serif);font-style:italic;font-size:22px;color:var(--ink);margin-bottom:12px">Submit for review?</div>
+    <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:22px">The course will be sent to <strong id="smeNameConfirm">the assigned reviewer</strong> and locked from edits until a decision is made.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="document.getElementById('submitModal').style.display='none'">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmSubmit()">Confirm &amp; submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="cb4Toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:12.5px;font-weight:600;letter-spacing:0.05em;padding:11px 22px;border-radius:var(--r-pill);box-shadow:var(--shadow-card);opacity:0;transition:opacity 0.22s,transform 0.22s;z-index:300;pointer-events:none">Submitted for review</div>
+
+<style>
+/* Override is-disabled to be actually disabled */
+.btn.is-disabled { opacity:0.5; cursor:not-allowed; pointer-events:none; }
+</style>
+
+<script>
+var _blockers = {transcript:true, persona:true, sme:true};
+
+function updateBlockerState(){
+  var remaining = Object.values(_blockers).filter(Boolean).length;
+  // Update banner
+  var banner = document.querySelector('.blockers-banner');
+  var bbTitle = banner ? banner.querySelector('.bb-title') : null;
+  var bbSub = banner ? banner.querySelector('.bb-sub') : null;
+  if(bbTitle) bbTitle.textContent = remaining + (remaining===1?' blocker':' blockers') + ' must be resolved before submission';
+  if(remaining===0 && banner){
+    banner.style.display='none';
+  }
+  // Update compliance footer
+  var foot = document.getElementById('complianceFoot');
+  if(foot) foot.textContent = remaining>0 ? (remaining+' blocker'+(remaining!==1?'s':'')+' must be resolved before submission.') : 'All checks passed. Ready to submit.';
+  // Update checklist chip (5 pre-submission rows: 4 ok, 1 warn; does not change with blocker count)
+  // chip stays "4 of 5 clear" until all compliance checks pass
+  var chip = document.querySelector('.chip.t-sage');
+  if(chip){ chip.textContent = remaining===0 ? '5 of 5 clear' : '4 of 5 clear'; }
+  checkSubmitReady();
+}
+
+function fixBlocker(id){
+  if(id==='sme'){
+    // Scroll to reviewer input and focus it
+    var inp = document.getElementById('smeReviewerInput');
+    inp.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(function(){inp.focus();},350);
+    return;
+  }
+  // Simulate fix
+  _blockers[id]=false;
+  var mark = document.getElementById('bm-'+id);
+  if(mark){ mark.className='compliance-mark ok'; mark.textContent='✓'; }
+  var row = document.getElementById('blocker-'+id);
+  if(row){ var btn=row.querySelector('button'); if(btn) btn.remove(); }
+  showToast(id==='transcript'?'Transcript uploaded':'Persona access updated');
+  updateBlockerState();
+}
+
+function checkSubmitReady(){
+  var inp = document.getElementById('smeReviewerInput');
+  var hasSme = inp && inp.value.trim().length > 0;
+  if(hasSme && !_blockers.sme){
+    // already fixed via input
+  }
+  if(hasSme){
+    _blockers.sme = false;
+    var mark = document.getElementById('bm-sme');
+    if(mark && mark.className.indexOf('block')>=0){ mark.className='compliance-mark ok'; mark.textContent='✓'; }
+    var row = document.getElementById('blocker-sme');
+    if(row){ var btn=row.querySelector('button'); if(btn) btn.remove(); }
+  } else {
+    _blockers.sme = true;
+    var mark2 = document.getElementById('bm-sme');
+    if(mark2 && mark2.className.indexOf('ok')>=0){ mark2.className='compliance-mark block'; mark2.textContent='\xd7'; }
+  }
+  var remaining = Object.values(_blockers).filter(Boolean).length;
+  var ready = remaining===0;
+  var hBtn = document.getElementById('submitHeaderBtn');
+  var rBtn = document.getElementById('submitRailBtn');
+  var note = document.getElementById('railGateNote');
+  [hBtn,rBtn].forEach(function(b){
+    if(!b) return;
+    if(ready){
+      b.classList.remove('is-disabled');
+      b.disabled=false;
+      b.removeAttribute('aria-disabled');
+      b.style.pointerEvents='';
+    } else {
+      b.classList.add('is-disabled');
+      b.disabled=true;
+      b.setAttribute('aria-disabled','true');
+    }
+  });
+  if(note) note.style.display = ready?'none':'flex';
+  updateBlockerBanner(remaining);
+}
+
+function updateBlockerBanner(remaining){
+  var banner = document.querySelector('.blockers-banner');
+  if(!banner) return;
+  if(remaining===0){ banner.style.display='none'; return; }
+  banner.style.display='flex';
+  var t = banner.querySelector('.bb-title');
+  if(t) t.textContent = remaining+' blocker'+(remaining!==1?'s':'')+' must be resolved before submission';
+  var foot = document.getElementById('complianceFoot');
+  if(foot) foot.textContent = remaining+' blocker'+(remaining!==1?'s':'')+' must be resolved before submission.';
+}
+
+function handleSubmit(){
+  var inp = document.getElementById('smeReviewerInput');
+  var name = inp ? inp.value.trim() : '';
+  if(!name){ inp.focus(); return; }
+  document.getElementById('smeNameConfirm').textContent = name;
+  document.getElementById('submitModal').style.display='flex';
+}
+
+function confirmSubmit(){
+  document.getElementById('submitModal').style.display='none';
+  showToast('Course submitted for SME review');
+  setTimeout(function(){
+    location.href='../role-views/content-dev-home.html';
+  },1800);
+}
+
+function showToast(msg){
+  var t=document.getElementById('cb4Toast');
+  t.textContent=msg;
+  t.style.opacity='1';
+  t.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},2400);
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') document.getElementById('submitModal').style.display='none';
+});
+
+// Init
+updateBlockerState();
+</script>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

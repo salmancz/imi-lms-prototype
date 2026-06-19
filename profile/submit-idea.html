@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit an Idea · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- page layout ---- */
+  .idea-wrap {
+    max-width: 900px;
+  }
+
+  /* ---- form + tips two-col ---- */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .idea-grid { grid-template-columns: 1fr; }
+    .idea-tips  { order: -1; }
+  }
+
+  /* ---- field sizes for this form ---- */
+  .field-row { margin-bottom: 22px; }
+  .field-row label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 7px;
+  }
+  .field-row .req { color: var(--accent); margin-left: 2px; }
+
+  .input-main {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: var(--r-sm);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .input-main:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+    background: #fff;
+  }
+  .input-main::placeholder { color: var(--ink-faint); }
+
+  .select-wrap { position: relative; }
+  .select-wrap select.input-main {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 42px;
+    cursor: pointer;
+  }
+
+  textarea.input-main {
+    height: auto;
+    padding: 13px 14px;
+    min-height: 130px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .char-hint {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    text-align: right;
+    margin-top: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .btn-submit {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 20px;
+    font-size: 14px;
+  }
+
+  /* ---- form card padding ---- */
+  .form-body { padding: 28px 30px 30px; }
+
+  /* ---- tips panel ---- */
+  .tips-card { padding: 22px 22px 24px; }
+  .tips-title {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .tip-item {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .tip-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .tip-icon svg { width: 14px; height: 14px; }
+  .tip-icon.t-honey { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .tip-icon.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage-text); }
+  .tip-icon.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay); }
+  .tip-text { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .tip-text strong { color: var(--ink); font-weight: 600; }
+
+  /* ---- divider inside card ---- */
+  .form-divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 24px 0;
+  }
+
+  /* ---- category pills (visual aid below select) ---- */
+  .cat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+  }
+  .cat-pill {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    background: var(--paper-2);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .cat-pill:hover, .cat-pill.is-sel {
+    background: var(--ink);
+    color: var(--hero-bg);
+    border-color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'">
+  </div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <a href="help-center.html" class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none">
+      <div class="avatar-ring" style="--pct:68">
+        <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+        <span class="ring-pct">68%</span>
+      </div>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span><span class="badge">8</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Wishlist</span><span class="badge">12</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Course Completed</span><span class="badge">5</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="idea-wrap">
+
+      <div class="page-head" style="grid-template-columns:1fr; margin-bottom:28px">
+        <div>
+          <div class="eyebrow">Feedback &middot; Ideas</div>
+          <h1 class="page-title">Submit an <em>idea</em></h1>
+          <p class="page-sub">Share your ideas to help shape the learning experience. Every submission is reviewed by the IMI team.</p>
+        </div>
+      </div>
+
+      <div class="idea-grid">
+
+        <!-- Form card -->
+        <div class="card">
+          <div class="form-body">
+
+            <div class="field-row">
+              <label for="idea-title">Idea title <span class="req">*</span></label>
+              <input id="idea-title" class="input-main" type="text" placeholder="Give your idea a short, clear title" maxlength="120">
+            </div>
+
+            <div class="field-row">
+              <label for="idea-cat">Category <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select id="idea-cat" class="input-main" onchange="syncCatPill(this.value)">
+                  <option value="">Select a category...</option>
+                  <option value="Course / content">Course / content</option>
+                  <option value="Feature">Feature</option>
+                  <option value="UX">UX</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="cat-pills" id="cat-pills" role="group" aria-label="Quick category select">
+                <button type="button" class="cat-pill" onclick="pickPill(this,'Course / content')">Course / content</button>
+                <button type="button" class="cat-pill" onclick="pickPill(this,'Feature')">Feature</button>
+                <button type="button" class="cat-pill" onclick="pickPill(this,'UX')">UX</button>
+                <button type="button" class="cat-pill" onclick="pickPill(this,'Other')">Other</button>
+              </div>
+            </div>
+
+            <div class="field-row" style="margin-bottom:0">
+              <label for="idea-desc">Description <span class="req">*</span></label>
+              <textarea id="idea-desc" class="input-main" rows="6" placeholder="Describe your idea. What problem does it solve? What would it look like?" maxlength="1000" oninput="updateCount(this)"></textarea>
+              <p class="char-hint" id="char-count">0 / 1000</p>
+            </div>
+
+            <hr class="form-divider">
+
+            <div style="margin-bottom:20px">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-family:var(--font-sans);font-size:13px;font-weight:400;color:var(--ink-soft);line-height:1.5">
+                <input type="checkbox" id="contactOkCb" style="margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--accent)">
+                <span>It's okay to contact me about this idea if we need more details.</span>
+              </label>
+            </div>
+
+            <button class="btn btn-primary btn-submit" type="submit" onclick="return submitIdea(event)">Submit idea</button>
+          </div>
+        </div>
+
+        <!-- Tips panel -->
+        <div class="card tips-card">
+          <div class="tips-title">Tips for a great submission</div>
+          <div class="tip-item">
+            <div class="tip-icon t-honey">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <p class="tip-text"><strong>Be specific.</strong> Ideas with a clear problem statement are more likely to be actioned.</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon t-sage">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <p class="tip-text"><strong>Think about others.</strong> Ideas that benefit many learners move to the top of the review queue.</p>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon t-clay">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <p class="tip-text"><strong>Describe the outcome.</strong> Explain what success looks like, not just what you want built.</p>
+          </div>
+        </div>
+
+      </div><!-- /idea-grid -->
+
+      <p style="margin-top:18px;font-family:var(--font-label);font-size:11px;letter-spacing:0.04em;color:var(--ink-faint);text-align:center">
+        Your ideas &nbsp;&middot;&nbsp;
+        <a href="help-center.html" style="color:var(--ink-soft);text-decoration:underline">View all submitted (0)</a>
+      </p>
+    </div>
+  </main>
+</div>
+
+<script>
+  function updateCount(el) {
+    var n = el.value.length;
+    var hint = document.getElementById('char-count');
+    if (hint) hint.textContent = n + ' / 1000';
+  }
+
+  function syncCatPill(val) {
+    document.querySelectorAll('#cat-pills .cat-pill').forEach(function(p) {
+      p.classList.toggle('is-sel', p.textContent.trim() === val);
+    });
+  }
+
+  function pickPill(btn, val) {
+    var sel = document.getElementById('idea-cat');
+    if (sel) sel.value = val;
+    document.querySelectorAll('#cat-pills .cat-pill').forEach(function(p) {
+      p.classList.remove('is-sel');
+    });
+    btn.classList.add('is-sel');
+  }
+
+  function submitIdea(e) {
+    e.preventDefault();
+    var title = document.getElementById('idea-title');
+    var cat   = document.getElementById('idea-cat');
+    var desc  = document.getElementById('idea-desc');
+    if (!title || !title.value.trim()) {
+      title && title.focus();
+      title && (title.style.outline = '2px solid var(--c-danger)');
+      setTimeout(function(){ title && (title.style.outline = ''); }, 1800);
+      return false;
+    }
+    if (!cat || !cat.value) {
+      cat && cat.focus();
+      cat && (cat.style.outline = '2px solid var(--c-danger)');
+      setTimeout(function(){ cat && (cat.style.outline = ''); }, 1800);
+      return false;
+    }
+    if (!desc || !desc.value.trim()) {
+      desc && desc.focus();
+      desc && (desc.style.outline = '2px solid var(--c-danger)');
+      setTimeout(function(){ desc && (desc.style.outline = ''); }, 1800);
+      return false;
+    }
+    var btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+    var t = document.createElement('div');
+    t.textContent = 'Idea submitted. Thanks for your feedback!';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--c-sage);color:#fff;padding:12px 24px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.15);white-space:nowrap;';
+    document.body.appendChild(t);
+    setTimeout(function() {
+      t.remove();
+      location.href = 'help-center.html';
+    }, 2200);
+    return false;
+  }
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

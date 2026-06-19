@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course builder · Step 2 Lessons · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- builder page-specific ---- */
+  .builder { max-width: 860px; }
+
+  .builder-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .builder-top .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* stepper */
+  .stepper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--surface-3);
+    color: var(--ink-mute);
+    flex-shrink: 0;
+  }
+  .step.is-current {
+    border-color: var(--line-strong);
+    color: var(--ink);
+    box-shadow: var(--shadow-xs);
+  }
+  .step.is-current .step-num {
+    background: var(--ink);
+    color: var(--hero-bg);
+  }
+  .step.is-done { color: var(--ink-soft); }
+  .step.is-done .step-num {
+    background: var(--c-sage);
+    color: var(--paper);
+  }
+
+  /* lessons section */
+  .lessons-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .lessons-head h2 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .lessons-head h2 em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .lesson-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    transition: border-color 0.2s, box-shadow 0.25s, transform 0.2s var(--tn);
+  }
+  .lesson-row:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-xs);
+    transform: translateY(-1px);
+  }
+
+  .lesson-drag {
+    color: var(--ink-faint);
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: -2px;
+    cursor: grab;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .lesson-drag:hover { color: var(--ink-soft); }
+
+  .lesson-idx {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    min-width: 22px;
+    flex-shrink: 0;
+  }
+
+  .lesson-type {
+    font-family: var(--font-label);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: var(--r-pill);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lesson-type.t-video {
+    background: var(--c-honey-wash);
+    border-color: rgba(201,155,46,0.30);
+    color: var(--c-honey-text);
+  }
+  .lesson-type.t-text {
+    background: var(--c-sage-wash);
+    border-color: rgba(126,155,111,0.35);
+    color: var(--c-sage-text);
+  }
+  .lesson-type.t-pdf {
+    background: var(--c-clay-wash);
+    border-color: rgba(184,101,78,0.30);
+    color: #8C4534;
+  }
+
+  .lesson-title {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+
+  .lesson-dur {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .lesson-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  /* add lesson type panel */
+  .add-type {
+    margin-top: 22px;
+    text-align: center;
+    padding: 28px 24px;
+    background: var(--paper-2);
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--r-md);
+  }
+  .add-type p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+  }
+  .add-type .type-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* stat strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) { .stat-strip { grid-template-columns: 1fr; } }
+
+  .stat-strip .stat-flat { display: flex; align-items: center; gap: 14px; }
+  .stat-strip .stat-flat .si-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .stat-strip .stat-flat .si-circle svg { width: 18px; height: 18px; }
+  .stat-strip .stat-flat .si-circle.honey { background: var(--c-honey-wash); color: var(--c-honey); }
+  .stat-strip .stat-flat .si-circle.sage  { background: var(--c-sage-wash);  color: var(--c-sage); }
+  .stat-strip .stat-flat .si-circle.clay  { background: var(--c-clay-wash);  color: var(--c-clay); }
+  .stat-strip .stat-flat .si-body { flex: 1; min-width: 0; }
+  .stat-strip .stat-flat .stat-label { margin-bottom: 2px; }
+  .stat-strip .stat-flat .stat-value { font-size: 22px; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="../role-views/content-dev-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../role-views/content-dev-home.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#my-courses" class="sidebar-link is-active" data-nav="my-courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Courses</span><span class="badge">12</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Drafts</span><span class="badge">3</span>
+      </a>
+      <a href="../role-views/content-dev-home.html#published" class="sidebar-link" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Published</span><span class="badge">9</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="../role-views/cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>SME Reviews</span><span class="badge">2</span>
+      </a>
+      <a href="../role-views/cd-feedback.html#qa" class="sidebar-link" data-nav="qa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Learner Q&amp;A</span><span class="badge">8</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="cb-reports.html" class="sidebar-link" data-nav="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="../role-views/cd-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="builder">
+
+      <!-- page head -->
+      <div class="builder-top">
+        <div>
+          <div class="eyebrow">Course builder &middot; Step 2 of 4</div>
+          <h1 class="page-title">Lessons</h1>
+          <p class="page-sub">Arrange and add lessons for your course. Drag to reorder.</p>
+        </div>
+        <div class="actions">
+          <a class="btn btn-ghost btn-sm" href="course-builder-1.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </a>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="(function(b){b.textContent='Saving...';var t=document.getElementById('cb2Toast');setTimeout(function(){b.textContent='Save draft';t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},2000);},600);})(this)">Save draft</button>
+          <a class="btn btn-primary btn-sm" href="course-builder-3.html">
+            Next
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- stepper -->
+      <div class="stepper">
+        <a class="step is-done" href="course-builder-1.html" style="text-decoration:none;color:inherit"><span class="step-num">&#10003;</span>Info</a>
+        <div class="step is-current"><span class="step-num">2</span>Lessons</div>
+        <a class="step" href="course-builder-3.html" style="text-decoration:none;color:inherit"><span class="step-num">3</span>Assessment</a>
+        <a class="step" href="course-builder-4.html" style="text-decoration:none;color:inherit"><span class="step-num">4</span>Review</a>
+      </div>
+
+      <!-- stat strip -->
+      <div class="stat-strip">
+        <div class="stat-flat">
+          <div class="si-circle honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </div>
+          <div class="si-body">
+            <div class="stat-label">Video lessons</div>
+            <div class="stat-value">4</div>
+          </div>
+        </div>
+        <div class="stat-flat">
+          <div class="si-circle sage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="si-body">
+            <div class="stat-label">Text lessons</div>
+            <div class="stat-value">1</div>
+          </div>
+        </div>
+        <div class="stat-flat">
+          <div class="si-circle clay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="si-body">
+            <div class="stat-label">Total runtime</div>
+            <div class="stat-value">2<span style="font-size:16px;font-weight:600;color:var(--ink-mute);margin-left:2px">h 50m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- lessons card -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Lessons <em>(5)</em></div>
+          <button class="btn btn-primary btn-sm" onclick="openTypePickerModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add lesson
+          </button>
+        </div>
+        <div class="card-body">
+
+          <div class="lesson-list">
+
+            <div class="lesson-row">
+              <span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>
+              <span class="lesson-idx">L1</span>
+              <span class="lesson-type t-video">Video</span>
+              <span class="lesson-title">Why data quality matters</span>
+              <span class="lesson-dur">24 min</span>
+              <span class="lesson-actions">
+                <button class="btn btn-ghost btn-sm" onclick="location.href='standalone-lesson.html'">Edit</button>
+                <button class="btn btn-danger-ghost btn-sm" onclick="this.closest('.lesson-row').remove()">Remove</button>
+              </span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>
+              <span class="lesson-idx">L2</span>
+              <span class="lesson-type t-video">Video</span>
+              <span class="lesson-title">Dimensions of data quality</span>
+              <span class="lesson-dur">38 min</span>
+              <span class="lesson-actions">
+                <button class="btn btn-ghost btn-sm" onclick="location.href='standalone-lesson.html'">Edit</button>
+                <button class="btn btn-danger-ghost btn-sm" onclick="this.closest('.lesson-row').remove()">Remove</button>
+              </span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>
+              <span class="lesson-idx">L3</span>
+              <span class="lesson-type t-video">Video</span>
+              <span class="lesson-title">Profiling techniques</span>
+              <span class="lesson-dur">52 min</span>
+              <span class="lesson-actions">
+                <button class="btn btn-ghost btn-sm" onclick="location.href='standalone-lesson.html'">Edit</button>
+                <button class="btn btn-danger-ghost btn-sm" onclick="this.closest('.lesson-row').remove()">Remove</button>
+              </span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>
+              <span class="lesson-idx">L4</span>
+              <span class="lesson-type t-video">Video</span>
+              <span class="lesson-title">Building quality scorecards</span>
+              <span class="lesson-dur">41 min</span>
+              <span class="lesson-actions">
+                <button class="btn btn-ghost btn-sm" onclick="location.href='standalone-lesson.html'">Edit</button>
+                <button class="btn btn-danger-ghost btn-sm" onclick="this.closest('.lesson-row').remove()">Remove</button>
+              </span>
+            </div>
+
+            <div class="lesson-row">
+              <span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>
+              <span class="lesson-idx">L5</span>
+              <span class="lesson-type t-text">Text</span>
+              <span class="lesson-title">Stakeholder communication frameworks</span>
+              <span class="lesson-dur">15 min read</span>
+              <span class="lesson-actions">
+                <button class="btn btn-ghost btn-sm" onclick="location.href='standalone-lesson.html'">Edit</button>
+                <button class="btn btn-danger-ghost btn-sm" onclick="this.closest('.lesson-row').remove()">Remove</button>
+              </span>
+            </div>
+
+          </div>
+
+          <div class="add-type">
+            <p>Add lesson type</p>
+            <div class="type-buttons">
+              <button class="btn btn-ghost btn-sm" onclick="openAddLesson('Video')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                Video
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="openAddLesson('PDF')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                PDF / Document
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="openAddLesson('Text')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+                Text
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Builder footer nav -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px;padding-top:22px;border-top:1px solid var(--line)">
+      <span style="font-family:var(--font-label);font-size:12px;color:var(--ink-mute);letter-spacing:0.04em">Step 2 of 4 &middot; Lessons</span>
+      <div style="display:flex;gap:10px">
+        <a class="btn btn-ghost" href="course-builder-1.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </a>
+        <a class="btn btn-primary" href="course-builder-3.html">Next: Assessment &rarr;</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Type Picker Modal -->
+<div id="typePickerModal" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px">
+  <div style="position:absolute;inset:0;background:rgba(42,17,8,0.45)" onclick="closeTypePicker()"></div>
+  <div style="position:relative;width:100%;max-width:420px;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:26px 28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:var(--font-serif);font-style:italic;font-size:21px;color:var(--ink)">Add lesson</div>
+      <button onclick="closeTypePicker()" style="width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-mute);border:1px solid var(--line);background:none;cursor:pointer;font-size:18px">&times;</button>
+    </div>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;font-family:var(--font-label);letter-spacing:0.03em">Choose a lesson type to continue</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-ghost" style="justify-content:flex-start;gap:14px;padding:14px 16px" onclick="closeTypePicker();openAddLesson('Video')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        <span style="text-align:left"><strong style="display:block;font-size:14px">Video</strong><span style="font-size:12px;color:var(--ink-mute)">Upload or link a video lesson</span></span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start;gap:14px;padding:14px 16px" onclick="closeTypePicker();openAddLesson('PDF')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span style="text-align:left"><strong style="display:block;font-size:14px">PDF / Document</strong><span style="font-size:12px;color:var(--ink-mute)">Upload a PDF, slides, or Word doc</span></span>
+      </button>
+      <button class="btn btn-ghost" style="justify-content:flex-start;gap:14px;padding:14px 16px" onclick="closeTypePicker();openAddLesson('Text')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+        <span style="text-align:left"><strong style="display:block;font-size:14px">Text</strong><span style="font-size:12px;color:var(--ink-mute)">Write a text-based reading lesson</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Lesson Modal -->
+<div id="addLessonModal" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px">
+  <div style="position:absolute;inset:0;background:rgba(42,17,8,0.45)" onclick="closeAddLesson()"></div>
+  <div style="position:relative;width:100%;max-width:520px;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:26px 28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:4px">Add lesson</div>
+        <span id="alModalType" style="font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-deep);background:var(--c-clay-wash);padding:5px 11px;border-radius:var(--r-pill)">Video</span>
+      </div>
+      <button onclick="closeAddLesson()" style="width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;color:var(--ink-mute);border:1px solid var(--line);background:none;cursor:pointer;font-size:18px">&times;</button>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:7px">Lesson title <span style="color:var(--accent)">*</span></label>
+      <input id="alTitle" class="input" placeholder="e.g. Introduction to data quality" style="width:100%">
+    </div>
+    <div id="alUploadWrap" style="margin-bottom:16px">
+      <label style="display:block;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:7px" id="alUploadLabel">Upload video</label>
+      <div onclick="document.getElementById('alFile').click()" style="border:1.5px dashed var(--line-strong);border-radius:var(--r-sm);background:var(--paper-2);padding:18px;text-align:center;font-family:var(--font-label);font-size:12px;color:var(--ink-mute);cursor:pointer" id="alDropZone">Click to upload or drag file here</div>
+      <input type="file" id="alFile" style="display:none" onchange="document.getElementById('alDropZone').textContent=this.files[0]?this.files[0].name:'Click to upload or drag file here'">
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:7px">Duration</label>
+      <input id="alDuration" class="input" placeholder="e.g. 20 min" style="width:100%">
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:16px;border-top:1px solid var(--line)">
+      <button class="btn btn-ghost" onclick="closeAddLesson()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAddLesson()">Add lesson</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="cb2Toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:12.5px;font-weight:600;letter-spacing:0.05em;padding:11px 22px;border-radius:var(--r-pill);box-shadow:var(--shadow-card);opacity:0;transition:opacity 0.22s,transform 0.22s;z-index:300;pointer-events:none">Lesson added</div>
+
+<script>
+function openTypePickerModal(){
+  document.getElementById('typePickerModal').style.display='flex';
+}
+function closeTypePicker(){
+  document.getElementById('typePickerModal').style.display='none';
+}
+
+var _alType = 'Video';
+var _lessonCount = 5;
+
+var typeLabels = {Video:'t-video',PDF:'t-pdf',Text:'t-text'};
+
+function openAddLesson(type){
+  _alType = type;
+  document.getElementById('alModalType').textContent = type;
+  document.getElementById('alTitle').value = '';
+  document.getElementById('alDuration').value = '';
+  document.getElementById('alDropZone').textContent = 'Click to upload or drag file here';
+  var uploadLabel = document.getElementById('alUploadLabel');
+  var uploadWrap = document.getElementById('alUploadWrap');
+  if(type==='Text'){
+    uploadLabel.textContent='Paste or write content';
+    uploadWrap.innerHTML='<label style="display:block;font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:7px" id="alUploadLabel">Lesson body (optional)</label><textarea class="input" id="alTextBody" rows="4" placeholder="Start writing..." style="width:100%;resize:vertical"></textarea>';
+  } else {
+    uploadLabel.textContent = type==='PDF'?'Upload PDF / document':'Upload video';
+    document.getElementById('alFile').accept = type==='PDF'?'.pdf,.doc,.docx,.ppt,.pptx':'video/*';
+  }
+  var m=document.getElementById('addLessonModal');
+  m.style.display='flex';
+  setTimeout(function(){document.getElementById('alTitle').focus();},80);
+}
+
+function closeAddLesson(){
+  document.getElementById('addLessonModal').style.display='none';
+}
+
+function submitAddLesson(){
+  var title=document.getElementById('alTitle').value.trim();
+  if(!title){document.getElementById('alTitle').focus();document.getElementById('alTitle').style.borderColor='var(--accent)';return;}
+  var dur=document.getElementById('alDuration').value.trim()||(_alType==='Text'?'10 min read':'15 min');
+  _lessonCount++;
+  var list=document.querySelector('.lesson-list');
+  var row=document.createElement('div');
+  row.className='lesson-row';
+  row.innerHTML='<span class="lesson-drag" aria-hidden="true">&#8942;&#8942;</span>'
+    +'<span class="lesson-idx">L'+_lessonCount+'</span>'
+    +'<span class="lesson-type '+( typeLabels[_alType]||'' )+'">'+_alType+'</span>'
+    +'<span class="lesson-title">'+title+'</span>'
+    +'<span class="lesson-dur">'+dur+'</span>'
+    +'<span class="lesson-actions">'
+    +'<button class="btn btn-ghost btn-sm" onclick="location.href=\'standalone-lesson.html\'">Edit</button>'
+    +'<button class="btn btn-danger-ghost btn-sm" onclick="this.closest(\'.lesson-row\').remove()">Remove</button>'
+    +'</span>';
+  list.appendChild(row);
+  // Update lessons count
+  var ct=document.querySelector('.card-title em');
+  if(ct) ct.textContent='('+_lessonCount+')';
+  closeAddLesson();
+  var t=document.getElementById('cb2Toast');
+  t.textContent=title+' added';
+  t.style.opacity='1';
+  t.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},2400);
+}
+
+// Keyboard close
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){ closeAddLesson(); closeTypePicker(); }
+});
+</script>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

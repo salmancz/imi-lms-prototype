@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Users · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- Page-local overrides (zero gradients) ---- */
+
+  /* KPI stat strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .stat-strip { grid-template-columns: 1fr 1fr; } }
+  .stat-strip .stat-flat[role="button"] { transition: border-color 0.18s, transform 0.18s var(--tn, ease), box-shadow 0.18s; }
+  .stat-strip .stat-flat[role="button"]:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+  /* Toolbar row */
+  .users-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 164px 164px;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 900px) { .users-toolbar { grid-template-columns: 1fr; } }
+
+  /* Search input inside toolbar */
+  .users-search { position: relative; }
+  .users-search input {
+    width: 100%;
+    height: 40px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    padding: 0 14px 0 40px;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .users-search input::placeholder { color: var(--ink-mute); }
+  .users-search input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42,17,8,0.04);
+  }
+  .users-search::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239B7165' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  /* Filter selects */
+  .users-select {
+    height: 40px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    padding: 0 12px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border 0.18s;
+  }
+  .users-select:focus { outline: none; border-color: var(--ink-mute); }
+
+  /* Table checkbox column */
+  .users-table th:first-child,
+  .users-table td:first-child { width: 38px; text-align: center; padding-left: 16px; }
+  .users-table th:last-child,
+  .users-table td:last-child  { text-align: right; }
+  .users-table input[type=checkbox] {
+    width: 15px; height: 15px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  /* User name link */
+  .user-name { color: var(--ink); font-weight: 600; }
+  .user-name:hover { color: var(--accent); }
+
+  /* Role chip stack */
+  .role-stack { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* Status cell (inline dot + text) */
+  .status-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-sage-text);
+  }
+  .status-cell .s-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--c-sage);
+    flex-shrink: 0;
+  }
+  .status-cell.suspended { color: var(--c-honey-text); }
+  .status-cell.suspended .s-dot { background: var(--c-honey); }
+  .status-cell.inactive { color: var(--ink-mute); }
+  .status-cell.inactive .s-dot { background: var(--ink-faint); }
+
+  /* Table footer with pager */
+  .tbl-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+  .pager { display: inline-flex; align-items: center; gap: 8px; }
+  .pager-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    display: grid; place-items: center;
+    color: var(--ink-soft);
+    transition: background 0.15s var(--tn), color 0.15s, border-color 0.15s, transform 0.15s var(--tn);
+    cursor: pointer;
+  }
+  .pager-btn:hover {
+    background: var(--ink);
+    color: var(--hero-bg);
+    border-color: var(--ink);
+    transform: translateY(-1px);
+  }
+  .pager-btn svg { width: 14px; height: 14px; }
+  .pager-now { font-weight: 600; color: var(--ink-soft); padding: 0 4px; }
+
+  /* Bulk-action bar (visible when rows checked) */
+  .bulk-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter')location.href='admin-users.html'">
+  </div>
+  <div class="topbar-actions">
+    <span class="role-pill">SUPER ADMIN</span>
+    <button class="icon-btn" title="Notifications" onclick="location.href='audit-log.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link is-active" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span>
+        <span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span>
+        <span class="badge">47</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span>
+        <span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section sidebar-foot">
+      <div class="sidebar-label">This role &middot; pages</div>
+      <div class="page-switch">
+        <a href="admin-dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="admin-users.html" class="sidebar-link is-active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <span>Users</span>
+        </a>
+        <a href="admin-reports.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <span>Reports</span>
+        </a>
+      </div>
+    </div>
+
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">User management</div>
+        <h1 class="page-title">Admin <em>users</em> &middot; 23</h1>
+        <p class="page-sub">Internal admin-role users: SME, Content Developer, Support Engineer, Super Admin.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="imiExportCSV();return false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </a>
+        <a class="btn btn-primary" href="admin-user-create.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create admin user
+        </a>
+      </div>
+    </div>
+
+    <!-- KPI stat strip (flat, no gradients) -->
+    <div class="stat-strip">
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="Show all users" onclick="imiKpiFilter('')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiKpiFilter('')}">
+        <div class="stat-label">Total admins</div>
+        <div class="stat-value">23</div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="Filter active users" onclick="imiKpiFilter('active')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiKpiFilter('active')}">
+        <div class="stat-label">Active</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-sage)"></span>
+          21
+        </div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="Filter suspended users" onclick="imiKpiFilter('suspended')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiKpiFilter('suspended')}">
+        <div class="stat-label">Suspended</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+          2
+        </div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="View roles and permissions" onclick="location.href='roles-permissions.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='roles-permissions.html'}">
+        <div class="stat-label">Roles in use</div>
+        <div class="stat-value">4</div>
+      </div>
+    </div>
+
+    <!-- Search + filter toolbar -->
+    <div class="users-toolbar">
+      <div class="users-search">
+        <input id="users-search-input" placeholder="Search by name / email / ID" oninput="imiFilterUsers()" onkeydown="if(event.key==='Enter')imiFilterUsers()">
+      </div>
+      <select class="users-select" id="filter-role" onchange="imiFilterUsers()">
+        <option value="">All roles</option>
+        <option value="sme">SME</option>
+        <option value="content developer">Content Developer</option>
+        <option value="support engineer">Support Engineer</option>
+        <option value="super admin">Super Admin</option>
+      </select>
+      <select class="users-select" id="filter-status" onchange="imiFilterUsers()">
+        <option value="">All statuses</option>
+        <option value="active">Active</option>
+        <option value="suspended">Suspended</option>
+        <option value="deactivated">Deactivated</option>
+      </select>
+    </div>
+
+    <!-- Users table card -->
+    <div class="card">
+      <div class="card-head">
+        <div class="row gap">
+          <div class="card-title">All admin users</div>
+          <span class="chip">23 total</span>
+        </div>
+        <div class="bulk-bar">
+          <button class="btn btn-sm btn-ghost" onclick="imiBulkAction('suspend')">Bulk: suspend</button>
+          <button class="btn btn-sm btn-ghost" onclick="imiBulkAction('role')">Bulk: change role</button>
+          <button class="btn btn-sm btn-ghost" onclick="imiBulkAction('email')">Bulk: email</button>
+        </div>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl users-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="select-all" aria-label="Select all" onclick="imiSelectAll(this)"></th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Roles</th>
+              <th>Status</th>
+              <th>Last login</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr class="user-row" data-name="faris al-maamari" data-email="faris@imi.om" data-role="sme content developer" data-dept="academic content" data-status="active" onclick="if(event.target.type!=='checkbox')location.href='admin-user-detail.html'" style="cursor:pointer">
+              <td><input type="checkbox" aria-label="Select Faris Al-Maamari" onclick="event.stopPropagation();imiUpdateSelectAll();imiBulkVisibility()"></td>
+              <td><a class="user-name" href="admin-user-detail.html" onclick="event.stopPropagation()">Faris Al-Maamari</a></td>
+              <td>faris@imi.om</td>
+              <td>
+                <div class="role-stack">
+                  <span class="chip t-sage">SME</span>
+                  <span class="chip t-honey">Content Developer</span>
+                </div>
+              </td>
+              <td><span class="status-cell"><span class="s-dot"></span>Active</span></td>
+              <td>3h ago</td>
+              <td><a class="btn btn-ghost btn-sm" href="admin-user-detail.html" onclick="event.stopPropagation()">View &rarr;</a></td>
+            </tr>
+            <tr class="user-row" data-name="salim eng" data-email="salim@imi.om" data-role="support engineer" data-dept="it operations" data-status="active" onclick="if(event.target.type!=='checkbox')location.href='admin-user-detail.html'" style="cursor:pointer">
+              <td><input type="checkbox" aria-label="Select Salim Eng" onclick="event.stopPropagation();imiUpdateSelectAll();imiBulkVisibility()"></td>
+              <td><a class="user-name" href="admin-user-detail.html" onclick="event.stopPropagation()">Salim Eng</a></td>
+              <td>salim@imi.om</td>
+              <td>
+                <div class="role-stack">
+                  <span class="chip">Support Engineer</span>
+                </div>
+              </td>
+              <td><span class="status-cell"><span class="s-dot"></span>Active</span></td>
+              <td>20m ago</td>
+              <td><a class="btn btn-ghost btn-sm" href="admin-user-detail.html" onclick="event.stopPropagation()">View &rarr;</a></td>
+            </tr>
+            <tr class="user-row" data-name="ahmed builder" data-email="ahmed.b@imi.om" data-role="content developer" data-dept="academic content" data-status="active" onclick="if(event.target.type!=='checkbox')location.href='admin-user-detail.html'" style="cursor:pointer">
+              <td><input type="checkbox" aria-label="Select Ahmed Builder" onclick="event.stopPropagation();imiUpdateSelectAll();imiBulkVisibility()"></td>
+              <td><a class="user-name" href="admin-user-detail.html" onclick="event.stopPropagation()">Ahmed Builder</a></td>
+              <td>ahmed.b@imi.om</td>
+              <td>
+                <div class="role-stack">
+                  <span class="chip t-honey">Content Developer</span>
+                </div>
+              </td>
+              <td><span class="status-cell"><span class="s-dot"></span>Active</span></td>
+              <td>2h ago</td>
+              <td><a class="btn btn-ghost btn-sm" href="admin-user-detail.html" onclick="event.stopPropagation()">View &rarr;</a></td>
+            </tr>
+            <tr class="user-row" data-name="aisha director" data-email="director@imi.om" data-role="super admin" data-dept="administration" data-status="active" onclick="if(event.target.type!=='checkbox')location.href='admin-user-detail.html'" style="cursor:pointer">
+              <td><input type="checkbox" aria-label="Select Aisha Director" onclick="event.stopPropagation();imiUpdateSelectAll();imiBulkVisibility()"></td>
+              <td><a class="user-name" href="admin-user-detail.html" onclick="event.stopPropagation()">Aisha Director</a></td>
+              <td>director@imi.om</td>
+              <td>
+                <div class="role-stack">
+                  <span class="chip t-ink">Super Admin</span>
+                </div>
+              </td>
+              <td><span class="status-cell"><span class="s-dot"></span>Active</span></td>
+              <td>5m ago</td>
+              <td><a class="btn btn-ghost btn-sm" href="admin-user-detail.html" onclick="event.stopPropagation()">View &rarr;</a></td>
+            </tr>
+            <tr class="user-row" data-name="noura al-wahaibi" data-email="noura@imi.om" data-role="sme" data-dept="academic content" data-status="suspended" onclick="if(event.target.type!=='checkbox')location.href='admin-user-detail.html'" style="cursor:pointer">
+              <td><input type="checkbox" aria-label="Select Noura Al-Wahaibi" onclick="event.stopPropagation();imiUpdateSelectAll();imiBulkVisibility()"></td>
+              <td><a class="user-name" href="admin-user-detail.html" onclick="event.stopPropagation()">Noura Al-Wahaibi</a></td>
+              <td>noura@imi.om</td>
+              <td>
+                <div class="role-stack">
+                  <span class="chip t-sage">SME</span>
+                </div>
+              </td>
+              <td><span class="status-cell suspended"><span class="s-dot"></span>Suspended</span></td>
+              <td>12d ago</td>
+              <td><a class="btn btn-ghost btn-sm" href="admin-user-detail.html" onclick="event.stopPropagation()">View &rarr;</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-foot">
+          <span id="users-count">Showing 5 of 5 (filtered)</span>
+          <div class="pager">
+            <button class="pager-btn" aria-label="Previous page" data-toggle="page" onclick="imiPagerNav(this,-1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="pager-now">1 of 5</span>
+            <button class="pager-btn" aria-label="Next page" data-toggle="page" onclick="imiPagerNav(this,1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+
+<script>
+/* ---- Ad strip ---- */
+(function(){
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(e){
+    e.stopPropagation();
+    var strip = document.querySelector('.ad-strip');
+    if(strip){ strip.style.transition='opacity 0.2s'; strip.style.opacity='0'; setTimeout(function(){strip.style.display='none';},220); }
+  });
+})();
+
+/* ---- Filter / search ---- */
+function imiFilterUsers() {
+  var q = (document.getElementById('users-search-input').value || '').toLowerCase().trim();
+  var role = (document.getElementById('filter-role').value || '').toLowerCase();
+  var status = (document.getElementById('filter-status').value || '').toLowerCase();
+
+  var rows = document.querySelectorAll('#users-tbody .user-row');
+  var shown = 0;
+  rows.forEach(function(row){
+    var name = (row.dataset.name||'').toLowerCase();
+    var email = (row.dataset.email||'').toLowerCase();
+    var rowRole = (row.dataset.role||'').toLowerCase();
+    var rowStatus = (row.dataset.status||'').toLowerCase();
+
+    var matchQ = !q || name.indexOf(q)>-1 || email.indexOf(q)>-1;
+    var matchRole = !role || rowRole.indexOf(role)>-1;
+    var matchStatus = !status || rowStatus === status;
+
+    var visible = matchQ && matchRole && matchStatus;
+    row.style.display = visible ? '' : 'none';
+    if(visible) shown++;
+  });
+
+  var countEl = document.getElementById('users-count');
+  if(countEl) countEl.textContent = 'Showing ' + shown + ' of ' + rows.length;
+
+  /* uncheck select-all when filter changes */
+  var sa = document.getElementById('select-all');
+  if(sa) sa.checked = false;
+}
+
+/* ---- Select all ---- */
+function imiSelectAll(master) {
+  document.querySelectorAll('#users-tbody .user-row:not([style*="display: none"]) input[type=checkbox]').forEach(function(cb){
+    cb.checked = master.checked;
+  });
+}
+function imiUpdateSelectAll() {
+  var all = document.querySelectorAll('#users-tbody .user-row:not([style*="display: none"]) input[type=checkbox]');
+  var checked = document.querySelectorAll('#users-tbody .user-row:not([style*="display: none"]) input[type=checkbox]:checked');
+  var sa = document.getElementById('select-all');
+  if(sa){ sa.checked = all.length>0 && checked.length===all.length; sa.indeterminate = checked.length>0 && checked.length<all.length; }
+}
+function imiBulkVisibility() {
+  /* no-op hook for future bulk-bar show/hide on check */
+}
+
+/* ---- Bulk actions ---- */
+function imiBulkAction(action) {
+  var checked = document.querySelectorAll('#users-tbody input[type=checkbox]:checked');
+  if (!checked.length) { imiToast('Select at least one user first.', 'warn'); return; }
+  var names = Array.from(checked).map(function(cb){ return cb.closest('tr').querySelector('.user-name').textContent; });
+  imiToast('Bulk "' + action + '" applied to: ' + names.join(', '), 'ok');
+}
+
+/* ---- Export CSV ---- */
+function imiExportCSV() {
+  var rows = [
+    ['Name','Email','Roles','Status','Last login'],
+    ['Faris Al-Maamari','faris@imi.om','SME, Content Developer','Active','3h ago'],
+    ['Salim Eng','salim@imi.om','Support Engineer','Active','20m ago'],
+    ['Ahmed Builder','ahmed.b@imi.om','Content Developer','Active','2h ago'],
+    ['Aisha Director','director@imi.om','Super Admin','Active','5m ago'],
+    ['Noura Al-Wahaibi','noura@imi.om','SME','Suspended','12d ago']
+  ];
+  var csv = rows.map(function(r){return r.map(function(c){return '"'+c+'"';}).join(',');}).join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'admin-users.csv';
+  a.click();
+  imiToast('CSV downloaded.', 'ok');
+}
+
+/* ---- Pagination (page through visible rows in slices of 5) ---- */
+var _page = 1;
+var PAGE_SIZE = 5;
+function imiRenderPage() {
+  var rows = Array.from(document.querySelectorAll('#users-tbody .user-row'));
+  /* visible = rows that passed the filter (data-filtered-out != '1') */
+  var visible = rows.filter(function(r){ return r.getAttribute('data-filtered-out') !== '1'; });
+  var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  _page = Math.max(1, Math.min(totalPages, _page));
+  /* hide all first, then reveal only the current page slice */
+  rows.forEach(function(r){ r.style.display = 'none'; });
+  visible.forEach(function(r, i){
+    if(i >= (_page-1)*PAGE_SIZE && i < _page*PAGE_SIZE) r.style.display = '';
+  });
+  var s = document.querySelector('.pager-now');
+  if(s) s.textContent = _page + ' of ' + totalPages;
+  /* disable prev/next when at boundaries */
+  var prevBtn = document.querySelector('.pager-btn[aria-label="Previous page"]');
+  var nextBtn = document.querySelector('.pager-btn[aria-label="Next page"]');
+  if(prevBtn){ prevBtn.disabled = _page <= 1; prevBtn.style.opacity = _page <= 1 ? '0.35' : ''; }
+  if(nextBtn){ nextBtn.disabled = _page >= totalPages; nextBtn.style.opacity = _page >= totalPages ? '0.35' : ''; }
+  var onPage = Math.min(PAGE_SIZE, visible.length - (_page-1)*PAGE_SIZE);
+  var countEl = document.getElementById('users-count');
+  if(countEl) countEl.textContent = 'Showing ' + onPage + ' of ' + visible.length;
+}
+function imiPagerNav(btn, dir) {
+  _page += dir;
+  imiRenderPage();
+}
+
+/* Override filter to integrate with pager - canonical implementation */
+imiFilterUsers = function() {
+  var q = (document.getElementById('users-search-input').value || '').toLowerCase().trim();
+  var role = (document.getElementById('filter-role').value || '').toLowerCase();
+  var dept = (document.getElementById('filter-dept').value || '').toLowerCase();
+  var status = (document.getElementById('filter-status').value || '').toLowerCase();
+  var rows = document.querySelectorAll('#users-tbody .user-row');
+  rows.forEach(function(row){
+    var name = (row.dataset.name||'').toLowerCase();
+    var email = (row.dataset.email||'').toLowerCase();
+    var rowRole = (row.dataset.role||'').toLowerCase();
+    var rowDept = (row.dataset.dept||'').toLowerCase();
+    var rowStatus = (row.dataset.status||'').toLowerCase();
+    var matchQ = !q || name.indexOf(q)>-1 || email.indexOf(q)>-1;
+    var matchRole = !role || rowRole.indexOf(role)>-1;
+    var matchDept = !dept || rowDept.indexOf(dept)>-1;
+    var matchStatus = !status || rowStatus===status;
+    var pass = matchQ && matchRole && matchDept && matchStatus;
+    row.setAttribute('data-filtered-out', pass ? '' : '1');
+  });
+  _page = 1;
+  imiRenderPage();
+  var sa = document.getElementById('select-all');
+  if(sa){ sa.checked=false; sa.indeterminate=false; }
+};
+
+/* Initial filter-out state: mark all rows as passing (empty string = not filtered out) */
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('#users-tbody .user-row').forEach(function(r){
+    r.setAttribute('data-filtered-out', '');
+  });
+  imiRenderPage();
+});
+
+/* ---- KPI card quick-filter ---- */
+function imiKpiFilter(status) {
+  var sel = document.getElementById('filter-status');
+  if(sel){ sel.value = status; }
+  imiFilterUsers();
+  if(status) imiToast('Filtered to ' + status + ' users.', 'ok');
+  else imiToast('Showing all users.', 'ok');
+}
+
+/* ---- Toast helper ---- */
+function imiToast(msg, type) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;z-index:999;max-width:360px;box-shadow:0 4px 20px rgba(0,0,0,0.18);transition:opacity 0.3s;' +
+    (type==='ok'?'background:#2a1108;color:#faf6f0;':'background:#c99b2e;color:#1a0e02;');
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); }, 320); }, 2800);
+}
+
+/* initial render handled in the override block above */
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

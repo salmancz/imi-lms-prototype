@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create new role · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── page shell ── */
+  .rc-shell {
+    max-width: 720px;
+  }
+
+  /* ── breadcrumb ── */
+  .rc-breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    transition: color 0.15s;
+    margin-bottom: 20px;
+  }
+  .rc-breadcrumb:hover { color: var(--accent); }
+  .rc-breadcrumb svg { width: 13px; height: 13px; }
+
+  /* ── page head ── */
+  .rc-head {
+    margin-bottom: 24px;
+  }
+  .rc-head .eyebrow { margin-bottom: 6px; }
+  .rc-head .page-title { margin-bottom: 6px; }
+
+  /* ── form card ── */
+  .rc-card {
+    padding: 28px 30px 30px;
+  }
+  .rc-card .field { margin-bottom: 24px; }
+  .rc-card .field:last-child { margin-bottom: 0; }
+  .field .req { color: var(--accent); }
+
+  /* ── user search input (taller) ── */
+  .rc-user-input {
+    position: relative;
+  }
+  .rc-user-input input {
+    width: 100%;
+    height: 46px;
+    padding: 0 16px 0 42px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper);
+    border-radius: var(--r-md);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .rc-user-input input::placeholder { color: var(--ink-mute); }
+  .rc-user-input input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42,17,8,0.05);
+  }
+  .rc-user-input::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  /* ── permissions grid ── */
+  .perm-section { margin-bottom: 20px; }
+  .perm-section:last-child { margin-bottom: 0; }
+  .perm-section-head {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .perm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+  }
+  @media (max-width: 600px) { .perm-grid { grid-template-columns: 1fr; } }
+  .perm-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: background 0.14s;
+  }
+  .perm-item:hover { background: var(--paper-2); }
+  .perm-item input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--ink);
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .perm-item-label {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  /* ── notice bar ── */
+  .rc-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201,155,46,0.28);
+    border-radius: var(--r-md);
+    margin-top: 24px;
+    font-size: 12.5px;
+    color: var(--c-honey-text);
+    line-height: 1.5;
+  }
+  .rc-notice svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── actions row ── */
+  .rc-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 26px;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link is-active" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="rc-shell">
+
+      <!-- Breadcrumb -->
+      <a class="rc-breadcrumb" href="roles-permissions.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Roles &amp; Permissions
+      </a>
+
+      <!-- Page heading -->
+      <div class="rc-head">
+        <div class="eyebrow">Super admin only</div>
+        <h1 class="page-title">Create new <em>role</em></h1>
+        <p class="page-sub">Define a custom role with a name, description, optional user assignments, and a granular permissions set.</p>
+      </div>
+
+      <!-- Form card: identity fields -->
+      <div class="card rc-card">
+
+        <!-- Role name -->
+        <div class="field">
+          <label for="rc-name">Role name <span class="req">*</span></label>
+          <input id="rc-name" class="input" type="text" placeholder="e.g. Regional Manager" autocomplete="off">
+        </div>
+
+        <!-- Short description -->
+        <div class="field">
+          <label for="rc-desc">Short description</label>
+          <input id="rc-desc" class="input" type="text" placeholder="Briefly describe this role's purpose (shown in role picker)">
+        </div>
+
+        <!-- Assign to users -->
+        <div class="field" style="margin-bottom:0">
+          <label for="rc-users">Assign to users</label>
+          <div class="rc-user-input">
+            <input id="rc-users" type="search" placeholder="Search users by name or email to assign this role..." autocomplete="off">
+          </div>
+          <div class="field-hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px;">Optional. You can assign users after creation from the Roles &amp; Permissions table.</div>
+        </div>
+      </div>
+
+      <!-- Permissions card -->
+      <div class="card rc-card" style="margin-top:16px">
+        <div style="font-family:var(--font-label);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:20px;">Permissions</div>
+
+        <!-- Users group -->
+        <div class="perm-section">
+          <div class="perm-section-head">Users</div>
+          <div class="perm-grid">
+            <label class="perm-item"><input type="checkbox" name="perm" value="view_users"><span class="perm-item-label">View users</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="edit_users"><span class="perm-item-label">Edit users</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="suspend_users"><span class="perm-item-label">Suspend users</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="delete_users"><span class="perm-item-label">Delete users (soft)</span></label>
+          </div>
+        </div>
+
+        <!-- Courses group -->
+        <div class="perm-section">
+          <div class="perm-section-head">Courses</div>
+          <div class="perm-grid">
+            <label class="perm-item"><input type="checkbox" name="perm" value="view_courses"><span class="perm-item-label">View courses</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="edit_courses"><span class="perm-item-label">Edit courses</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="publish_courses"><span class="perm-item-label">Publish courses</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="archive_courses"><span class="perm-item-label">Archive courses</span></label>
+          </div>
+        </div>
+
+        <!-- Certificates group -->
+        <div class="perm-section">
+          <div class="perm-section-head">Certificates</div>
+          <div class="perm-grid">
+            <label class="perm-item"><input type="checkbox" name="perm" value="manage_certs"><span class="perm-item-label">Manage certificates</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="revoke_certs"><span class="perm-item-label">Revoke certificates</span></label>
+          </div>
+        </div>
+
+        <!-- Reports group -->
+        <div class="perm-section">
+          <div class="perm-section-head">Reports &amp; data</div>
+          <div class="perm-grid">
+            <label class="perm-item"><input type="checkbox" name="perm" value="view_reports"><span class="perm-item-label">View reports</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="export_data"><span class="perm-item-label">Export data</span></label>
+          </div>
+        </div>
+
+        <!-- System group -->
+        <div class="perm-section">
+          <div class="perm-section-head">System</div>
+          <div class="perm-grid">
+            <label class="perm-item"><input type="checkbox" name="perm" value="manage_settings"><span class="perm-item-label">Manage settings</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="manage_roles"><span class="perm-item-label">Create roles</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="manage_tenants"><span class="perm-item-label">Manage corporate tenants</span></label>
+            <label class="perm-item"><input type="checkbox" name="perm" value="view_audit"><span class="perm-item-label">View audit log</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info notice -->
+      <div class="rc-notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Custom roles extend the base permission set. Only Super Administrators can create or modify custom roles. Role creation is written to the audit log.
+      </div>
+
+      <!-- Actions -->
+      <div class="rc-actions">
+        <a class="btn btn-ghost" href="roles-permissions.html">Cancel</a>
+        <button type="button" class="btn btn-primary" id="create-role-btn">Create role &rarr;</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function(){
+  /* ---- toast ---- */
+  function toast(msg, type){
+    var t=document.createElement('div');
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ink);color:var(--hero-bg,#FCF7AE);padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-family:var(--font-sans);font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px);max-width:340px;';
+    if(type==='error') t.style.background='var(--c-clay,#B8523E)';
+    t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(function(){t.style.opacity='1';t.style.transform='translateY(0)';},10);
+    setTimeout(function(){t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(function(){t.remove();},300);},3400);
+  }
+
+  /* ---- topbar search ---- */
+  var topSearch = document.querySelector('.topbar .search input');
+  if(topSearch){
+    topSearch.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){
+        var q = encodeURIComponent(topSearch.value.trim());
+        if(q) window.location.href='admin-users.html?q='+q;
+      }
+    });
+  }
+
+  /* ---- topbar icon buttons ---- */
+  var notifBtn = document.querySelector('.topbar .icon-btn[title="Notifications"]');
+  if(notifBtn && !notifBtn.closest('a')) notifBtn.addEventListener('click', function(){ window.location.href='../profile/notifications.html'; });
+  var helpBtn = document.querySelector('.topbar .icon-btn[title="Help"]');
+  if(helpBtn && !helpBtn.closest('a')) helpBtn.addEventListener('click', function(){ window.location.href='../profile/help-center.html'; });
+
+  /* ---- user assign autocomplete ---- */
+  var userInput = document.getElementById('rc-users');
+  var USERS = [
+    'Ahmed Al-Balushi (ahmed@imi.om)',
+    'Fatima Al-Hinai (fatima@imi.om)',
+    'Layla Al-Hashimi (layla@bankmuscat.om)',
+    'Faris Al-Maamari (faris@imi.om)',
+    'Noura Al-Balushi (noura@imi.om)',
+    'Sami Al-Hinai (sami@example.com)',
+  ];
+  var sugBox = null;
+  function closeSug(){ if(sugBox){ sugBox.remove(); sugBox=null; } }
+  if(userInput){
+    userInput.addEventListener('input', function(){
+      closeSug();
+      var q = userInput.value.toLowerCase().trim();
+      if(!q) return;
+      var matches = USERS.filter(function(u){ return u.toLowerCase().includes(q); });
+      if(!matches.length) return;
+      sugBox = document.createElement('div');
+      sugBox.style.cssText='position:absolute;z-index:500;left:0;right:0;top:100%;background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--r-md);box-shadow:var(--shadow-card,0 4px 18px rgba(42,17,8,0.12));overflow:hidden;margin-top:4px;';
+      matches.forEach(function(u){
+        var opt=document.createElement('div');
+        opt.textContent=u;
+        opt.style.cssText='padding:10px 16px;cursor:pointer;font-size:13.5px;transition:background 0.12s;';
+        opt.addEventListener('mouseenter',function(){opt.style.background='var(--paper-2)';});
+        opt.addEventListener('mouseleave',function(){opt.style.background='';});
+        opt.addEventListener('mousedown',function(e){e.preventDefault();userInput.value=u;closeSug();});
+        sugBox.appendChild(opt);
+      });
+      var wrap = userInput.closest('.rc-user-input');
+      if(wrap){ wrap.style.position='relative'; wrap.appendChild(sugBox); }
+    });
+    document.addEventListener('click', closeSug);
+  }
+
+  /* ---- Create role submit with validation ---- */
+  var createBtn = document.getElementById('create-role-btn');
+  if(createBtn){
+    createBtn.addEventListener('click', function(){
+      var nameVal = document.getElementById('rc-name') ? document.getElementById('rc-name').value.trim() : '';
+      var permsChecked = document.querySelectorAll('input[name="perm"]:checked');
+
+      if(!nameVal){
+        toast('Please enter a role name.','error');
+        var nameEl = document.getElementById('rc-name');
+        if(nameEl) nameEl.focus();
+        return;
+      }
+      if(!permsChecked.length){
+        toast('Select at least one permission.','error');
+        return;
+      }
+
+      createBtn.textContent='Creating...';
+      createBtn.disabled=true;
+
+      setTimeout(function(){
+        sessionStorage.setItem('rp_toast','Role "'+nameVal+'" created with '+permsChecked.length+' permission'+(permsChecked.length===1?'':'s')+'.');
+        window.location.href='roles-permissions.html';
+      }, 900);
+    });
+  }
+
+  /* ---- read toast from sessionStorage ---- */
+  var stored = sessionStorage.getItem('rp_toast');
+  if(stored && window.location.pathname.includes('roles-permissions')){
+    sessionStorage.removeItem('rp_toast');
+    setTimeout(function(){ toast(stored); }, 400);
+  }
+
+})();
+</script>
+</body>
+</html>

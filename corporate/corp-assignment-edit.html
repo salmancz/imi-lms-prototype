@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Assignment &middot; IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── back breadcrumb ── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--ink); }
+  .back-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ── notice banner ── */
+  .notice-card {
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.32);
+    border-left: 4px solid var(--c-honey);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .notice-card .notice-ic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--c-honey-soft);
+    color: var(--c-honey-text);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .notice-card .notice-ic svg { width: 15px; height: 15px; }
+  .notice-card strong { color: var(--c-honey-text); font-weight: 700; }
+
+  /* ── form layout ── */
+  .form-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 540px);
+    gap: 0;
+  }
+
+  .form-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xs);
+    margin-bottom: 24px;
+  }
+  .form-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .form-card-head .fc-ic {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .form-card-head .fc-ic svg { width: 15px; height: 15px; }
+  .form-card-head .fc-ic.honey { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .form-card-head .fc-ic.sage  { background: var(--c-sage-wash);  color: var(--c-sage-text); }
+  .form-card-head h2 {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0;
+  }
+  .form-card-body { padding: 22px 24px 20px; }
+
+  /* ── field overrides ── */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 7px;
+  }
+  input.input {
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    border-radius: var(--r-sm);
+    font-size: 13.5px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+    display: block;
+    width: 100%;
+  }
+  input.input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.05);
+  }
+  input.input:disabled {
+    background: var(--bg-alt);
+    color: var(--ink-mute);
+    border-color: var(--line);
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+  select.input {
+    height: 40px;
+    padding: 0 36px 0 14px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    border-radius: var(--r-sm);
+    font-size: 13.5px;
+    color: var(--ink);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A5042' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    display: block;
+    width: 100%;
+    transition: border 0.18s, box-shadow 0.18s;
+    cursor: pointer;
+  }
+  select.input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.05);
+  }
+
+  /* ── field hint ── */
+  .field-hint {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  /* ── completion snapshot (inline stat row) ── */
+  .snapshot-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .snapshot-item {
+    flex: 1;
+    padding: 14px 18px;
+    border-right: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .snapshot-item:last-child { border-right: none; }
+  .snapshot-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .snapshot-value {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .snapshot-value.sage { color: var(--c-sage); }
+  .snapshot-value.honey { color: var(--c-honey-text); }
+  .snapshot-sub {
+    font-family: var(--font-label);
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── progress mini ── */
+  .progress-mini {
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-mini .fill { height: 100%; border-radius: var(--r-pill); }
+  .fill-sage { background: var(--c-sage); }
+  .fill-honey { background: var(--c-honey); }
+
+  /* ── form actions bar ── */
+  .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    margin-bottom: 24px;
+  }
+
+  /* ── danger zone ── */
+  .danger-zone {
+    border: 1px solid rgba(193, 42, 28, 0.20);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .danger-zone-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: var(--c-danger-wash);
+    border-bottom: 1px solid rgba(193, 42, 28, 0.16);
+  }
+  .danger-zone-head svg { width: 15px; height: 15px; color: var(--c-danger); flex-shrink: 0; }
+  .danger-zone-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-danger);
+  }
+  .danger-zone-body {
+    padding: 18px 20px 20px;
+    background: var(--paper);
+  }
+  .danger-hint {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="corp-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search"><input placeholder="Search team, groups, courses..."></div>
+  <div class="topbar-actions">
+    <a href="corp-admin-notification.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <a href="corp-user-profile.html" class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span><span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span><span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link is-active" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span><span class="badge">24</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <a class="back-link" href="corp-assignment.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Assignments
+    </a>
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Course assignment</div>
+        <h1 class="page-title">Edit <em>assignment</em></h1>
+        <p class="page-sub">Records Management Fundamentals &rarr; Engineering Team (142 members)</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="corp-assignment.html">Cancel</a>
+        <button class="btn btn-primary" id="btn-save-top" type="button">Save changes</button>
+      </div>
+    </div>
+
+    <!-- Completion snapshot -->
+    <div class="snapshot-row">
+      <div class="snapshot-item">
+        <div class="snapshot-label">Total assigned</div>
+        <div class="snapshot-value">142</div>
+        <div class="snapshot-sub">Engineering Team</div>
+      </div>
+      <div class="snapshot-item">
+        <div class="snapshot-label">Course Completed</div>
+        <div class="snapshot-value sage">104</div>
+        <div class="snapshot-sub">73% completion</div>
+        <div class="progress-mini"><div class="fill fill-sage" style="width:73%"></div></div>
+      </div>
+      <div class="snapshot-item">
+        <div class="snapshot-label">Remaining</div>
+        <div class="snapshot-value honey">38</div>
+        <div class="snapshot-sub">Affected by changes</div>
+      </div>
+    </div>
+
+    <!-- Notice -->
+    <div class="notice-card">
+      <div class="notice-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <strong>104 learners have already completed this course.</strong> Completion records will be preserved regardless of changes. Changes to deadline and mandatory flag apply to the remaining 38 learners.
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-wrap">
+
+      <!-- Assignment details card -->
+      <div class="form-card">
+        <div class="form-card-head">
+          <div class="fc-ic honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <h2>Assignment details</h2>
+        </div>
+        <div class="form-card-body">
+          <div class="field">
+            <label>Course (locked)</label>
+            <input class="input" value="Records Management Fundamentals" disabled>
+            <div class="field-hint">Course cannot be changed after assignment is created.</div>
+          </div>
+          <div class="field">
+            <label>Audience</label>
+            <select class="input">
+              <option>Group: Engineering Team</option>
+              <option>Multiple groups...</option>
+              <option>Individual users...</option>
+              <option>Entire tenant</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Deadline</label>
+            <input class="input" value="30 Jun 2025">
+            <div class="field-hint">Applies to learners who have not yet completed the course.</div>
+          </div>
+          <div class="field">
+            <label>Mandatory</label>
+            <select class="input">
+              <option selected>Yes</option>
+              <option>Optional / self-learning</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Notify learners</label>
+            <select class="input">
+              <option>On assignment only</option>
+              <option>Silent (no email)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form actions -->
+      <div class="form-actions">
+        <a class="btn btn-ghost" href="corp-assignment.html">Cancel</a>
+        <button class="btn btn-primary" id="btn-save-form" type="button">Save changes</button>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="danger-zone">
+        <div class="danger-zone-head">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="danger-zone-label">Danger zone</span>
+        </div>
+        <div class="danger-zone-body">
+          <button class="btn btn-danger btn-sm" id="btn-unassign" type="button">Unassign course from group</button>
+          <p class="danger-hint">Removes course from group dashboards. In-progress learners can finish (records preserved). Cannot be undone except by re-assigning.</p>
+        </div>
+      </div>
+
+    </div><!-- /form-wrap -->
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+
+<!-- Confirm modal -->
+<div id="confirm-overlay" style="display:none;position:fixed;inset:0;z-index:70;background:rgba(42,17,8,0.48);backdrop-filter:blur(3px);align-items:center;justify-content:center;">
+  <div style="background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 32px;max-width:420px;width:90%;box-shadow:0 40px 80px -24px rgba(42,17,8,0.45);">
+    <h3 style="font-size:18px;font-weight:700;letter-spacing:-0.02em;color:var(--ink);margin:0 0 10px;">Unassign course?</h3>
+    <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin:0 0 22px;">This will remove Records Management Fundamentals from Engineering Team. 104 completion records are preserved. The 38 in-progress learners will lose access. This cannot be undone.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" id="confirm-cancel" type="button">Keep assignment</button>
+      <button class="btn btn-danger btn-sm" id="confirm-proceed" type="button">Yes, unassign</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  function toast(msg, then) {
+    var t = document.getElementById('imi-toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+      if (then) setTimeout(then, 220);
+    }, 1800);
+  }
+
+  function doSave(btn) {
+    btn.disabled = true;
+    var orig = btn.textContent;
+    btn.textContent = 'Saving...';
+    setTimeout(function () {
+      toast('Assignment updated. Redirecting...', function () {
+        location.href = 'corp-assignment.html';
+      });
+    }, 400);
+  }
+
+  var btnTop = document.getElementById('btn-save-top');
+  var btnForm = document.getElementById('btn-save-form');
+  if (btnTop) btnTop.addEventListener('click', function () { doSave(btnTop); });
+  if (btnForm) btnForm.addEventListener('click', function () { doSave(btnForm); });
+
+  /* ── unassign with confirm ── */
+  var btnUnassign = document.getElementById('btn-unassign');
+  var confirmOverlay = document.getElementById('confirm-overlay');
+  var confirmCancel = document.getElementById('confirm-cancel');
+  var confirmProceed = document.getElementById('confirm-proceed');
+
+  if (btnUnassign && confirmOverlay) {
+    btnUnassign.addEventListener('click', function () {
+      confirmOverlay.style.display = 'flex';
+    });
+    confirmCancel.addEventListener('click', function () {
+      confirmOverlay.style.display = 'none';
+    });
+    confirmOverlay.addEventListener('click', function (e) {
+      if (e.target === confirmOverlay) confirmOverlay.style.display = 'none';
+    });
+    confirmProceed.addEventListener('click', function () {
+      confirmOverlay.style.display = 'none';
+      confirmProceed.disabled = true;
+      toast('Course unassigned from group. Redirecting...', function () {
+        location.href = 'corp-assignment.html';
+      });
+    });
+  }
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

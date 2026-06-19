@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User detail · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* page header row */
+  .detail-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* purge guard */
+  .purge-guard {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .purge-guard-note {
+    font-size: 11px;
+    color: var(--c-danger);
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  /* profile avatar — flat ink, no gradient */
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--hero-bg);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    border: 1px solid var(--line-strong);
+  }
+  .profile-row { display: flex; gap: 16px; align-items: flex-start; }
+  .profile-name { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .profile-email { font-size: 13px; color: var(--ink-mute); margin-top: 3px; }
+  .profile-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* lifecycle buttons row */
+  .lifecycle-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+  /* 2-col info grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 28px;
+  }
+  .info-cell .info-label {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 5px;
+  }
+  .info-cell .info-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* stat row — 4 flat KPI cards */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-row .stat-flat[role="button"] { transition: border-color 0.18s, transform 0.18s var(--tn, ease), box-shadow 0.18s; }
+  .stat-row .stat-flat[role="button"]:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+  /* enrollment course list rows */
+  .enroll-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.18s;
+  }
+  .enroll-row:last-child { border-bottom: none; }
+  .enroll-row:hover { background: var(--paper-2); }
+  .enroll-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .enroll-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .enroll-body { flex: 1; min-width: 0; }
+  .enroll-title { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .enroll-meta { font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.04em; }
+  .enroll-prog { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .enroll-pct { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* cert row */
+  .cert-ic {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--r-sm);
+    background: var(--c-sage-wash);
+    color: var(--c-sage-text);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .cert-ic svg { width: 16px; height: 16px; }
+
+  /* role badge inside table */
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 22px;
+    padding: 0 10px;
+    border-radius: var(--r-pill);
+    border: 1.5px solid var(--line-strong);
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." type="search" onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='admin-users.html'"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='audit-log.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link is-active" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span>
+        <span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span>
+        <span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span>
+        <span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- back -->
+    <a href="admin-users.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Users
+    </a>
+
+    <!-- page title + action buttons -->
+    <div class="detail-head">
+      <div>
+        <div class="eyebrow">User management drill-in</div>
+        <h1 class="page-title">Layla <em>Al-Hashimi</em></h1>
+      </div>
+      <div class="detail-actions">
+        <a href="admin-user-suspend.html" class="btn btn-ghost btn-sm">Suspend</a>
+        <button class="btn btn-ghost btn-sm" onclick="imiLifecycle('unsuspend')">Unsuspend</button>
+        <button class="btn btn-ghost btn-sm" onclick="imiLifecycle('deactivate')">Deactivate</button>
+        <div class="purge-guard">
+          <button class="btn btn-danger btn-sm" disabled title="Hard purge blocked: user holds earned certificates (LIFE-08)">Hard purge</button>
+          <span class="purge-guard-note">Blocked - certified user</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 flat stat cards -->
+    <div class="stat-row">
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="View enrollments" onclick="imiSwitchTab('enrollments',document.querySelector('[data-tab=enrollments]'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiSwitchTab('enrollments',document.querySelector('[data-tab=enrollments]'))}">
+        <div class="stat-label">Enrolled</div>
+        <div class="stat-value">
+          <span class="stat-dot"></span>
+          8
+        </div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="View enrollments" onclick="imiSwitchTab('enrollments',document.querySelector('[data-tab=enrollments]'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiSwitchTab('enrollments',document.querySelector('[data-tab=enrollments]'))}">
+        <div class="stat-label">Course Completed</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+          5
+        </div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="View certificates" onclick="imiSwitchTab('certificates',document.querySelector('[data-tab=certificates]'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiSwitchTab('certificates',document.querySelector('[data-tab=certificates]'))}">
+        <div class="stat-label">Certificates</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--accent)"></span>
+          3
+        </div>
+      </div>
+      <div class="stat-flat" role="button" tabindex="0" style="cursor:pointer" title="View overview" onclick="imiSwitchTab('overview',document.querySelector('[data-tab=overview]'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();imiSwitchTab('overview',document.querySelector('[data-tab=overview]'))}">
+        <div class="stat-label">Profile complete</div>
+        <div class="stat-value">92<span style="font-size:16px;font-weight:500;color:var(--ink-soft)">%</span></div>
+      </div>
+    </div>
+
+    <!-- profile + lifecycle side by side -->
+    <div class="grid-2-eq" style="margin-bottom:24px">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Profile</div>
+        </div>
+        <div class="card-body">
+          <div class="profile-row">
+            <div class="profile-avatar" aria-label="Layla Al-Hashimi initials">LA</div>
+            <div>
+              <div class="profile-name">Layla Al-Hashimi</div>
+              <div class="profile-email">layla@bankmuscat.om</div>
+              <div class="profile-chips">
+                <span class="chip t-sage dot">Active</span>
+                <span class="chip">Individual</span>
+                <span class="chip">Corporate &middot; Bank Muscat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Lifecycle <em>state</em></div>
+        </div>
+        <div class="card-body">
+          <p class="page-sub" style="margin:0 0 4px;font-size:13px">Account lifecycle controls. Each action triggers a confirmation dialog and is written to the audit trail.</p>
+          <div class="lifecycle-actions">
+            <button class="btn btn-ghost btn-sm" onclick="if(confirm('Suspend Layla Al-Hashimi? She will lose access until unsuspended.')){location.href='admin-user-suspend.html';}">Suspend</button>
+            <button class="btn btn-ghost btn-sm" onclick="imiLifecycle('unsuspend')">Unsuspend</button>
+            <button class="btn btn-ghost btn-sm" onclick="imiLifecycle('deactivate')">Deactivate</button>
+            <button class="btn btn-ghost btn-sm" onclick="imiLifecycle('reactivate')">Reactivate</button>
+            <button class="btn btn-ghost btn-sm" id="soft-delete-btn" onclick="openSoftDeleteModal()">Soft delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabs" id="user-tabs">
+      <button class="is" data-tab="overview" onclick="imiSwitchTab('overview',this)">Overview</button>
+      <button data-tab="activity" onclick="imiSwitchTab('activity',this)">Activity</button>
+      <button data-tab="enrollments" onclick="imiSwitchTab('enrollments',this)">Enrollments</button>
+      <button data-tab="certificates" onclick="imiSwitchTab('certificates',this)">Certificates</button>
+      <button data-tab="roles" onclick="imiSwitchTab('roles',this)">Roles</button>
+    </div>
+
+    <!-- tab panel: overview -->
+    <div id="tab-panel-overview" class="col gap-lg">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Account <em>info</em></div>
+        </div>
+        <div class="card-body">
+          <div class="info-grid">
+            <div class="info-cell">
+              <div class="info-label">Joined</div>
+              <div class="info-value">2025-11-04</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-label">Last login</div>
+              <div class="info-value">2026-05-22 09:14 GST</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-label">Profile complete</div>
+              <div class="info-value">92%</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-label">Certs earned</div>
+              <div class="info-value">3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab panel: activity -->
+    <div id="tab-panel-activity" class="col gap-lg" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Recent <em>activity</em></div>
+        </div>
+        <div class="card-body flush">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Course</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2026-05-22</td>
+                <td>Lesson completed</td>
+                <td>Knowledge Mapping &middot; Lesson 4</td>
+              </tr>
+              <tr>
+                <td>2026-05-20</td>
+                <td>Quiz passed (88%)</td>
+                <td>Data Quality Foundations</td>
+              </tr>
+              <tr>
+                <td>2026-05-18</td>
+                <td>Course enrolled</td>
+                <td>ISO 15489 Records Management</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab panel: enrollments -->
+    <div id="tab-panel-enrollments" class="col gap-lg" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Enrollments <em>&amp; progress</em></div>
+          <span class="chip">8 courses</span>
+        </div>
+        <div class="card-body flush">
+          <div class="enroll-row">
+            <div class="enroll-thumb">
+              <img src="../img/covers/cover-1.jpg" alt="Knowledge Mapping cover">
+            </div>
+            <div class="enroll-body">
+              <div class="enroll-title">Knowledge Mapping</div>
+              <div class="enroll-meta">Records &amp; Info Management &middot; Started Feb 2026</div>
+              <div class="enroll-prog">
+                <div class="progress" style="flex:1">
+                  <div class="progress-fill" style="width:74%;background:var(--c-sage)"></div>
+                </div>
+                <span class="enroll-pct">74%</span>
+              </div>
+            </div>
+            <span class="chip t-sage">In progress</span>
+          </div>
+          <div class="enroll-row">
+            <div class="enroll-thumb">
+              <img src="../img/covers/cover-2.jpg" alt="Data Quality Foundations cover">
+            </div>
+            <div class="enroll-body">
+              <div class="enroll-title">Data Quality Foundations</div>
+              <div class="enroll-meta">Data Management &middot; Started Jan 2026</div>
+              <div class="enroll-prog">
+                <div class="progress" style="flex:1">
+                  <div class="progress-fill" style="width:100%;background:var(--c-honey)"></div>
+                </div>
+                <span class="enroll-pct">100%</span>
+              </div>
+            </div>
+            <span class="chip t-honey">Course Completed</span>
+          </div>
+          <div class="enroll-row">
+            <div class="enroll-thumb">
+              <img src="../img/covers/cover-3.jpg" alt="ISO 15489 Records Management cover">
+            </div>
+            <div class="enroll-body">
+              <div class="enroll-title">ISO 15489 Records Management</div>
+              <div class="enroll-meta">Compliance &middot; Started May 2026</div>
+              <div class="enroll-prog">
+                <div class="progress" style="flex:1">
+                  <div class="progress-fill" style="width:12%;background:var(--c-sage)"></div>
+                </div>
+                <span class="enroll-pct">12%</span>
+              </div>
+            </div>
+            <span class="chip">Enrolled</span>
+          </div>
+          <div class="enroll-row">
+            <div class="enroll-thumb">
+              <img src="../img/covers/cover-1.jpg" alt="CDMP Essentials cover">
+            </div>
+            <div class="enroll-body">
+              <div class="enroll-title">CDMP Essentials</div>
+              <div class="enroll-meta">CDMP Prep &middot; Completed Nov 2025</div>
+              <div class="enroll-prog">
+                <div class="progress" style="flex:1">
+                  <div class="progress-fill" style="width:100%;background:var(--c-honey)"></div>
+                </div>
+                <span class="enroll-pct">100%</span>
+              </div>
+            </div>
+            <span class="chip t-honey">Course Completed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab panel: certificates -->
+    <div id="tab-panel-certificates" class="col gap-lg" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Certificates</div>
+          <span class="chip t-sage">3 earned</span>
+        </div>
+        <div class="card-body flush">
+          <div class="list-row">
+            <div class="cert-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <div class="list-body">
+              <div class="list-title">CDMP Associate Certificate</div>
+              <div class="list-sub">Issued 2026-03-15 &middot; Valid 3 years</div>
+            </div>
+            <span class="chip t-sage dot">Active</span>
+          </div>
+          <div class="list-row">
+            <div class="cert-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <div class="list-body">
+              <div class="list-title">IGP Practitioner Certificate</div>
+              <div class="list-sub">Issued 2026-01-10 &middot; Valid 2 years</div>
+            </div>
+            <span class="chip t-sage dot">Active</span>
+          </div>
+          <div class="list-row">
+            <div class="cert-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+            </div>
+            <div class="list-body">
+              <div class="list-title">Data Quality Foundations Certificate</div>
+              <div class="list-sub">Issued 2025-12-02 &middot; Valid 2 years</div>
+            </div>
+            <span class="chip t-sage dot">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- tab panel: roles -->
+    <div id="tab-panel-roles" class="col gap-lg" style="display:none">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Roles <em>&amp; permissions</em></div>
+          <a href="roles-permissions.html" class="card-link">Manage roles &rarr;</a>
+        </div>
+        <div class="card-body flush">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Scope</th>
+                <th>Granted</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="role-badge">Learner</span></td>
+                <td>Platform-wide</td>
+                <td>2025-11-04</td>
+                <td><span class="chip t-sage dot">Active</span></td>
+              </tr>
+              <tr>
+                <td><span class="role-badge">Corporate member</span></td>
+                <td>Bank Muscat org</td>
+                <td>2025-11-04</td>
+                <td><span class="chip t-sage dot">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ---- Tab switcher - shows/hides content panels ---- */
+function imiSwitchTab(name, btn) {
+  /* update active tab button */
+  btn.closest('.tabs').querySelectorAll('button').forEach(function(b){ b.classList.remove('is'); });
+  btn.classList.add('is');
+  /* show matching panel, hide others */
+  ['overview','activity','enrollments','certificates','roles'].forEach(function(panel){
+    var el = document.getElementById('tab-panel-' + panel);
+    if(el) el.style.display = panel === name ? '' : 'none';
+  });
+}
+
+/* ---- Ad strip close ---- */
+(function(){
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(e){
+    e.stopPropagation();
+    var strip = document.querySelector('.ad-strip');
+    if(strip){ strip.style.transition='opacity 0.2s'; strip.style.opacity='0'; setTimeout(function(){strip.style.display='none';},220); }
+  });
+})();
+
+/* ---- Lifecycle actions with toast feedback ---- */
+function imiLifecycle(action) {
+  var msgs = {
+    unsuspend: 'Account unsuspended. User can now log in.',
+    deactivate: 'Account deactivated. Redirecting to user list.',
+    reactivate: 'Account reactivated. Redirecting to user list.'
+  };
+  imiToast(msgs[action] || 'Action applied.', 'ok');
+  setTimeout(function(){ location.href='admin-users.html'; }, 1600);
+}
+
+/* ---- Toast for lifecycle actions ---- */
+function imiToast(msg, type) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;z-index:999;max-width:360px;box-shadow:0 4px 20px rgba(0,0,0,0.18);transition:opacity 0.3s;background:#2a1108;color:#faf6f0;';
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); },320); }, 2400);
+}
+
+
+/* ---- Soft delete modal ---- */
+function openSoftDeleteModal(){
+  var m = document.getElementById('soft-delete-modal');
+  if(m){ m.style.display='flex'; m.classList.add('is-open'); }
+}
+function closeSoftDeleteModal(){
+  var m = document.getElementById('soft-delete-modal');
+  if(m){ m.style.display='none'; m.classList.remove('is-open'); }
+}
+function confirmSoftDelete(){
+  closeSoftDeleteModal();
+  imiToast('Account soft-deleted. Layla Al-Hashimi has been moved to the deletion queue (grace period: 30 days).');
+  setTimeout(function(){ location.href='admin-deletion-queue.html'; }, 1800);
+}
+</script>
+
+<!-- Soft-delete confirm modal -->
+<div id="soft-delete-modal" class="modal-backdrop" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(42,17,8,0.44);align-items:center;justify-content:center;padding:24px" onclick="if(event.target===this)closeSoftDeleteModal()">
+  <div style="background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:0 24px 48px rgba(42,17,8,0.2);width:100%;max-width:480px;overflow:hidden" onclick="event.stopPropagation()">
+    <div style="padding:22px 24px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <div style="font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:4px">Account lifecycle</div>
+        <div style="font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.01em">Soft delete this account?</div>
+      </div>
+      <button onclick="closeSoftDeleteModal()" style="background:none;border:none;cursor:pointer;color:var(--ink-mute);padding:6px;border-radius:var(--r-sm)" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div style="padding:20px 24px">
+      <p style="font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:16px">
+        <strong style="color:var(--ink)">Layla Al-Hashimi</strong> will be moved to the deletion queue and cannot log in. Their account enters a <strong style="color:var(--ink)">30-day grace period</strong> before permanent PII removal. This action is written to the audit log.
+      </p>
+      <p style="font-size:12px;color:var(--ink-mute);line-height:1.5">Locally certified members are retained permanently per policy LIFE-08 and cannot be hard-deleted.</p>
+    </div>
+    <div style="padding:14px 24px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px">
+      <button class="btn btn-ghost btn-sm" onclick="closeSoftDeleteModal()">Cancel</button>
+      <button class="btn btn-danger btn-sm" onclick="confirmSoftDelete()">Soft delete account</button>
+    </div>
+  </div>
+</div>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

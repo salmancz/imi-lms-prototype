@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account already exists · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+  .sa-top {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .sa-brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .sa-brand img { height: 28px; width: auto; display: block; }
+  .sa-wrap { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 32px 20px 80px; }
+  .sa-main { width: 100%; max-width: 480px; }
+
+  /* page-specific: account-exists notice card */
+  .auth-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 44px 40px 36px;
+    text-align: center;
+  }
+  .auth-brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .auth-brand img { height: 28px; width: auto; display: block; }
+  .auth-mark {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+  }
+  .auth-mark svg { width: 26px; height: 26px; }
+  .auth-title {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .auth-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .auth-msg {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .auth-email {
+    font-family: var(--font-label);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .auth-card .btn.full {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+  .auth-card .btn.full + .btn.full { margin-top: 10px; }
+  .auth-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 24px 0 18px;
+  }
+  .auth-legal {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .auth-legal a {
+    color: var(--ink-mute);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .auth-legal a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="sa-top"><a class="sa-brand" href="login.html"><img src="../img/imi-logo.png" alt="IMI"></a></div>
+<div class="sa-wrap"><main class="sa-main">
+<div class="auth-card" role="alertdialog" aria-labelledby="auth-title">
+  <div class="auth-brand"><img src="../img/imi-logo.png" alt="IMI"></div>
+
+  <div class="auth-mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+
+  <h1 class="auth-title" id="auth-title">This email is <em>already</em> registered</h1>
+  <p class="auth-msg">An IMI account already exists with</p>
+  <p class="auth-email">salman@webinnoventix.com</p>
+
+  <a class="btn btn-primary full" href="login.html">Sign in instead →</a>
+  <a class="btn btn-ghost full" href="signup.html">Use a different email</a>
+
+  <div class="auth-divider"></div>
+
+  <p class="auth-legal"><a href="../profile/help-center.html">Privacy</a> · <a href="../profile/help-center.html">Terms</a> · <a href="../profile/help-center.html">Help</a></p>
+</div>
+</main></div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

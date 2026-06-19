@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications &middot; IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- Notification list ---- */
+  .notif-wrap { max-width: 880px; }
+
+  .notif-list { overflow: hidden; }
+
+  .notif-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.18s;
+  }
+  .notif-row:last-child { border-bottom: none; }
+  .notif-row:hover { background: var(--paper-2); }
+  .notif-row.is-unread { background: var(--c-honey-wash); }
+  .notif-row.is-unread:hover { background: #F0E2B0; }
+
+  .notif-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 7px;
+    flex-shrink: 0;
+    background: var(--ink-faint);
+  }
+  .notif-dot.warn { background: var(--c-honey); }
+  .notif-dot.ok   { background: var(--c-sage); }
+
+  .notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: var(--paper-2);
+    color: var(--ink-soft);
+  }
+  .notif-icon svg { width: 17px; height: 17px; }
+  .notif-icon.t-honey { background: var(--c-honey-wash); color: var(--c-honey); }
+  .notif-icon.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage); }
+  .notif-icon.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay); }
+
+  .notif-main  { flex: 1; min-width: 0; }
+  .notif-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .notif-body  { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .notif-body a { color: var(--accent); text-decoration: underline; font-weight: 600; }
+
+  .notif-when {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* unread badge count on bell */
+  .icon-btn .dot.count {
+    top: 4px;
+    right: 4px;
+    width: auto;
+    height: 16px;
+    min-width: 16px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  /* row checkbox */
+  .notif-cb {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 10px;
+    cursor: pointer;
+    accent-color: var(--accent);
+  }
+
+  /* per-row trash button */
+  .notif-del {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-faint);
+    padding: 5px;
+    border-radius: var(--r-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: color 0.15s, background 0.15s;
+    opacity: 0;
+  }
+  .notif-del svg { width: 15px; height: 15px; }
+  .notif-row:hover .notif-del,
+  .notif-del:focus { opacity: 1; }
+  .notif-del:hover { color: var(--c-danger); background: var(--c-danger-wash); }
+
+  /* empty state */
+  .notif-empty {
+    padding: 52px 24px;
+    text-align: center;
+    color: var(--ink-mute);
+  }
+  .notif-empty svg { width: 40px; height: 40px; margin-bottom: 14px; color: var(--ink-faint); }
+  .notif-empty p { font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot count" aria-label="3 unread notifications">3</span>
+    </a>
+    <a href="help-center.html" class="icon-btn" title="Help" aria-label="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </a>
+    <a href="profile.html" class="avatar-ring" style="--pct:68" aria-label="My profile">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<!-- App shell -->
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../learning/dashboard.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span><span class="badge">8</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Wishlist</span><span class="badge">12</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Course Completed</span><span class="badge">5</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="profile.html" class="sidebar-link" data-nav="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
+      </a>
+      <a href="settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="notif-wrap">
+
+      <!-- Page header -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
+        <div>
+          <div class="eyebrow">User Portal</div>
+          <h1 class="page-title">Notifications <em>centre</em></h1>
+          <p class="page-sub">All your activity, in one place.</p>
+        </div>
+        <div class="page-actions" style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm"
+            onclick="document.querySelectorAll('.notif-row.is-unread').forEach(function(r){r.classList.remove('is-unread')});document.querySelectorAll('.notif-dot.warn,.notif-dot').forEach(function(d){d.style.opacity='0.3'});this.disabled=true;this.textContent='All read';">
+            Mark all as read
+          </button>
+          <button class="btn btn-ghost btn-sm" id="deleteAllBtn" style="color:var(--c-danger);border-color:rgba(193,42,28,0.30)">Delete all</button>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="tabs" id="notif-tabs">
+        <button class="is tab" id="notif-tab-all" data-filter="all">All (6)</button>
+        <button class="tab" id="notif-tab-unread" data-filter="unread">Unread (3)</button>
+      </div>
+
+      <!-- Notification list -->
+      <div class="card notif-list">
+
+        <!-- Unread: security alert -->
+        <div class="notif-row is-unread" role="button" tabindex="0" data-notif-href="active-sessions.html">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot warn" aria-hidden="true"></span>
+          <div class="notif-icon t-clay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">New device login detected</div>
+            <div class="notif-body">Chrome 124 &middot; Windows 11 &middot; Muscat, Oman signed in just now. If this wasn't you, <a href="active-sessions.html" onclick="event.stopPropagation()">review active sessions</a>.</div>
+          </div>
+          <span class="notif-when">Just now</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+
+        <!-- Unread: course completion proof -->
+        <a href="../learning/completed-proof-detail.html" class="notif-row is-unread">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot ok" aria-hidden="true"></span>
+          <div class="notif-icon t-sage" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">Course Completed proof ready &middot; Data Quality Foundations</div>
+            <div class="notif-body">Your course completion proof is now downloadable from your profile.</div>
+          </div>
+          <span class="notif-when">2h ago</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </a>
+
+        <!-- Unread: CDMP renewal -->
+        <div class="notif-row is-unread" role="button" tabindex="0" data-notif-href="../learning/certificate.html">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot warn" aria-hidden="true"></span>
+          <div class="notif-icon t-honey" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">CDMP Practitioner renewal opens in 90 days</div>
+            <div class="notif-body">Your CDMP Practitioner credential is due for renewal. Review the renewal requirements in your certificate.</div>
+          </div>
+          <span class="notif-when">1d ago</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+
+        <!-- Read: new course -->
+        <a href="../learning/course-detail.html" class="notif-row">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot" aria-hidden="true"></span>
+          <div class="notif-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">New course in your path &middot; Knowledge Mapping</div>
+            <div class="notif-body">Released by Dr. Faris Al-Maamari. Aligned with KMP path.</div>
+          </div>
+          <span class="notif-when">3d ago</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </a>
+
+        <!-- Read: profile completion -->
+        <div class="notif-row" role="button" tabindex="0" data-notif-href="profile-edit-v2.html">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot" aria-hidden="true"></span>
+          <div class="notif-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">Profile 72% complete</div>
+            <div class="notif-body">Add phone number and work history to reach 100% and unlock proofs.</div>
+          </div>
+          <span class="notif-when">5d ago</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+
+        <!-- Read: quiz result -->
+        <div class="notif-row" role="button" tabindex="0" data-notif-href="../learning/my-learning.html">
+          <input type="checkbox" class="notif-cb" aria-label="Select notification" onclick="event.stopPropagation()">
+          <span class="notif-dot" aria-hidden="true"></span>
+          <div class="notif-icon t-sage" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 4 12 14.01 9 11.01"/><path d="M22 4L12 14.01 9 11.01 2 18"/></svg>
+          </div>
+          <div class="notif-main">
+            <div class="notif-title">Quiz passed &middot; 82%</div>
+            <div class="notif-body">You passed the CDMP Practitioner assessment.</div>
+          </div>
+          <span class="notif-when">1w ago</span>
+          <button class="notif-del" aria-label="Delete notification" title="Delete" onclick="deleteNotif(event,this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+
+      </div><!-- /notif-list -->
+    </div><!-- /notif-wrap -->
+  </main>
+</div>
+
+<script>
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);white-space:nowrap;';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2800);
+  }
+
+  function deleteNotif(e, btn) {
+    e.preventDefault();
+    e.stopPropagation();
+    var row = btn.closest('.notif-row');
+    if (!row) return;
+    row.style.transition = 'opacity 0.22s, transform 0.22s';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(8px)';
+    setTimeout(function() { row.remove(); }, 240);
+    showToast('Notification deleted.');
+  }
+
+  (function () {
+    /* Delete all button */
+    var delAllBtn = document.getElementById('deleteAllBtn');
+    if (delAllBtn) {
+      delAllBtn.addEventListener('click', function () {
+        var rows = document.querySelectorAll('.notif-row');
+        rows.forEach(function(r) {
+          r.style.transition = 'opacity 0.18s, transform 0.18s';
+          r.style.opacity = '0';
+          r.style.transform = 'translateX(8px)';
+        });
+        setTimeout(function() {
+          rows.forEach(function(r) { r.remove(); });
+          showToast('All notifications deleted.');
+        }, 220);
+      });
+    }
+
+    /* Tab filter */
+    var tabBtns = document.querySelectorAll('#notif-tabs button[data-filter]');
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        tabBtns.forEach(function (b) { b.classList.remove('is'); });
+        btn.classList.add('is');
+        var filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.notif-row').forEach(function (row) {
+          if (filter === 'all') {
+            row.style.display = '';
+          } else {
+            row.style.display = row.classList.contains('is-unread') ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    /* Mark as read on click for data-notif-href rows */
+    document.querySelectorAll('[data-notif-href]').forEach(function (row) {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', function () {
+        row.classList.remove('is-unread');
+        var dot = row.querySelector('.notif-dot');
+        if (dot) { dot.style.opacity = '0.3'; }
+        var href = row.getAttribute('data-notif-href');
+        if (href) { window.location.href = href; }
+      });
+      row.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          row.click();
+        }
+      });
+    });
+
+    /* Mark all as read button — select by text content */
+    var markAllBtn = null;
+    document.querySelectorAll('.page-actions button').forEach(function(b) {
+      if (b.textContent.trim() === 'Mark all as read') markAllBtn = b;
+    });
+    if (markAllBtn) {
+      markAllBtn.removeAttribute('onclick');
+      markAllBtn.addEventListener('click', function () {
+        document.querySelectorAll('.notif-row.is-unread').forEach(function (r) {
+          r.classList.remove('is-unread');
+          var dot = r.querySelector('.notif-dot');
+          if (dot) dot.style.opacity = '0.3';
+        });
+        var allTab = document.querySelector('#notif-tabs button[data-filter="all"]');
+        var unreadTab = document.querySelector('#notif-tabs button[data-filter="unread"]');
+        if (allTab) allTab.textContent = 'All (6)';
+        if (unreadTab) unreadTab.textContent = 'Unread (0)';
+        /* also update the topbar bell count */
+        var bellCount = document.querySelector('.icon-btn .dot.count');
+        if (bellCount) { bellCount.textContent = '0'; bellCount.style.display = 'none'; }
+        markAllBtn.disabled = true;
+        markAllBtn.textContent = 'All read';
+      });
+    }
+  })();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

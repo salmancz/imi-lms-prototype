@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course detail · already enrolled · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .enrolled-note {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    background: var(--c-sage-wash);
+    border: 1px solid rgba(126, 155, 111, 0.32);
+    border-radius: var(--r-lg);
+    padding: 22px 26px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 720px) {
+    .enrolled-note { grid-template-columns: 52px 1fr; }
+    .enrolled-note .btn { grid-column: 1 / -1; justify-content: center; }
+  }
+  .enrolled-seal {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--c-sage);
+    display: grid; place-items: center;
+    color: var(--paper);
+    flex-shrink: 0;
+  }
+  .enrolled-seal svg { width: 26px; height: 26px; }
+  .enrolled-title {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--ink); margin-bottom: 4px;
+  }
+  .enrolled-sub {
+    font-size: 13.5px; color: var(--c-sage-text); line-height: 1.5;
+  }
+
+  .cd-section-title {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    color: var(--ink); margin-bottom: 14px;
+  }
+  .cd-section-title em {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--ink-soft);
+  }
+
+  .progress-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 16px 24px;
+    align-items: center;
+    padding: 22px 26px;
+  }
+  @media (max-width: 720px) { .progress-card { grid-template-columns: 1fr; } }
+  .progress-stats { display: flex; gap: 36px; flex-wrap: wrap; }
+  .pstat { display: flex; flex-direction: column; gap: 4px; }
+  .pstat .ps-label {
+    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
+  }
+  .pstat .ps-value {
+    font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1;
+  }
+  .pstat .ps-value em {
+    font-family: var(--font-serif); font-style: italic; font-weight: 400;
+    font-size: 14px; color: var(--ink-soft); margin-left: 2px;
+  }
+
+  .lesson-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+  }
+  .lesson-mark {
+    width: 34px; height: 34px; border-radius: var(--r-sm);
+    background: var(--paper-2); display: grid; place-items: center;
+    color: var(--ink-soft); flex-shrink: 0;
+  }
+  .lesson-mark svg { width: 16px; height: 16px; }
+  .lesson-mark.done { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .lesson-mark.current { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .lesson-body { flex: 1; min-width: 0; }
+  .lesson-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .lesson-meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+      <a href="catalog.html" class="sidebar-link is-active" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+      <a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+      <a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+    <div style="max-width:880px">
+      <div class="eyebrow" style="margin-bottom:6px">CDMP &middot; Foundations</div>
+      <h1 class="page-title" style="margin-bottom:8px">Knowledge <em>Mapping</em></h1>
+      <p class="page-sub" style="margin-bottom:28px">You requested to enrol, but you are already on this course. Pick up where you left off below.</p>
+
+      <div class="enrolled-note">
+        <div class="enrolled-seal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div class="enrolled-title">You're already enrolled</div>
+          <div class="enrolled-sub">You enrolled in Knowledge Mapping on 12 Apr 2026. Progress: 65% (Lesson 4 of 9).</div>
+        </div>
+        <a class="btn btn-primary" href="player.html">Resume course &rarr;</a>
+      </div>
+
+      <h2 class="cd-section-title">Your <em>progress</em></h2>
+      <div class="card" style="margin-bottom:36px">
+        <div class="card-body progress-card">
+          <div class="progress-stats">
+            <div class="pstat"><span class="ps-label">Enrolled</span><span class="ps-value" style="font-size:15px;font-weight:600">12 Apr 2026</span></div>
+            <div class="pstat"><span class="ps-label">Lessons done</span><span class="ps-value">4 <em>of 9</em></span></div>
+            <div class="pstat"><span class="ps-label">Completion</span><span class="ps-value">65<em>%</em></span></div>
+          </div>
+          <a class="btn btn-ghost btn-sm" href="player.html">Resume Lesson 4 &rarr;</a>
+        </div>
+        <div class="card-body" style="border-top:1px solid var(--line);padding-top:18px">
+          <div class="row gap" style="align-items:center">
+            <div class="progress" style="flex:1"><div class="progress-fill sage" style="width:65%"></div></div>
+            <span style="font-family:var(--font-label);font-size:12px;color:var(--ink-soft);font-weight:600">65%</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="cd-section-title">Continue <em>where you left off</em></h2>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-body flush">
+          <div class="lesson-row" style="border-bottom:1px solid var(--line)">
+            <div class="lesson-mark done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="lesson-body"><div class="lesson-title">3. Mapping tacit knowledge flows</div><div class="lesson-meta">Video &middot; 34 min &middot; completed</div></div>
+            <span class="chip dot t-sage">Done</span>
+          </div>
+          <div class="lesson-row">
+            <div class="lesson-mark current"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <div class="lesson-body"><div class="lesson-title">4. Building a knowledge map</div><div class="lesson-meta">Video &middot; 41 min &middot; in progress</div></div>
+            <a class="btn btn-primary btn-sm" href="player.html">Resume &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div><a href="course-detail.html" class="btn btn-ghost btn-sm">View full course outline &rarr;</a></div>
+    </div>
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

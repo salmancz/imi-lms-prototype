@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz start warning · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Quiz chrome: minimal focused topbar (no sidebar) */
+  .quiz-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 32px;
+    height: 52px;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 36px;
+    z-index: 10;
+  }
+  .quiz-topbar-l { display: flex; align-items: center; gap: 14px; }
+  .quiz-sep { color: var(--ink-faint); font-size: 18px; font-weight: 300; }
+  .quiz-course-label {
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .quiz-topbar-r { display: flex; align-items: center; gap: 20px; }
+  .quiz-prog-label {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
+  .quiz-track {
+    width: 140px;
+    height: 5px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .quiz-fill {
+    height: 100%;
+    background: var(--c-honey);
+    border-radius: var(--r-pill);
+  }
+
+  /* Main content area */
+  .quiz-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+  }
+
+  /* Warning card */
+  .qsw-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0 12px;
+  }
+  .qsw-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 40px 40px 36px;
+    text-align: center;
+  }
+  .qsw-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-honey-wash);
+    border: 2px solid var(--c-honey-soft);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 20px;
+    color: var(--c-honey-text);
+  }
+  .qsw-icon svg { width: 30px; height: 30px; }
+  .qsw-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .qsw-title {
+    font-family: var(--font-sans);
+    font-size: 27px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .qsw-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .qsw-lead {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 440px;
+    margin: 0 auto 24px;
+  }
+  .qsw-rules {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 6px 22px;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .qsw-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .qsw-rule:last-child { border-bottom: none; }
+  .qsw-tick {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--c-honey-wash);
+    color: var(--c-honey-text);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qsw-tick svg { width: 13px; height: 13px; }
+  .qsw-rule strong { color: var(--ink); font-weight: 700; }
+  .qsw-ack {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    text-align: left;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    cursor: pointer;
+  }
+  .qsw-ack input {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .qsw-ack span { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .qsw-ack span strong { color: var(--ink); font-weight: 600; }
+  .qsw-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .qsw-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 18px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Quiz topbar: minimal chrome appropriate for focused assessment flow -->
+<header class="quiz-topbar">
+  <div class="quiz-topbar-l">
+    <a class="brand" href="dashboard.html" style="width:auto;gap:10px;">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      <span class="brand-text">IMI</span>
+    </a>
+    <span class="quiz-sep">/</span>
+    <span class="quiz-course-label">CDMP Practitioner Assessment</span>
+  </div>
+  <div class="quiz-topbar-r">
+    <span class="quiz-prog-label">Not started &middot; 10 questions</span>
+    <div class="quiz-track">
+      <div class="quiz-fill" style="width:0%"></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="location.href='my-learning.html'">Exit quiz</button>
+  </div>
+</header>
+
+<!-- Main content -->
+<main class="quiz-main">
+  <div class="qsw-wrap">
+    <div class="qsw-card">
+
+      <!-- Icon -->
+      <div class="qsw-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+
+      <div class="qsw-eyebrow">Practitioner Assessment</div>
+      <h2 class="qsw-title">Before you <em>start</em> the assessment</h2>
+      <p class="qsw-lead">Please read these rules carefully. Once started, you cannot pause or exit and resume.</p>
+
+      <!-- Rules list -->
+      <div class="qsw-rules">
+        <div class="qsw-rule">
+          <span class="qsw-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span><strong>10 questions</strong></span>
+        </div>
+        <div class="qsw-rule">
+          <span class="qsw-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span><strong>Pass mark: 70%</strong></span>
+        </div>
+        <div class="qsw-rule">
+          <span class="qsw-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span><strong>Retakes allowed per course policy</strong> &middot; limited attempts, blocked once exhausted</span>
+        </div>
+        <div class="qsw-rule">
+          <span class="qsw-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span><strong>You can't exit and resume</strong> &middot; exiting restarts from Q1</span>
+        </div>
+        <div class="qsw-rule">
+          <span class="qsw-tick">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span><strong>Results shown immediately</strong> on submit</span>
+        </div>
+      </div>
+
+      <!-- Acknowledgement checkbox -->
+      <label class="qsw-ack">
+        <input type="checkbox">
+        <span><strong>I understand.</strong> I'm ready to start.</span>
+      </label>
+
+      <!-- Actions -->
+      <div class="qsw-actions">
+        <button class="btn btn-primary" id="btn-start-assessment" type="button" disabled style="opacity:0.45;cursor:not-allowed;">Start assessment &rarr;</button>
+        <a class="btn btn-ghost" href="course-detail.html">Not yet, back to course</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  var ack = document.querySelector('.qsw-ack input[type="checkbox"]');
+  var btn = document.getElementById('btn-start-assessment');
+  function syncBtn() {
+    if (ack.checked) {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = '0.45';
+      btn.style.cursor = 'not-allowed';
+    }
+  }
+  ack.addEventListener('change', syncBtn);
+  btn.addEventListener('click', function () {
+    if (!ack.checked) return;
+    location.href = 'quiz.html';
+  });
+})();
+</script>
+</body>
+</html>

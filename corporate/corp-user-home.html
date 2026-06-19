@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home · Bank Muscat · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Org brand banner: flat, no gradient */
+  .org-banner {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--r-lg);
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .org-banner .ob-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-label);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .org-banner .ob-text { flex: 1; min-width: 0; }
+  .org-banner .ob-greeting {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .org-banner .ob-greeting em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .org-banner .ob-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.60);
+    line-height: 1.4;
+  }
+  .org-banner .ob-actions { display: flex; gap: 10px; flex-shrink: 0; }
+  .org-banner .btn-inv {
+    height: 34px;
+    padding: 0 16px;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    background: transparent;
+    color: var(--paper);
+    border-radius: var(--r-sm);
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.18s, border-color 0.18s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .org-banner .btn-inv:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.55); }
+  .org-banner .btn-inv.solid { background: var(--c-honey); border-color: var(--c-honey); color: var(--ink-deep); }
+  .org-banner .btn-inv.solid:hover { background: #b8880f; border-color: #b8880f; }
+
+  /* Hero stat row */
+  .hero-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .hero-stats-row { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .hero-stats-row { grid-template-columns: 1fr; } }
+
+  /* Resume card */
+  .resume-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 22px;
+  }
+  .resume-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--r-md);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+  }
+  .resume-body { flex: 1; min-width: 0; }
+  .resume-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .resume-sub {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
+  }
+
+  /* Course grid 3-col */
+  .crs-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  @media (max-width: 1200px) { .crs-grid-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 860px)  { .crs-grid-3 { grid-template-columns: 1fr; } }
+
+  /* Course card mini */
+  .course-mini {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: transform 0.22s var(--tn), box-shadow 0.22s, border-color 0.18s;
+    cursor: pointer;
+  }
+  .course-mini:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--line-strong); }
+  .course-mini .cm-thumb {
+    height: 90px;
+    background: var(--paper-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .course-mini .cm-body { padding: 14px 16px; }
+  .course-mini .cm-cat {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 5px;
+  }
+  .course-mini .cm-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+  .course-mini .cm-meta {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+
+  /* Deadline alert card */
+  .deadline-alert {
+    background: var(--c-clay-wash);
+    border: 1px solid rgba(184,101,78,0.28);
+    border-left: 4px solid var(--c-clay);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .deadline-alert .da-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--c-clay);
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .deadline-alert .da-body { flex: 1; min-width: 0; }
+  .deadline-alert .da-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-clay);
+    margin-bottom: 3px;
+  }
+  .deadline-alert .da-sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  /* 2-col layout */
+  .home-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 1200px) { .home-layout { grid-template-columns: 1fr; } }
+
+  .col-gap { display: flex; flex-direction: column; gap: 20px; }
+
+  /* section toggle visibility */
+  .section-hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="corp-user-home.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search">
+    <input id="home-search" placeholder="Search courses, lessons..." onkeydown="if(event.key==='Enter'&&this.value.trim()){location.href='../learning/catalog.html?q='+encodeURIComponent(this.value.trim())}">
+  </div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="corp-admin-notification.html" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <button class="icon-btn" id="help-btn-home" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <a href="corp-user-profile.html" class="avatar-ring" style="--pct:62">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CU" alt="CU"></div>
+      <span class="ring-pct">62%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-user-home.html" class="sidebar-link is-active" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Learning</span>
+        <span class="badge">4</span>
+      </a>
+      <a href="../learning/catalog.html" class="sidebar-link" data-nav="browse">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span>Browse</span>
+      </a>
+      <a href="../learning/certificate.html" class="sidebar-link" data-nav="completed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Completed</span>
+        <span class="badge">2</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="corp-user-profile.html" class="sidebar-link" data-nav="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
+      </a>
+      <a href="../auth/login.html" class="sidebar-link" data-nav="logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="blob-honey">
+
+    <!-- Org brand banner -->
+    <div class="org-banner">
+      <div class="ob-logo">BM</div>
+      <div class="ob-text">
+        <div class="ob-greeting">Welcome back, <em>Ahmed</em></div>
+        <div class="ob-sub">Bank Muscat &middot; Banking &middot; Your assigned courses are ready</div>
+      </div>
+      <div class="ob-actions">
+        <a href="../learning/catalog.html" class="btn-inv">Browse catalog</a>
+        <a href="../learning/player.html" class="btn-inv solid">Continue learning &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Deadline alert (conditional) -->
+    <div class="deadline-alert" id="deadline-alert">
+      <div class="da-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="da-body">
+        <div class="da-title">KYC Refresher due in 5 days</div>
+        <div class="da-sub">Required by Bank Muscat compliance policy. Complete before 23 Jun 2026.</div>
+      </div>
+      <a href="../learning/player.html" class="btn btn-primary btn-sm">Start now &rarr;</a>
+    </div>
+
+    <!-- Hero stats -->
+    <div class="hero-stats-row">
+      <a href="../learning/my-learning.html" class="stat-flat" style="text-decoration:none;color:inherit">
+        <div class="stat-label">Courses assigned</div>
+        <div class="stat-value">4</div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">by Bank Muscat</div>
+      </a>
+      <a href="../learning/certificate.html" class="stat-flat" style="text-decoration:none;color:inherit">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value"><span class="stat-dot" style="background:var(--c-sage)"></span>2</div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">of 4 assigned</div>
+      </a>
+      <div class="stat-flat">
+        <div class="stat-label">Hours learned</div>
+        <div class="stat-value">38<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">h</span></div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">this year</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Avg score</div>
+        <div class="stat-value">81<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
+        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">across courses</div>
+      </div>
+    </div>
+
+    <!-- Main content + right rail -->
+    <div class="home-layout">
+
+      <div class="col-gap">
+
+        <!-- Continue learning -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Continue <em>learning</em></div>
+            <a class="card-link" href="../learning/my-learning.html">VIEW ALL &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <div class="resume-card" onclick="location.href='../learning/player.html'" style="cursor:pointer">
+              <div class="resume-thumb">&#128218;</div>
+              <div class="resume-body">
+                <div class="resume-title">KYC Refresher 2026</div>
+                <div class="resume-sub">Module 2 of 4 &middot; last accessed today</div>
+                <div class="row gap" style="margin-top:0;max-width:400px">
+                  <div class="progress" style="flex:1"><div class="progress-fill honey" style="width:38%"></div></div>
+                  <span style="font-family:var(--font-label);font-size:11.5px;font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">38%</span>
+                </div>
+              </div>
+              <a class="btn btn-primary btn-sm" href="../learning/player.html">Resume &rarr;</a>
+            </div>
+            <div class="resume-card" onclick="location.href='../learning/player.html'" style="cursor:pointer">
+              <div class="resume-thumb">&#128202;</div>
+              <div class="resume-body">
+                <div class="resume-title">Data Quality Foundations</div>
+                <div class="resume-sub">Module 2 of 5 &middot; last accessed 3 days ago</div>
+                <div class="row gap" style="margin-top:0;max-width:400px">
+                  <div class="progress" style="flex:1"><div class="progress-fill sage" style="width:22%"></div></div>
+                  <span style="font-family:var(--font-label);font-size:11.5px;font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">22%</span>
+                </div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="../learning/player.html">Resume &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- New releases section (toggleable) -->
+        <div class="card" id="section-new-releases">
+          <div class="card-head">
+            <div class="card-title">New <em>releases</em></div>
+            <a class="card-link" href="../learning/catalog.html">BROWSE ALL &rarr;</a>
+          </div>
+          <div class="card-body" style="padding-top:0">
+            <div class="crs-grid-3" style="margin-top:16px">
+              <div class="course-mini" onclick="location.href='../learning/course-detail.html'">
+                <div class="cm-thumb">&#128296;</div>
+                <div class="cm-body">
+                  <div class="cm-cat">Data Management</div>
+                  <div class="cm-title">ISO 8000 Data Quality Standard</div>
+                  <div class="cm-meta">3.5h &middot; New this month</div>
+                </div>
+              </div>
+              <div class="course-mini" onclick="location.href='../learning/course-detail.html'">
+                <div class="cm-thumb">&#128269;</div>
+                <div class="cm-body">
+                  <div class="cm-cat">Records Management</div>
+                  <div class="cm-title">Digital Preservation Essentials</div>
+                  <div class="cm-meta">2.8h &middot; New this month</div>
+                </div>
+              </div>
+              <div class="course-mini" onclick="location.href='../learning/course-detail.html'">
+                <div class="cm-thumb">&#127757;</div>
+                <div class="cm-body">
+                  <div class="cm-cat">Compliance</div>
+                  <div class="cm-title">AML Fundamentals 2026</div>
+                  <div class="cm-meta">1.5h &middot; New this week</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending section (toggleable) -->
+        <div class="card" id="section-trending">
+          <div class="card-head">
+            <div class="card-title">Trending <em>this month</em></div>
+            <a class="card-link" href="../learning/catalog.html">BROWSE ALL &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Course</th>
+                  <th>Enrollments</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="location.href='../learning/course-detail.html'" style="cursor:pointer">
+                  <td style="color:var(--ink-mute);font-weight:700">1</td>
+                  <td>CDMP Practitioner</td>
+                  <td>22 this month</td>
+                  <td><a class="btn btn-ghost btn-sm" href="../learning/course-detail.html">View</a></td>
+                </tr>
+                <tr onclick="location.href='../learning/course-detail.html'" style="cursor:pointer">
+                  <td style="color:var(--ink-mute);font-weight:700">2</td>
+                  <td>Records Retention 101</td>
+                  <td>20 this month</td>
+                  <td><a class="btn btn-ghost btn-sm" href="../learning/course-detail.html">View</a></td>
+                </tr>
+                <tr onclick="location.href='../learning/course-detail.html'" style="cursor:pointer">
+                  <td style="color:var(--ink-mute);font-weight:700">3</td>
+                  <td>KYC Refresher 2026</td>
+                  <td>18 this month</td>
+                  <td><a class="btn btn-ghost btn-sm" href="../learning/course-detail.html">View</a></td>
+                </tr>
+                <tr onclick="location.href='../learning/course-detail.html'" style="cursor:pointer">
+                  <td style="color:var(--ink-mute);font-weight:700">4</td>
+                  <td>Data Governance Essentials</td>
+                  <td>14 this month</td>
+                  <td><a class="btn btn-ghost btn-sm" href="../learning/course-detail.html">View</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right rail -->
+      <div class="col-gap">
+
+        <!-- My assignments -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">My <em>assignments</em></div>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <div class="list-icon t-clay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">KYC Refresher 2026</div>
+                <div class="list-sub">Due 23 Jun 2026 &middot; Required</div>
+              </div>
+              <span class="chip t-clay dot">Overdue</span>
+            </div>
+            <div class="list-row">
+              <div class="list-icon t-honey">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Data Quality Foundations</div>
+                <div class="list-sub">Due 31 Jul 2026</div>
+              </div>
+              <span class="chip t-honey dot">In progress</span>
+            </div>
+            <div class="list-row">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Records Retention 101</div>
+                <div class="list-sub">Completed 10 Apr 2026</div>
+              </div>
+              <span class="chip t-sage dot">Done</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed proofs -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Completion <em>proofs</em></div>
+            <a class="card-link" href="../learning/certificate.html">VIEW ALL &rarr;</a>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h11"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Records Retention 101</div>
+                <div class="list-sub">Score 81% &middot; 10 Apr 2026</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a>
+            </div>
+            <div class="list-row">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h11"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">AML Awareness</div>
+                <div class="list-sub">Score 76% &middot; 2 Feb 2026</div>
+              </div>
+              <a class="btn btn-ghost btn-sm" href="../learning/completed-proof-detail.html">Download</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+
+  /* ── Ad strip close ── */
+  var adClose = document.querySelector('.ad-close');
+  if (adClose) adClose.addEventListener('click', function () { document.querySelector('.ad-strip').style.display = 'none'; });
+
+  /* ── Help button ── */
+  var helpBtn = document.getElementById('help-btn-home');
+  if (helpBtn) helpBtn.addEventListener('click', function () {
+    window.imiToast ? window.imiToast('Help centre coming soon.') : null;
+  });
+
+  /* ── Topbar search ── */
+  var srch = document.getElementById('home-search');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = '../learning/catalog.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── Homepage section visibility from org-admin settings ── */
+  /* In a real app these flags come from the tenant config API. */
+  /* For prototype purposes we read from localStorage set by oa-settings toggles. */
+  function applyHomepageSections() {
+    var showNew = localStorage.getItem('imi_section_new_releases') !== 'false';
+    var showTrending = localStorage.getItem('imi_section_trending') !== 'false';
+    var secNew = document.getElementById('section-new-releases');
+    var secTrend = document.getElementById('section-trending');
+    if (secNew) secNew.style.display = showNew ? '' : 'none';
+    if (secTrend) secTrend.style.display = showTrending ? '' : 'none';
+  }
+  applyHomepageSections();
+
+  /* ── Deadline alert dismiss ── */
+  var deadlineAlert = document.getElementById('deadline-alert');
+  if (deadlineAlert) {
+    deadlineAlert.style.cursor = 'default';
+  }
+
+})();
+</script>
+</body>
+</html>

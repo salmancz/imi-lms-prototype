@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-specific layout for the profile edit form */
+  .pe-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; flex-wrap: wrap; }
+  .pe-actions { display: flex; align-items: center; gap: 14px; }
+  .pe-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .pe-bar .progress { flex: 1; height: 8px; }
+  .pe-bar .pe-val { font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--ink-soft); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+  .pe-tabs { display: flex; gap: 6px; padding: 4px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-pill); margin-bottom: 26px; width: fit-content; max-width: 100%; flex-wrap: wrap; }
+  .pe-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 16px; border-radius: var(--r-pill); font-family: var(--font-sans); font-size: 12.5px; font-weight: 600; color: var(--ink-soft); transition: background 0.18s, color 0.18s; }
+  .pe-tabs button.is { background: var(--ink); color: var(--hero-bg); }
+  .pe-tabs button:not(.is):hover { color: var(--ink); }
+  .pe-tabs .frac { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 1px 7px; border-radius: var(--r-pill); background: var(--paper-2); color: var(--ink-mute); }
+  .pe-tabs button.is .frac { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
+  .pe-tabs .frac.ok { color: var(--c-sage-text); background: var(--c-sage-wash); }
+  .pe-tabs button.is .frac.ok { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
+  .pe-section-label { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 18px; }
+  .pe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+  .pe-stack { display: flex; flex-direction: column; gap: 4px; }
+  .pe-grid .field, .pe-stack .field { margin-bottom: 0; }
+  .field .input[disabled], .field select.input[disabled] { background: var(--paper-2); color: var(--ink-soft); cursor: not-allowed; opacity: 0.85; }
+  .field .opt { color: var(--ink-mute); font-weight: 400; letter-spacing: 0.04em; text-transform: none; }
+  .field .req { color: var(--accent); margin-left: 2px; }
+  .field .hint { font-size: 12px; color: var(--ink-soft); margin-top: 7px; line-height: 1.45; }
+  .field .hint.warn { color: var(--c-honey-text); }
+  .pe-upload { display: flex; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); background: var(--paper-2); color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; padding: 16px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s; }
+  .pe-upload:hover { border-color: var(--accent); background: var(--paper); }
+  .pe-upload input[type="file"] { display: none; }
+  .pe-file { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 14px 16px; }
+  .pe-file .pf-info { font-size: 13px; color: var(--ink); }
+  .pe-file .pf-meta { font-size: 12px; color: var(--ink-mute); margin-top: 3px; font-family: var(--font-label); letter-spacing: 0.03em; }
+  /* Pending file (selected, not yet uploaded) */
+  .pf-pending { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 12px 16px; margin-top: 10px; }
+  .pf-pending .pf-icon { width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--paper-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pf-pending .pf-icon svg { width: 16px; height: 16px; color: var(--ink-soft); }
+  .pf-pending .pf-body { flex: 1; min-width: 0; }
+  .pf-pending .pf-name { font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pf-pending .pf-size { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); margin-top: 2px; }
+  .pf-pending .pf-remove { flex-shrink: 0; background: none; border: none; cursor: pointer; color: var(--ink-mute); padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: color 0.15s, background 0.15s; }
+  .pf-pending .pf-remove:hover { color: #c0392b; background: #fdecea; }
+  .pf-pending .pf-remove svg { width: 15px; height: 15px; }
+  /* Upload progress */
+  .pf-progress-wrap { margin-top: 8px; }
+  .pf-progress-track { height: 5px; background: var(--paper-2); border-radius: 99px; overflow: hidden; margin-bottom: 5px; }
+  .pf-progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width 0.25s ease; }
+  .pf-progress-label { font-size: 11.5px; color: var(--ink-soft); font-family: var(--font-label); display: flex; justify-content: space-between; }
+  .pf-progress-label .pf-pct { font-weight: 700; color: var(--ink); }
+  .pf-status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-family: var(--font-label); padding: 3px 9px; border-radius: var(--r-pill); margin-top: 6px; }
+  .pf-status.uploading { background: #fff9e0; color: #a07800; }
+  .pf-status.done { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .pf-status.err { background: #fdecea; color: #c0392b; }
+  .pf-status svg { width: 12px; height: 12px; }
+  .pe-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+  .pe-chips .chip { cursor: default; }
+  .pe-chips .chip .x { color: var(--ink-mute); font-weight: 700; margin-left: 1px; }
+  .span-2 { grid-column: 1 / -1; }
+  .pe-link-row { display: flex; align-items: center; gap: 10px; }
+  .pe-link-row .input { flex: 1; }
+  textarea.input { height: auto; padding: 9px 14px; resize: vertical; line-height: 1.5; }
+  html { scroll-behavior: smooth; }
+  .pe-section { scroll-margin-top: 96px; }
+  @media (max-width: 1080px) { .pe-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="pe-head">
+  <div>
+    <div class="eyebrow">Profile &amp; Account</div>
+    <h1 class="page-title">Edit <em>profile</em></h1>
+    <p class="page-sub">Complete every field, including optional ones, to reach 100%. Full completion is required before your Course Completed proof can be issued.</p>
+  </div>
+  <div class="pe-actions">
+    <span class="chip t-sage dot" id="completion-chip">67% complete</span>
+    <button class="btn btn-primary" id="save-btn" type="button" onclick="saveChanges()">Save changes</button>
+  </div>
+</div>
+
+<div class="pe-bar">
+  <div class="progress"><div class="progress-fill grad-sage" style="width:67%"></div></div>
+  <span class="pe-val">67%</span>
+</div>
+
+<div class="pe-tabs" role="tablist" id="pe-tabs">
+  <button class="is" type="button" data-target="sec-personal" onclick="peTabClick(this)">Personal <span class="frac">9/12</span></button>
+  <button type="button" data-target="sec-professional" onclick="peTabClick(this)">Professional <span class="frac">2/3</span></button>
+  <button type="button" data-target="sec-links" onclick="peTabClick(this)">Personal links <span class="frac">0/1</span></button>
+  <button type="button" data-target="sec-documents" onclick="peTabClick(this)">Documents <span class="frac">1/2</span></button>
+</div>
+
+<div class="card pe-section" id="sec-personal">
+  <div class="card-head">
+    <div class="card-title">Personal <em>details</em></div>
+  </div>
+  <div class="card-body">
+    <div class="pe-section-label">Core identity + demographic</div>
+    <div class="pe-grid">
+      <div class="field">
+        <label>First Name <span class="req">*</span></label>
+        <input class="input" value="Salman">
+      </div>
+      <div class="field">
+        <label>Last Name <span class="req">*</span></label>
+        <input class="input" value="Ali">
+      </div>
+      <div class="field">
+        <label>Email <span class="req">*</span> <span class="opt">(OTP required to change)</span></label>
+        <input class="input" value="salman@webinnoventix.com" disabled>
+      </div>
+      <div class="field">
+        <label>Title / Prefix <span class="opt">(optional)</span></label>
+        <input class="input" placeholder="e.g. Mr., Dr., Eng.">
+      </div>
+      <div class="field">
+        <label>Name on your Course Completed proof <span class="req">*</span></label>
+        <input class="input" value="Salman Ali">
+        <div class="hint warn">Controls the name shown on your Course Completed proof(s). Changes apply only to future Course Completed proofs. OTP required.</div>
+      </div>
+      <div class="field">
+        <label>Photo</label>
+        <div class="pe-upload" id="photo-upload-zone" role="button" tabindex="0" aria-label="Upload profile photo">
+          <input type="file" id="photo-file-input" accept=".jpg,.jpeg,.png" style="display:none">
+          <span id="photo-upload-label">Drag image or click to upload · square JPG/PNG up to 2 MB · preview shown before save</span>
+        </div>
+        <div id="photo-preview-wrap" style="display:none;margin-top:10px;align-items:center;gap:12px;">
+          <img id="photo-preview-img" src="" alt="Preview" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--line);">
+          <button type="button" id="photo-preview-remove" class="btn btn-ghost btn-sm">Remove</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Preferred Language <span class="opt">(recommended)</span></label>
+        <select class="input"><option>English</option><option>العربية (Arabic)</option></select>
+      </div>
+      <div class="field">
+        <label>Date of birth <span class="opt">(used for age verification · min 16)</span></label>
+        <input class="input" value="11 / 04 / 1998">
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <select class="input"><option>Male</option><option>Female</option><option>Prefer not to say</option></select>
+      </div>
+      <div class="field">
+        <label>Country <span class="req">*</span></label>
+        <select class="input"><option selected>Oman</option><option>United Arab Emirates</option><option>Saudi Arabia</option><option>Other</option></select>
+      </div>
+      <div class="field">
+        <label>City</label>
+        <input class="input" value="Muscat">
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input class="input" placeholder="+968 9X XXX XXXX">
+      </div>
+      <div class="field span-2">
+        <label>Learning interests <span class="opt">(used for recommendations)</span></label>
+        <input class="input" placeholder="Add interest ▾">
+        <div class="pe-chips" id="interest-chips">
+          <span class="chip" data-chip>Records mgmt <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
+          <span class="chip" data-chip>ISO 30401 <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
+          <span class="chip" data-chip>Data governance <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card pe-section" id="sec-professional" style="margin-top:24px">
+  <div class="card-head">
+    <div class="card-title">Professional <em>profile</em></div>
+    <span class="chip">2/3 complete</span>
+  </div>
+  <div class="card-body">
+    <div class="pe-section-label">Professional profile</div>
+    <div class="pe-grid">
+      <div class="field">
+        <label>Current Role</label>
+        <input class="input" placeholder="e.g. Information Architect">
+      </div>
+      <div class="field">
+        <label>Experience Level</label>
+        <select class="input"><option>Entry (0-2 yrs)</option><option>Mid (3-7 yrs)</option><option>Senior (8-15 yrs)</option><option>Lead / Principal (15+ yrs)</option></select>
+      </div>
+      <div class="field">
+        <label>Industry</label>
+        <select class="input">
+          <option value="" selected disabled>Select industry</option>
+          <option>Banking &amp; Finance</option>
+          <option>Government</option>
+          <option>Healthcare</option>
+          <option>Technology</option>
+          <option>Energy</option>
+          <option>Telecom</option>
+          <option>Education</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card pe-section" id="sec-links" style="margin-top:24px">
+  <div class="card-head">
+    <div class="card-title">Personal <em>links</em></div>
+    <span class="chip">0/1 complete</span>
+  </div>
+  <div class="card-body">
+    <div class="pe-section-label">One field, multiple links allowed</div>
+    <div class="pe-stack">
+      <div class="field">
+        <label>Personal Site / Blog Links <span class="opt">(optional · multiple allowed)</span></label>
+        <input class="input" placeholder="https://">
+        <button type="button" class="btn btn-ghost btn-sm" style="margin-top:10px" id="add-link-btn">+ Add another link</button>
+        <div class="hint">A single field that allows multiple social, professional, or personal web links.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card pe-section" id="sec-documents" style="margin-top:24px">
+  <div class="card-head">
+    <div class="card-title">Documents <em>&amp; evidence</em></div>
+    <span class="chip">1/2 complete</span>
+  </div>
+  <div class="card-body">
+    <div class="pe-section-label">Supporting evidence</div>
+    <div class="pe-stack">
+      <div class="field">
+        <label>CV / Resume <span class="opt">(PDF, up to 5 MB · optional)</span></label>
+        <div class="pe-file">
+          <div>
+            <div class="pf-info">cv-salman-ali.pdf</div>
+            <div class="pf-meta">Uploaded 12 Mar 2026</div>
+          </div>
+          <a href="javascript:void(0)" class="btn btn-ghost btn-sm" onclick="(function(){var inp=document.createElement('input');inp.type='file';inp.accept='.pdf';inp.style.display='none';document.body.appendChild(inp);inp.click();inp.addEventListener('change',function(){if(inp.files[0]){document.querySelector('.pf-info').textContent=inp.files[0].name;document.querySelector('.pf-meta').textContent='Uploaded just now';}document.body.removeChild(inp);});}())">Replace</a>
+        </div>
+      </div>
+      <div class="field">
+        <label>Externally Earned Certificates, Portfolio <span class="opt">(optional · multi-upload)</span></label>
+        <div class="pe-upload" id="cert-upload-zone" role="button" tabindex="0" aria-label="Upload certificates or portfolio files">
+          <input type="file" id="cert-file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
+          <span>Add files · PDF, JPG, PNG, ZIP up to 10 MB each · certificates earned outside the platform plus portfolio items</span>
+        </div>
+        <div id="cert-file-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </main>
+</div>
+<script>
+  /* Toast helper */
+  function showToast(msg, type) {
+    var t = document.getElementById('pf-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'pf-toast';
+      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.background = type === 'ok' ? 'var(--c-sage-wash)' : type === 'err' ? '#fdecea' : 'var(--ink)';
+    t.style.color = type === 'ok' ? 'var(--c-sage-text)' : type === 'err' ? '#c0392b' : 'var(--paper)';
+    t.style.border = type === 'ok' ? '1px solid var(--c-sage)' : type === 'err' ? '1px solid #f5c6c2' : '1px solid transparent';
+    t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+    clearTimeout(t._to);
+    t._to = setTimeout(function () { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 2800);
+  }
+
+  function saveChanges() {
+    var btn = document.getElementById('save-btn');
+    btn.textContent = 'Saving...'; btn.disabled = true;
+    setTimeout(function () {
+      btn.textContent = 'Save changes'; btn.disabled = false;
+      showToast('Profile saved', 'ok');
+      setTimeout(function () { window.location.href = 'profile.html'; }, 1200);
+    }, 700);
+  }
+
+  /* Global so inline chip-X onclick can call it */
+  function updateCompletion() {
+    var chip = document.getElementById('completion-chip');
+    var bar = document.querySelector('.progress-fill');
+    var valEl = document.querySelector('.pe-val');
+    var chips = document.querySelectorAll('[data-chip]').length;
+    var linkInputs = document.querySelectorAll('#sec-links .input');
+    var hasLink = false;
+    linkInputs.forEach(function(inp) { if (inp.value.trim()) hasLink = true; });
+    var roleInput = document.querySelector('#sec-professional .input[placeholder]');
+    var hasRole = roleInput && roleInput.value.trim();
+    var hasCv = document.querySelector('.pf-info') !== null;
+    var photoReady = document.getElementById('photo-preview-img') && document.getElementById('photo-preview-img').src && !document.getElementById('photo-preview-img').src.endsWith('profile-edit-v2.html');
+    var filled = (chips > 0 ? 1 : 0) + (hasLink ? 1 : 0) + (hasRole ? 1 : 0) + (hasCv ? 1 : 0) + (photoReady ? 1 : 0);
+    var pct = Math.min(100, 67 + filled * 7);
+    if (chip) chip.textContent = pct + '% complete';
+    if (bar) bar.style.width = pct + '%';
+    if (valEl) valEl.textContent = pct + '%';
+  }
+
+  /* Global tab click handler - called by inline onclick so static link checker sees it */
+  function peTabClick(btn) {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.pe-tabs button[data-target]'));
+    tabs.forEach(function (t) { t.classList.remove('is'); });
+    btn.classList.add('is');
+    var target = document.getElementById(btn.getAttribute('data-target'));
+    if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+
+  (function () {
+    /* Tab navigation with IntersectionObserver active-state sync */
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.pe-tabs button[data-target]'));
+
+    /* Sync active tab as user scrolls */
+    if (typeof IntersectionObserver !== 'undefined') {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.id;
+            tabs.forEach(function (t) {
+              t.classList.toggle('is', t.getAttribute('data-target') === id);
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      document.querySelectorAll('.pe-section[id]').forEach(function (sec) { io.observe(sec); });
+    }
+
+    /* Photo upload */
+    var photoZone = document.getElementById('photo-upload-zone');
+    var photoInput = document.getElementById('photo-file-input');
+    var photoPreviewWrap = document.getElementById('photo-preview-wrap');
+    var photoPreviewImg = document.getElementById('photo-preview-img');
+    var photoLabel = document.getElementById('photo-upload-label');
+    var photoRemove = document.getElementById('photo-preview-remove');
+
+    if (photoZone && photoInput) {
+      photoZone.addEventListener('click', function () { photoInput.click(); });
+      photoZone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); photoInput.click(); } });
+      photoZone.addEventListener('dragover', function (e) { e.preventDefault(); photoZone.style.borderColor = 'var(--accent)'; });
+      photoZone.addEventListener('dragleave', function () { photoZone.style.borderColor = ''; });
+      photoZone.addEventListener('drop', function (e) {
+        e.preventDefault(); photoZone.style.borderColor = '';
+        var f = e.dataTransfer.files[0];
+        if (f) handlePhotoFile(f);
+      });
+      photoInput.addEventListener('change', function () {
+        if (photoInput.files[0]) handlePhotoFile(photoInput.files[0]);
+        photoInput.value = '';
+      });
+    }
+
+    function handlePhotoFile(f) {
+      if (!f.type.match(/^image\//)) { showToast('Please upload a JPG or PNG image', 'err'); return; }
+      if (f.size > 2 * 1024 * 1024) { showToast('Image must be under 2 MB', 'err'); return; }
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        photoPreviewImg.src = e.target.result;
+        photoPreviewWrap.style.display = 'flex';
+        photoLabel.textContent = f.name + ' (ready to save)';
+        updateCompletion();
+      };
+      reader.readAsDataURL(f);
+    }
+
+    if (photoRemove) {
+      photoRemove.addEventListener('click', function () {
+        photoPreviewImg.src = '';
+        photoPreviewWrap.style.display = 'none';
+        photoLabel.textContent = 'Drag image or click to upload · square JPG/PNG up to 2 MB · preview shown before save';
+        updateCompletion();
+      });
+    }
+
+    /* Learning interests: Enter or comma adds a chip */
+    var interestInput = document.querySelector('#interest-chips').previousElementSibling;
+    if (interestInput && interestInput.classList.contains('input')) {
+      interestInput.id = 'interest-input';
+      interestInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ',') {
+          e.preventDefault();
+          var val = interestInput.value.trim().replace(/,+$/, '');
+          if (!val) return;
+          var chipsWrap = document.getElementById('interest-chips');
+          var chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.setAttribute('data-chip', '');
+          chip.innerHTML = val + ' <span class="x" onclick="this.closest(\'[data-chip]\').remove();updateCompletion()">×</span>';
+          chipsWrap.appendChild(chip);
+          interestInput.value = '';
+          updateCompletion();
+        }
+      });
+    }
+
+    /* + Add another link */
+    var addLinkBtn = document.getElementById('add-link-btn');
+    if (addLinkBtn) {
+      addLinkBtn.addEventListener('click', function () {
+        var inp = document.createElement('input');
+        inp.className = 'input';
+        inp.placeholder = 'https://';
+        inp.style.marginTop = '8px';
+        addLinkBtn.parentNode.insertBefore(inp, addLinkBtn);
+        inp.focus();
+      });
+    }
+
+    /* File upload with progress + remove (Gmail-attachment pattern) */
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function svgFile() {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    }
+
+    function svgX() {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    }
+
+    function svgCheck() {
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    }
+
+    function simulateUpload(fillEl, pctEl, statusEl, onDone) {
+      var pct = 0;
+      var iv = setInterval(function () {
+        pct += Math.random() * 18 + 6;
+        if (pct >= 100) { pct = 100; clearInterval(iv); onDone(); }
+        fillEl.style.width = pct.toFixed(0) + '%';
+        pctEl.textContent = pct.toFixed(0) + '%';
+      }, 140);
+    }
+
+    function addFileEntry(list, file) {
+      var entry = document.createElement('div');
+      entry.className = 'pf-pending';
+      entry.innerHTML =
+        '<div class="pf-icon">' + svgFile() + '</div>' +
+        '<div class="pf-body">' +
+          '<div class="pf-name">' + file.name + '</div>' +
+          '<div class="pf-size">' + formatBytes(file.size) + '</div>' +
+          '<div class="pf-progress-wrap">' +
+            '<div class="pf-progress-track"><div class="pf-progress-fill"></div></div>' +
+            '<div class="pf-progress-label"><span class="pf-status uploading"><span>Uploading...</span></span><span class="pf-pct">0%</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<button class="pf-remove" type="button" aria-label="Remove file">' + svgX() + '</button>';
+
+      var fillEl = entry.querySelector('.pf-progress-fill');
+      var pctEl = entry.querySelector('.pf-pct');
+      var statusEl = entry.querySelector('.pf-status');
+      var removeBtn = entry.querySelector('.pf-remove');
+
+      list.appendChild(entry);
+
+      removeBtn.addEventListener('click', function () {
+        entry.remove();
+      });
+
+      simulateUpload(fillEl, pctEl, statusEl, function () {
+        statusEl.className = 'pf-status done';
+        statusEl.innerHTML = svgCheck() + '<span>Uploaded</span>';
+        pctEl.textContent = '100%';
+      });
+    }
+
+    var zone = document.getElementById('cert-upload-zone');
+    var input = document.getElementById('cert-file-input');
+    var list = document.getElementById('cert-file-list');
+
+    if (zone && input && list) {
+      zone.addEventListener('click', function () { input.click(); });
+      zone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+      zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.style.borderColor = 'var(--accent)'; });
+      zone.addEventListener('dragleave', function () { zone.style.borderColor = ''; });
+      zone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        zone.style.borderColor = '';
+        var files = e.dataTransfer.files;
+        for (var i = 0; i < files.length; i++) { addFileEntry(list, files[i]); }
+      });
+      input.addEventListener('change', function () {
+        var files = input.files;
+        for (var i = 0; i < files.length; i++) { addFileEntry(list, files[i]); }
+        input.value = '';
+      });
+    }
+
+    /* Seed one demo pending file to show state */
+    if (list) {
+      addFileEntry(list, { name: 'iso-30401-certificate.pdf', size: 1243648 });
+    }
+  })();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

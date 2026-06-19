@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk actions · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+.bulk-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 14px;
+  transition: color 0.15s;
+}
+.bulk-back:hover { color: var(--ink); }
+
+.selected-panel {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 22px;
+  margin-bottom: 24px;
+}
+.selected-panel .sp-label {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+}
+.selected-panel .chip-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.selected-panel .chip {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 11.5px;
+}
+.selected-panel .chip .x {
+  margin-left: 2px;
+  color: var(--ink-mute);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .action-grid { grid-template-columns: 1fr; } }
+
+.action-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.25s, transform 0.2s var(--tn);
+}
+.action-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+.action-card .ac-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+.action-card .ac-icon svg { width: 17px; height: 17px; }
+.action-card .ac-icon.t-honey { background: var(--c-honey-wash); color: var(--c-honey); border-color: rgba(201,155,46,0.2); }
+.action-card .ac-icon.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage);  border-color: rgba(126,155,111,0.2); }
+.action-card .ac-icon.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay);  border-color: rgba(184,101,78,0.2); }
+.action-card .ac-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.action-card .ac-desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  flex: 1;
+}
+.action-card .ac-field { margin-bottom: 12px; }
+.action-card .ac-field label {
+  display: block;
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+}
+.action-card select.input,
+.action-card input[type="date"] {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  border-radius: var(--r-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink);
+  width: 100%;
+  transition: border 0.18s, box-shadow 0.18s;
+}
+.action-card select.input:focus,
+.action-card input[type="date"]:focus {
+  outline: none;
+  border-color: var(--ink-mute);
+  box-shadow: 0 0 0 4px rgba(42,17,8,0.04);
+}
+.action-card .ac-foot { margin-top: auto; padding-top: 4px; }
+.ac-spacer { height: 60px; margin-bottom: 0; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="corp-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span><span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search"><input placeholder="Search team, groups, courses..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Dashboard</span></a>
+      <a href="oa-team.html" class="sidebar-link is-active" data-nav="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span><span class="badge">487</span></a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Groups</span><span class="badge">12</span></a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Assignments</span><span class="badge">24</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Licenses</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+
+    <a class="bulk-back" href="oa-team.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Tenant users</a>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Tenant &middot; Petroleum Development Oman</div>
+        <h1 class="page-title">Bulk <em>actions</em></h1>
+        <p class="page-sub">3 of 487 tenant users selected. Choose an action below to apply to all selected.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="oa-team.html">Clear selection</a>
+      </div>
+    </div>
+
+    <div class="selected-panel">
+      <div class="sp-label">Selected users</div>
+      <div class="chip-row" id="selected-chips">
+        <span class="chip t-ink" data-user="Ahmed Al-Balushi">Ahmed Al-Balushi <span class="x" role="button" aria-label="Remove Ahmed Al-Balushi">&times;</span></span>
+        <span class="chip t-ink" data-user="Fatima Al-Hinai">Fatima Al-Hinai <span class="x" role="button" aria-label="Remove Fatima Al-Hinai">&times;</span></span>
+        <span class="chip t-ink" data-user="Salem Al-Kindi">Salem Al-Kindi <span class="x" role="button" aria-label="Remove Salem Al-Kindi">&times;</span></span>
+      </div>
+    </div>
+
+    <div class="action-grid">
+
+      <div class="action-card">
+        <div class="ac-icon t-honey">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="ac-title">Add to group</div>
+        <p class="ac-desc">Move selected users into an existing group. They keep all prior assignments.</p>
+        <div class="ac-field">
+          <label>Select group</label>
+          <select class="input"><option>Records Team</option><option>Data Analytics</option><option>Compliance</option><option>Operations</option><option>Risk Management</option></select>
+        </div>
+        <div class="ac-field ac-spacer" aria-hidden="true"></div>
+        <div class="ac-foot">
+          <button class="btn btn-primary btn-sm bulk-apply-btn" data-action="group" data-toggle="apply" type="button">Apply to <span class="apply-count">3</span> users</button>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="ac-icon t-sage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="ac-title">Assign course</div>
+        <p class="ac-desc">Assign a course to all 3 users.</p>
+        <div class="ac-field">
+          <label>Select course</label>
+          <select class="input"><option>Records Management Fundamentals</option><option>ISO 30401 KM Standard</option><option>Data Governance Essentials</option></select>
+        </div>
+        <div class="ac-field">
+          <label>Target completion date <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <input type="date" class="input">
+        </div>
+        <div class="ac-foot">
+          <button class="btn btn-primary btn-sm bulk-apply-btn" data-action="course" data-toggle="apply" type="button">Apply to <span class="apply-count">3</span> users</button>
+        </div>
+      </div>
+
+      <div class="action-card">
+        <div class="ac-icon t-clay">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <div class="ac-title">Export selected</div>
+        <p class="ac-desc">Download CSV with profile and progress data for selected users.</p>
+        <div class="ac-foot">
+          <button class="btn btn-ghost btn-sm" data-toggle="export" onclick="var a=document.querySelector('#export-anchor')||document.body.appendChild(Object.assign(document.createElement('a'),{id:'export-anchor'}));var csv='Name,Email,Progress\nAhmed Al-Balushi,ahmed@example.com,68%\nFatima Al-Hinai,fatima@example.com,42%\nSalem Al-Kindi,salem@example.com,91%';a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='users-export.csv';a.click();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export 3 users</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+<!-- Toast -->
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+
+<script>
+(function () {
+  function toast(msg, then) {
+    var t = document.getElementById('imi-toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+      if (then) setTimeout(then, 220);
+    }, 1800);
+  }
+
+  function getSelectedCount() {
+    return document.querySelectorAll('#selected-chips .chip').length;
+  }
+
+  function refreshCounts() {
+    var n = getSelectedCount();
+    document.querySelectorAll('.apply-count').forEach(function (el) { el.textContent = n; });
+    document.querySelectorAll('.bulk-apply-btn').forEach(function (btn) {
+      btn.disabled = n === 0;
+    });
+    var sub = document.querySelector('.page-sub');
+    if (sub) sub.textContent = n + ' of 487 tenant users selected. Choose an action below to apply to all selected.';
+  }
+
+  /* ── chip remove ── */
+  document.getElementById('selected-chips').addEventListener('click', function (e) {
+    var x = e.target.closest('.x');
+    if (!x) return;
+    var chip = x.closest('.chip');
+    if (chip) {
+      chip.style.transition = 'opacity 0.2s, transform 0.2s';
+      chip.style.opacity = '0';
+      chip.style.transform = 'scale(0.85)';
+      setTimeout(function () { chip.remove(); refreshCounts(); }, 200);
+    }
+  });
+
+  /* ── apply buttons ── */
+  document.querySelectorAll('.bulk-apply-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var n = getSelectedCount();
+      if (!n) { toast('No users selected.'); return; }
+      var action = btn.dataset.action;
+      var label = action === 'group' ? 'Group assignment' : 'Course assignment';
+      btn.disabled = true;
+      btn.textContent = 'Applying...';
+      setTimeout(function () {
+        toast(label + ' applied to ' + n + ' users. Redirecting...', function () {
+          location.href = 'oa-team.html';
+        });
+      }, 400);
+    });
+  });
+
+  refreshCounts();
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

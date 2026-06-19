@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Quality Foundations · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .course-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 900px) { .stat-grid { grid-template-columns: 1fr; } }
+
+  .stat-foot {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    margin-top: 6px;
+  }
+
+  .stat-value-warn {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .due-text { color: var(--accent); font-weight: 600; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-row .pct-tag {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .extra-row { display: none; }
+
+  .tbl-footer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+  .tbl-count {
+    font-family: var(--font-label);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="corp-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search"><input placeholder="Search team, groups, courses..."></div>
+  <div class="topbar-actions">
+    <a href="corp-admin-notification.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span><span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span><span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link is-active" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span><span class="badge">24</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <a class="back-link" href="corp-assignment.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Course assignments
+    </a>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">CDMP Career Path</div>
+        <h1 class="page-title">Data Quality <em>Foundations</em></h1>
+        <div class="course-chips">
+          <span class="chip">6 lessons</span>
+          <span class="chip">4 hours</span>
+          <span class="chip">Intermediate</span>
+          <span class="chip t-sage dot">Mandatory for your team</span>
+        </div>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" id="send-reminder-btn">Send reminder</a>
+        <a class="btn btn-primary" href="corp-assignment-edit.html">Manage assignment &rarr;</a>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-flat">
+        <div class="stat-label">Assigned to</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-sage)"></span>
+          24
+        </div>
+        <div class="stat-foot">team members</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+          18
+        </div>
+        <div class="stat-foot">75% completion</div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Overdue</div>
+        <div class="stat-value-warn">3</div>
+        <div class="stat-foot">past deadline</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Team completion <em>status</em></div>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Status</th>
+              <th>Progress</th>
+              <th>Completion date</th>
+            </tr>
+          </thead>
+          <tbody id="completion-tbody">
+            <tr>
+              <td>Layla Al-Hashimi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-10</td>
+            </tr>
+            <tr>
+              <td>Maryam Al-Farsi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-11</td>
+            </tr>
+            <tr>
+              <td>Khalid Al-Maamari</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-12</td>
+            </tr>
+            <tr>
+              <td>Fatima Al-Kalbani</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-13</td>
+            </tr>
+            <tr>
+              <td>Omar Al-Wahaibi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-14</td>
+            </tr>
+            <tr>
+              <td>Hessa Al-Rawahi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-15</td>
+            </tr>
+            <tr>
+              <td>Salim Al-Hosni</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-16</td>
+            </tr>
+            <tr>
+              <td>Noura Al-Siyabi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-17</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Yusuf Al-Aamri</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-18</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Aisha Al-Ghaithi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-19</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Hassan Al-Muqbali</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-20</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Reem Al-Zadjali</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-21</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Badr Al-Lawati</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-22</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Samira Al-Mahrouqi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-23</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Faisal Al-Nabhani</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-24</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Iman Al-Harrasi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-25</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Majid Al-Ruqaishi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-26</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Wafa Al-Musharfi</td>
+              <td><span class="chip t-sage dot">Course Completed</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:100%;background:var(--c-sage)"></div></div>
+                  <span class="pct-tag">100%</span>
+                </div>
+              </td>
+              <td>2026-05-27</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Ahmed Al-Rashid</td>
+              <td><span class="chip t-honey dot">In progress</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:65%;background:var(--c-honey)"></div></div>
+                  <span class="pct-tag">65%</span>
+                </div>
+              </td>
+              <td class="mute">Not yet completed</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Nadia Al-Shukri</td>
+              <td><span class="chip t-honey dot">In progress</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:40%;background:var(--c-honey)"></div></div>
+                  <span class="pct-tag">40%</span>
+                </div>
+              </td>
+              <td class="mute">Not yet completed</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Ziad Al-Busaidi</td>
+              <td><span class="chip t-honey dot">In progress</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:28%;background:var(--c-honey)"></div></div>
+                  <span class="pct-tag">28%</span>
+                </div>
+              </td>
+              <td class="mute">Not yet completed</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Tariq Al-Balushi</td>
+              <td><span class="chip t-clay dot">Overdue</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:12%;background:var(--c-clay)"></div></div>
+                  <span class="pct-tag">12%</span>
+                </div>
+              </td>
+              <td class="due-text">Deadline: May 1</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Rania Al-Khanbashi</td>
+              <td><span class="chip t-clay dot">Overdue</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:0%;background:var(--c-clay)"></div></div>
+                  <span class="pct-tag">0%</span>
+                </div>
+              </td>
+              <td class="due-text">Deadline: May 1</td>
+            </tr>
+            <tr class="extra-row">
+              <td>Mansoor Al-Habsi</td>
+              <td><span class="chip t-clay dot">Overdue</span></td>
+              <td>
+                <div class="progress-row">
+                  <div class="progress" style="flex:1"><div class="progress-fill" style="width:5%;background:var(--c-clay)"></div></div>
+                  <span class="pct-tag">5%</span>
+                </div>
+              </td>
+              <td class="due-text">Deadline: May 1</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="tbl-footer">
+          <button class="btn btn-ghost btn-sm" id="toggle-rows">View all 24 members</button>
+          <span class="tbl-count">Showing 8 of 24</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  /* ── toast helper ── */
+  function showToast(msg) {
+    var t = document.getElementById('imi-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'imi-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._tid);
+    t._tid = setTimeout(function () { t.style.opacity = '0'; }, 3000);
+  }
+
+  /* ── Send reminder button ── */
+  var reminderBtn = document.getElementById('send-reminder-btn');
+  if (reminderBtn) reminderBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    var orig = this.textContent;
+    this.textContent = 'Sending...';
+    this.style.pointerEvents = 'none';
+    var btn = this;
+    setTimeout(function () {
+      btn.textContent = orig;
+      btn.style.pointerEvents = '';
+      showToast('Reminder sent to 3 overdue members.');
+    }, 700);
+  });
+
+  /* ── topbar search ── */
+  var srch = document.querySelector('.search input');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'oa-team.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── table rows navigate to learner detail ── */
+  document.querySelectorAll('.tbl tbody tr').forEach(function (row) {
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', function () {
+      location.href = 'corp-learner-detail.html';
+    });
+  });
+
+  /* ── toggle rows: fix initial state so extra-rows are hidden ── */
+  var extraRows = document.querySelectorAll('.extra-row');
+  extraRows.forEach(function (r) { r.style.display = 'none'; });
+  var toggleBtn = document.getElementById('toggle-rows');
+  var countEl = document.querySelector('.tbl-count');
+  if (toggleBtn) {
+    var expanded = false;
+    toggleBtn.onclick = function () {
+      expanded = !expanded;
+      extraRows.forEach(function (r) { r.style.display = expanded ? '' : 'none'; });
+      toggleBtn.textContent = expanded ? 'Show fewer members' : 'View all 24 members';
+      if (countEl) countEl.textContent = expanded ? 'Showing all 24 members' : 'Showing 8 of 24';
+    };
+  }
+})();
+</script>
+</body>
+</html>

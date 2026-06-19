@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course player, document lesson · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* course bar: title + progress + exit, sits above the player layout */
+  .course-bar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .course-bar .cb-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .course-bar .cb-mark img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+  }
+  .course-bar .cb-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .course-bar .cb-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+    min-width: 240px;
+  }
+  .course-bar .cb-progress .progress { flex: 1; }
+  .course-bar .cb-pct {
+    font-family: var(--font-label);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* two-column player grid: document stage + lessons rail */
+  .player-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .player-grid { grid-template-columns: 1fr; } }
+
+  .lesson-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+
+  /* document page: a paper sheet holding the reading content */
+  .doc-sheet {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 52px 56px 44px;
+    max-width: 720px;
+  }
+  .doc-title {
+    font-family: var(--font-sans);
+    font-size: 33px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 22px;
+  }
+  .doc-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .doc-sheet p {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .doc-foot {
+    margin-top: 26px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-style: normal;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
+  .doc-foot .sep { margin: 0 8px; opacity: 0.6; }
+
+  /* player controls row + phase-2 hook */
+  .player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .player-controls .ctrl-actions { display: flex; gap: 10px; align-items: center; }
+  .ask-hook {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-pill);
+    padding: 7px 14px;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .ask-hook svg { width: 15px; height: 15px; }
+  .ask-hook .phase-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--surface-3);
+    color: var(--ink-soft);
+    padding: 2px 7px;
+    border-radius: var(--r-pill);
+  }
+
+  /* lessons rail */
+  .rail-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px 12px;
+  }
+  .rail-head .rh-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .rail-head .rh-count {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .rail-progress { padding: 0 18px 14px; }
+
+  .pl-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 18px;
+    border-top: 1px solid var(--line);
+    transition: background 0.15s;
+  }
+  .pl-item:hover { background: var(--paper-2); }
+  .pl-item.is-current { background: var(--c-honey-wash); }
+  .pl-item.is-locked { opacity: 0.5; }
+  .pl-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--paper);
+  }
+  .pl-dot svg { width: 11px; height: 11px; }
+  .pl-dot.done { background: var(--c-sage); border-color: var(--c-sage); }
+  .pl-dot.current { border-color: var(--accent); background: var(--accent); }
+  .pl-dot.current::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
+  .pl-body { flex: 1; min-width: 0; }
+  .pl-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .pl-name.muted { color: var(--ink-mute); font-weight: 600; }
+
+  /* rail footer: auto-complete note + continue + policy line */
+  .rail-foot {
+    border-top: 1px solid var(--line);
+    padding: 16px 18px 18px;
+    text-align: center;
+  }
+  .rail-foot .auto-note {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+    margin-bottom: 12px;
+  }
+  .rail-foot .btn { width: 100%; justify-content: center; }
+  .rail-foot .policy-note {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+
+  /* next-up recommendation card in the rail footer */
+  .rail-foot .nextup-card {
+    background: var(--c-sage-wash);
+    border: 1px solid rgba(126,155,111,0.22);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .nextup-card .nu-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-sage-text);
+    margin-bottom: 5px;
+  }
+  .nextup-card .nu-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .nextup-card .nu-meta {
+    font-size: 11.5px;
+    color: var(--c-sage-text);
+    margin-top: 3px;
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+
+  /* notebook: capture and review notes while reading */
+  .notebook {
+    margin-top: 22px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 20px 22px;
+    max-width: 720px;
+  }
+  .notebook .nb-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .notebook .nb-head svg { width: 16px; height: 16px; color: var(--ink-mute); }
+  .notebook .nb-title {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .notebook .nb-count {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .note-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .note-card .nc-time {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .note-card .nc-body { font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .note-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-sm);
+    padding: 10px 14px;
+  }
+  .note-add .na-stamp {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    padding: 4px 10px;
+    flex-shrink: 0;
+  }
+  .note-add input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 13.5px;
+    color: var(--ink);
+    height: 30px;
+  }
+  .note-add input:focus { outline: none; }
+  .note-add input::placeholder { color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" onclick="event.preventDefault()">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a class="avatar-ring" href="../profile/profile.html" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link is-active" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main>
+
+<div class="course-bar">
+  <span class="cb-mark"><img src="../img/imi-mark-ink.png" alt="IMI"></span>
+  <span class="cb-title">Knowledge mapping</span>
+  <div class="cb-progress">
+    <div class="progress"><div class="progress-fill grad-honey" style="width:22%"></div></div>
+    <span class="cb-pct">22%</span>
+  </div>
+  <a class="btn btn-ghost btn-sm" href="course-detail.html">Exit course</a>
+</div>
+
+<div class="player-grid">
+  <div>
+    <div class="lesson-eyebrow">Lesson 2 of 9 · Document</div>
+
+    <article class="doc-sheet" id="docSheet">
+      <h1 class="doc-title" id="docTitle">2. Tacit vs explicit <em>knowledge</em></h1>
+      <div id="docContent">
+        <p>There is a useful distinction at the centre of knowledge management between two kinds of knowledge: tacit and explicit. Explicit knowledge can be written down, codified, and shared as a document, the rules in this policy, the diagram on this page.</p>
+        <p>Tacit knowledge, by contrast, is the knowledge that lives in a practitioner's head. The way a senior records officer instinctively knows which file belongs in which retention class. The judgment that an experienced auditor brings to a quality review.</p>
+        <p>The challenge of knowledge mapping is to translate as much tacit knowledge as possible into explicit form, without losing the nuance that makes the tacit version useful in the first place.</p>
+      </div>
+      <div class="doc-foot" id="docFoot">Page 1 of 4<span class="sep">&middot;</span>Reading time: ~5 min</div>
+    </article>
+
+    <div class="player-controls">
+      <span class="ask-hook" title="Community discussion coming in Phase 2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Ask a question
+        <span class="phase-tag">Phase 2</span>
+      </span>
+      <div class="ctrl-actions">
+        <button class="btn btn-ghost btn-sm" id="prevPageBtn" onclick="docNav(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Previous</button>
+        <button class="btn btn-primary btn-sm" id="nextPageBtn" onclick="docNav(1)">Next page <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+      </div>
+    </div>
+
+    <section class="notebook">
+      <div class="nb-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nb-title">Notebook</span>
+        <span class="nb-count">2 notes</span>
+      </div>
+      <div class="note-card">
+        <div class="nc-time">Page 1 · added 6 min ago</div>
+        <div class="nc-body">Explicit = codified and shareable as a document. Tacit = lives in the practitioner's head. Mapping goal is to translate tacit into explicit without losing nuance.</div>
+      </div>
+      <div class="note-card">
+        <div class="nc-time">Page 1 · added 9 min ago</div>
+        <div class="nc-body">Example to reuse: records officer instinct for retention class is tacit judgment worth capturing.</div>
+      </div>
+      <div class="note-add" id="docNoteAdd">
+        <span class="na-stamp" id="docNoteStamp">+ Page 1</span>
+        <input id="docNoteInput" placeholder="Add a note for this lesson...">
+        <a class="btn btn-primary btn-sm" href="#" onclick="event.preventDefault();(function(btn){var inp=document.getElementById('docNoteInput');var txt=inp.value.trim();if(!txt)return;var nb=document.querySelector('.notebook');var addRow=document.getElementById('docNoteAdd');var pageLabel=document.getElementById('docNoteStamp').textContent;var card=document.createElement('div');card.className='note-card';card.innerHTML='<div class=&quot;nc-time&quot;>'+pageLabel.replace('+ ','')+' &middot; just now</div><div class=&quot;nc-body&quot;>'+txt+'</div>';nb.querySelector('.nb-head').insertAdjacentElement('afterend',card);inp.value='';btn.textContent='Saved';setTimeout(function(){btn.textContent='Save';},1200);imiToast('Note saved');})(this)">Save</a>
+      </div>
+    </section>
+  </div>
+
+  <aside>
+    <div class="rail-card">
+      <div class="rail-head">
+        <span class="rh-label">Lessons</span>
+        <span class="rh-count">2 of 9</span>
+      </div>
+      <div class="rail-progress">
+        <div class="progress"><div class="progress-fill grad-honey" style="width:22%"></div></div>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-document.html'">
+        <span class="pl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <div class="pl-body">
+          <div class="pl-name">1. What is knowledge mapping?</div>
+        </div>
+      </div>
+
+      <div class="pl-item is-current">
+        <span class="pl-dot current"></span>
+        <div class="pl-body">
+          <div class="pl-name">2. Tacit vs explicit</div>
+        </div>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-text.html'">
+        <span class="pl-dot"></span>
+        <div class="pl-body">
+          <div class="pl-name muted">3. Knowledge audits</div>
+        </div>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-v2.html'">
+        <span class="pl-dot"></span>
+        <div class="pl-body">
+          <div class="pl-name muted">4. Concept mapping</div>
+        </div>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player.html'">
+        <span class="pl-dot"></span>
+        <div class="pl-body">
+          <div class="pl-name muted">5. Mapping in practice</div>
+        </div>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='quiz-start-warning.html'">
+        <span class="pl-dot"></span>
+        <div class="pl-body">
+          <div class="pl-name muted">6. Assessment</div>
+        </div>
+      </div>
+
+      <div class="rail-foot">
+        <div class="auto-note">Auto-completed on scroll to bottom</div>
+        <div class="nextup-card">
+          <div class="nu-label">Next up</div>
+          <div class="nu-title">3. Knowledge audits</div>
+          <div class="nu-meta">6 min · part of CDMP path</div>
+        </div>
+        <a class="btn btn-primary btn-sm" href="player.html">Continue to next lesson →</a>
+      </div>
+    </div>
+  </aside>
+</div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+function imiToast(msg) {
+  var t = document.getElementById('_imi_toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = '_imi_toast';
+    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.04em;padding:10px 22px;border-radius:var(--r-pill);z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._tid);
+  t._tid = setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(16px)'; }, 2200);
+}
+
+var _docPage = 1;
+var _docPages = [
+  { title: '2. Tacit vs explicit <em>knowledge</em>', content: '<p>There is a useful distinction at the centre of knowledge management between two kinds of knowledge: tacit and explicit. Explicit knowledge can be written down, codified, and shared as a document, the rules in this policy, the diagram on this page.</p><p>Tacit knowledge, by contrast, is the knowledge that lives in a practitioner\'s head. The way a senior records officer instinctively knows which file belongs in which retention class. The judgment that an experienced auditor brings to a quality review.</p><p>The challenge of knowledge mapping is to translate as much tacit knowledge as possible into explicit form, without losing the nuance that makes the tacit version useful in the first place.</p>' },
+  { title: '2. Tacit vs explicit <em>knowledge</em> (cont.)', content: '<p>The most practical frameworks for this translation come from communities of practice research: documentation exercises, apprenticeship observation, and structured interview protocols that draw out tacit reasoning step by step.</p><p>One technique used across GCC government contexts is the "walk-me-through" interview: a practitioner narrates a decision they have made before, while a knowledge analyst annotates the decision nodes. The resulting map becomes explicit knowledge that can be revised, audited, and shared.</p>' },
+  { title: '2. Tacit vs explicit <em>knowledge</em> (cont.)', content: '<p>Risks to be aware of: not all tacit knowledge should be made explicit. Some judgment is contextual and would mislead if codified without its full context. A good knowledge audit distinguishes between knowledge that should be shared and knowledge that should be preserved in role design and mentoring relationships.</p><p>The next lesson examines how to conduct a structured knowledge audit before any mapping work begins.</p>' },
+  { title: '2. Tacit vs explicit <em>knowledge</em> (summary)', content: '<p><strong>Key takeaways from this lesson:</strong></p><p>Explicit knowledge is codifiable and shareable as a document. Tacit knowledge lives in a practitioner\'s judgment and requires deliberate capture techniques.</p><p>Translation techniques include walk-me-through interviews, communities of practice observation, and apprenticeship documentation. Not all tacit knowledge should be made explicit: context matters.</p><p>You are ready to move on to Lesson 3: Knowledge audits.</p>' }
+];
+
+function docNav(dir) {
+  var next = _docPage + dir;
+  if (next < 1) { imiToast('This is the first page'); return; }
+  if (next > _docPages.length) { location.href = 'player-text.html'; return; }
+  _docPage = next;
+  var pg = _docPages[_docPage - 1];
+  document.getElementById('docTitle').innerHTML = pg.title;
+  document.getElementById('docContent').innerHTML = pg.content;
+  document.getElementById('docFoot').innerHTML = 'Page ' + _docPage + ' of 4<span class="sep">&middot;</span>Reading time: ~5 min';
+  document.getElementById('docNoteStamp').textContent = '+ Page ' + _docPage;
+  document.getElementById('prevPageBtn').style.opacity = _docPage === 1 ? '0.45' : '1';
+  if (_docPage === _docPages.length) {
+    document.getElementById('nextPageBtn').textContent = 'Next lesson';
+  } else {
+    document.getElementById('nextPageBtn').innerHTML = 'Next page <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  }
+  document.getElementById('docSheet').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('prevPageBtn').style.opacity = '0.45';
+});
+</script>
+</body>
+</html>

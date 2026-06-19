@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SME Feedback · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── page-level overrides ── */
+  .fb-wrap {
+    max-width: 820px;
+  }
+
+  /* review thread card */
+  .fb-thread {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 20px 22px;
+    transition: border-color 0.2s, box-shadow 0.25s, opacity 0.3s;
+  }
+  .fb-thread:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-xs);
+  }
+  .fb-thread.is-resolved {
+    opacity: 0.65;
+  }
+  .fb-thread-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  /* per-thread reply + address row */
+  .fb-thread-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .fb-thread-reply-box {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+  }
+  .fb-thread-reply-box.open { display: block; }
+  .fb-thread-reply-box textarea {
+    width: 100%; height: 68px; resize: vertical;
+    font-size: 13px; line-height: 1.5;
+    border: 1px solid var(--line); border-radius: var(--r-xs);
+    padding: 8px 10px; background: var(--paper);
+    font-family: var(--font-body); color: var(--ink);
+    margin-bottom: 8px; box-sizing: border-box;
+  }
+  .fb-thread-reply-box textarea:focus { border-color: var(--accent); outline: none; }
+  .fb-thread-reply-actions { display: flex; gap: 8px; }
+  .fb-loc {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+  .fb-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 16.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    margin: 0 0 8px;
+    padding-left: 16px;
+    border-left: 2px solid var(--line-strong);
+  }
+  .fb-byline {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    margin-bottom: 0;
+  }
+
+  /* summary chip row */
+  .fb-summary {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+  }
+
+  /* resubmission gate card */
+  .fb-gate {
+    margin-top: 26px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c-clay);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+  }
+  .fb-gate-title {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .fb-gate-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+  .fb-gate-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .fb-gate-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .fb-gate-item .chip {
+    flex: 0 0 auto;
+    min-width: 84px;
+    justify-content: center;
+  }
+  .fb-gate-item.is-missing > span:last-child {
+    font-weight: 600;
+  }
+
+  /* sticky action bar */
+  .fb-bar {
+    position: sticky;
+    bottom: 0;
+    margin: 36px -48px -80px;
+    padding: 18px 48px;
+    background: rgba(250, 246, 240, 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1.5px solid var(--line-strong);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .fb-bar .fb-bar-note {
+    font-family: var(--font-label);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+
+  /* disabled button state */
+  .btn.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .btn.is-disabled:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* tab panel visibility */
+  .tab-panel { display: none; }
+  .tab-panel.is-active { display: block; }
+
+  /* extra room so content scrolls fully clear of the sticky action bar */
+  main { padding-bottom: 100px; }
+
+  /* Toast */
+  .fb-toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--ink); color: var(--paper); border-radius: var(--r-pill);
+    padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+    box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+    transition: opacity 0.22s, transform 0.22s; z-index: 999; white-space: nowrap;
+  }
+  .fb-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Reply box */
+  .qa-reply-box {
+    display: none; margin-top: 10px;
+    padding: 10px 14px; background: var(--paper-2);
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+  }
+  .qa-reply-box.open { display: block; }
+  .qa-reply-box textarea {
+    width: 100%; height: 70px; resize: vertical;
+    font-size: 13px; line-height: 1.5;
+    border: 1px solid var(--line); border-radius: var(--r-xs);
+    padding: 8px 10px; background: var(--paper);
+    font-family: var(--font-body); color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .qa-reply-box textarea:focus { border-color: var(--accent); outline: none; }
+  .qa-reply-actions { display: flex; gap: 8px; }
+
+  /* learner Q&A thread */
+  .qa-thread {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 22px;
+    transition: border-color 0.2s, box-shadow 0.25s;
+  }
+  .qa-thread:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-xs);
+  }
+  .qa-thread-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .qa-question {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 8px;
+    line-height: 1.45;
+  }
+  .qa-answer {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0 0 8px;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border-radius: var(--r-sm);
+  }
+  .qa-answer strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .qa-meta {
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
+  .qa-unanswered {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--c-honey-text);
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="content-dev-home.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Studio</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search my courses, drafts..." aria-label="Search">
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" aria-label="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help" aria-label="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="content-dev-home.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Courses</span>
+        <span class="badge">12</span>
+      </a>
+      <a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Drafts</span>
+        <span class="badge">3</span>
+      </a>
+      <a href="content-dev-home.html#published" class="sidebar-link" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Published</span>
+        <span class="badge">9</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="cd-feedback.html#sme-reviews" class="sidebar-link is-active" data-nav="sme-reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>SME Reviews</span>
+        <span class="badge">2</span>
+      </a>
+      <a href="cd-feedback.html#qa" class="sidebar-link" data-nav="qa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Learner Q&amp;A</span>
+        <span class="badge">8</span>
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="../course-builder/cb-reports.html" class="sidebar-link" data-nav="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="cd-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head" style="grid-template-columns:1fr;margin-bottom:24px">
+      <div>
+        <div class="eyebrow">Feedback &middot; Author view</div>
+        <h1 class="page-title">Feedback: Knowledge Mapping <em>Fundamentals</em></h1>
+        <div class="row gap" style="margin-top:14px;flex-wrap:wrap">
+          <span class="chip t-clay dot">Rejected</span>
+          <span class="fb-loc">Reviewed by Dr. Faris Al-Maamari &middot; 2h ago</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs strip -->
+    <div class="tabs" role="tablist" aria-label="Feedback sections">
+      <button
+        class="tab is"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-sme-reviews"
+        data-tab="sme-reviews"
+        onclick="switchTab('sme-reviews')"
+      >SME Reviews</button>
+      <button
+        class="tab"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-qa"
+        data-tab="qa"
+        onclick="switchTab('qa')"
+      >Learner Q&amp;A</button>
+    </div>
+
+    <!-- SME Reviews panel -->
+    <div id="panel-sme-reviews" class="tab-panel is-active fb-wrap" role="tabpanel" aria-labelledby="tab-sme-reviews">
+
+      <!-- Summary -->
+      <div class="fb-summary" id="fb-summary-row">
+        <span class="chip t-clay dot" id="fb-req-count">1 Required (must resolve)</span>
+        <span class="chip dot" id="fb-sug-count">2 Suggestions (optional)</span>
+        <span class="chip t-sage dot" id="fb-res-count">1 Resolved</span>
+      </div>
+
+      <!-- Review threads -->
+      <div class="col gap-lg">
+
+        <!-- Thread 1: Required -->
+        <div class="fb-thread" id="fb-t1" style="border-left:3px solid var(--c-clay)">
+          <div class="fb-thread-head">
+            <span class="chip t-clay" id="fb-t1-chip">Required</span>
+            <span class="chip t-honey">Lesson 3</span>
+            <span class="fb-loc">Knowledge audits &middot; 00:42</span>
+          </div>
+          <blockquote class="fb-quote">"Add ISO 30401 reference in the lesson 3 intro. The current material does not cite the standard."</blockquote>
+          <div class="fb-byline">Dr. Faris Al-Maamari &middot; 2h ago</div>
+          <div class="fb-thread-reply-box" id="fb-t1-reply">
+            <textarea placeholder="Write a reply..."></textarea>
+            <div class="fb-thread-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="fbSendReply('t1',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="fbCancelReply('t1')">Cancel</button>
+            </div>
+          </div>
+          <div class="fb-thread-actions" id="fb-t1-actions">
+            <button class="btn btn-ghost btn-sm" id="fb-t1-reply-btn" onclick="fbOpenReply('t1')">Reply</button>
+            <button class="btn btn-primary btn-sm" onclick="fbMarkAddressed('t1')">Mark as addressed</button>
+          </div>
+        </div>
+
+        <!-- Thread 2: Suggestion -->
+        <div class="fb-thread" id="fb-t2">
+          <div class="fb-thread-head">
+            <span class="chip" id="fb-t2-chip">Suggestion</span>
+            <span class="chip t-honey">Lesson 7</span>
+          </div>
+          <blockquote class="fb-quote">"Consider adding a GCC ministry case study. Current examples are all Western."</blockquote>
+          <div class="fb-byline">Dr. Faris Al-Maamari &middot; 2h ago</div>
+          <p style="font-size:12px;color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
+          <div class="fb-thread-reply-box" id="fb-t2-reply">
+            <textarea placeholder="Write a reply..."></textarea>
+            <div class="fb-thread-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="fbSendReply('t2',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="fbCancelReply('t2')">Cancel</button>
+            </div>
+          </div>
+          <div class="fb-thread-actions" id="fb-t2-actions">
+            <button class="btn btn-ghost btn-sm" id="fb-t2-reply-btn" onclick="fbOpenReply('t2')">Reply</button>
+            <button class="btn btn-ghost btn-sm" onclick="fbMarkAddressed('t2')">Mark as addressed</button>
+          </div>
+        </div>
+
+        <!-- Thread 3: Suggestion -->
+        <div class="fb-thread" id="fb-t3">
+          <div class="fb-thread-head">
+            <span class="chip" id="fb-t3-chip">Suggestion</span>
+            <span class="chip t-honey">Learning outcomes</span>
+          </div>
+          <blockquote class="fb-quote">"Outcome 4 overlaps with outcome 2. Consider merging."</blockquote>
+          <div class="fb-byline">Dr. Faris Al-Maamari &middot; 2h ago</div>
+          <p style="font-size:12px;color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
+          <div class="fb-thread-reply-box" id="fb-t3-reply">
+            <textarea placeholder="Write a reply..."></textarea>
+            <div class="fb-thread-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="fbSendReply('t3',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="fbCancelReply('t3')">Cancel</button>
+            </div>
+          </div>
+          <div class="fb-thread-actions" id="fb-t3-actions">
+            <button class="btn btn-ghost btn-sm" id="fb-t3-reply-btn" onclick="fbOpenReply('t3')">Reply</button>
+            <button class="btn btn-ghost btn-sm" onclick="fbMarkAddressed('t3')">Mark as addressed</button>
+          </div>
+        </div>
+
+        <!-- Thread 4: Resolved (pre-resolved example, dimmed) -->
+        <div class="fb-thread is-resolved" id="fb-t4">
+          <div class="fb-thread-head">
+            <span class="chip t-sage" id="fb-t4-chip">Resolved</span>
+            <span class="chip t-honey">General</span>
+            <span class="fb-loc">4h ago</span>
+          </div>
+          <blockquote class="fb-quote">"Is the assessment auto-graded?"</blockquote>
+          <div class="fb-byline">Dr. Faris Al-Maamari</div>
+          <div class="qa-answer" style="margin-top:10px"><strong>You replied:</strong> Yes, MCQ and T/F are auto-graded. Essay questions are manually reviewed within 48h.</div>
+        </div>
+
+      </div>
+
+      <!-- Resubmission gate -->
+      <div class="fb-gate">
+        <div class="fb-gate-title">Resubmission checklist</div>
+        <p class="fb-gate-sub">All mandatory fields and assets must be complete before this course can be resubmitted for review.</p>
+        <ul class="fb-gate-list">
+          <li class="fb-gate-item is-missing">
+            <span class="chip t-clay dot">Missing</span>
+            <span>Course metadata</span>
+          </li>
+          <li class="fb-gate-item is-missing">
+            <span class="chip t-clay dot">Missing</span>
+            <span>Lesson transcripts</span>
+          </li>
+          <li class="fb-gate-item is-ok">
+            <span class="chip t-sage dot">Complete</span>
+            <span>Persona assignment</span>
+          </li>
+          <li class="fb-gate-item is-ok">
+            <span class="chip t-sage dot">Complete</span>
+            <span>Subordinate assets</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Learner Q&A panel -->
+    <div id="panel-qa" class="tab-panel fb-wrap" role="tabpanel" aria-labelledby="tab-qa">
+
+      <!-- Summary -->
+      <div class="fb-summary">
+        <span class="chip t-honey dot">8 questions</span>
+        <span class="chip t-clay dot">3 unanswered</span>
+      </div>
+
+      <div class="col gap-lg">
+
+        <!-- Q1 - answered -->
+        <div class="qa-thread">
+          <div class="qa-thread-head">
+            <span class="chip t-sage dot">Answered</span>
+            <span class="fb-loc">Lesson 2 &middot; 3 days ago</span>
+          </div>
+          <p class="qa-question">How does the knowledge audit framework differ from a standard competency gap analysis?</p>
+          <div class="qa-answer"><strong>You replied:</strong> The audit framework maps tacit knowledge flows in addition to skill gaps, whereas a competency gap analysis focuses on observable, measurable skills only. Lesson 3 covers this distinction with the ISO 30401 lens.</div>
+          <div class="qa-meta">Asked by Nour Al-Rashid &middot; 2 upvotes</div>
+        </div>
+
+        <!-- Q2 - answered -->
+        <div class="qa-thread">
+          <div class="qa-thread-head">
+            <span class="chip t-sage dot">Answered</span>
+            <span class="fb-loc">Lesson 5 &middot; 5 days ago</span>
+          </div>
+          <p class="qa-question">Is the KM maturity model in module 2 applicable to public sector organisations?</p>
+          <div class="qa-answer"><strong>You replied:</strong> Yes. The five-stage model is sector-agnostic. Lesson 7 will include a GCC ministry case study in the next revision to illustrate public sector application.</div>
+          <div class="qa-meta">Asked by Tariq Hamdan &middot; 5 upvotes</div>
+        </div>
+
+        <!-- Q3 - answered -->
+        <div class="qa-thread">
+          <div class="qa-thread-head">
+            <span class="chip t-sage dot">Answered</span>
+            <span class="fb-loc">Lesson 4 &middot; 6 days ago</span>
+          </div>
+          <p class="qa-question">Should learning outcome 4 be assessed separately or can it be combined with outcome 2?</p>
+          <div class="qa-answer"><strong>You replied:</strong> Good catch. Outcome 4 and outcome 2 do overlap. This is under review following SME feedback and will be merged in the next draft.</div>
+          <div class="qa-meta">Asked by Mariam Youssef &middot; 4 upvotes</div>
+        </div>
+
+        <!-- Q4 - answered -->
+        <div class="qa-thread">
+          <div class="qa-thread-head">
+            <span class="chip t-sage dot">Answered</span>
+            <span class="fb-loc">Lesson 1 &middot; 1 week ago</span>
+          </div>
+          <p class="qa-question">What prerequisite knowledge is assumed for this course?</p>
+          <div class="qa-answer"><strong>You replied:</strong> No formal prerequisites are required. Familiarity with basic organisational management concepts is helpful but not mandatory.</div>
+          <div class="qa-meta">Asked by Khalid Mansouri &middot; 11 upvotes</div>
+        </div>
+
+        <!-- Q5 - answered -->
+        <div class="qa-thread">
+          <div class="qa-thread-head">
+            <span class="chip t-sage dot">Answered</span>
+            <span class="fb-loc">Lesson 6 &middot; 1 week ago</span>
+          </div>
+          <p class="qa-question">Are the downloadable templates in lesson 6 compatible with Microsoft 365?</p>
+          <div class="qa-answer"><strong>You replied:</strong> Yes, all templates are in .xlsx and .docx format and are fully compatible with Microsoft 365 as well as Google Workspace.</div>
+          <div class="qa-meta">Asked by Sara Al-Jabri &middot; 3 upvotes</div>
+        </div>
+
+        <!-- Q6 - unanswered -->
+        <div class="qa-thread" id="qa-q6">
+          <div class="qa-thread-head">
+            <span class="chip t-clay dot" id="qa-q6-status">Unanswered</span>
+            <span class="fb-loc">Lesson 3 &middot; 2 days ago</span>
+          </div>
+          <p class="qa-question">Can you point to a freely accessible version of ISO 30401 for self-study before the next session?</p>
+          <div class="qa-meta">Asked by Reem Al-Farsi &middot; 7 upvotes</div>
+          <div class="qa-reply-box" id="qa-q6-reply">
+            <textarea placeholder="Write your reply..."></textarea>
+            <div class="qa-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="submitQAReply('q6',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="cancelQAReply('q6')">Cancel</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <button class="btn btn-ghost btn-sm" id="qa-q6-btn" onclick="openQAReply('q6')">Reply</button>
+          </div>
+        </div>
+
+        <!-- Q7 - unanswered -->
+        <div class="qa-thread" id="qa-q7">
+          <div class="qa-thread-head">
+            <span class="chip t-clay dot" id="qa-q7-status">Unanswered</span>
+            <span class="fb-loc">Lesson 7 &middot; 1 day ago</span>
+          </div>
+          <p class="qa-question">Will the GCC ministry case study be available before the final assessment?</p>
+          <div class="qa-meta">Asked by Faisal Al-Otaibi &middot; 9 upvotes</div>
+          <div class="qa-reply-box" id="qa-q7-reply">
+            <textarea placeholder="Write your reply..."></textarea>
+            <div class="qa-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="submitQAReply('q7',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="cancelQAReply('q7')">Cancel</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <button class="btn btn-ghost btn-sm" id="qa-q7-btn" onclick="openQAReply('q7')">Reply</button>
+          </div>
+        </div>
+
+        <!-- Q8 - unanswered -->
+        <div class="qa-thread" id="qa-q8">
+          <div class="qa-thread-head">
+            <span class="chip t-clay dot" id="qa-q8-status">Unanswered</span>
+            <span class="fb-loc">Learning outcomes &middot; 4h ago</span>
+          </div>
+          <p class="qa-question">After the outcomes are merged, will the assessment rubric be updated to reflect the change?</p>
+          <div class="qa-meta">Asked by Hessa Al-Nuaimi &middot; 6 upvotes</div>
+          <div class="qa-reply-box" id="qa-q8-reply">
+            <textarea placeholder="Write your reply..."></textarea>
+            <div class="qa-reply-actions">
+              <button class="btn btn-primary btn-sm" onclick="submitQAReply('q8',this)">Send reply</button>
+              <button class="btn btn-ghost btn-sm" onclick="cancelQAReply('q8')">Cancel</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;">
+            <button class="btn btn-ghost btn-sm" id="qa-q8-btn" onclick="openQAReply('q8')">Reply</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Sticky action bar -->
+    <div class="fb-bar">
+      <span class="fb-bar-note">2 mandatory items still missing</span>
+      <div class="row gap">
+        <button class="btn btn-ghost btn-sm" id="btn-save-progress" onclick="fbSaveProgress(this)">Save progress</button>
+        <button class="btn btn-primary btn-sm is-disabled" id="btn-resubmit" title="Complete all mandatory fields and assets to resubmit" aria-disabled="true" disabled>Resubmit for review</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="fb-toast" class="fb-toast toast" aria-live="polite"></div>
+<script>
+  function showFbToast(msg) {
+    var t = document.getElementById('fb-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('visible');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() { t.classList.remove('visible'); }, 2400);
+  }
+
+  function switchTab(tabId) {
+    var tabs = document.querySelectorAll('.tabs .tab');
+    var panels = document.querySelectorAll('.tab-panel');
+    tabs.forEach(function(btn) {
+      var active = btn.dataset.tab === tabId;
+      btn.classList.toggle('is', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    panels.forEach(function(panel) {
+      var show = panel.id === 'panel-' + tabId;
+      panel.classList.toggle('is-active', show);
+      panel.style.display = show ? '' : 'none';
+    });
+    location.hash = tabId;
+  }
+
+  // per-thread reply/address for SME review threads
+  var fbThreadTypes = { t1: 'required', t2: 'suggestion', t3: 'suggestion', t4: 'resolved' };
+  var fbResolvedSet = { t4: true };
+
+  function fbOpenReply(id) {
+    var box = document.getElementById('fb-' + id + '-reply');
+    var btn = document.getElementById('fb-' + id + '-reply-btn');
+    if (box) { box.classList.add('open'); box.querySelector('textarea').focus(); }
+    if (btn) btn.style.display = 'none';
+  }
+
+  function fbCancelReply(id) {
+    var box = document.getElementById('fb-' + id + '-reply');
+    var btn = document.getElementById('fb-' + id + '-reply-btn');
+    if (box) { box.classList.remove('open'); box.querySelector('textarea').value = ''; }
+    if (btn) btn.style.display = '';
+  }
+
+  function fbSendReply(id, sendBtn) {
+    var box = document.getElementById('fb-' + id + '-reply');
+    var ta = box && box.querySelector('textarea');
+    var text = ta && ta.value.trim();
+    if (!text) { showFbToast('Write a reply before sending.'); return; }
+    var replyEl = document.createElement('div');
+    replyEl.className = 'qa-answer';
+    replyEl.style.marginTop = '10px';
+    replyEl.innerHTML = '<strong>You replied:</strong> ' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var actions = document.getElementById('fb-' + id + '-actions');
+    if (actions) actions.parentNode.insertBefore(replyEl, actions);
+    fbCancelReply(id);
+    showFbToast('Reply sent.');
+  }
+
+  function fbMarkAddressed(id) {
+    if (fbResolvedSet[id]) return;
+    fbResolvedSet[id] = true;
+    var thread = document.getElementById('fb-' + id);
+    var chip = document.getElementById('fb-' + id + '-chip');
+    var actions = document.getElementById('fb-' + id + '-actions');
+    var box = document.getElementById('fb-' + id + '-reply');
+    if (thread) thread.classList.add('is-resolved');
+    if (chip) { chip.textContent = 'Resolved'; chip.className = 'chip t-sage'; }
+    if (actions) actions.remove();
+    if (box) { box.classList.remove('open'); box.remove(); }
+    fbUpdateSummary();
+    fbUpdateResubmitGate();
+    showFbToast('Marked as addressed.');
+  }
+
+  function fbUpdateSummary() {
+    var reqCount = 0, sugCount = 0, resCount = 0;
+    ['t1','t2','t3','t4'].forEach(function(id) {
+      if (fbResolvedSet[id]) { resCount++; }
+      else if (fbThreadTypes[id] === 'required') { reqCount++; }
+      else if (fbThreadTypes[id] === 'suggestion') { sugCount++; }
+    });
+    var rq = document.getElementById('fb-req-count');
+    var sg = document.getElementById('fb-sug-count');
+    var rs = document.getElementById('fb-res-count');
+    if (rq) rq.textContent = reqCount + ' Required (must resolve)';
+    if (sg) sg.textContent = sugCount + ' Suggestion' + (sugCount !== 1 ? 's' : '') + ' (optional)';
+    if (rs) rs.textContent = resCount + ' Resolved';
+  }
+
+  function fbUpdateResubmitGate() {
+    var openRequired = ['t1','t2','t3','t4'].filter(function(id) {
+      return !fbResolvedSet[id] && fbThreadTypes[id] === 'required';
+    }).length;
+    var barNote = document.querySelector('.fb-bar .fb-bar-note');
+    var resubBtn = document.getElementById('btn-resubmit');
+    if (openRequired === 0) {
+      if (barNote) barNote.textContent = 'All required items addressed.';
+      if (resubBtn) {
+        resubBtn.classList.remove('is-disabled');
+        resubBtn.removeAttribute('aria-disabled');
+        resubBtn.removeAttribute('title');
+        resubBtn.removeAttribute('disabled');
+        resubBtn.onclick = function() { showFbToast('Course resubmitted for review.'); };
+      }
+    } else {
+      if (barNote) barNote.textContent = openRequired + ' mandatory item' + (openRequired !== 1 ? 's' : '') + ' still missing';
+    }
+  }
+
+  function fbSaveProgress(btn) {
+    var orig = btn.textContent;
+    btn.textContent = 'Saved';
+    showFbToast('Progress saved.');
+    setTimeout(function() { btn.textContent = orig; }, 1800);
+  }
+
+  function openQAReply(id) {
+    var box = document.getElementById('qa-' + id + '-reply');
+    var btn = document.getElementById('qa-' + id + '-btn');
+    if (box) { box.classList.add('open'); box.querySelector('textarea').focus(); }
+    if (btn) btn.style.display = 'none';
+  }
+
+  function cancelQAReply(id) {
+    var box = document.getElementById('qa-' + id + '-reply');
+    var btn = document.getElementById('qa-' + id + '-btn');
+    if (box) { box.classList.remove('open'); box.querySelector('textarea').value = ''; }
+    if (btn) btn.style.display = '';
+  }
+
+  function submitQAReply(id, sendBtn) {
+    var box = document.getElementById('qa-' + id + '-reply');
+    var ta = box && box.querySelector('textarea');
+    var text = ta && ta.value.trim();
+    if (!text) { showFbToast('Please write a reply before sending.'); return; }
+    var thread = document.getElementById('qa-' + id);
+    var statusChip = document.getElementById('qa-' + id + '-status');
+    var btn = document.getElementById('qa-' + id + '-btn');
+
+    var answerEl = document.createElement('div');
+    answerEl.className = 'qa-answer';
+    answerEl.innerHTML = '<strong>You replied:</strong> ' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    box.parentNode.insertBefore(answerEl, box);
+
+    if (statusChip) {
+      statusChip.className = 'chip t-sage dot';
+      statusChip.textContent = 'Answered';
+    }
+    box.classList.remove('open');
+    if (btn) btn.style.display = 'none';
+    showFbToast('Reply sent.');
+  }
+
+  (function() {
+    var hash = location.hash.replace('#', '');
+    if (hash === 'sme-reviews' || hash === 'qa') {
+      switchTab(hash);
+    } else {
+      switchTab('sme-reviews');
+    }
+  })();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

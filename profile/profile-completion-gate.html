@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile completion gate · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Page-specific: profile completion gate centered over a dimmed app */
+  .gate-wrap {
+    position: relative;
+    min-height: calc(100vh - 200px);
+    display: grid;
+    place-items: center;
+    padding: 24px 0;
+  }
+  /* dimmed/blurred learner backdrop behind the gate */
+  .gate-backdrop {
+    position: absolute;
+    inset: -36px -48px;
+    opacity: 0.42;
+    filter: blur(2px) saturate(0.85);
+    pointer-events: none;
+    user-select: none;
+  }
+  .gate-backdrop .page-title { color: var(--ink); }
+  .gate-backdrop .gate-bd-row {
+    display: flex; gap: 16px; margin-top: 22px;
+  }
+  .gate-scrim {
+    position: absolute;
+    inset: -36px -48px;
+    background: rgba(242, 237, 227, 0.68);
+    pointer-events: none;
+  }
+  .gate-card {
+    position: relative;
+    z-index: 2;
+    width: 560px;
+    max-width: 100%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 40px 44px 36px;
+    text-align: center;
+  }
+  .gate-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+  .gate-lock {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--c-honey-wash);
+    border: 2px solid var(--c-honey);
+    color: var(--c-honey-text);
+    display: grid; place-items: center;
+    margin: 0 auto 20px;
+  }
+  .gate-lock svg { width: 28px; height: 28px; }
+  .gate-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .gate-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .gate-sub {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 420px;
+    margin: 0 auto 22px;
+  }
+  .gate-sub strong { color: var(--ink); font-weight: 700; }
+  .gate-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .gate-bar .progress { flex: 1; height: 8px; }
+  .gate-bar .gate-pct {
+    font-family: var(--font-label);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    min-width: 38px;
+    text-align: right;
+  }
+  .gate-missing {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px 14px;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .gate-missing-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .gate-missing ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .gate-missing li {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .gate-missing li .x {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    color: var(--accent);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .gate-missing li .x svg { width: 12px; height: 12px; }
+  .gate-missing li .seg {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .gate-actions { display: flex; flex-direction: column; gap: 10px; }
+  .gate-actions .btn { width: 100%; justify-content: center; padding: 12px 18px; font-size: 14px; }
+  .gate-foot {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" title="Profile" style="text-decoration:none"><div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+<a href="profile.html" class="sidebar-link is-active" data-nav="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></a>
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="gate-wrap">
+
+  <div class="gate-backdrop" aria-hidden="true">
+    <div class="eyebrow">Course Completed</div>
+    <h1 class="page-title">Records Management Fundamentals, <em>completed</em></h1>
+    <p class="page-sub">Your proof of completion is ready to download once your profile is complete.</p>
+    <div class="gate-bd-row">
+      <div class="card" style="flex:1;padding:18px 20px">
+        <div class="eyebrow" style="margin-bottom:8px">Completed on</div>
+        <div style="font-size:20px;font-weight:700;color:var(--ink)">12 May 2026</div>
+      </div>
+      <div class="card" style="flex:1;padding:18px 20px">
+        <div class="eyebrow" style="margin-bottom:8px">Final score</div>
+        <div style="font-size:20px;font-weight:700;color:var(--ink)">91%</div>
+      </div>
+      <div class="card" style="flex:1;padding:18px 20px">
+        <div class="eyebrow" style="margin-bottom:8px">Modules</div>
+        <div style="font-size:20px;font-weight:700;color:var(--ink)">5 of 5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gate-scrim" aria-hidden="true"></div>
+
+  <div class="gate-card" role="dialog" aria-labelledby="gate-title">
+    <div class="gate-mark">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      IMI
+    </div>
+
+    <div class="gate-lock">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+
+    <h2 class="gate-title" id="gate-title">Complete your profile to <em>unlock</em></h2>
+    <p class="gate-sub">Per IMI policy, Course Completed proofs are issued only to learners with a complete profile. You're at <strong>68%</strong>.</p>
+
+    <div class="gate-bar">
+      <div class="progress"><div class="progress-fill" style="width:68%;background:var(--c-honey)"></div></div>
+      <span class="gate-pct">68%</span>
+    </div>
+
+    <div class="gate-missing">
+      <div class="gate-missing-label">Missing fields</div>
+      <ul>
+        <li><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="seg">Personal</span> Photo</li>
+        <li><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="seg">Professional</span> Current Role / Experience Level / Industry</li>
+        <li><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="seg">Learning preference</span> Learning Interests</li>
+        <li><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="seg">Links</span> Personal Site / Blog Links</li>
+        <li><span class="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span><span class="seg">Documents</span> CV / Resume</li>
+      </ul>
+    </div>
+
+    <div class="gate-actions">
+      <a class="btn btn-primary" href="profile-edit-v2.html">Complete profile now</a>
+      <a class="btn btn-ghost" href="../learning/dashboard.html">Later</a>
+    </div>
+
+    <p class="gate-foot">100% completion (including optional fields) is required before your Course Completed proof is issued.</p>
+  </div>
+
+</div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

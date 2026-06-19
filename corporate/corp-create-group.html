@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create group · IMI Corporate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .form-shell { max-width: 760px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
+    margin-bottom: 14px; transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .form-card { padding: 0; margin-bottom: 18px; }
+  .form-card .sec-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-card .sec-title {
+    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .form-card .sec-num {
+    font-family: var(--font-label); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-faint);
+  }
+  .form-card .form-body { padding: 24px 28px 28px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+  .form-grid .span-2 { grid-column: 1 / -1; }
+
+  .field { margin-bottom: 0; }
+  .field .req { color: var(--accent); font-weight: 700; }
+  .field .input { height: 40px; }
+  .field select.input { height: 40px; padding-top: 0; padding-bottom: 0; }
+  .field .hint {
+    font-size: 11.5px; color: var(--ink-mute); margin-top: 6px;
+    font-family: var(--font-sans); letter-spacing: 0;
+  }
+
+  /* Member picker */
+  .member-search-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .member-search-wrap::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 13px;
+    height: 13px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-size: contain;
+    pointer-events: none;
+  }
+  .member-search-wrap input {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    padding: 0 14px 0 34px;
+    font-size: 13px;
+    color: var(--ink);
+    transition: border 0.18s, box-shadow 0.18s;
+  }
+  .member-search-wrap input::placeholder { color: var(--ink-soft); }
+  .member-search-wrap input:focus {
+    outline: none;
+    border-color: var(--ink-mute);
+    box-shadow: 0 0 0 4px rgba(42, 17, 8, 0.04);
+  }
+
+  .member-list {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .member-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .member-row:last-child { border-bottom: none; }
+  .member-row:hover { background: var(--paper-2); }
+  .member-row input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--c-honey);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .member-av {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--surface-3);
+  }
+  .member-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .member-body { flex: 1; min-width: 0; }
+  .member-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .member-role { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; }
+  .member-dept {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+
+  .selected-count {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--c-sage-text);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+
+  .form-actions { display: flex; gap: 10px; margin-top: 24px; }
+
+  @media (max-width: 760px) { .form-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="corp-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search"><input placeholder="Search team, groups, courses..." onkeydown="if(event.key==='Enter'&&this.value.trim()){location.href='oa-team.html?q='+encodeURIComponent(this.value.trim())}"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='corp-admin-notification.html'" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" id="help-btn-create-group" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Dashboard</span></a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Team</span><span class="badge">487</span></a>
+      <a href="corp-groups.html" class="sidebar-link is-active" data-nav="groups"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Groups</span></a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Assignments</span><span class="badge">24</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>Licenses</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="form-shell">
+
+      <a href="corp-groups.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Groups
+      </a>
+
+      <div class="page-head" style="grid-template-columns:1fr;margin-bottom:22px">
+        <div>
+          <div class="eyebrow">Tenant &middot; Bank Muscat</div>
+          <h1 class="page-title">Create <em>group</em></h1>
+          <p class="page-sub">Groups let you organise team members and assign learning together. Members can belong to multiple groups.</p>
+        </div>
+      </div>
+
+      <!-- Group identity -->
+      <div class="card form-card">
+        <div class="sec-head">
+          <div class="sec-title">Group identity</div>
+          <div class="sec-num">Name &amp; description</div>
+        </div>
+        <div class="form-body">
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="f-name">Group name <span class="req">*</span></label>
+              <input class="input" id="f-name" placeholder="e.g. Finance Leadership">
+            </div>
+            <div class="field span-2">
+              <label for="f-desc">Description</label>
+              <textarea id="f-desc" placeholder="Brief note on this group's purpose or membership criteria (optional)"></textarea>
+              <div class="hint">Visible to Corporate Admins only. Not shown to members.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Parent group (optional) -->
+      <div class="card form-card">
+        <div class="sec-head">
+          <div class="sec-title">Parent group</div>
+          <div class="sec-num">Optional hierarchy</div>
+        </div>
+        <div class="form-body">
+          <div class="field">
+            <label for="f-parent">Parent group <span style="font-weight:400;color:var(--ink-mute);font-size:10px;letter-spacing:0">(optional)</span></label>
+            <select class="input" id="f-parent">
+              <option value="">None (top-level group)</option>
+              <option value="it">IT Team</option>
+              <option value="records">Records Team</option>
+              <option value="analytics">Data Analytics</option>
+              <option value="compliance">Compliance</option>
+              <option value="ops">Operations</option>
+            </select>
+            <div class="hint">Assign a parent to nest this group within an existing one. Assignments made to the parent do not automatically apply here.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add members -->
+      <div class="card form-card">
+        <div class="sec-head">
+          <div class="sec-title">Members</div>
+          <div class="sec-num">Add to group on creation</div>
+        </div>
+        <div class="form-body">
+          <div class="member-search-wrap">
+            <input id="member-search" type="search" placeholder="Search by name or department..." autocomplete="off">
+          </div>
+          <div class="member-list" id="member-list" role="group" aria-label="Select members">
+            <label class="member-row" for="m1">
+              <input type="checkbox" id="m1" value="m1">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m1" alt="Fatima Al-Said"></div>
+              <div class="member-body">
+                <div class="member-name">Fatima Al-Said</div>
+                <div class="member-role">Senior Analyst &middot; Finance</div>
+              </div>
+              <div class="member-dept">Finance</div>
+            </label>
+            <label class="member-row" for="m2">
+              <input type="checkbox" id="m2" value="m2">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m2" alt="Khalid Al-Balushi"></div>
+              <div class="member-body">
+                <div class="member-name">Khalid Al-Balushi</div>
+                <div class="member-role">IT Lead &middot; Technology</div>
+              </div>
+              <div class="member-dept">Technology</div>
+            </label>
+            <label class="member-row" for="m3">
+              <input type="checkbox" id="m3" value="m3">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m3" alt="Sara Al-Harthi"></div>
+              <div class="member-body">
+                <div class="member-name">Sara Al-Harthi</div>
+                <div class="member-role">Compliance Officer &middot; Compliance</div>
+              </div>
+              <div class="member-dept">Compliance</div>
+            </label>
+            <label class="member-row" for="m4">
+              <input type="checkbox" id="m4" value="m4">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m4" alt="Mohammed Al-Maqbali"></div>
+              <div class="member-body">
+                <div class="member-name">Mohammed Al-Maqbali</div>
+                <div class="member-role">Operations Manager &middot; Operations</div>
+              </div>
+              <div class="member-dept">Operations</div>
+            </label>
+            <label class="member-row" for="m5">
+              <input type="checkbox" id="m5" value="m5">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m5" alt="Aisha Al-Lawati"></div>
+              <div class="member-body">
+                <div class="member-name">Aisha Al-Lawati</div>
+                <div class="member-role">Data Analyst &middot; Analytics</div>
+              </div>
+              <div class="member-dept">Analytics</div>
+            </label>
+            <label class="member-row" for="m6">
+              <input type="checkbox" id="m6" value="m6">
+              <div class="member-av"><img src="https://i.pravatar.cc/60?u=imi-m6" alt="Nasser Al-Habsi"></div>
+              <div class="member-body">
+                <div class="member-name">Nasser Al-Habsi</div>
+                <div class="member-role">Records Officer &middot; Records</div>
+              </div>
+              <div class="member-dept">Records</div>
+            </label>
+          </div>
+          <div class="selected-count" id="selected-count" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="btn btn-ghost" href="corp-groups.html">Cancel</a>
+        <button class="btn btn-primary" id="btn-create-group" type="button">Create group &rarr;</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  function toast(msg, then) {
+    var t = document.getElementById('imi-toast');
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+      if (then) setTimeout(then, 220);
+    }, 1800);
+  }
+
+  /* ad dismiss */
+  var adClose = document.querySelector('.ad-close');
+  if (adClose) adClose.addEventListener('click', function () { document.querySelector('.ad-strip').style.display = 'none'; });
+
+  /* help button */
+  var helpBtn = document.getElementById('help-btn-create-group');
+  if (helpBtn) {
+    helpBtn.addEventListener('click', function () {
+      toast('Help centre coming soon.');
+    });
+  }
+
+  /* member search filter */
+  var searchEl = document.getElementById('member-search');
+  var rows = document.querySelectorAll('.member-row');
+  if (searchEl) {
+    searchEl.addEventListener('input', function () {
+      var q = this.value.toLowerCase();
+      rows.forEach(function (row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    });
+  }
+
+  /* selected count */
+  var checkboxes = document.querySelectorAll('.member-list input[type="checkbox"]');
+  var countEl = document.getElementById('selected-count');
+  function updateCount() {
+    var n = Array.from(checkboxes).filter(function (c) { return c.checked; }).length;
+    countEl.textContent = n > 0 ? n + ' member' + (n === 1 ? '' : 's') + ' selected' : '';
+  }
+  checkboxes.forEach(function (cb) {
+    cb.addEventListener('change', updateCount);
+  });
+
+  /* create group */
+  var btn = document.getElementById('btn-create-group');
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var nameEl = document.getElementById('f-name');
+      if (!nameEl.value.trim()) {
+        nameEl.style.borderColor = 'var(--accent)';
+        setTimeout(function () { nameEl.style.borderColor = ''; }, 2000);
+        toast('Enter a group name to continue.');
+        return;
+      }
+      var selected = Array.from(checkboxes).filter(function (c) { return c.checked; }).length;
+      btn.disabled = true;
+      btn.textContent = 'Creating group...';
+      setTimeout(function () {
+        var msg = 'Group created' + (selected > 0 ? ' with ' + selected + ' member' + (selected === 1 ? '' : 's') + '.' : '.');
+        toast(msg + ' Redirecting...', function () {
+          location.href = 'corp-groups.html';
+        });
+      }, 400);
+    });
+  }
+})();
+</script>
+</body>
+</html>

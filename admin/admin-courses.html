@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All courses · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- filter bar ---- */
+  .filter-bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+  .filter-bar .search { flex: 1; min-width: 240px; max-width: none; }
+  .filter-bar .search input { background: var(--paper); }
+  .filter-select {
+    height: 34px;
+    padding: 0 32px 0 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: var(--r-pill);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border 0.18s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 13px;
+  }
+  .filter-select:focus { outline: none; border-color: var(--ink-mute); }
+
+  /* ---- stat grid (flat, no gradients) ---- */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1280px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 900px)  { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-flat .stat-dot.honey { background: var(--c-honey); }
+  .stat-flat .stat-dot.clay  { background: var(--c-clay); }
+  .stat-flat .stat-dot.muted { background: var(--ink-faint); }
+  .stat-flat .stat-dot.blue  { background: #5a7ab8; }
+
+  /* ---- table ---- */
+  /* tighten cell padding so 10 columns fit comfortably at 1440px */
+  .courses-tbl th,
+  .courses-tbl td { padding-left: 10px; padding-right: 10px; }
+  .courses-tbl th:first-child,
+  .courses-tbl td:first-child { padding-left: 16px; }
+  .courses-tbl th:last-child,
+  .courses-tbl td:last-child  { padding-right: 16px; }
+
+  /* column width hints */
+  .courses-tbl col.col-course     { width: 18%; }
+  .courses-tbl col.col-author     { width: 9%; }
+  .courses-tbl col.col-role       { width: 12%; }
+  .courses-tbl col.col-type       { width: 9%; }
+  .courses-tbl col.col-domain     { width: 9%; }
+  .courses-tbl col.col-vis        { width: 11%; }
+  .courses-tbl col.col-enrol      { width: 7%; }
+  .courses-tbl col.col-status     { width: 9%; }
+  .courses-tbl col.col-updated    { width: 7%; }
+  .courses-tbl col.col-actions    { width: 9%; }
+
+  .courses-tbl td:first-child { color: var(--ink); font-weight: 600; }
+  .courses-tbl .c-author { font-family: var(--font-label); letter-spacing: 0.02em; color: var(--ink-soft); }
+  .courses-tbl .c-meta { color: var(--ink-soft); font-size: 12.5px; }
+  .courses-tbl .c-num { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+  .courses-tbl th.c-num-h { text-align: right; }
+  .courses-tbl .c-time { font-family: var(--font-label); letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
+  .courses-tbl .row-archived td { color: var(--ink-mute); }
+  .courses-tbl .row-archived .c-num { color: var(--ink-mute); }
+
+  /* ---- status pill ---- */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .status.ok         { color: var(--c-sage-text); }
+  .status.ok .dot    { background: var(--c-sage); }
+  .status.warn       { color: var(--c-honey-text); }
+  .status.warn .dot  { background: var(--c-honey); }
+  .status.approved   { color: var(--c-sage-text); }
+  .status.approved .dot { background: #7cb87c; }
+  .status.submitted  { color: #5a7ab8; }
+  .status.submitted .dot { background: #5a7ab8; }
+  .status.rejected   { color: #b85a5a; }
+  .status.rejected .dot { background: #b85a5a; }
+  .status.draft      { color: var(--ink-mute); }
+  .status.draft .dot { background: var(--ink-faint); }
+  .status.arch       { color: var(--ink-mute); }
+  .status.arch .dot  { background: var(--ink-faint); }
+
+  /* ---- row actions ---- */
+  .tbl-actions { display: inline-flex; gap: 14px; }
+  .tbl-actions a { font-family: var(--font-label); font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); transition: color 0.15s; }
+  .tbl-actions a:hover { color: var(--accent); }
+  .courses-tbl tr.row-archived a { color: var(--ink-mute); }
+
+  /* ---- pager ---- */
+  .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .pager .count { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.04em; color: var(--ink-mute); }
+
+  /* ---- admin note ---- */
+  .admin-note {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.20);
+    border-radius: var(--r-md);
+    padding: 16px 20px;
+  }
+  .admin-note svg { width: 18px; height: 18px; color: var(--c-honey-text); flex-shrink: 0; margin-top: 1px; }
+  .admin-note p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .admin-note strong { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" onclick="event.preventDefault()">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="admin-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." onkeydown="if(event.key==='Enter'&&this.value.trim()){document.getElementById('course-search').value=this.value.trim();document.getElementById('course-search').dispatchEvent(new Event('input'));}"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Overview</span></a>
+      <a href="admin-users.html" class="sidebar-link" data-nav="users"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Users</span><span class="badge">487</span></a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>Roles</span></a>
+      <a href="admin-courses.html" class="sidebar-link is-active" data-nav="courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Courses</span><span class="badge">47</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg><span>Corporate</span><span class="badge">23</span></a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Reports</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Audit Log</span></a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="tabs" style="margin-bottom:18px"><button class="is" onclick="location.href='admin-courses.html'" style="cursor:pointer">Courses</button><button onclick="location.href='admin-learning-paths.html'" style="cursor:pointer">Learning Paths</button><button onclick="location.href='admin-certificates.html'" style="cursor:pointer">Certificates</button></div>
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">Catalog management</div>
+        <h1 class="page-title">All <em>courses</em></h1>
+        <p class="page-sub">Every course on the platform across all authors and tenants.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-primary" href="../course-builder/course-builder-1.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New course</a>
+      </div>
+    </div>
+
+    <!-- KPI stat row: flat cards, no gradients -->
+    <div class="stat-grid">
+      <div class="stat-flat">
+        <div class="stat-label">Published</div>
+        <div class="stat-value">142<span class="stat-dot sage" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Approved</div>
+        <div class="stat-value">6<span class="stat-dot sage" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">In review</div>
+        <div class="stat-value">12<span class="stat-dot honey" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Submitted</div>
+        <div class="stat-value">9<span class="stat-dot blue" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Draft</div>
+        <div class="stat-value">23<span class="stat-dot muted" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Rejected</div>
+        <div class="stat-value">4<span class="stat-dot clay" style="margin-left:8px"></span></div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-label">Archived</div>
+        <div class="stat-value">8<span class="stat-dot muted" style="margin-left:8px"></span></div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="search"><input id="course-search" placeholder="Search courses, authors..."></div>
+      <select id="filter-status" class="filter-select"><option value="">Status: All</option><option value="draft">Draft</option><option value="submitted">Submitted</option><option value="in review">In review</option><option value="approved">Approved</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="archived">Archived</option></select>
+      <select id="filter-type" class="filter-select"><option value="">Type: All</option><option value="path course">Path course</option><option value="standalone">Standalone</option><option value="lesson">Lesson</option></select>
+      <select id="filter-vis" class="filter-select"><option value="">Visibility: All</option><option value="public">Public</option><option value="tenant">Tenant-only</option></select>
+      <select id="filter-domain" class="filter-select"><option value="">Domain: All</option><option value="data mgmt">Data Management</option><option value="records">Records Mgmt</option><option value="knowledge mgmt">Knowledge Mgmt</option><option value="governance">Governance</option></select>
+    </div>
+
+    <!-- Courses table -->
+    <div class="card">
+      <div class="card-body flush">
+        <table class="tbl courses-tbl">
+          <colgroup>
+            <col class="col-course">
+            <col class="col-author">
+            <col class="col-role">
+            <col class="col-type">
+            <col class="col-domain">
+            <col class="col-vis">
+            <col class="col-enrol">
+            <col class="col-status">
+            <col class="col-updated">
+            <col class="col-actions">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Author</th>
+              <th>Role</th>
+              <th>Type</th>
+              <th>Domain</th>
+              <th>Visibility</th>
+              <th class="c-num-h">Enrolments</th>
+              <th>Status</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="courses-tbody">
+            <tr data-status="published" data-type="path course" data-domain="data mgmt" data-vis="public" data-search="data quality foundations a. khalfan" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Data Quality Foundations</td>
+              <td class="c-author">A. Khalfan</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-sage">Path course</span></td>
+              <td class="c-meta">Data Mgmt</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">1,204</td>
+              <td><span class="status ok"><span class="dot"></span>Published</span></td>
+              <td class="c-time">2d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="published" data-type="standalone" data-domain="records" data-vis="tenant" data-search="records retention 101 r. kumar" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Records Retention 101</td>
+              <td class="c-author">R. Kumar</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-honey">Standalone</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Tenant: TechVision</td>
+              <td class="c-num">198</td>
+              <td><span class="status ok"><span class="dot"></span>Published</span></td>
+              <td class="c-time">5d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="published" data-type="path course" data-domain="governance" data-vis="tenant" data-search="data governance essentials m. al-rashdi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Data Governance Essentials</td>
+              <td class="c-author">M. Al-Rashdi</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-sage">Path course</span></td>
+              <td class="c-meta">Governance</td>
+              <td class="c-meta">Tenant: Bank Muscat</td>
+              <td class="c-num">643</td>
+              <td><span class="status ok"><span class="dot"></span>Published</span></td>
+              <td class="c-time">1w ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="in review" data-type="standalone" data-domain="data mgmt" data-vis="public" data-search="metadata management practicum s. al-farsi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Metadata Management Practicum</td>
+              <td class="c-author">S. Al-Farsi</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-honey">Standalone</span></td>
+              <td class="c-meta">Data Mgmt</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status warn"><span class="dot"></span>In review</span></td>
+              <td class="c-time">3d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="in review" data-type="path course" data-domain="records" data-vis="tenant" data-search="information lifecycle management n. al-hinai" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Information Lifecycle Management</td>
+              <td class="c-author">N. Al-Hinai</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-sage">Path course</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Tenant: PDO</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status warn"><span class="dot"></span>In review</span></td>
+              <td class="c-time">1d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="draft" data-type="lesson" data-domain="knowledge mgmt" data-vis="public" data-search="knowledge management fundamentals l. al-zadjali" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Knowledge Management Fundamentals</td>
+              <td class="c-author">L. Al-Zadjali</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-clay">Lesson</span></td>
+              <td class="c-meta">Knowledge Mgmt</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status draft"><span class="dot"></span>Draft</span></td>
+              <td class="c-time">6h ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="draft" data-type="standalone" data-domain="records" data-vis="tenant" data-search="erm compliance checklist a. khalfan" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>ERM Compliance Checklist</td>
+              <td class="c-author">A. Khalfan</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-honey">Standalone</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Tenant: OIA</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status draft"><span class="dot"></span>Draft</span></td>
+              <td class="c-time">2d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="published" data-type="lesson" data-domain="data mgmt" data-vis="public" data-search="data stewardship role and practice r. kumar" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Data Stewardship: Role and Practice</td>
+              <td class="c-author">R. Kumar</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-clay">Lesson</span></td>
+              <td class="c-meta">Data Mgmt</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">881</td>
+              <td><span class="status ok"><span class="dot"></span>Published</span></td>
+              <td class="c-time">3w ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="submitted" data-type="standalone" data-domain="records" data-vis="public" data-search="records classification scheme h. al-siyabi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Records Classification Scheme</td>
+              <td class="c-author">H. Al-Siyabi</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-honey">Standalone</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status submitted"><span class="dot"></span>Submitted</span></td>
+              <td class="c-time">12h ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="approved" data-type="path course" data-domain="governance" data-vis="tenant" data-search="data governance policy essentials m. al-rashdi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Data Governance Policy Essentials</td>
+              <td class="c-author">M. Al-Rashdi</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-sage">Path course</span></td>
+              <td class="c-meta">Governance</td>
+              <td class="c-meta">Tenant: OIA</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status approved"><span class="dot"></span>Approved</span></td>
+              <td class="c-time">1d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr data-status="rejected" data-type="lesson" data-domain="records" data-vis="public" data-search="retention schedule basics s. al-farsi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>Retention Schedule Basics</td>
+              <td class="c-author">S. Al-Farsi</td>
+              <td><span class="chip">Content Developer (Moderator)</span></td>
+              <td><span class="chip t-clay">Lesson</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">&mdash;</td>
+              <td><span class="status rejected"><span class="dot"></span>Rejected</span></td>
+              <td class="c-time">3d ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="../course-builder/course-builder-1.html" onclick="event.stopPropagation()">Edit</a></span></td>
+            </tr>
+            <tr class="row-archived" data-status="archived" data-type="standalone" data-domain="data mgmt" data-vis="public" data-search="dama introduction legacy s. al-farsi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>DAMA Introduction (Legacy)</td>
+              <td class="c-author">S. Al-Farsi</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-honey">Standalone</span></td>
+              <td class="c-meta">Data Mgmt</td>
+              <td class="c-meta">Public</td>
+              <td class="c-num">372</td>
+              <td><span class="status arch"><span class="dot"></span>Archived</span></td>
+              <td class="c-time">4mo ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="#" onclick="event.stopPropagation();if(confirm('Restore this course to Published status?')){this.closest('tr').classList.remove('row-archived');this.closest('tr').dataset.status='published';var sd=this.closest('tr').querySelector('.status');if(sd){sd.className='status ok';sd.innerHTML='<span class=\'dot\'></span>Published';}window.imiToast('Course restored and set to Published');}">Restore</a></span></td>
+            </tr>
+            <tr class="row-archived" data-status="archived" data-type="lesson" data-domain="records" data-vis="tenant" data-search="iso 15489 records awareness m. al-rashdi" style="cursor:pointer" onclick="location.href='admin-course-versions.html'">
+              <td>ISO 15489 Records Awareness</td>
+              <td class="c-author">M. Al-Rashdi</td>
+              <td><span class="chip">Content Dev</span></td>
+              <td><span class="chip t-clay">Lesson</span></td>
+              <td class="c-meta">Records</td>
+              <td class="c-meta">Tenant: Bank Muscat</td>
+              <td class="c-num">55</td>
+              <td><span class="status arch"><span class="dot"></span>Archived</span></td>
+              <td class="c-time">6mo ago</td>
+              <td><span class="tbl-actions"><a href="admin-course-versions.html" onclick="event.stopPropagation()">View</a><a href="#" onclick="event.stopPropagation();if(confirm('Restore this course to Published status?')){this.closest('tr').classList.remove('row-archived');this.closest('tr').dataset.status='published';var sd=this.closest('tr').querySelector('.status');if(sd){sd.className='status ok';sd.innerHTML='<span class=\'dot\'></span>Published';}window.imiToast('Course restored and set to Published');}">Restore</a></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pager">
+      <span id="pager-count" class="count">Showing 1-13 of 188 courses</span>
+      <div class="row gap-sm">
+        <button id="btn-prev" class="btn btn-ghost btn-sm" disabled>&larr; Prev</button>
+        <button id="btn-next" class="btn btn-primary btn-sm">Next &rarr;</button>
+      </div>
+    </div>
+
+    <div class="admin-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <p><strong>Admin visibility rules:</strong> Super Admin sees all courses including tenant-only programs. Content Developers see only their own courses in a separate workspace.</p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var PAGE_SIZE = 10;
+  var currentPage = 0;
+  var allRows = [];
+  var filtered = [];
+
+  function getRows(){
+    return Array.from(document.querySelectorAll('#courses-tbody tr'));
+  }
+
+  function applyFilters(){
+    var q = (document.getElementById('course-search').value||'').toLowerCase().trim();
+    var status = (document.getElementById('filter-status').value||'').toLowerCase();
+    var type = (document.getElementById('filter-type').value||'').toLowerCase();
+    var vis = (document.getElementById('filter-vis').value||'').toLowerCase();
+    var domain = (document.getElementById('filter-domain').value||'').toLowerCase();
+
+    filtered = allRows.filter(function(tr){
+      var s = (tr.dataset.status||'').toLowerCase();
+      var t = (tr.dataset.type||'').toLowerCase();
+      var v = (tr.dataset.vis||'').toLowerCase();
+      var d = (tr.dataset.domain||'').toLowerCase();
+      var text = (tr.dataset.search||tr.textContent||'').toLowerCase();
+
+      if(q && text.indexOf(q)===-1) return false;
+      if(status && s !== status) return false;
+      if(type && t !== type) return false;
+      if(vis === 'public' && v !== 'public') return false;
+      if(vis === 'tenant' && v === 'public') return false;
+      if(domain && d.indexOf(domain.split(' ')[0])===-1) return false;
+      return true;
+    });
+    currentPage = 0;
+    renderPage();
+  }
+
+  function renderPage(){
+    var start = currentPage * PAGE_SIZE;
+    var end = start + PAGE_SIZE;
+    allRows.forEach(function(tr){ tr.style.display='none'; });
+    var page = filtered.slice(start, end);
+    page.forEach(function(tr){ tr.style.display=''; });
+
+    var total = filtered.length;
+    var showing = page.length;
+    var from = total === 0 ? 0 : start + 1;
+    var to = start + showing;
+    document.getElementById('pager-count').textContent = 'Showing ' + from + '-' + to + ' of ' + total + ' courses';
+
+    var prevBtn = document.getElementById('btn-prev');
+    var nextBtn = document.getElementById('btn-next');
+    prevBtn.disabled = currentPage === 0;
+    nextBtn.disabled = end >= total;
+
+    prevBtn.onclick = function(){ if(currentPage>0){currentPage--;renderPage();} };
+    nextBtn.onclick = function(){ if((currentPage+1)*PAGE_SIZE<filtered.length){currentPage++;renderPage();} };
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    allRows = getRows();
+    filtered = allRows.slice();
+    renderPage();
+
+    document.getElementById('course-search').addEventListener('input', applyFilters);
+    ['filter-status','filter-type','filter-vis','filter-domain'].forEach(function(id){
+      document.getElementById(id).addEventListener('change', applyFilters);
+    });
+  });
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

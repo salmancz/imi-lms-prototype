@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings (Org Admin) · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ── page-level layout ── */
+  .settings-wrap { max-width: 860px; }
+  .settings-stack { display: flex; flex-direction: column; gap: 22px; }
+
+  /* ── two-column form grid ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+  .form-grid .span-2 { grid-column: 1 / -1; }
+  @media (max-width: 720px) { .form-grid { grid-template-columns: 1fr; } }
+
+  /* ── field helpers ── */
+  .field-hint {
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 7px;
+    line-height: 1.45;
+  }
+  .field .input[disabled] {
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    cursor: not-allowed;
+  }
+  textarea.input {
+    height: auto;
+    padding: 11px 14px;
+    line-height: 1.5;
+    resize: vertical;
+    font-family: inherit;
+  }
+  select.input {
+    height: 36px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  input.input { height: 36px; }
+
+  /* ── checkbox list ── */
+  .check-list { display: flex; flex-direction: column; gap: 2px; }
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 4px;
+    font-size: 14px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .check:last-child { border-bottom: none; }
+  .check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ── security rows ── */
+  .sec-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+  }
+  .sec-row + .sec-row { border-top: 1px solid var(--line); }
+  .sec-text { font-size: 14px; color: var(--ink); }
+  .sec-text strong { font-weight: 700; }
+
+  /* ── seat meter (flat, solid fill) ── */
+  .seat-meter {
+    flex: 1;
+    height: 8px;
+    background: var(--surface-3);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    min-width: 120px;
+  }
+  .seat-meter > span {
+    display: block;
+    height: 100%;
+    background: var(--c-honey);
+    border-radius: var(--r-pill);
+  }
+  .seat-val {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  /* ── tenant card (read-only tint) ── */
+  .card.tenant-read { background: var(--paper-2); }
+
+  /* ── note below card-head ── */
+  .card-note {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: -2px 22px 4px;
+    line-height: 1.5;
+  }
+
+  /* ── danger zone card ── */
+  .card.danger-zone {
+    background: var(--c-danger-wash);
+    border-color: rgba(193, 42, 28, 0.22);
+  }
+  .card.danger-zone .card-title { color: var(--c-danger); }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="corp-dashboard.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Corporate</span>
+  </a>
+  <div class="search">
+    <input placeholder="Search team, groups, courses...">
+  </div>
+  <div class="topbar-actions">
+    <a href="corp-admin-notification.html" class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </a>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <a href="corp-user-profile.html" class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div>
+      <span class="ring-pct">68%</span>
+    </a>
+  </div>
+</header>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="corp-dashboard.html" class="sidebar-link" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="oa-team.html" class="sidebar-link" data-nav="team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Team</span><span class="badge">487</span>
+      </a>
+      <a href="corp-groups.html" class="sidebar-link" data-nav="groups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Groups</span><span class="badge">12</span>
+      </a>
+      <a href="corp-assignment.html" class="sidebar-link" data-nav="assignments">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Assignments</span><span class="badge">24</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="corp-reporting.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="corp-license-utilization.html" class="sidebar-link" data-nav="licenses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <span>Licenses</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">ACCOUNT</div>
+      <a href="oa-settings.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="blob-honey">
+
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">IMI Corporate &middot; Org Admin</div>
+        <h1 class="page-title">Settings <em>(Org Admin)</em></h1>
+        <p class="page-sub">Personal account settings in IMI Corporate.</p>
+      </div>
+    </div>
+
+    <div class="settings-wrap">
+      <div class="settings-stack">
+
+        <!-- Account -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Account</div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field" style="margin-bottom:0">
+                <label>Full name</label>
+                <input class="input" value="Ahmed Al-Said">
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Email</label>
+                <input class="input" value="ahmed.said@bankmuscat.om" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Language</label>
+                <select class="input">
+                  <option>English</option>
+                  <option>&#x627;&#x644;&#x639;&#x631;&#x628;&#x64A;&#x629; (Arabic)</option>
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Time zone</label>
+                <select class="input">
+                  <option>GMT+4 (Gulf Standard Time)</option>
+                  <option>GMT+3 (Arabian Standard Time)</option>
+                  <option>GMT+0 (Coordinated Universal Time)</option>
+                </select>
+              </div>
+              <div class="field span-2" style="margin-bottom:0">
+                <label>Mobile <span style="font-weight:400;color:var(--ink-mute)">(optional)</span></label>
+                <input class="input" type="tel" placeholder="+968 XXXX XXXX">
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" style="margin-top:20px" type="submit">Save changes</button>
+          </div>
+        </div>
+
+        <!-- Notification preferences -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Notification <em>preferences</em></div>
+          </div>
+          <div class="card-body">
+            <div class="check-list">
+              <label class="check"><input type="checkbox" checked>Email: team member accepted invite</label>
+              <label class="check"><input type="checkbox" checked>Email: course completion by team member</label>
+              <label class="check"><input type="checkbox" checked>Email: weekly team summary digest</label>
+              <label class="check"><input type="checkbox">Email: seat utilisation alerts</label>
+              <label class="check"><input type="checkbox" checked>In-app: assignment deadline reminders</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Security</div>
+          </div>
+          <div class="card-body">
+            <div class="sec-row">
+              <span class="sec-text">Active sessions: <strong>1</strong> (Muscat &middot; Chrome)</span>
+              <button class="btn btn-ghost btn-sm" onclick="location.href='../profile/active-sessions.html'">View all</button>
+            </div>
+            <div class="sec-row">
+              <span class="sec-text">Two-step verification: <strong>Enabled (OTP) - required for admins</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tenant information (read-only) -->
+        <div class="card tenant-read">
+          <div class="card-head">
+            <div class="card-title">Tenant <em>information</em></div>
+            <span class="chip">Read-only</span>
+          </div>
+          <p class="card-note">Managed by IMI. Contact your account manager to request changes.</p>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field" style="margin-bottom:0">
+                <label>Tenant ID</label>
+                <input class="input" value="bank-muscat" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Industry</label>
+                <input class="input" value="Banking" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Plan</label>
+                <input class="input" value="Corporate &middot; Standard" disabled>
+              </div>
+              <div class="field span-2" style="margin-bottom:0">
+                <label>Seat usage</label>
+                <div class="row gap" style="margin-top:4px">
+                  <div class="seat-meter"><span style="width:60%"></span></div>
+                  <span class="seat-val">240 / 400 seats</span>
+                </div>
+                <div class="field-hint">160 seats remaining. Top-up requires IMI account manager.</div>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Primary contact</label>
+                <input class="input" value="Ahmed Al-Said (you)" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Billing owner</label>
+                <input class="input" value="Managed by IMI" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Contract start date</label>
+                <input class="input" value="15 January 2026" disabled>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Contract end date</label>
+                <input class="input" value="14 January 2027" disabled>
+              </div>
+              <div class="field span-2" style="margin-bottom:0">
+                <label>SSO / Single sign-on</label>
+                <div class="row gap" style="margin-top:4px">
+                  <span class="chip dot">Phase 2</span>
+                  <span style="font-size:13px;color:var(--ink-mute)">Not configured in Phase 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Homepage sections -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Homepage <em>sections</em></div>
+          </div>
+          <p class="card-note">Control which sections appear on the learner home page for this tenant.</p>
+          <div class="card-body">
+            <div class="check-list" id="homepage-section-toggles">
+              <label class="check">
+                <input type="checkbox" checked id="toggle-new-releases">
+                <span>
+                  <strong>New releases</strong>
+                  <span style="display:block;font-size:12px;color:var(--ink-mute);margin-top:1px">Show recently added courses on the learner home page</span>
+                </span>
+              </label>
+              <label class="check">
+                <input type="checkbox" checked id="toggle-trending">
+                <span>
+                  <strong>Trending</strong>
+                  <span style="display:block;font-size:12px;color:var(--ink-mute);margin-top:1px">Show most-enrolled courses this month on the learner home page</span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="card danger-zone">
+          <div class="card-head">
+            <div class="card-title">Danger zone</div>
+          </div>
+          <div class="card-body">
+            <div class="sec-row" style="padding:0">
+              <span class="sec-text">Delete your Org Admin account (all corporate users lose access immediately)</span>
+              <button class="btn btn-danger btn-sm" onclick="location.href='../profile/lifecycle-self-deletion.html'">Request deletion</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+<script>
+(function () {
+  /* ── toast helper ── */
+  function showToast(msg, type) {
+    var t = document.getElementById('imi-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'imi-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      document.body.appendChild(t);
+    }
+    t.style.background = (type === 'success') ? 'var(--c-sage)' : 'var(--ink)';
+    t.style.color = (type === 'success') ? 'var(--c-sage-text)' : 'var(--paper)';
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._tid);
+    t._tid = setTimeout(function () { t.style.opacity = '0'; }, 3000);
+  }
+
+  /* ── topbar search ── */
+  var srch = document.querySelector('.search input');
+  if (srch) srch.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && this.value.trim()) {
+      location.href = 'oa-team.html?q=' + encodeURIComponent(this.value.trim());
+    }
+  });
+
+  /* ── Save changes: validate + toast ── */
+  var saveBtn = document.querySelector('.btn-primary[type="submit"]');
+  if (saveBtn) saveBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    var nameInput = document.querySelector('input.input[value="Ahmed Al-Said"]') ||
+                    document.querySelector('.form-grid input.input:not([disabled])');
+    if (nameInput && !nameInput.value.trim()) {
+      showToast('Full name is required.', 'error');
+      nameInput.focus();
+      return;
+    }
+    var orig = saveBtn.textContent;
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+    setTimeout(function () {
+      saveBtn.textContent = orig;
+      saveBtn.disabled = false;
+      showToast('Settings saved successfully.', 'success');
+    }, 900);
+  });
+
+  /* ── Notification checkboxes: toast on change ── */
+  document.querySelectorAll('.check input[type="checkbox"]').forEach(function (cb) {
+    cb.addEventListener('change', function () {
+      var label = this.closest('.check').textContent.trim().slice(0, 50);
+      showToast((this.checked ? 'Enabled: ' : 'Disabled: ') + label, 'success');
+    });
+  });
+
+  /* ── Homepage section toggles: persist + toast ── */
+  var sectionToggles = [
+    { id: 'toggle-new-releases', key: 'imi_section_new_releases', label: 'New releases' },
+    { id: 'toggle-trending',     key: 'imi_section_trending',     label: 'Trending' }
+  ];
+  sectionToggles.forEach(function (cfg) {
+    var cb = document.getElementById(cfg.id);
+    if (!cb) return;
+    /* restore persisted state */
+    var stored = localStorage.getItem(cfg.key);
+    if (stored === 'false') cb.checked = false;
+    cb.addEventListener('change', function () {
+      localStorage.setItem(cfg.key, this.checked ? 'true' : 'false');
+      showToast(cfg.label + ' section ' + (this.checked ? 'enabled' : 'disabled') + ' for learner home.', this.checked ? 'success' : 'error');
+    });
+  });
+})();
+</script>
+</body>
+</html>

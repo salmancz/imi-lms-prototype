@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suspend user · IMI Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Modal scrim + card */
+  .modal-scrim {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: grid;
+    place-items: center;
+    padding: 40px 24px;
+    z-index: 60;
+    overflow-y: auto;
+  }
+  .modal-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    width: 100%;
+    max-width: 540px;
+    padding: 32px 34px 30px;
+  }
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .modal-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .modal-meta {
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+  .modal-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--ink-mute);
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .modal-close:hover { background: var(--paper-2); color: var(--ink); }
+
+  /* Suspension effects note box */
+  .effects-note {
+    background: var(--c-honey-wash);
+    border: 1px solid rgba(201, 155, 46, 0.40);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    margin-bottom: 22px;
+  }
+  .effects-note .effects-head {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--c-honey-text);
+    margin-bottom: 10px;
+  }
+  .effects-note ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .effects-note li {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    padding-left: 16px;
+    position: relative;
+  }
+  .effects-note li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-honey);
+  }
+  .effects-note li code {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    font-weight: 600;
+    background: rgba(201, 155, 46, 0.18);
+    color: var(--c-honey-text);
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+
+  /* Form field helpers */
+  .modal-card .field label .req { color: var(--c-danger); }
+  .modal-card .field label .opt {
+    color: var(--ink-faint);
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .modal-card select.input,
+  .modal-card textarea.input {
+    height: auto;
+    padding: 9px 14px;
+    line-height: 1.5;
+  }
+  .modal-card textarea.input { resize: vertical; min-height: 76px; }
+  .modal-card textarea.input::placeholder { color: var(--ink-faint); }
+
+  /* Confirmation checkbox */
+  .check-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 22px 0 26px;
+  }
+  .check-field input[type="checkbox"] {
+    margin-top: 2px;
+    width: 15px;
+    height: 15px;
+    accent-color: var(--c-danger);
+    flex-shrink: 0;
+  }
+  .check-field label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+    cursor: pointer;
+  }
+
+  /* Modal action row */
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Ad strip (locked chrome) -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Topbar (locked chrome) -->
+<header class="topbar">
+  <a class="brand" href="admin-dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Admin</span>
+  </a>
+  <div class="search"><input placeholder="Search users, courses, audit..." type="search" onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='admin-users.html'"></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications" onclick="location.href='audit-log.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<!-- App shell -->
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="admin-dashboard.html" class="sidebar-link" data-nav="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Overview</span>
+      </a>
+      <a href="admin-users.html" class="sidebar-link is-active" data-nav="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Users</span><span class="badge">487</span>
+      </a>
+      <a href="roles-permissions.html" class="sidebar-link" data-nav="roles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Roles</span>
+      </a>
+      <a href="admin-courses.html" class="sidebar-link" data-nav="courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Courses</span><span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">BUSINESS</div>
+      <a href="../corporate/corp-list.html" class="sidebar-link" data-nav="corporate">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/></svg>
+        <span>Corporate</span><span class="badge">23</span>
+      </a>
+      <a href="admin-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SYSTEM</div>
+      <a href="audit-log.html" class="sidebar-link" data-nav="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Audit Log</span>
+      </a>
+      <a href="admin-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header: user management list view -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">User management</div>
+        <h1 class="page-title">Registered <em>users</em></h1>
+        <p class="page-sub">Review accounts, manage roles, and take lifecycle actions. 487 active users across all tenants.</p>
+      </div>
+      <div class="page-actions">
+        <a class="btn btn-ghost" href="#" onclick="imiExportCSV();return false;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </a>
+        <a class="btn btn-primary" href="admin-user-create.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          Add user
+        </a>
+      </div>
+    </div>
+
+    <!-- Users table -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">All <em>users</em></div>
+        <a class="card-link" href="admin-users.html">487 TOTAL &rarr;</a>
+      </div>
+      <div class="card-body flush">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Tenant</th>
+              <th>Status</th>
+              <th>Last active</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Salman Ahmed</td>
+              <td>Learner</td>
+              <td>Web Innoventix</td>
+              <td><span class="chip t-honey dot">Suspended</span></td>
+              <td>2H ago</td>
+            </tr>
+            <tr>
+              <td>Aisha Rahman</td>
+              <td>Content Dev</td>
+              <td>PDO</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>15M ago</td>
+            </tr>
+            <tr>
+              <td>Omar Khalid</td>
+              <td>SME Reviewer</td>
+              <td>Ministry of Energy</td>
+              <td><span class="chip t-sage dot">Active</span></td>
+              <td>1H ago</td>
+            </tr>
+            <tr>
+              <td>Fatima Noor</td>
+              <td>Learner</td>
+              <td>PDO</td>
+              <td><span class="chip t-honey dot">Suspended</span></td>
+              <td>3D ago</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Suspend user modal -->
+<div class="modal-scrim">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="suspend-title">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="suspend-title">Suspended <em>account</em></div>
+        <p class="modal-meta">salman.ahmed@webinnoventix.com &middot; Learner &middot; Web Innoventix</p>
+      </div>
+      <a href="admin-user-detail.html" class="modal-close" aria-label="Close">&times;</a>
+    </div>
+
+    <!-- Suspension effects info box -->
+    <div class="effects-note">
+      <div class="effects-head">Suspension effects</div>
+      <ul>
+        <li>User cannot log in until reactivated</li>
+        <li>Active sessions terminated immediately</li>
+        <li>In-progress courses paused (data retained)</li>
+        <li>User retains access to issued certificates while suspended</li>
+        <li>User receives email per template <code>account-suspended</code></li>
+      </ul>
+    </div>
+
+    <!-- Reason field -->
+    <div class="field">
+      <label>Reason <span class="req">*</span></label>
+      <select class="input" id="suspend-reason">
+        <option value="">-- select a reason --</option>
+        <option value="policy" selected>Policy violation</option>
+        <option value="fraud">Suspected fraud</option>
+        <option value="identity">Identity verification pending</option>
+        <option value="vacation">User request (vacation hold)</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <!-- Internal notes field -->
+    <div class="field">
+      <label>Internal notes <span class="opt">(visible to admins only)</span></label>
+      <textarea class="input" id="suspend-notes" rows="3">Reported by SME reviewer Omar Khalid on 2026-06-18 for repeated quiz answer sharing across cohort. Audit trail in ticket #TKT-4821. User acknowledged in session log 2026-06-17 19:42 UTC. Suspension applied by admin SA per policy 3.2(b).</textarea>
+    </div>
+
+    <!-- Duration field -->
+    <div class="field">
+      <label>Suspension duration</label>
+      <select class="input" id="suspend-duration">
+        <option value="indefinite">Indefinite (until manually reactivated)</option>
+        <option value="7d">7 days</option>
+        <option value="30d" selected>30 days</option>
+        <option value="90d">90 days</option>
+        <option value="custom">Custom date</option>
+      </select>
+    </div>
+
+    <!-- Confirmation checkbox -->
+    <div class="check-field">
+      <input type="checkbox" id="suspend-confirm" checked>
+      <label for="suspend-confirm">I confirm this suspension record is accurate. Changes will be logged to the audit trail.</label>
+    </div>
+
+    <!-- Notification checkbox -->
+    <div class="check-field">
+      <input type="checkbox" id="notify" checked>
+      <label for="notify">Send updated notification email to user if reason or duration changes</label>
+    </div>
+
+    <!-- Actions -->
+    <div class="modal-actions">
+      <a class="btn btn-ghost" href="admin-user-detail.html">Cancel</a>
+      <button class="btn btn-primary" id="btn-suspend-submit" onclick="imiSubmitSuspend()">Update suspension</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---- Ad strip close ---- */
+(function(){
+  var adClose = document.querySelector('.ad-close');
+  if(adClose) adClose.addEventListener('click', function(e){
+    e.stopPropagation();
+    var strip = document.querySelector('.ad-strip');
+    if(strip){ strip.style.transition='opacity 0.2s'; strip.style.opacity='0'; setTimeout(function(){strip.style.display='none';},220); }
+  });
+})();
+
+/* ---- Export CSV ---- */
+function imiExportCSV() {
+  var rows = [
+    ['Name','Email','Role','Tenant','Status'],
+    ['Salman Ahmed','salman.ahmed@webinnoventix.com','Learner','Web Innoventix','Suspended'],
+    ['Aisha Rahman','aisha@pdo.om','Content Dev','PDO','Active'],
+    ['Omar Khalid','omar@moe.gov.om','SME Reviewer','Ministry of Energy','Active'],
+    ['Fatima Noor','fatima@pdo.om','Learner','PDO','Suspended']
+  ];
+  var csv = rows.map(function(r){return r.map(function(c){return '"'+c+'"';}).join(',');}).join('\n');
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'admin-users.csv';
+  a.click();
+  imiToast('CSV downloaded.', 'ok');
+}
+
+/* ---- Suspend submit validation ---- */
+function imiSubmitSuspend() {
+  var reason = document.getElementById('suspend-reason').value;
+  var confirmed = document.getElementById('suspend-confirm').checked;
+
+  if(!reason){
+    imiToast('Please select a suspension reason.', 'warn');
+    var sel = document.getElementById('suspend-reason');
+    sel.style.borderColor='var(--c-danger,#c0392b)';
+    setTimeout(function(){ sel.style.borderColor=''; }, 2500);
+    return;
+  }
+  if(!confirmed){
+    imiToast('Please tick the confirmation checkbox before saving.', 'warn');
+    var cb = document.getElementById('suspend-confirm');
+    cb.closest('.check-field').style.outline='2px solid var(--c-danger,#c0392b)';
+    cb.closest('.check-field').style.borderRadius='4px';
+    setTimeout(function(){ cb.closest('.check-field').style.outline=''; }, 2500);
+    return;
+  }
+
+  var btn = document.getElementById('btn-suspend-submit');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  imiToast('Suspension record updated. Audit log entry created.', 'ok');
+  setTimeout(function(){ location.href='admin-user-detail.html'; }, 1800);
+}
+
+/* ---- Toast helper ---- */
+function imiToast(msg, type) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:28px;right:28px;padding:12px 20px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;z-index:999;max-width:360px;box-shadow:0 4px 20px rgba(0,0,0,0.18);transition:opacity 0.3s;' +
+    (type==='ok'?'background:#2a1108;color:#faf6f0;':'background:#c0392b;color:#fff;');
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); },320); }, 3200);
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

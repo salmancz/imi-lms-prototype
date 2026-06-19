@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup error: duplicate email · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body {
+    background: var(--bg);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* top strip */
+  .sa-top {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img { height: 28px; width: auto; display: block; }
+  .sa-brand-text {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sa-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  /* centered layout */
+  .sa-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .sa-main { width: 100%; max-width: 460px; }
+
+  /* auth card */
+  .auth-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 44px 40px 36px;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+  }
+
+  /* logo lockup */
+  .auth-lockup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .auth-lockup img { height: 38px; width: auto; display: block; }
+
+  /* error icon */
+  .auth-mark {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 20px;
+    border-radius: 14px;
+    background: var(--c-clay-wash);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+  }
+  .auth-mark svg { width: 26px; height: 26px; }
+
+  /* eyebrow */
+  .auth-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+
+  /* heading */
+  .auth-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .auth-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  /* body copy */
+  .auth-msg {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .auth-msg strong { color: var(--ink); font-weight: 700; }
+
+  /* action buttons */
+  .auth-actions { display: flex; flex-direction: column; gap: 10px; }
+  .auth-actions .btn {
+    width: 100%;
+    justify-content: center;
+    height: 48px;
+    font-size: 14px;
+    border-radius: var(--r-md);
+  }
+
+  /* divider */
+  .auth-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 24px 0 20px;
+  }
+
+  /* footer */
+  .auth-foot {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.6;
+  }
+  .auth-foot a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .auth-foot a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- top strip -->
+<div class="sa-top">
+  <a class="sa-brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" alt="IMI">
+    <span class="sa-brand-text">IMI</span>
+    <span class="sa-brand-sub">Learning</span>
+  </a>
+</div>
+
+<!-- centered auth card -->
+<div class="sa-wrap">
+  <main class="sa-main">
+    <div class="auth-card">
+
+      <!-- logo lockup -->
+      <a class="auth-lockup" href="../learning/dashboard.html">
+        <img src="../img/imi-logo.png" alt="IMI">
+      </a>
+
+      <!-- error icon -->
+      <div class="auth-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+
+      <p class="auth-eyebrow">Sign up</p>
+      <h1 class="auth-title">This email is <em>already</em> registered</h1>
+      <p class="auth-msg">An account already exists with this email. Sign in instead, or use a different email to create a new account.</p>
+
+      <div class="auth-actions">
+        <a class="btn btn-primary" href="login.html">Sign in instead</a>
+        <a class="btn btn-ghost" href="signup.html">Use different email</a>
+      </div>
+
+      <div class="auth-divider"></div>
+
+      <p class="auth-foot">Forgot which email you used? <a href="../profile/help-center.html">Contact support.</a></p>
+
+    </div>
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

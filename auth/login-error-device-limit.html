@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login error: device limit · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; min-height: 100vh; }
+
+  /* top bar: logo lockup */
+  .sa-top {
+    padding: 22px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img.logo-lockup {
+    height: 28px;
+    width: auto;
+    display: block;
+  }
+
+  /* page wrapper */
+  .sa-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 20px 80px;
+    min-height: calc(100vh - 73px);
+  }
+  .sa-main { width: 100%; max-width: 440px; }
+
+  /* error card */
+  .lock-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 40px 38px 36px;
+    text-align: center;
+  }
+
+  /* lock icon */
+  .lock-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 1px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 22px;
+    color: var(--accent);
+  }
+  .lock-icon-wrap svg { width: 28px; height: 28px; }
+
+  /* eyebrow */
+  .lock-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+
+  /* heading */
+  .lock-title {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .lock-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  /* lead text */
+  .lock-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 26px;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* active sessions list */
+  .sess-list {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper-2);
+    overflow: hidden;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .sess-head {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 10px 16px 9px;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .sess-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 16px;
+  }
+  .sess-row + .sess-row { border-top: 1px solid var(--line); }
+  .sess-ic {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    background: var(--surface-3);
+    color: var(--ink-soft);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .sess-ic svg { width: 18px; height: 18px; }
+  .sess-body { flex: 1; min-width: 0; }
+  .sess-name {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .sess-meta {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+  .sess-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--c-sage-text);
+  }
+  .sess-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-sage);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* primary CTA */
+  .btn-full {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+
+  /* divider */
+  .lock-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 24px 0 20px;
+  }
+
+  /* footer link */
+  .lock-foot {
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .lock-foot a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .lock-foot a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="sa-top">
+  <a class="sa-brand" href="login.html">
+    <img src="../img/imi-logo.png" alt="IMI" class="logo-lockup">
+  </a>
+</div>
+
+<div class="sa-wrap">
+  <main class="sa-main">
+    <div class="lock-card" role="alertdialog" aria-labelledby="dl-title" aria-describedby="dl-desc">
+
+      <div class="lock-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+
+      <p class="lock-eyebrow">Access restricted</p>
+      <h2 class="lock-title" id="dl-title">Already signed in on another <em>device</em></h2>
+      <p class="lock-lead" id="dl-desc">Only one device can be active at a time. Sign out from your active session below to continue here.</p>
+
+      <div class="sess-list">
+        <div class="sess-head">Active device</div>
+        <div class="sess-row">
+          <div class="sess-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 18v3"/>
+            </svg>
+          </div>
+          <div class="sess-body">
+            <div class="sess-name">MacBook Pro · Chrome</div>
+            <div class="sess-meta">Muscat</div>
+          </div>
+          <span class="sess-status">Active now</span>
+        </div>
+      </div>
+
+      <a class="btn btn-accent btn-full" href="device-limit.html">Manage sessions</a>
+
+      <div class="lock-divider"></div>
+
+      <p class="lock-foot"><a href="login.html">Back to sign in</a></p>
+    </div>
+  </main>
+</div>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

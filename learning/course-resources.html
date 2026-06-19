@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course resources · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .cr-wrap { max-width: 920px; }
+  .cr-back {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-label);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink-mute);
+    transition: color 0.15s;
+    margin-bottom: 10px;
+  }
+  .cr-back:hover { color: var(--accent); }
+  .cr-back svg { width: 14px; height: 14px; }
+
+  .cr-access {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+    margin: 6px 0 26px; max-width: 680px;
+  }
+  .cr-access svg { width: 16px; height: 16px; color: var(--ink-mute); flex-shrink: 0; margin-top: 2px; }
+  .cr-access strong { color: var(--ink); font-weight: 600; }
+
+  .cr-list {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .cr-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.18s;
+  }
+  .cr-row:last-child { border-bottom: none; }
+  .cr-row:hover { background: var(--paper-2); }
+
+  .cr-tag {
+    width: 40px; height: 40px; border-radius: var(--r-sm);
+    background: var(--paper-2); border: 1px solid var(--line);
+    display: grid; place-items: center;
+    font-family: var(--font-label); font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--ink-mute); flex-shrink: 0;
+  }
+  .cr-tag.pdf { background: var(--c-clay-wash); border-color: rgba(184,101,78,0.20); color: #8C4534; }
+  .cr-tag.link { background: var(--c-sage-wash); border-color: rgba(126,155,111,0.22); color: var(--c-sage-text); }
+
+  .cr-body { flex: 1; min-width: 0; }
+  .cr-name { font-size: 14.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .cr-meta { font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 3px; }
+
+  .cr-footer {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 20px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em;
+  }
+  .cr-footer svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--ink-faint); }
+  .cr-footer strong { color: var(--ink-soft); font-weight: 600; }
+
+  .cr-wrap { padding-bottom: 40px; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link is-active" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+<div class="cr-wrap">
+  <a class="cr-back" href="course-detail.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Data Quality Foundations</a>
+  <h1 class="page-title">Course <em>resources</em></h1>
+
+  <div class="cr-access">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <span><strong>Access rule:</strong> Resources are accessible to enrolled users only. Free preview lessons may have limited resources visible. Downloadable resources require active enrolment.</span>
+  </div>
+
+  <div class="tabs" id="cr-tabs">
+    <button class="is" data-tab="all" onclick="crFilter('all',this)">All resources</button>
+    <button data-tab="pdf" onclick="crFilter('pdf',this)">PDFs</button>
+    <button data-tab="link" onclick="crFilter('link',this)">Links</button>
+    <button data-tab="supplementary" onclick="crFilter('supplementary',this)">Supplementary</button>
+  </div>
+
+  <div id="cr-list" class="cr-list">
+    <div class="cr-row" data-type="pdf">
+      <div class="cr-tag pdf">PDF</div>
+      <div class="cr-body">
+        <div class="cr-name">DAMA-DMBOK Quick Reference</div>
+        <div class="cr-meta">PDF · 2.4 MB · Lesson 1 resource</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="var b=this;b.disabled=true;b.textContent='Downloading…';setTimeout(function(){b.disabled=false;b.textContent='Download';},1500)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
+    </div>
+    <div class="cr-row" data-type="pdf">
+      <div class="cr-tag pdf">PDF</div>
+      <div class="cr-body">
+        <div class="cr-name">Data Quality Assessment Worksheet</div>
+        <div class="cr-meta">PDF · 890 KB · Lesson 3 resource</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="var b=this;b.disabled=true;b.textContent='Downloading…';setTimeout(function(){b.disabled=false;b.textContent='Download';},1500)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
+    </div>
+    <div class="cr-row" data-type="link">
+      <div class="cr-tag link">LINK</div>
+      <div class="cr-body">
+        <div class="cr-name">ISO 8000 Data Quality Standards (External)</div>
+        <div class="cr-meta">External link · Opens in new tab</div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="https://www.iso.org/standard/61844.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Open</a>
+    </div>
+    <div class="cr-row" data-type="supplementary">
+      <div class="cr-tag pdf">PDF</div>
+      <div class="cr-body">
+        <div class="cr-name">Reading list: Data Quality literature</div>
+        <div class="cr-meta">PDF · 440 KB · Supplementary</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="var b=this;b.disabled=true;b.textContent='Downloading…';setTimeout(function(){b.disabled=false;b.textContent='Download';},1500)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
+    </div>
+  </div>
+  <div id="cr-empty" style="display:none;padding:28px 20px;text-align:center;font-size:14px;color:var(--ink-mute);font-family:var(--font-label);letter-spacing:0.04em">No resources in this category.</div>
+
+  <div class="cr-footer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <span><strong>4 resources</strong> for this course. Resources remain accessible for 12 months after enrolment. Contact <a href="../profile/help-center.html" style="color:var(--accent);text-decoration:none;font-weight:600">support</a> if a download fails.</span>
+  </div>
+</div>
+  </main>
+</div>
+<script>
+function crFilter(type, btn) {
+  document.querySelectorAll('#cr-tabs button').forEach(function(b) { b.classList.remove('is'); });
+  btn.classList.add('is');
+  var rows = document.querySelectorAll('#cr-list .cr-row');
+  var visible = 0;
+  rows.forEach(function(row) {
+    var show = (type === 'all') || (row.dataset.type === type);
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('cr-empty').style.display = visible === 0 ? 'block' : 'none';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

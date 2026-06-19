@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standalone lesson upload · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .lesson-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; margin-top: 6px; }
+  @media (max-width: 1100px) { .lesson-grid { grid-template-columns: 1fr; } }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
+    transition: color 0.15s; margin-bottom: 18px;
+  }
+  .back-link:hover { color: var(--accent); }
+  .type-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .type-opt {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border: 1.5px solid var(--line-strong);
+    border-radius: var(--r-pill); font-size: 13px; font-weight: 600;
+    color: var(--ink-soft); background: var(--paper); cursor: pointer;
+    transition: border-color 0.18s, background 0.18s, color 0.18s;
+  }
+  .type-opt:hover { border-color: var(--ink-mute); }
+  .type-opt.is { border-color: var(--ink); background: var(--ink); color: var(--hero-bg); }
+  .type-opt .dotmark {
+    width: 13px; height: 13px; border-radius: 50%;
+    border: 2px solid var(--line-strong); display: inline-flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .type-opt.is .dotmark { border-color: var(--hero-bg); }
+  .type-opt.is .dotmark::after {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--hero-bg); display: block;
+  }
+  .req { color: var(--accent); font-weight: 700; }
+  .field textarea.input { height: auto; min-height: 76px; padding: 10px 14px; line-height: 1.5; resize: vertical; }
+  .field-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 540px) { .field-2 { grid-template-columns: 1fr; } }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .field-hint { font-size: 12px; color: var(--ink-mute); margin-top: 7px; line-height: 1.5; }
+  .dropzone {
+    border: 1.5px dashed var(--line-strong); border-radius: var(--r-md);
+    background: var(--paper-2); padding: 26px 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; text-align: center; transition: border-color 0.18s, background 0.18s;
+  }
+  .dropzone:hover { border-color: var(--ink-mute); background: var(--paper); }
+  .dropzone .dz-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--c-honey-wash); color: var(--c-honey-text);
+    display: grid; place-items: center; margin-bottom: 4px;
+  }
+  .dropzone .dz-icon svg { width: 18px; height: 18px; }
+  .dropzone .dz-main { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .dropzone .dz-meta { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); text-transform: uppercase; }
+  .dropzone.slim { flex-direction: row; padding: 16px 20px; gap: 12px; }
+  .dropzone.slim .dz-main { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .opt-label { color: var(--ink-mute); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .check-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; }
+  .check-head { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+  .check-head input { margin-top: 3px; width: 17px; height: 17px; flex-shrink: 0; accent-color: var(--ink); }
+  .check-head .ch-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .check-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 7px; padding-left: 29px; line-height: 1.5; }
+  .check-questions { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .qcard { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 14px 16px; margin-bottom: 12px; }
+  .qcard-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .qcard-tag { font-family: var(--font-label); font-size: 10.5px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+  .qopts { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .qopt { display: flex; align-items: center; gap: 10px; }
+  .qopt input[type="radio"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--ink); }
+  .qopt .input { height: 30px; padding: 0 12px; font-size: 13px; }
+  .summary-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+  .summary-row span { color: var(--ink-soft); }
+  .summary-row strong { color: var(--ink); font-weight: 700; }
+  .summary-card .stack { display: flex; flex-direction: column; gap: 12px; }
+  .review-step { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+  .review-num {
+    width: 20px; height: 20px; border-radius: 50%; background: var(--ink);
+    color: var(--hero-bg); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .side-stack { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 96px; }
+  .submit-stack { display: flex; flex-direction: column; gap: 10px; }
+  .btn.full { justify-content: center; width: 100%; }
+  .gate-note {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--c-sage-wash); border: 1px solid rgba(126,155,111,0.22);
+    border-radius: var(--r-md); padding: 14px 16px; font-size: 13px;
+    color: var(--c-sage-text); line-height: 1.5; margin-top: 24px;
+  }
+  .gate-note + .gate-note { margin-top: 12px; }
+  .gate-note .gn-icon { flex-shrink: 0; margin-top: 1px; }
+  .gate-note .gn-icon svg { width: 17px; height: 17px; }
+  .gate-note strong { color: var(--ink); font-weight: 700; }
+  .form-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 30px; }
+
+  /* File upload: selected-but-not-yet-uploaded state */
+  .file-pending {
+    display: none;
+    align-items: center; gap: 10px;
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--r-sm); padding: 10px 14px; margin-top: 10px;
+  }
+  .file-pending.visible { display: flex; }
+  .fp-icon {
+    width: 32px; height: 32px; border-radius: var(--r-sm);
+    background: var(--c-honey-wash); color: var(--c-honey-text);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .fp-icon svg { width: 15px; height: 15px; }
+  .fp-info { flex: 1; min-width: 0; }
+  .fp-name { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fp-size { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 1px; }
+  .fp-remove {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: none; background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-mute); transition: background 0.15s, color 0.15s; flex-shrink: 0;
+  }
+  .fp-remove:hover { background: var(--c-rose-wash, #fdecea); color: #c0392b; }
+  .fp-remove svg { width: 14px; height: 14px; }
+
+  /* Chip remove button */
+  .chip-x { cursor: pointer; margin-left: 4px; opacity: 0.7; }
+  .chip-x:hover { opacity: 1; }
+
+  /* Toast notification */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--ink); color: var(--paper); border-radius: var(--r-pill);
+    padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+    box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+    transition: opacity 0.22s, transform 0.22s; z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.t-sage { background: var(--c-sage-text,#2e5e28); }
+  .toast.t-clay { background: #b84e3b; }
+
+  /* Upload progress bar */
+  .upload-progress {
+    display: none;
+    flex-direction: column; gap: 6px;
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--r-sm); padding: 10px 14px; margin-top: 10px;
+  }
+  .upload-progress.visible { display: flex; }
+  .up-head { display: flex; align-items: center; justify-content: space-between; }
+  .up-name { font-size: 13px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .up-pct { font-family: var(--font-label); font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: 0.06em; flex-shrink: 0; margin-left: 8px; }
+  .up-track {
+    height: 5px; border-radius: 99px;
+    background: var(--line); overflow: hidden;
+  }
+  .up-bar {
+    height: 100%; border-radius: 99px;
+    background: var(--accent); width: 0%;
+    transition: width 0.3s ease;
+  }
+  .up-status { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; }
+  .up-status.done { color: var(--c-sage-text); font-weight: 600; }
+  .up-status.err  { color: #c0392b; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">·</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
+  <a href="#" class="ad-cta">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+<header class="topbar">
+  <a href="../role-views/content-dev-home.html" class="brand"><img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI"><span class="brand-text">IMI</span><span class="brand-sub">Studio</span></a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../role-views/content-dev-home.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../role-views/content-dev-home.html#my-courses" class="sidebar-link is-active" data-nav="my-courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Courses</span><span class="badge">12</span></a>
+<a href="../role-views/content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Drafts</span><span class="badge">3</span></a>
+<a href="../role-views/content-dev-home.html#published" class="sidebar-link" data-nav="published"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Published</span><span class="badge">9</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">FEEDBACK</div>
+<a href="../role-views/cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>SME Reviews</span><span class="badge">2</span></a>
+<a href="../role-views/cd-feedback.html#qa" class="sidebar-link" data-nav="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span>Learner Q&A</span><span class="badge">8</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">INSIGHTS</div>
+<a href="cb-reports.html" class="sidebar-link" data-nav="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Analytics</span></a>
+<a href="../role-views/cd-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<a href="../role-views/content-dev-home.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back to workspace</a>
+
+<div class="page-head" style="grid-template-columns:1fr;margin-bottom:22px">
+  <div>
+    <div class="eyebrow">Content Library</div>
+    <h1 class="page-title">Upload <em>standalone lesson</em></h1>
+    <p class="page-sub">A single video, PDF, or text lesson that can be added to any course later, or accessed from the Learner Library.</p>
+  </div>
+</div>
+
+<div class="lesson-grid">
+
+  <div class="form-card">
+
+    <div class="field">
+      <label>Lesson type <span class="req">*</span></label>
+      <div class="type-options" id="type-options">
+        <label class="type-opt is" data-type="Video" onclick="selectType('Video',this)"><span class="dotmark"></span>Video</label>
+        <label class="type-opt" data-type="PDF" onclick="selectType('PDF',this)"><span class="dotmark"></span>PDF</label>
+        <label class="type-opt" data-type="Text" onclick="selectType('Text',this)"><span class="dotmark"></span>Text</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Lesson title <span class="req">*</span></label>
+      <input class="input" id="f-title" placeholder="e.g. Introduction to Knowledge Classification" oninput="updateSummary()">
+    </div>
+
+    <div class="field">
+      <label>Description <span class="req">*</span></label>
+      <textarea class="input" id="f-desc" rows="3" placeholder="What this lesson covers and who it is for"></textarea>
+    </div>
+
+    <div class="field-2">
+      <div class="field">
+        <label>Domain <span class="req">*</span></label>
+        <select class="input" id="f-domain" onchange="updateSummary()">
+          <option>Technology</option>
+          <option>Business</option>
+          <option>Leadership</option>
+          <option>Data &amp; Analytics</option>
+          <option>Compliance</option>
+          <option>Knowledge Management</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Duration estimate (minutes) <span class="req">*</span></label>
+        <input class="input" id="f-duration" placeholder="12" oninput="updateSummary()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Language <span class="req">*</span></label>
+      <select class="input" id="f-lang" onchange="updateSummary()">
+        <option>English</option>
+        <option>Arabic</option>
+        <option>French</option>
+        <option>Spanish</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Subject tags <span class="req">*</span></label>
+      <input class="input" id="tag-input" placeholder="Add tag and press Enter" onkeydown="handleChipKey(event,'tag-chips')">
+      <div class="chip-row" id="tag-chips">
+        <span class="chip" data-chip>Knowledge mgmt <span class="chip-x" onclick="removeChip(this)">×</span></span>
+        <span class="chip" data-chip>Classification <span class="chip-x" onclick="removeChip(this)">×</span></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Skills you'll learn</label>
+      <input class="input" id="skill-input" placeholder="Add a skill and press Enter" onkeydown="handleChipKey(event,'skill-chips')">
+      <div class="chip-row" id="skill-chips">
+        <span class="chip" data-chip>Taxonomy design <span class="chip-x" onclick="removeChip(this)">×</span></span>
+        <span class="chip" data-chip>Metadata tagging <span class="chip-x" onclick="removeChip(this)">×</span></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Video file or URL <span class="req">*</span></label>
+      <div class="dropzone" id="dz-video" onclick="document.getElementById('fi-video').click()" style="cursor:pointer">
+        <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="dz-main">Drag &amp; drop video here or <span style="color:var(--accent);text-decoration:underline">browse</span></div>
+        <div class="dz-meta">MP4 · MOV · max 2 GB</div>
+      </div>
+      <input type="file" id="fi-video" accept="video/mp4,video/quicktime" style="display:none" onchange="handlePick('video',this)">
+      <!-- Pre-upload: file selected, not yet sent -->
+      <div class="file-pending" id="fp-video">
+        <div class="fp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+        <div class="fp-info">
+          <div class="fp-name" id="fp-video-name">lesson-intro.mp4</div>
+          <div class="fp-size" id="fp-video-size">124 MB</div>
+        </div>
+        <button class="fp-remove" title="Remove file" onclick="removePick('video');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-video').style.display=''">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <!-- Upload progress -->
+      <div class="upload-progress" id="up-video">
+        <div class="up-head">
+          <div class="up-name" id="up-video-name"></div>
+          <div class="up-pct" id="up-video-pct">0%</div>
+        </div>
+        <div class="up-track"><div class="up-bar" id="up-video-bar"></div></div>
+        <div class="up-status" id="up-video-status">Uploading...</div>
+      </div>
+      <input class="input" style="margin-top:10px" placeholder="Or paste a video URL (e.g. Vimeo, hosted MP4)">
+    </div>
+
+    <div class="field">
+      <label>Thumbnail <span class="req">*</span></label>
+      <div class="dropzone slim" id="dz-thumb" onclick="document.getElementById('fi-thumb').click()" style="cursor:pointer">
+        <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="dz-main">Upload a thumbnail image (1280 x 720, JPG or PNG)</div>
+      </div>
+      <input type="file" id="fi-thumb" accept="image/jpeg,image/png" style="display:none" onchange="handlePick('thumb',this)">
+      <div class="file-pending" id="fp-thumb">
+        <div class="fp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="fp-info">
+          <div class="fp-name" id="fp-thumb-name"></div>
+          <div class="fp-size" id="fp-thumb-size"></div>
+        </div>
+        <button class="fp-remove" title="Remove file" onclick="removePick('thumb');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-thumb').style.display=''">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="upload-progress" id="up-thumb">
+        <div class="up-head">
+          <div class="up-name" id="up-thumb-name"></div>
+          <div class="up-pct" id="up-thumb-pct">0%</div>
+        </div>
+        <div class="up-track"><div class="up-bar" id="up-thumb-bar"></div></div>
+        <div class="up-status" id="up-thumb-status">Uploading...</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Transcript / captions <span class="req">*</span></label>
+      <div class="dropzone slim" id="dz-caption" onclick="document.getElementById('fi-caption').click()" style="cursor:pointer">
+        <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="dz-main">Upload .srt or .vtt file for accessibility</div>
+      </div>
+      <input type="file" id="fi-caption" accept=".srt,.vtt" style="display:none" onchange="handlePick('caption',this)">
+      <div class="file-pending" id="fp-caption">
+        <div class="fp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="fp-info">
+          <div class="fp-name" id="fp-caption-name"></div>
+          <div class="fp-size" id="fp-caption-size"></div>
+        </div>
+        <button class="fp-remove" title="Remove file" onclick="removePick('caption');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-caption').style.display=''">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="upload-progress" id="up-caption">
+        <div class="up-head">
+          <div class="up-name" id="up-caption-name"></div>
+          <div class="up-pct" id="up-caption-pct">0%</div>
+        </div>
+        <div class="up-track"><div class="up-bar" id="up-caption-bar"></div></div>
+        <div class="up-status" id="up-caption-status">Uploading...</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Visibility <span class="req">*</span></label>
+      <select class="input" id="f-visibility" onchange="updateSummary()">
+        <option>Public library</option>
+        <option>Tenant-only</option>
+        <option>Private (draft)</option>
+      </select>
+      <div class="field-hint">Public library = available to all learners and content developers. Tenant-only = visible inside one tenant's portal.</div>
+    </div>
+
+    <div class="field">
+      <label>Persona Access <span class="req">*</span></label>
+      <input class="input" id="persona-input" placeholder="Add persona and press Enter" onkeydown="handleChipKey(event,'persona-chips')">
+      <div class="chip-row" id="persona-chips">
+        <span class="chip" data-chip>Learner / Member <span class="chip-x" onclick="removeChip(this);updateSummary()">×</span></span>
+        <span class="chip" data-chip>Corporate User <span class="chip-x" onclick="removeChip(this);updateSummary()">×</span></span>
+      </div>
+      <div class="field-hint">At least one persona must be assigned. Content without a persona assignment is not visible to any learner.</div>
+    </div>
+
+    <div class="check-card">
+      <label class="check-head">
+        <input type="checkbox" id="kc-toggle" checked onchange="toggleKnowledgeCheck(this)">
+        <span class="ch-title">Add quick knowledge check (optional)</span>
+      </label>
+      <p class="check-sub">Attach 1 to 3 questions learners answer after watching. Not a graded assessment, completion only.</p>
+
+      <div class="check-questions" id="check-questions-area">
+        <div class="kpi-label" style="margin-bottom:12px">Knowledge check questions</div>
+        <div class="qcard">
+          <div class="qcard-head">
+            <span class="qcard-tag">Q1 · MCQ</span>
+            <button class="btn btn-ghost btn-sm" onclick="this.closest('.qcard').remove()">Remove</button>
+          </div>
+          <input class="input" placeholder="Question text" style="margin-bottom:10px">
+          <div class="qopts">
+            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option A"></label>
+            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option B"></label>
+            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option C"></label>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="addQuestion(this);this.closest('.check-questions').querySelector('.qcard')&&void 0">+ Add question</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="side-stack">
+
+    <div class="card summary-card">
+      <div class="card-head"><div class="card-title">Lesson <em>summary</em></div></div>
+      <div class="card-body">
+        <div class="stack">
+          <div class="summary-row"><span>Type</span><strong id="sum-type">Video</strong></div>
+          <div class="summary-row"><span>Domain</span><strong id="sum-domain">Technology</strong></div>
+          <div class="summary-row"><span>Language</span><strong id="sum-lang">English</strong></div>
+          <div class="summary-row"><span>Duration</span><strong id="sum-duration">12 min</strong></div>
+          <div class="summary-row"><span>Visibility</span><strong id="sum-visibility">Public library</strong></div>
+          <div class="summary-row"><span>Persona access</span><strong id="sum-persona">2 assigned</strong></div>
+          <div class="summary-row"><span>Assessment</span><strong id="sum-assessment">Not added</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="kpi-label" style="margin-bottom:14px">Review process</div>
+        <div class="stack" style="display:flex;flex-direction:column;gap:12px">
+          <div class="review-step"><span class="review-num">1</span>Submit to SME for content review</div>
+          <div class="review-step"><span class="review-num">2</span>SME approves or rejects with comment</div>
+          <div class="review-step"><span class="review-num">3</span>Approved lesson goes live in Learner Library</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-stack">
+      <button class="btn btn-primary full" id="submit-btn" onclick="submitLesson()">Submit for SME review →</button>
+      <button class="btn btn-ghost full" id="save-btn" onclick="saveDraft()">Save draft</button>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="gate-note">
+  <span class="gn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+  <div><strong>Review gate:</strong> Standalone lessons that pass SME review become available in the Learner Library. Submissions without SME approval are not visible to learners.</div>
+</div>
+<div class="gate-note">
+  <span class="gn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span>
+  <div><strong>Reuse by developers:</strong> Content developers can embed approved standalone lessons in their courses (with attribution). The original lesson owner is credited automatically. Want to organise lessons into a full course? <a href="standalone-course.html" style="color:var(--ink);font-weight:600;text-decoration:underline">Create a standalone course &rarr;</a></div>
+</div>
+
+  </main>
+</div>
+<script>
+/* ---- Toast ---- */
+function showToast(msg, type) {
+  var t = document.getElementById('sl-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('visible');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() { t.classList.remove('visible'); }, 2400);
+}
+
+/* ---- Type toggle ---- */
+function selectType(type, el) {
+  document.querySelectorAll('.type-opt').forEach(function(o) { o.classList.remove('is'); });
+  el.classList.add('is');
+  document.getElementById('sum-type').textContent = type;
+  var videoField = document.getElementById('dz-video') && document.getElementById('dz-video').closest('.field');
+  if (videoField) {
+    videoField.querySelector('label').innerHTML = type + ' file or URL <span class="req">*</span>';
+    var dzMain = videoField.querySelector('.dz-main');
+    var dzMeta = videoField.querySelector('.dz-meta');
+    var fi = document.getElementById('fi-video');
+    if (type === 'PDF') {
+      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop PDF here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
+      if (dzMeta) dzMeta.textContent = 'PDF · max 200 MB';
+      if (fi) fi.accept = 'application/pdf';
+    } else if (type === 'Text') {
+      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop file here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
+      if (dzMeta) dzMeta.textContent = 'DOCX · TXT · HTML · max 50 MB';
+      if (fi) fi.accept = '.docx,.txt,.html';
+    } else {
+      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop video here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
+      if (dzMeta) dzMeta.textContent = 'MP4 · MOV · max 2 GB';
+      if (fi) fi.accept = 'video/mp4,video/quicktime';
+    }
+  }
+}
+
+/* ---- Live summary update ---- */
+function updateSummary() {
+  var domain = document.getElementById('f-domain');
+  var lang   = document.getElementById('f-lang');
+  var dur    = document.getElementById('f-duration');
+  var vis    = document.getElementById('f-visibility');
+  var pchips = document.querySelectorAll('#persona-chips [data-chip]');
+  var kc     = document.getElementById('kc-toggle');
+
+  if (domain)  document.getElementById('sum-domain').textContent  = domain.value;
+  if (lang)    document.getElementById('sum-lang').textContent    = lang.value;
+  if (dur)     document.getElementById('sum-duration').textContent = (dur.value ? dur.value + ' min' : '-');
+  if (vis)     document.getElementById('sum-visibility').textContent = vis.value;
+  document.getElementById('sum-persona').textContent = pchips.length + ' assigned';
+  document.getElementById('sum-assessment').textContent = (kc && kc.checked) ? 'Added' : 'Not added';
+}
+
+/* ---- Knowledge check toggle ---- */
+function toggleKnowledgeCheck(cb) {
+  var area = document.getElementById('check-questions-area');
+  if (area) area.style.display = cb.checked ? '' : 'none';
+  updateSummary();
+}
+
+/* ---- Chip helpers ---- */
+function handleChipKey(e, containerId) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  var input = e.target;
+  var val = input.value.trim();
+  if (!val) return;
+  var container = document.getElementById(containerId);
+  var chip = document.createElement('span');
+  chip.className = 'chip';
+  chip.setAttribute('data-chip', '');
+  chip.innerHTML = val + ' <span class="chip-x" onclick="removeChip(this);updateSummary()">×</span>';
+  container.appendChild(chip);
+  input.value = '';
+  updateSummary();
+}
+
+function removeChip(xBtn) {
+  xBtn.closest('[data-chip]').remove();
+}
+
+/* ---- File pick ---- */
+function fmtSize(bytes) {
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function handlePick(key, input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  document.getElementById('fp-' + key + '-name').textContent = file.name;
+  document.getElementById('fp-' + key + '-size').textContent = fmtSize(file.size);
+  document.getElementById('fp-' + key).classList.add('visible');
+  document.getElementById('dz-' + key).style.display = 'none';
+}
+
+function removePick(key) {
+  document.getElementById('fi-' + key).value = '';
+  var upEl = document.getElementById('up-' + key);
+  if (upEl) upEl.classList.remove('visible');
+  document.getElementById('fp-' + key).classList.remove('visible');
+  document.getElementById('dz-' + key).style.display = '';
+}
+
+/* ---- Upload simulation ---- */
+function startUpload(key) {
+  var pending  = document.getElementById('fp-' + key);
+  var nameEl   = document.getElementById('fp-' + key + '-name');
+  var upEl     = document.getElementById('up-' + key);
+  var upName   = document.getElementById('up-' + key + '-name');
+  var upPct    = document.getElementById('up-' + key + '-pct');
+  var upBar    = document.getElementById('up-' + key + '-bar');
+  var upStatus = document.getElementById('up-' + key + '-status');
+
+  pending.classList.remove('visible');
+  upName.textContent = nameEl.textContent;
+  upEl.classList.add('visible');
+  upPct.textContent = '0%';
+  upBar.style.width = '0%';
+  upStatus.textContent = 'Uploading...';
+  upStatus.className = 'up-status';
+
+  var pct = 0;
+  var speed = key === 'video' ? 180 : 90;
+  var timer = setInterval(function() {
+    pct += Math.floor(Math.random() * 8) + 3;
+    if (pct >= 100) {
+      pct = 100; clearInterval(timer);
+      upBar.style.width = '100%'; upPct.textContent = '100%';
+      upStatus.textContent = 'Upload complete';
+      upStatus.className = 'up-status done';
+    } else {
+      upBar.style.width = pct + '%'; upPct.textContent = pct + '%';
+    }
+  }, speed);
+}
+
+/* ---- Submit ---- */
+function submitLesson() {
+  var title = document.getElementById('f-title');
+  if (!title || !title.value.trim()) {
+    showToast('Please enter a lesson title.', 't-clay');
+    title && title.focus();
+    return;
+  }
+  var pending = ['video', 'thumb', 'caption'].filter(function(k) {
+    var fp = document.getElementById('fp-' + k);
+    return fp && fp.classList.contains('visible');
+  });
+  if (pending.length) {
+    pending.forEach(startUpload);
+    var btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+    setTimeout(function() {
+      window.location.href = '../role-views/cd-course-overview.html';
+    }, pending.length * 1200 + 800);
+    return;
+  }
+  showToast('Submitted for SME review.', 't-sage');
+  setTimeout(function() {
+    window.location.href = '../role-views/cd-course-overview.html';
+  }, 1400);
+}
+
+/* ---- Save draft ---- */
+function saveDraft() {
+  var btn = document.getElementById('save-btn');
+  if (btn) {
+    var orig = btn.textContent;
+    btn.textContent = 'Saved';
+    showToast('Draft saved.', '');
+    setTimeout(function() { btn.textContent = orig; }, 1800);
+  }
+}
+
+/* ---- Knowledge check add question ---- */
+function addQuestion(btn) {
+  var container = btn.closest('.check-questions');
+  var cards = container.querySelectorAll('.qcard');
+  if (cards.length >= 3) { showToast('Maximum 3 questions allowed.', 't-clay'); return; }
+  var n = cards.length + 1;
+  var qcard = document.createElement('div');
+  qcard.className = 'qcard';
+  qcard.innerHTML = '<div class="qcard-head"><span class="qcard-tag">Q' + n + ' · MCQ</span><button class="btn btn-ghost btn-sm" onclick="this.closest(\'.qcard\').remove()">Remove</button></div><input class="input" placeholder="Question text" style="margin-bottom:10px"><div class="qopts"><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option A"></label><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option B"></label><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option C"></label></div>';
+  container.insertBefore(qcard, btn);
+}
+
+document.addEventListener('DOMContentLoaded', updateSummary);
+</script>
+<div id="sl-toast" class="toast" aria-live="polite"></div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

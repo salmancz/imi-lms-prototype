@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email verification · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- auth shell ---- */
+  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+
+  .sa-top {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  .sa-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .sa-brand img.brand-logo-mark {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: block;
+  }
+  .sa-brand-text {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sa-brand-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+
+  .sa-wrap {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .sa-main {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  /* ---- card ---- */
+  .auth-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 44px 44px 36px;
+    text-align: center;
+  }
+
+  /* success seal */
+  .verify-seal {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--c-sage-wash);
+    border: 2px solid var(--c-sage-soft);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 26px;
+  }
+  .verify-seal svg {
+    width: 32px;
+    height: 32px;
+    color: var(--c-sage-text);
+  }
+
+  /* heading */
+  .auth-title {
+    font-family: var(--font-sans);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .auth-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--c-sage-text);
+  }
+
+  /* email display */
+  .verify-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .verify-email {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .verify-lead {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 28px;
+  }
+
+  /* divider */
+  .auth-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--line-strong);
+    margin: 0 auto 24px;
+  }
+
+  /* next-step card */
+  .next-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c-sage);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .nc-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-sage-text);
+    margin-bottom: 6px;
+  }
+  .nc-copy {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* buttons */
+  .btn.full {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+  .btn.full + .btn.full { margin-top: 10px; }
+
+  /* footer note */
+  .verify-foot {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.6;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .verify-foot strong { color: var(--ink-soft); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="sa-top">
+  <a class="sa-brand" href="login.html">
+    <img src="../img/imi-logo.png" class="brand-logo-mark" alt="IMI">
+    <span class="sa-brand-text">IMI</span>
+    <span class="sa-brand-sub">Learning</span>
+  </a>
+</div>
+
+<div class="sa-wrap">
+  <main class="sa-main">
+
+    <div class="auth-card">
+
+      <div class="verify-seal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+
+      <h1 class="auth-title">Email <em>verified</em></h1>
+
+      <p class="verify-label">Your email</p>
+      <p class="verify-email" id="verify-email-addr">salman@webinnoventix.com</p>
+      <p class="verify-lead">has been verified. Your IMI account is now active.</p>
+
+      <div class="auth-divider"></div>
+
+      <div class="next-card">
+        <div class="nc-label">Next step</div>
+        <div class="nc-copy">Complete your profile to unlock course enrollment. Profile completion takes about 3 minutes.</div>
+      </div>
+
+      <a class="btn btn-primary full" href="profile-setup.html">Complete profile &rarr;</a>
+      <a class="btn btn-ghost full" href="../learning/dashboard.html">Skip for now</a>
+
+      <p class="verify-foot">You can complete your profile anytime from Settings. <strong>Course completion proofs require 100% profile.</strong></p>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  var el = document.getElementById('verify-email-addr');
+  var stored = sessionStorage.getItem('imi_email');
+  if (el && stored) el.textContent = stored;
+})();
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

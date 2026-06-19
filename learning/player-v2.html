@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course player v2 · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* lesson head: chip + meta + share */
+  .lesson-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .lesson-bar .lb-meta {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+  .lesson-bar .lb-actions { margin-left: auto; }
+
+  /* two-column player grid: stage + progress rail */
+  .player-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) { .player-grid { grid-template-columns: 1fr; } }
+
+  .lesson-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .lesson-title {
+    font-family: var(--font-sans);
+    font-size: 33px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  .lesson-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+
+  /* preferred format toggle card */
+  .format-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    margin-bottom: 16px;
+  }
+  .format-card .fc-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .format-card .tabs { margin: 0; }
+
+  /* video stage */
+  .video-stage {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--ink-deep);
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+  }
+  .video-stage .play-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(250, 246, 240, 0.92);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    box-shadow: 0 16px 40px -12px rgba(0,0,0,0.5);
+    transition: transform 0.2s var(--tn);
+  }
+  .video-stage .play-btn:hover { transform: scale(1.06); }
+  .video-stage .play-btn svg { width: 26px; height: 26px; margin-left: 3px; }
+  .video-stage .video-time {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--hero-bg);
+    background: rgba(26, 10, 4, 0.65);
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    font-variant-numeric: tabular-nums;
+  }
+  .video-scrub {
+    height: 6px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .video-scrub .fill {
+    height: 100%;
+    width: 47%;
+    background: var(--accent);
+    border-radius: var(--r-pill);
+  }
+
+  /* player controls / meta row */
+  .player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .player-controls .pc-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .player-controls .pc-chip {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    padding: 3px 10px;
+  }
+  .player-controls .auto-note {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+
+  /* tabs row + phase hook */
+  .player-tabrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .player-tabrow .tabs { margin: 0; }
+
+  .ask-hook {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-pill);
+    padding: 7px 14px;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .ask-hook svg { width: 15px; height: 15px; }
+  .ask-hook-ai-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    animation: ai-blink 1.6s ease-in-out infinite;
+  }
+  @keyframes ai-blink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(184,82,62,0.55); }
+    50% { opacity: 0.3; box-shadow: 0 0 0 4px rgba(184,82,62,0); }
+  }
+  .ask-hook .phase-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--surface-3);
+    color: var(--ink-soft);
+    padding: 2px 7px;
+    border-radius: var(--r-pill);
+  }
+
+  /* transcript panel */
+  .panel { padding: 16px 0; }
+  .transcript-row {
+    display: flex;
+    gap: 14px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    padding: 8px 0;
+  }
+  .transcript-row .ts-time {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    flex-shrink: 0;
+    width: 44px;
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+  .transcript-row.is-active {
+    background: var(--c-honey-wash);
+    border-radius: var(--r-sm);
+    padding: 10px 14px;
+    margin: 4px 0;
+  }
+  .transcript-row.is-active .ts-text { color: var(--ink); font-weight: 600; }
+
+  /* notebook panel */
+  .note-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .note-card .nc-time {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .note-card .nc-body { font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .note-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-md);
+    padding: 10px 14px;
+  }
+  .note-add .na-stamp {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    padding: 4px 10px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .note-add input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 13.5px;
+    color: var(--ink);
+    height: 30px;
+  }
+  .note-add input:focus { outline: none; }
+  .note-add input::placeholder { color: var(--ink-faint); }
+
+  /* resources panel */
+  .res-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--paper);
+    margin-bottom: 10px;
+  }
+  .res-ico {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    font-family: var(--font-label);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .res-ico.pdf { background: var(--c-clay-wash); border: 1px solid rgba(184,101,78,0.20); color: #8C4534; }
+  .res-ico.link { background: var(--c-sage-wash); border: 1px solid rgba(126,155,111,0.22); color: var(--c-sage-text); }
+  .res-body { flex: 1; min-width: 0; }
+  .res-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+  /* progress rail */
+  .rail-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 18px 16px;
+  }
+  .rail-head {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .rail-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .rail-progress .progress { flex: 1; }
+  .rail-progress .rp-val {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .pl-item {
+    display: flex;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: var(--r-sm);
+    transition: background 0.15s;
+  }
+  .pl-item + .pl-item { margin-top: 2px; }
+  .pl-item:hover { background: var(--paper-2); }
+  .pl-item.is-current { background: var(--c-honey-wash); }
+  .pl-item.is-locked .pl-name { color: var(--ink-mute); font-weight: 500; }
+  .pl-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-strong);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--paper);
+  }
+  .pl-dot svg { width: 11px; height: 11px; }
+  .pl-dot.done { background: var(--c-sage); border-color: var(--c-sage); }
+  .pl-dot.current { border-color: var(--accent); background: var(--accent); position: relative; }
+  .pl-dot.current::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
+  .pl-body { flex: 1; min-width: 0; }
+  .pl-name { font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .pl-item.is-current .pl-name { font-weight: 700; }
+
+  /* next up card */
+  .nextup-card {
+    background: var(--c-sage-wash);
+    border: 1px solid rgba(126,155,111,0.22);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-top: 16px;
+  }
+  .nextup-card .nu-label {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--c-sage-text);
+    margin-bottom: 5px;
+  }
+  .nextup-card .nu-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .nextup-card .nu-meta {
+    font-size: 11.5px;
+    color: var(--c-sage-text);
+    margin-top: 3px;
+    font-family: var(--font-label);
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">·</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta" onclick="event.preventDefault()">Learn more →</a>
+  <button class="ad-close" aria-label="Dismiss ad">×</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='search-results.html'"></div>
+  <div class="topbar-actions">
+    <a href="../profile/notifications.html" class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a href="../profile/help-center.html" class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="../profile/profile.html" class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">68%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="my-learning.html" class="sidebar-link is-active" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+
+<a href="../profile/settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main class="blob-honey">
+
+<div class="player-grid">
+  <div>
+    <div class="lesson-bar">
+      <span class="chip t-ink">4 of 9</span>
+      <span class="lb-meta">Concept mapping techniques · 3 min</span>
+      <div class="lb-actions" style="display:flex;align-items:center;gap:8px;">
+        <a class="btn btn-ghost btn-sm" href="course-resources.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Course resources
+        </a>
+        <button class="btn btn-ghost btn-sm" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(function(){imiToast('Link copied')})" aria-label="Share this lesson">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+    </div>
+
+    <div class="lesson-eyebrow">Knowledge mapping · Lesson 4</div>
+    <h1 class="lesson-title">Concept mapping <em>techniques</em></h1>
+
+    <div class="format-card">
+      <span class="fc-label">Preferred format</span>
+      <div class="tabs">
+        <button class="is" data-format="video" onclick="(function(b){document.querySelectorAll('.format-card .tabs button,.format-card .tab-btn').forEach(function(t){t.classList.remove('is');});b.classList.add('is');imiToast('Video format selected');})(this)">Video</button>
+        <a class="tab-btn" href="player-text.html" data-format="text">Text and images</a>
+      </div>
+    </div>
+
+    <div class="video-stage" id="videoStage2" style="background-image:url(../img/video-thumb.png);background-size:cover;background-position:center;">
+      <button class="play-btn" aria-label="Play lesson" onclick="(function(btn){var s=document.getElementById('videoStage2');var paused=s.dataset.paused!=='false';if(paused){s.dataset.paused='false';btn.setAttribute('aria-label','Pause lesson');btn.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;currentColor&quot;><rect x=&quot;6&quot; y=&quot;4&quot; width=&quot;4&quot; height=&quot;16&quot;/><rect x=&quot;14&quot; y=&quot;4&quot; width=&quot;4&quot; height=&quot;16&quot;/></svg>';var fill=document.querySelector('.video-scrub .fill');var pct=parseFloat(fill.style.width)||47;clearInterval(window._playerIv2);window._playerIv2=setInterval(function(){pct=Math.min(pct+0.25,100);fill.style.width=pct+'%';if(pct>=100)clearInterval(window._playerIv2);},200);}else{s.dataset.paused='true';clearInterval(window._playerIv2);btn.setAttribute('aria-label','Play lesson');btn.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;currentColor&quot;><polygon points=&quot;5 3 19 12 5 21 5 3&quot;/></svg>';}})(this)"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+      <span class="video-time">1:32 / 3:18</span>
+    </div>
+    <div class="video-scrub" style="cursor:pointer" onclick="(function(e){var bar=e.currentTarget;var rect=bar.getBoundingClientRect();var pct=Math.max(0,Math.min(100,((e.clientX-rect.left)/rect.width)*100));bar.querySelector('.fill').style.width=pct+'%';})(event)"><div class="fill"></div></div>
+
+    <div class="player-controls">
+      <div class="pc-meta">
+        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var speeds=['1x','1.25x','1.5x','2x'];var cur=speeds.indexOf(btn.dataset.speed||'1x');var next=speeds[(cur+1)%speeds.length];btn.dataset.speed=next;btn.textContent='Speed '+next;imiToast('Playback speed: '+next);})(this)">Speed 1x</button>
+        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var on=btn.dataset.cc!=='off';btn.dataset.cc=on?'off':'on';btn.textContent=on?'Captions OFF':'Captions ON';imiToast(on?'Captions turned off':'Captions turned on');})(this)">Captions ON</button>
+        <span class="pc-chip">HD</span>
+      </div>
+      <span class="auto-note">Auto-progress: 90% watched</span>
+    </div>
+
+    <div class="player-tabrow">
+      <div class="tabs">
+        <button class="is" onclick="(function(b){document.querySelectorAll('.player-tabrow .tabs button').forEach(function(t){t.classList.remove('is');});b.classList.add('is');var panels=document.querySelectorAll('.panel');panels[0].hidden=false;panels[1].hidden=true;panels[2].hidden=true;imiToast('Transcript');})(this)">Transcript</button>
+        <button onclick="(function(b){document.querySelectorAll('.player-tabrow .tabs button').forEach(function(t){t.classList.remove('is');});b.classList.add('is');var panels=document.querySelectorAll('.panel');panels[0].hidden=true;panels[1].hidden=false;panels[2].hidden=true;})(this)">Notebook (2)</button>
+        <button onclick="(function(b){document.querySelectorAll('.player-tabrow .tabs button').forEach(function(t){t.classList.remove('is');});b.classList.add('is');var panels=document.querySelectorAll('.panel');panels[0].hidden=true;panels[1].hidden=true;panels[2].hidden=false;})(this)">Resources (3)</button>
+      </div>
+      <span class="ask-hook" title="Routes to course author/expert; community discussion destination deferred">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Ask Question
+        <span class="ask-hook-ai-dot" aria-hidden="true"></span>
+        <span class="phase-tag">Placeholder</span>
+      </span>
+    </div>
+
+    <div class="panel">
+      <div class="transcript-row">
+        <span class="ts-time">00:24</span>
+        <span class="ts-text">A senior records officer explains a retention schedule. They reach for a whiteboard.</span>
+      </div>
+      <div class="transcript-row">
+        <span class="ts-time">00:58</span>
+        <span class="ts-text">Joseph Novak formalised this technique in the 1970s while studying how children build scientific understanding.</span>
+      </div>
+      <div class="transcript-row is-active">
+        <span class="ts-time">01:32</span>
+        <span class="ts-text">What makes a good concept map is not how many ideas it contains, but how precisely it names the relationships.</span>
+      </div>
+    </div>
+
+    <div class="panel" hidden>
+      <div class="note-card">
+        <div class="nc-time">01:32 · added 8 min ago</div>
+        <div class="nc-body">Strength = precision of relationship labels, not count of concepts. Apply to retention schedules: name the TRIGGER not the linked record.</div>
+      </div>
+      <div class="note-card">
+        <div class="nc-time">00:58 · added 5 min ago</div>
+        <div class="nc-body">Novak 1970s, children's science understanding. Look up the foundational paper.</div>
+      </div>
+      <div class="note-add" id="noteAddRow">
+        <span class="na-stamp" id="noteStamp">+ 01:42</span>
+        <input id="noteInputV2" placeholder="Add note at current timestamp...">
+        <button class="btn btn-primary btn-sm" type="button" onclick="(function(btn){var inp=document.getElementById('noteInputV2');var txt=inp.value.trim();if(!txt)return;var panel=btn.closest('.panel');var card=document.createElement('div');card.className='note-card';card.innerHTML='<div class=&quot;nc-time&quot;>'+document.getElementById('noteStamp').textContent.replace('+ ','')+' &middot; just now</div><div class=&quot;nc-body&quot;>'+txt+'</div>';panel.insertBefore(card,document.getElementById('noteAddRow'));inp.value='';btn.textContent='Saved';setTimeout(function(){btn.textContent='Save';},1200);imiToast('Note saved');})(this)">Save</button>
+      </div>
+    </div>
+
+    <div class="panel" hidden>
+      <div class="res-row">
+        <span class="res-ico pdf">PDF</span>
+        <div class="res-body"><div class="res-name">Novak's concept map template (PDF, 2 pages)</div></div>
+        <a class="btn btn-ghost btn-sm" href="course-resources.html" onclick="event.preventDefault();var a=document.createElement('a');a.href='../img/resource-novak-template.pdf';a.download='novak-concept-map-template.pdf';a.click();">Download</a>
+      </div>
+      <div class="res-row">
+        <span class="res-ico pdf">PDF</span>
+        <div class="res-body"><div class="res-name">5-step worked example: GCC ministry case (PDF)</div></div>
+        <a class="btn btn-ghost btn-sm" href="course-resources.html" onclick="event.preventDefault();var a=document.createElement('a');a.href='../img/resource-gcc-case.pdf';a.download='gcc-ministry-case.pdf';a.click();">Download</a>
+      </div>
+      <div class="res-row">
+        <span class="res-ico link">URL</span>
+        <div class="res-body"><div class="res-name">Companion reading: Novak 1984 chapter (external)</div></div>
+        <a class="btn btn-ghost btn-sm" href="https://www.researchgate.net/publication/232550300" target="_blank" rel="noopener">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="rail-card">
+      <div class="rail-head">Course progress</div>
+      <div class="rail-progress">
+        <div class="progress"><div class="progress-fill grad-honey" style="width:44%"></div></div>
+        <span class="rp-val">4 of 9</span>
+      </div>
+
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-document.html'">
+        <span class="pl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <div class="pl-body"><div class="pl-name">1. What is knowledge mapping?</div></div>
+      </div>
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-document.html'">
+        <span class="pl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <div class="pl-body"><div class="pl-name">2. Tacit vs explicit</div></div>
+      </div>
+      <div class="pl-item" style="cursor:pointer" onclick="location.href='player-text.html'">
+        <span class="pl-dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <div class="pl-body"><div class="pl-name">3. Knowledge audits</div></div>
+      </div>
+      <div class="pl-item is-current">
+        <span class="pl-dot current"></span>
+        <div class="pl-body"><div class="pl-name">4. Concept mapping</div></div>
+      </div>
+      <div class="pl-item is-locked" style="cursor:pointer" onclick="imiToast('Complete lesson 4 first to unlock Mapping in practice')">
+        <span class="pl-dot"></span>
+        <div class="pl-body"><div class="pl-name">5. Mapping in practice</div></div>
+      </div>
+      <div class="pl-item is-locked" style="cursor:pointer" onclick="imiToast('Complete earlier lessons to unlock Implementation')">
+        <span class="pl-dot"></span>
+        <div class="pl-body"><div class="pl-name">6. Implementation</div></div>
+      </div>
+      <div class="pl-item is-locked" style="cursor:pointer" onclick="imiToast('Complete earlier lessons to unlock Measurement')">
+        <span class="pl-dot"></span>
+        <div class="pl-body"><div class="pl-name">7. Measurement</div></div>
+      </div>
+      <div class="pl-item is-locked" style="cursor:pointer" onclick="imiToast('Complete earlier lessons to unlock Common pitfalls')">
+        <span class="pl-dot"></span>
+        <div class="pl-body"><div class="pl-name">8. Common pitfalls</div></div>
+      </div>
+      <div class="pl-item is-locked" style="cursor:pointer" onclick="imiToast('Complete all lessons to unlock the Assessment quiz')">
+        <span class="pl-dot"></span>
+        <div class="pl-body"><div class="pl-name">9. Assessment quiz</div></div>
+      </div>
+
+      <div class="nextup-card">
+        <div class="nu-label">Next up</div>
+        <div class="nu-title">5. Mapping in practice</div>
+        <div class="nu-meta">4 min · part of CDMP path</div>
+      </div>
+      <a class="btn btn-primary btn-sm" href="player.html" style="width:100%;justify-content:center;margin-top:14px">Continue learning →</a>
+    </div>
+  </aside>
+</div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+<script>
+</body>
+</html>

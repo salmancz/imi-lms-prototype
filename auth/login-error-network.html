@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login error: network · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body {
+    background: var(--bg);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Auth top bar */
+  .auth-top {
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .auth-brand img {
+    height: 30px;
+    width: auto;
+    display: block;
+  }
+  .auth-brand-text {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  /* Centered layout */
+  .auth-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  .auth-main {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  /* Error card */
+  .err-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 48px 44px 44px;
+    text-align: center;
+  }
+
+  /* Icon circle */
+  .err-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 1px solid rgba(184, 101, 78, 0.22);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 24px;
+    color: var(--c-clay);
+  }
+  .err-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Eyebrow */
+  .err-eyebrow {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+
+  /* Heading */
+  .err-title {
+    font-family: var(--font-sans);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .err-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  /* Body copy */
+  .err-copy {
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0 auto 28px;
+  }
+
+  /* Divider */
+  .err-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 0 0 24px;
+  }
+
+  /* Retry button */
+  .btn-full {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  /* Hint text */
+  .err-hint {
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+    margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+
+<header class="auth-top">
+  <a class="auth-brand" href="login.html">
+    <img src="../img/imi-logo.png" alt="IMI">
+  </a>
+</header>
+
+<div class="auth-wrap">
+  <main class="auth-main">
+    <div class="err-card">
+
+      <div class="err-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="1" y1="1" x2="23" y2="23"/>
+          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+          <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+          <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+          <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <line x1="12" y1="20" x2="12.01" y2="20"/>
+        </svg>
+      </div>
+
+      <div class="err-eyebrow">Connection</div>
+
+      <h1 class="err-title">Connection <em>lost</em></h1>
+
+      <p class="err-copy">We could not reach IMI. Check your internet connection and try again.</p>
+
+      <div class="err-divider"></div>
+
+      <button class="btn btn-primary btn-full" id="retry-net-btn" onclick="retryConnection()">Retry</button>
+
+      <p class="err-hint">If this keeps happening, your network may be blocking the IMI app.</p>
+
+    </div>
+  </main>
+</div>
+
+<script>
+function retryConnection() {
+  var btn = document.getElementById('retry-net-btn');
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  if (!navigator.onLine) {
+    btn.disabled = false;
+    btn.textContent = 'Retry';
+    if (window.imiToast) window.imiToast('Still offline. Check your network and try again.');
+    return;
+  }
+  if (window.imiToast) window.imiToast('Connection detected. Taking you back to sign in...');
+  setTimeout(function() { window.location.href = 'login.html'; }, 800);
+}
+window.addEventListener('online', function() {
+  var btn = document.getElementById('retry-net-btn');
+  if (btn) { btn.disabled = false; btn.textContent = 'Retry'; }
+  if (window.imiToast) window.imiToast('You are back online.');
+});
+window.addEventListener('offline', function() {
+  if (window.imiToast) window.imiToast('No network connection detected.');
+});
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

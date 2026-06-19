@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CD Settings · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* Settings page layout */
+  .settings-wrap { max-width: 760px; display: flex; flex-direction: column; gap: 16px; }
+
+  /* Section card */
+  .set-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .set-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .set-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-sm);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  .set-card-icon svg { width: 17px; height: 17px; }
+  .set-card-icon.t-honey { background: var(--c-honey-wash); color: var(--c-honey); border-color: rgba(201,155,46,0.25); }
+  .set-card-icon.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage);  border-color: rgba(126,155,111,0.25); }
+  .set-card-icon.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay);  border-color: rgba(184,101,78,0.25); }
+  .set-card-icon.t-ink   { background: var(--surface-3);    color: var(--ink);     border-color: var(--line-strong); }
+  .set-card-icon.t-danger { background: var(--c-danger-wash); color: var(--c-danger); border-color: rgba(193,42,28,0.20); }
+
+  .set-card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .set-card-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+
+  .set-card-body { padding: 20px 24px 24px; }
+
+  /* Field grid */
+  .set-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 20px;
+  }
+  @media (max-width: 720px) { .set-grid-2 { grid-template-columns: 1fr; } }
+
+  .set-field { margin-bottom: 0; }
+
+  .input { height: 36px; }
+  .input:disabled {
+    background: var(--paper-2);
+    color: var(--ink-mute);
+    cursor: not-allowed;
+  }
+
+  /* Field hint */
+  .field-hint {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    margin-top: 7px;
+    display: block;
+    line-height: 1.45;
+  }
+
+  /* Section divider inside card body */
+  .set-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 18px 0;
+  }
+
+  /* Toggle row */
+  .set-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .set-row-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .set-row-hint {
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    line-height: 1.45;
+  }
+
+  /* Toggle switch */
+  .toggle-group { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .toggle-state {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .toggle {
+    width: 40px;
+    height: 22px;
+    background: var(--ink);
+    border-radius: var(--r-pill);
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+  }
+
+  /* Checkbox rows */
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+  }
+  .check-row:last-child { border-bottom: none; }
+  .check-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* Select wrapper */
+  .set-select-wrap { position: relative; }
+  .set-select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid var(--ink-mute);
+    border-bottom: 1.5px solid var(--ink-mute);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  .set-select-wrap select.input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    cursor: pointer;
+    height: 36px;
+  }
+
+  /* Security info rows */
+  .set-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0;
+  }
+  .set-info-row:not(:last-child) { border-bottom: 1px solid var(--line); }
+  .set-info-label {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .set-info-label strong { color: var(--ink); font-weight: 600; }
+
+  /* Toggle off state */
+  .toggle.off {
+    background: var(--line-strong);
+  }
+  .toggle.off::after {
+    right: auto; left: 3px;
+  }
+  /* Toast */
+  .set-toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--ink); color: var(--paper); border-radius: var(--r-pill);
+    padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+    box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+    transition: opacity 0.22s, transform 0.22s; z-index: 999; white-space: nowrap;
+  }
+  .set-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Danger section */
+  .set-card.danger-zone { border-color: rgba(193,42,28,0.22); }
+  .set-card.danger-zone .set-card-head { border-bottom-color: rgba(193,42,28,0.14); background: var(--c-danger-wash); }
+  .danger-copy { font-size: 13px; color: var(--ink-soft); line-height: 1.6; flex: 1; }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="content-dev-home.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="content-dev-home.html" class="sidebar-link" data-nav="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-courses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>My Courses</span><span class="badge">12</span>
+      </a>
+      <a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Drafts</span><span class="badge">3</span>
+      </a>
+      <a href="content-dev-home.html#published" class="sidebar-link" data-nav="published">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Published</span><span class="badge">9</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>SME Reviews</span><span class="badge">2</span>
+      </a>
+      <a href="cd-feedback.html#qa" class="sidebar-link" data-nav="qa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        <span>Learner Q&amp;A</span><span class="badge">8</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="../course-builder/cb-reports.html" class="sidebar-link" data-nav="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Analytics</span>
+      </a>
+      <a href="cd-settings.html" class="sidebar-link is-active" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- Page header -->
+    <div class="page-head" style="grid-template-columns:1fr;margin-bottom:28px">
+      <div>
+        <div class="eyebrow">Content Developer &middot; Personal account settings</div>
+        <h1 class="page-title">Account <em>settings</em></h1>
+        <p class="page-sub">Manage your account, preferences and security.</p>
+      </div>
+    </div>
+
+    <div class="settings-wrap">
+
+      <!-- Account -->
+      <div class="set-card">
+        <div class="set-card-head">
+          <div class="set-card-icon t-honey">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="set-card-title">Account</div>
+          </div>
+        </div>
+        <div class="set-card-body">
+          <div class="set-grid-2">
+            <div class="field set-field">
+              <label>Full name</label>
+              <input class="input" value="Aisha Khalfan">
+            </div>
+            <div class="field set-field">
+              <label>Email</label>
+              <input class="input" value="aisha.khalfan@imi.om" disabled>
+            </div>
+            <div class="field set-field">
+              <label>Display name (certificate)</label>
+              <input class="input" value="Aisha Khalfan Al-Rawahi">
+            </div>
+            <div class="field set-field">
+              <label>Language</label>
+              <input class="input" value="English (EN)">
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="save-account-btn" style="margin-top:20px" type="button" onclick="saveAccountSettings(this)">Save changes</button>
+        </div>
+      </div>
+
+      <!-- Notification preferences -->
+      <div class="set-card">
+        <div class="set-card-head">
+          <div class="set-card-icon t-sage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </div>
+          <div>
+            <div class="set-card-title">Notification preferences</div>
+          </div>
+        </div>
+        <div class="set-card-body" style="padding-top:12px;padding-bottom:12px">
+          <label class="check-row">
+            <input type="checkbox" checked>
+            Email weekly digest
+          </label>
+          <label class="check-row">
+            <input type="checkbox" checked>
+            SME feedback received (email + in-app)
+          </label>
+          <label class="check-row">
+            <input type="checkbox" checked>
+            Course approved or rejected (in-app)
+          </label>
+          <label class="check-row">
+            <input type="checkbox">
+            Platform announcements
+          </label>
+        </div>
+      </div>
+
+      <!-- Authoring preferences -->
+      <div class="set-card">
+        <div class="set-card-head">
+          <div class="set-card-icon t-ink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div>
+            <div class="set-card-title">Authoring preferences</div>
+          </div>
+        </div>
+        <div class="set-card-body">
+          <div class="field set-field" style="margin-bottom:0">
+            <label>Default course visibility</label>
+            <div class="set-select-wrap">
+              <select class="input">
+                <option>Draft (private)</option>
+              <option>Option one</option><option>Option two</option></select>
+            </div>
+            <span class="field-hint">New courses start as a private draft. Courses go live only after SME review and approval.</span>
+          </div>
+
+          <div class="set-divider"></div>
+
+          <div class="set-row">
+            <div>
+              <div class="set-row-label">Auto-save drafts</div>
+              <div class="set-row-hint">Save lesson content every 60 seconds while editing</div>
+            </div>
+            <div class="toggle-group">
+              <span class="toggle-state" id="autosave-label">On</span>
+              <div class="toggle" id="autosave-toggle" role="switch" aria-checked="true" tabindex="0" onclick="toggleSwitch('autosave-toggle','autosave-label')" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSwitch('autosave-toggle','autosave-label')" style="cursor:pointer;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="set-card">
+        <div class="set-card-head">
+          <div class="set-card-icon t-clay">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div>
+            <div class="set-card-title">Security</div>
+          </div>
+        </div>
+        <div class="set-card-body" style="padding-top:12px;padding-bottom:12px">
+          <div class="set-info-row">
+            <span class="set-info-label">Active sessions: <strong>2</strong> (Muscat &middot; Chrome, Mobile &middot; Safari)</span>
+            <button class="btn btn-ghost btn-sm" onclick="location.href='../profile/active-sessions.html'">View all</button>
+          </div>
+          <div class="set-info-row">
+            <span class="set-info-label">MFA via OTP: <strong>Required</strong> (enforced for content authoring access)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="set-card danger-zone">
+        <div class="set-card-head">
+          <div class="set-card-icon t-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </div>
+          <div>
+            <div class="set-card-title" style="color:var(--c-danger)">Danger zone</div>
+          </div>
+        </div>
+        <div class="set-card-body">
+          <div class="set-row" style="gap:24px;align-items:flex-start">
+            <span class="danger-copy">Delete account: all data permanently removed in 30 days. Courses you authored remain in the catalogue.</span>
+            <button class="btn btn-danger btn-sm" onclick="location.href='../profile/lifecycle-self-deletion.html'">Request deletion</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div id="set-toast" class="set-toast" aria-live="polite"></div>
+<script>
+  function showSetToast(msg) {
+    var t = document.getElementById('set-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('visible');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() { t.classList.remove('visible'); }, 2400);
+  }
+
+  function toggleSwitch(toggleId, labelId) {
+    var toggle = document.getElementById(toggleId);
+    var label  = document.getElementById(labelId);
+    if (!toggle) return;
+    var isOn = toggle.getAttribute('aria-checked') === 'true';
+    toggle.setAttribute('aria-checked', isOn ? 'false' : 'true');
+    toggle.classList.toggle('off', isOn);
+    if (label) label.textContent = isOn ? 'Off' : 'On';
+    showSetToast('Auto-save ' + (isOn ? 'disabled.' : 'enabled.'));
+  }
+
+  function saveAccountSettings(btn) {
+    var orig = btn.textContent;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+    setTimeout(function() {
+      btn.textContent = orig;
+      btn.disabled = false;
+      showSetToast('Settings saved.');
+    }, 700);
+  }
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

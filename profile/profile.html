@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .profile-wrap { max-width: 880px; margin: 0 auto; }
+
+  /* profile header */
+  .pf-head { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 28px; }
+  .pf-photo {
+    width: 104px; height: 104px; border-radius: 50%; flex-shrink: 0;
+    background: var(--c-honey-wash);
+    display: grid; place-items: center; overflow: hidden;
+    border: 1px solid var(--line-strong);
+  }
+  .pf-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pf-id { flex: 1; min-width: 0; padding-top: 6px; }
+  .pf-name {
+    font-family: var(--font-sans); font-size: 33px; font-weight: 800;
+    letter-spacing: -0.025em; line-height: 1.1; color: var(--ink); margin-bottom: 6px;
+  }
+  .pf-name em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .pf-role { font-size: 15px; color: var(--ink-soft); }
+
+  /* completion ring (minimal conic variant) */
+  .pf-completion-ring-wrap {
+    display: flex; align-items: center; gap: 20px;
+  }
+  .pf-conic-ring {
+    position: relative;
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--c-sage) 0deg calc(var(--pct, 94) * 3.6deg),
+      var(--surface-3) calc(var(--pct, 94) * 3.6deg) 360deg
+    );
+    flex-shrink: 0;
+  }
+  .pf-conic-ring::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .pf-conic-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1;
+  }
+  @keyframes pf-pct-pop { 0% { opacity: 0; transform: scale(0.8); } 60% { transform: scale(1.08); } 100% { opacity: 1; transform: scale(1); } }
+  .pf-conic-pct {
+    font-family: var(--font-label);
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--c-sage-text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    animation: pf-pct-pop 0.55s var(--tn) both;
+  }
+  .pf-completion-copy { flex: 1; min-width: 0; }
+  .pf-completion-h { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .pf-completion-note { font-size: 13px; color: var(--ink-mute); line-height: 1.5; }
+  @keyframes pf-pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+  .pf-completion-note .pf-note-tag {
+    display: inline-block;
+    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--c-sage-text); background: var(--c-sage-wash);
+    padding: 2px 7px; border-radius: 100px;
+    margin-right: 5px;
+    animation: pf-pulse 2s ease-in-out infinite;
+  }
+
+  /* earned certifications list */
+  .pf-cert-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+  }
+  .pf-cert-row:last-child { border-bottom: none; }
+  .pf-cert-row .cert-name { color: var(--ink); }
+  .pf-cert-row .cert-name strong { font-weight: 700; }
+  .pf-cert-row.is-progress .cert-name { color: var(--ink-mute); }
+  .pf-cert-date {
+    font-family: var(--font-label); font-size: 12px; letter-spacing: 0.04em;
+    color: var(--ink-mute); white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* detail field grid */
+  .pf-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; }
+  .pf-field { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .pf-field.full { grid-column: 1 / -1; }
+  .pf-field.last { border-bottom: none; }
+  .pf-field-label {
+    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 4px;
+  }
+  .pf-field-val { font-size: 14.5px; font-weight: 500; color: var(--ink); }
+  .pf-field-val.empty { font-weight: 400; color: var(--ink-faint); }
+
+  .pf-card-label {
+    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="../learning/dashboard.html">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Learning</span>
+  </a>
+  <div class="search"><input placeholder="Search courses, lessons, paths..." onkeydown="if(event.key==='Enter')location.href='../learning/search-results.html'"></div>
+  <div class="topbar-actions">
+    <a class="icon-btn" href="notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></a>
+    <a class="icon-btn" href="help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <a href="profile.html" class="avatar-ring" style="--pct:94" title="Profile"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-SA" alt="SA"></div><span class="ring-pct">94%</span></a>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+<div class="sidebar-section">
+<a href="../learning/dashboard.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+<a href="../learning/my-learning.html" class="sidebar-link" data-nav="my-learning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Learning</span><span class="badge">8</span></a>
+<a href="../learning/catalog.html" class="sidebar-link" data-nav="browse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>Browse</span></a>
+<a href="../learning/wishlist.html" class="sidebar-link" data-nav="wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>Wishlist</span><span class="badge">12</span></a>
+<a href="../learning/certificate.html" class="sidebar-link" data-nav="completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Course Completed</span><span class="badge">5</span></a>
+</div>
+<div class="sidebar-section">
+<div class="sidebar-label">ACCOUNT</div>
+<a href="settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+<a href="../auth/login.html" class="sidebar-link" data-nav="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+</div>
+</aside>
+  <main>
+<div class="profile-wrap">
+
+  <div class="eyebrow">User portal</div>
+  <h1 class="page-title" style="margin-bottom:28px">Profile <em>view</em></h1>
+
+  <!-- Profile header: avatar + name + role + edit -->
+  <div class="pf-head">
+    <div class="pf-photo"><img src="https://i.pravatar.cc/200?u=imi-salman-ali" alt="Salman Ali"></div>
+    <div class="pf-id">
+      <div class="pf-name">Salman Ali</div>
+      <div class="pf-role">Designer-developer &middot; 22 yrs</div>
+    </div>
+    <a href="profile-edit-v2.html" class="btn btn-ghost btn-sm" style="flex-shrink:0">Edit profile</a>
+  </div>
+
+  <div class="col gap-lg">
+
+    <!-- Profile completion -->
+    <div class="card">
+      <div class="card-body">
+        <div class="pf-card-label">Profile completion</div>
+        <div class="pf-completion-ring-wrap" style="margin-top:14px">
+          <div class="pf-conic-ring" style="--pct:94">
+            <div class="pf-conic-center">
+              <span class="pf-conic-pct">94%</span>
+            </div>
+          </div>
+          <div class="pf-completion-copy">
+            <div class="pf-completion-h">Almost there</div>
+            <p class="pf-completion-note"><span class="pf-note-tag">1 step left</span>Add a Personal Site / Blog link to reach 100% and unlock your Course Completed proofs.</p>
+            <a href="profile-edit-v2.html#sec-links" class="btn btn-primary btn-sm" style="margin-top:12px;display:inline-flex;">Complete profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Earned certifications -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Earned <em>certifications</em></div>
+        <a class="card-link" href="../learning/certificate.html">VIEW ALL &rarr;</a>
+      </div>
+      <div class="card-body">
+        <div class="pf-cert-row">
+          <span class="cert-name"><strong>CIP</strong> &middot; Certified Information Pro</span>
+          <span class="pf-cert-date">Apr 2026</span>
+        </div>
+        <div class="pf-cert-row">
+          <span class="cert-name"><strong>ERM</strong> &middot; Electronic Records Specialist</span>
+          <span class="pf-cert-date">Jan 2026</span>
+        </div>
+        <div class="pf-cert-row is-progress">
+          <span class="cert-name">IGP &middot; Information Governance Pro &middot; in progress</span>
+          <span class="pf-cert-date">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal details -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">Personal</div></div>
+      <div class="card-body">
+        <div class="pf-fields">
+          <div class="pf-field"><div class="pf-field-label">First Name</div><div class="pf-field-val">Salman</div></div>
+          <div class="pf-field"><div class="pf-field-label">Last Name</div><div class="pf-field-val">Ali</div></div>
+          <div class="pf-field"><div class="pf-field-label">Email</div><div class="pf-field-val">salman@webinnoventix.com</div></div>
+          <div class="pf-field"><div class="pf-field-label">Date of Birth</div><div class="pf-field-val">11 Apr 1998</div></div>
+          <div class="pf-field"><div class="pf-field-label">Gender</div><div class="pf-field-val">Male</div></div>
+          <div class="pf-field"><div class="pf-field-label">City</div><div class="pf-field-val">Muscat</div></div>
+          <div class="pf-field"><div class="pf-field-label">Country</div><div class="pf-field-val">Oman</div></div>
+          <div class="pf-field"><div class="pf-field-label">Phone</div><div class="pf-field-val empty">Not provided</div></div>
+          <div class="pf-field full last"><div class="pf-field-label">Preferred Language</div><div class="pf-field-val">English</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Professional details -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">Professional</div></div>
+      <div class="card-body">
+        <div class="pf-fields">
+          <div class="pf-field"><div class="pf-field-label">Current Role</div><div class="pf-field-val">Information Architect</div></div>
+          <div class="pf-field"><div class="pf-field-label">Experience Level</div><div class="pf-field-val">Mid (3-7 yrs)</div></div>
+          <div class="pf-field full"><div class="pf-field-label">Industry</div><div class="pf-field-val">Technology</div></div>
+          <div class="pf-field full last"><div class="pf-field-label">Learning Interests</div><div class="pf-field-val">Information governance, Records management, Data privacy</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certificate name -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">Course Completed proof</div></div>
+      <div class="card-body">
+        <div class="pf-fields">
+          <div class="pf-field last"><div class="pf-field-label">Name on your Course Completed proof</div><div class="pf-field-val">Salman Ali</div></div>
+          <div class="pf-field last"><div class="pf-field-label">Title / Prefix</div><div class="pf-field-val empty">Not set</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">Links</div></div>
+      <div class="card-body">
+        <div class="pf-fields">
+          <div class="pf-field full last"><div class="pf-field-label">Personal Site / Blog Links</div><div class="pf-field-val empty">Not provided</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents -->
+    <div class="card">
+      <div class="card-head"><div class="card-title">Documents</div></div>
+      <div class="card-body">
+        <div class="pf-fields">
+          <div class="pf-field full"><div class="pf-field-label">CV / Resume</div><div class="pf-field-val">cv-salman-ali.pdf</div></div>
+          <div class="pf-field full last"><div class="pf-field-label">Externally Earned Certificates + Portfolio</div><div class="pf-field-val empty">Not uploaded</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

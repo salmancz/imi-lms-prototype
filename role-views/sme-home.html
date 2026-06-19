@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SME Review Home · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 700px)  { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-accent-bar {
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .wait-cell {
+    font-family: var(--font-label);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .recent-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .recent-status .when {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  .domain-tag {
+    font-family: var(--font-label);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<header class="topbar">
+  <a href="sme-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Review</span>
+  </a>
+  <div class="search"><input placeholder="Search review queue..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='../course-builder/sme-queue.html?q='+encodeURIComponent(this.value.trim())"></div>
+  <div class="topbar-actions">
+    <span class="role-pill">SME Reviewer</span>
+    <button class="icon-btn" title="Notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      <span class="dot"></span>
+    </button>
+    <button class="icon-btn" title="Help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
+    <div class="avatar-ring" style="--pct:68">
+      <div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div>
+      <span class="ring-pct">68%</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="../course-builder/sme-queue.html#queue" class="sidebar-link is-active" data-nav="queue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Queue</span>
+        <span class="badge">5</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#in-progress" class="sidebar-link" data-nav="in-progress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+        <span>In progress</span>
+        <span class="badge">1</span>
+      </a>
+      <a href="../course-builder/sme-queue.html#reviewed" class="sidebar-link" data-nav="reviewed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Reviewed</span>
+        <span class="badge">47</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Domain</div>
+      <a href="../course-builder/sme-queue.html?domain=km" class="sidebar-link" data-nav="km">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>KM Standards</span>
+      </a>
+      <a href="../course-builder/sme-queue.html?domain=records" class="sidebar-link" data-nav="records">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Records Mgmt</span>
+      </a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a href="sme-reports.html" class="sidebar-link" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        <span>Reports</span>
+      </a>
+      <a href="sme-settings.html" class="sidebar-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- Page header -->
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">SME Review Home</div>
+        <h1 class="page-title">Review <em>queue</em></h1>
+        <p class="page-sub">Subject Matter Expert &middot; Dr. Faris Al-Maamari. Courses in your domain expertise, awaiting your review.</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost" type="button" id="filter-toggle-btn" onclick="toggleFilter()">Filter</button>
+        <a class="btn btn-primary" href="../course-builder/sme-review.html">Start next &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Filter panel (hidden by default) -->
+    <div id="filter-panel" style="display:none;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 20px;margin-bottom:22px">
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+        <div class="field" style="margin:0">
+          <label>Domain</label>
+          <select class="input" id="filt-domain" style="width:160px" onchange="applyFilters()">
+            <option value="">All domains</option>
+            <option value="Knowledge Mgmt">Knowledge Mgmt</option>
+            <option value="Records Mgmt">Records Mgmt</option>
+            <option value="Document Mgmt">Document Mgmt</option>
+            <option value="Content Mgmt">Content Mgmt</option>
+            <option value="Data Mgmt">Data Mgmt</option>
+          </select>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Wait time</label>
+          <select class="input" id="filt-wait" style="width:160px" onchange="applyFilters()">
+            <option value="">Any</option>
+            <option value="urgent">Urgent (&gt;3 days)</option>
+            <option value="today">Today</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="clearFilters()">Clear filters</button>
+      </div>
+      <div id="filter-count" style="margin-top:10px;font-family:var(--font-label);font-size:12px;color:var(--ink-mute)"></div>
+    </div>
+
+    <!-- KPI stat strip -->
+    <div class="eyebrow" style="margin-bottom:12px">Assigned to me</div>
+    <div class="stat-strip">
+      <div class="stat-flat">
+        <div class="stat-accent-bar" style="background:var(--c-clay)"></div>
+        <div class="stat-label">Awaiting Review</div>
+        <div class="stat-value">
+          <span>4</span>
+          <span class="stat-dot" style="background:var(--c-clay)"></span>
+        </div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-accent-bar" style="background:var(--c-honey)"></div>
+        <div class="stat-label">In Progress</div>
+        <div class="stat-value">
+          <span>2</span>
+          <span class="stat-dot" style="background:var(--c-honey)"></span>
+        </div>
+      </div>
+      <div class="stat-flat" onclick="location.href='sme-certificates.html'" style="cursor:pointer">
+        <div class="stat-accent-bar" style="background:var(--c-sage)"></div>
+        <div class="stat-label">Approved (all-time)</div>
+        <div class="stat-value">
+          <span>38</span>
+          <span class="stat-dot" style="background:var(--c-sage)"></span>
+        </div>
+      </div>
+      <div class="stat-flat">
+        <div class="stat-accent-bar" style="background:var(--c-honey)"></div>
+        <div class="stat-label">Avg turnaround</div>
+        <div class="stat-value">
+          <span>1.2</span><span style="font-size:13px;font-weight:400;color:var(--ink-mute)"> day</span>
+        </div>
+      </div>
+      <div class="stat-flat" style="border:1.5px solid var(--line-strong)">
+        <div class="stat-accent-bar" style="background:var(--ink-mute)"></div>
+        <div class="stat-label">SLA target</div>
+        <div class="stat-value">
+          <span>3</span><span style="font-size:13px;font-weight:400;color:var(--ink-mute)"> days</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-column layout: queue table + recently reviewed -->
+    <div class="grid-2">
+      <div class="col gap-lg">
+
+        <!-- Review queue table -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Review queue <em>(assigned to me)</em></div>
+            <span class="chip">5 courses</span>
+          </div>
+          <div class="card-body flush">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Submitted by</th>
+                  <th>Domain</th>
+                  <th>Waiting</th>
+                  <th>Priority</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="queue-tbody">
+                <tr class="queue-tbl-row" data-domain="Knowledge Mgmt" data-wait="6" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+                  <td>Knowledge Mapping Fundamentals</td>
+                  <td>Aisha Khalfan</td>
+                  <td><span class="chip">Knowledge Mgmt</span></td>
+                  <td><span class="wait-cell">6 days</span></td>
+                  <td><span class="chip t-clay dot">High</span></td>
+                  <td><a class="btn btn-sm btn-primary" href="../course-builder/sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a></td>
+                </tr>
+                <tr class="queue-tbl-row" data-domain="Records Mgmt" data-wait="2" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+                  <td>Records Lifecycle Management</td>
+                  <td>Khalid Rashid</td>
+                  <td><span class="chip">Records Mgmt</span></td>
+                  <td><span class="wait-cell">2 days</span></td>
+                  <td><span class="chip t-honey dot">Medium</span></td>
+                  <td><a class="btn btn-sm btn-ghost" href="../course-builder/sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a></td>
+                </tr>
+                <tr class="queue-tbl-row" data-domain="Document Mgmt" data-wait="1" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+                  <td>Document Control Essentials</td>
+                  <td>Noor Al-Habsi</td>
+                  <td><span class="chip">Document Mgmt</span></td>
+                  <td><span class="wait-cell">1 day</span></td>
+                  <td><span class="chip">Normal</span></td>
+                  <td><a class="btn btn-sm btn-ghost" href="../course-builder/sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a></td>
+                </tr>
+                <tr class="queue-tbl-row" data-domain="Content Mgmt" data-wait="1" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+                  <td>Content Taxonomy Basics</td>
+                  <td>Sara Al-Zadjali</td>
+                  <td><span class="chip">Content Mgmt</span></td>
+                  <td><span class="wait-cell">1 day</span></td>
+                  <td><span class="chip">Normal</span></td>
+                  <td><a class="btn btn-sm btn-ghost" href="../course-builder/sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a></td>
+                </tr>
+                <tr class="queue-tbl-row" data-domain="Data Mgmt" data-wait="0" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+                  <td>Data Quality Fundamentals</td>
+                  <td>Aisha Khalfan</td>
+                  <td><span class="chip">Data Mgmt</span></td>
+                  <td><span class="wait-cell">&lt;1 day</span></td>
+                  <td><span class="chip">Normal</span></td>
+                  <td><a class="btn btn-sm btn-ghost" href="../course-builder/sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right rail -->
+      <div class="col gap-lg">
+
+        <!-- Recently reviewed -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Recently <em>reviewed</em></div>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Information Architecture Overview</div>
+                <div class="list-sub">Reviewed &middot; Aisha Khalfan</div>
+              </div>
+              <div class="recent-status">
+                <span class="chip t-sage dot">Approved</span>
+                <span class="when">3d ago</span>
+              </div>
+            </div>
+            <div class="list-row" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+              <div class="list-icon t-clay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Data Governance: Module 2</div>
+                <div class="list-sub">Reviewed &middot; Khalid Rashid</div>
+              </div>
+              <div class="recent-status">
+                <span class="chip t-clay dot">Rejected</span>
+                <span class="when">5d ago</span>
+              </div>
+            </div>
+            <div class="list-row" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Knowledge Systems Intro</div>
+                <div class="list-sub">Reviewed &middot; Noor Al-Habsi</div>
+              </div>
+              <div class="recent-status">
+                <span class="chip t-sage dot">Approved</span>
+                <span class="when">6d ago</span>
+              </div>
+            </div>
+            <div class="list-row" style="cursor:pointer" onclick="location.href='../course-builder/sme-review.html'">
+              <div class="list-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Records Audit Basics</div>
+                <div class="list-sub">Reviewed &middot; Sara Al-Zadjali</div>
+              </div>
+              <div class="recent-status">
+                <span class="chip">Rejected</span>
+                <span class="when">8d ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick summary -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">My <em>domains</em></div>
+          </div>
+          <div class="card-body flush">
+            <div class="list-row">
+              <div class="list-icon t-honey">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">KM Standards</div>
+                <div class="list-sub">3 pending &middot; 22 reviewed total</div>
+              </div>
+              <a class="btn btn-sm btn-ghost" href="../course-builder/sme-queue.html">View &rarr;</a>
+            </div>
+            <div class="list-row">
+              <div class="list-icon t-sage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div class="list-body">
+                <div class="list-title">Records Mgmt</div>
+                <div class="list-sub">2 pending &middot; 16 reviewed total</div>
+              </div>
+              <a class="btn btn-sm btn-ghost" href="../course-builder/sme-queue.html">View &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<style>
+  .imi-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.02em;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;white-space:nowrap}
+  .imi-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .imi-toast.t-sage{background:var(--c-sage)}
+  .imi-toast.t-clay{background:var(--c-clay)}
+</style>
+<div id="imi-toast" class="imi-toast"></div>
+<script>
+function showToast(msg,type,duration){var t=document.getElementById('imi-toast');t.textContent=msg;t.className='imi-toast'+(type?' '+type:'');requestAnimationFrame(function(){t.classList.add('show')});setTimeout(function(){t.classList.remove('show')},duration||3000)}
+
+var filterVisible = false;
+function toggleFilter() {
+  filterVisible = !filterVisible;
+  var panel = document.getElementById('filter-panel');
+  panel.style.display = filterVisible ? 'block' : 'none';
+  var btn = document.getElementById('filter-toggle-btn');
+  btn.classList.toggle('is-active', filterVisible);
+}
+
+function applyFilters() {
+  var domain = document.getElementById('filt-domain').value;
+  var wait = document.getElementById('filt-wait').value;
+  var rows = document.querySelectorAll('.queue-tbl-row');
+  var shown = 0;
+  rows.forEach(function(r) {
+    var domainOk = !domain || r.dataset.domain === domain;
+    var w = parseInt(r.dataset.wait, 10);
+    var waitOk = !wait || (wait === 'urgent' && w >= 3) || (wait === 'today' && w < 1);
+    var show = domainOk && waitOk;
+    r.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  var countEl = document.getElementById('filter-count');
+  if (countEl) countEl.textContent = 'Showing ' + shown + ' of ' + rows.length + ' items';
+}
+
+function clearFilters() {
+  var domain = document.getElementById('filt-domain');
+  var wait = document.getElementById('filt-wait');
+  if (domain) domain.selectedIndex = 0;
+  if (wait) wait.selectedIndex = 0;
+  document.querySelectorAll('.queue-tbl-row').forEach(function(r) { r.style.display = ''; });
+  var countEl = document.getElementById('filter-count');
+  if (countEl) countEl.textContent = '';
+}
+</script>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>

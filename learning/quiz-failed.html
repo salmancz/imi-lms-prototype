@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz results (fail) · IMI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  body { background: var(--bg); margin: 0; }
+
+  /* ── Quiz chrome bar ── */
+  .qbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+    height: 52px;
+    background: rgba(250, 246, 240, 0.92);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .ad-strip + .qbar { top: 36px; }
+  .qbar-l { display: flex; align-items: center; gap: 11px; }
+  .qbar-sep { color: var(--ink-faint); font-size: 16px; }
+  .qbar-title {
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: .10em;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .qbar-r { display: flex; align-items: center; gap: 18px; }
+  .qbar-prog {
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .qbar-track {
+    width: 160px;
+    height: 5px;
+    border-radius: var(--r-pill);
+    background: var(--surface-3);
+    overflow: hidden;
+  }
+  .qbar-fill {
+    height: 100%;
+    border-radius: var(--r-pill);
+    background: var(--accent);
+  }
+
+  /* ── page body ── */
+  .qmain {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── score ring (flat, no gradient) ── */
+  .score-ring {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    background: var(--c-clay-wash);
+    border: 4px solid var(--accent);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    place-items: center;
+    margin-bottom: 28px;
+  }
+  .score-ring .score-inner { text-align: center; }
+  .score-ring .score-val {
+    font-family: var(--font-sans);
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--accent-deep);
+    line-height: 1;
+    display: block;
+  }
+  .score-ring .score-tag {
+    font-family: var(--font-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-top: 5px;
+  }
+
+  /* ── result card ── */
+  .result-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    padding: 40px 44px 36px;
+    width: 560px;
+    max-width: 100%;
+    text-align: center;
+  }
+  .result-eyebrow {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .result-title {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .result-title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .result-body {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 440px;
+    margin: 0 auto 28px;
+  }
+  .result-body strong { color: var(--ink); font-weight: 700; }
+
+  /* ── divider ── */
+  .result-rule {
+    height: 1px;
+    background: var(--line);
+    margin: 0 0 22px;
+  }
+
+  /* ── stat row ── */
+  .score-stat-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .score-stat { text-align: center; }
+  .score-stat .ss-value {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-stat .ss-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .score-stat.t-warn .ss-value { color: var(--accent-deep); }
+  .score-stat.t-ok  .ss-value { color: var(--c-sage-text); }
+
+  /* ── steps card ── */
+  .steps-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .steps-label {
+    font-family: var(--font-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+  }
+  .steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .steps-list li {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .steps-list li .arr {
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps-list li strong { color: var(--ink); font-weight: 700; }
+
+  /* ── actions ── */
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .result-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 18px;
+    font-size: 14px;
+  }
+
+  /* ── footer note ── */
+  .result-foot {
+    font-family: var(--font-label);
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+    margin-top: 20px;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .result-card { padding: 28px 20px 24px; }
+    .score-stat-row { gap: 24px; }
+    .qbar { padding: 0 16px; }
+    .qmain { padding: 32px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ad strip -->
+<div class="ad-strip">
+  <span class="ad-tag">Sponsored</span>
+  <div class="ad-body">
+    <strong>Ad placeholder</strong>
+    <span class="sep">&middot;</span>
+    <span class="copy">Featured course, partner promo, or new program launch</span>
+  </div>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
+</div>
+
+<!-- Quiz chrome bar -->
+<header class="qbar">
+  <div class="qbar-l">
+    <a href="dashboard.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+      <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+      <span class="brand-text">IMI</span>
+    </a>
+    <span class="qbar-sep">&middot;</span>
+    <span class="qbar-title">CDMP Practitioner Assessment</span>
+  </div>
+  <div class="qbar-r">
+    <span class="qbar-prog">Submitted &middot; 10 of 10</span>
+    <div class="qbar-track">
+      <div class="qbar-fill" style="width:100%"></div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="location.href='my-learning.html'">Exit quiz</button>
+  </div>
+</header>
+
+<main class="qmain">
+  <!-- Score ring -->
+  <div class="score-ring">
+    <div class="score-inner">
+      <span class="score-val">50%</span>
+      <span class="score-tag">Below pass</span>
+    </div>
+  </div>
+
+  <!-- Main result card -->
+  <div class="result-card">
+    <div class="result-eyebrow">Assessment result</div>
+    <h1 class="result-title"><em>Almost</em> there</h1>
+    <p class="result-body">You answered <strong>5 of 10</strong> correctly. Review the lessons and try again. You have <strong>2 of 3 attempts</strong> remaining for this course.</p>
+
+    <!-- Score stats -->
+    <div class="score-stat-row">
+      <div class="score-stat t-warn">
+        <div class="ss-value">50%</div>
+        <div class="ss-label">Your score</div>
+      </div>
+      <div class="score-stat t-ok">
+        <div class="ss-value">2 left</div>
+        <div class="ss-label">Attempts remaining</div>
+      </div>
+    </div>
+
+    <!-- Suggested next steps -->
+    <div class="steps-card">
+      <div class="steps-label">Suggested next steps</div>
+      <ul class="steps-list">
+        <li><span class="arr">&rarr;</span><span>Re-watch <strong>Lesson 3: Knowledge audits</strong> (you missed 2 questions here)</span></li>
+        <li><span class="arr">&rarr;</span><span>Re-watch <strong>Lesson 5: Mapping in practice</strong> (you missed 1 question here)</span></li>
+        <li><span class="arr">&rarr;</span><span>Try the assessment again when ready</span></li>
+      </ul>
+    </div>
+
+    <!-- Actions -->
+    <div class="result-actions">
+      <a class="btn btn-primary" href="player.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Re-watch suggested lessons
+      </a>
+      <a class="btn btn-ghost" href="quiz-start-warning.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Retake assessment now
+      </a>
+    </div>
+
+    <p class="result-foot">No course completion proof issued for failed attempts. Lesson progress is preserved.</p>
+  </div>
+</main>
+
+<script src="../ui-enhance.js"></script>
+</body>
+</html>
