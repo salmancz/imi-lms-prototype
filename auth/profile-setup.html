@@ -301,6 +301,10 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
   }
   .ps-addlink:hover { color: var(--accent); }
 
@@ -451,7 +455,7 @@
         <div class="ps-field full">
           <label>Personal Site / Blog Links <span class="opt">(optional &middot; multiple allowed)</span></label>
           <input class="input" placeholder="https://">
-          <a href="javascript:void(0)" class="ps-addlink" onclick="var f=document.createElement('input');f.className='input';f.placeholder='https://';f.style.marginTop='8px';this.closest('.ps-field').querySelector('.input').parentNode.insertBefore(f,this)">+ Add another link</a>
+          <button type="button" class="ps-addlink" onclick="var f=document.createElement('input');f.className='input';f.placeholder='https://';f.style.marginTop='8px';this.closest('.ps-field').querySelector('.input').parentNode.insertBefore(f,this)">+ Add another link</button>
           <div class="hint">One field that allows multiple social, professional, or personal web links.</div>
         </div>
       </div>

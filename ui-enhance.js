@@ -302,7 +302,51 @@
     }
   }
 
+  // ---- breadcrumbs ----
+  // Renders a breadcrumb so the user always knows where they are in a flow.
+  // Uses body[data-crumbs]="Label|href;Label|href;Current" when present; otherwise
+  // falls back to "Section > Page title" derived from the folder + page title.
+  function enhanceBreadcrumb() {
+    if (document.querySelector('nav.crumbs')) return;
+    var main = document.querySelector('main'); if (!main) return;
+    var trail = [];
+    var dc = document.body.getAttribute('data-crumbs');
+    if (dc) {
+      trail = dc.split(';').map(function (s) { var p = s.split('|'); return { label: (p[0] || '').trim(), href: (p[1] || '').trim() }; }).filter(function (c) { return c.label; });
+    } else {
+      var seg = location.pathname.split('/').filter(Boolean);
+      var folder = seg.length >= 2 ? seg[seg.length - 2] : '';
+      var here = seg[seg.length - 1] || '';
+      var P = { 'learning': ['Learn', 'dashboard.html'], 'profile': ['Account', 'settings.html'], 'admin': ['Admin', 'admin-dashboard.html'], 'corporate': ['Corporate', 'corp-dashboard.html'], 'course-builder': ['Authoring', '../role-views/content-dev-home.html'], 'role-views': ['Workspace', ''] };
+      if (!P[folder] || folder === 'auth') return;
+      var t = (document.title || '').replace(/\s*[·|].*$/, '').trim();
+      if (!t) { var hh = document.querySelector('h1'); t = hh ? hh.textContent.replace(/\s+/g, ' ').trim() : 'Page'; }
+      if (P[folder][1] && here !== P[folder][1]) trail.push({ label: P[folder][0], href: P[folder][1] });
+      trail.push({ label: t, href: '' });
+    }
+    if (!trail.length) return;
+    if (!document.getElementById('crumbs-css')) {
+      var st = document.createElement('style'); st.id = 'crumbs-css';
+      st.textContent = 'nav.crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font-family:var(--font-label,inherit);font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--ink-mute);margin:0 0 16px;}nav.crumbs a{color:var(--ink-soft);text-decoration:none;}nav.crumbs a:hover{color:var(--accent);}nav.crumbs .cr-sep{color:var(--ink-faint);font-weight:400;}nav.crumbs .cr-cur{color:var(--ink);font-weight:700;}';
+      document.head.appendChild(st);
+    }
+    var nav = document.createElement('nav'); nav.className = 'crumbs'; nav.setAttribute('aria-label', 'Breadcrumb');
+    trail.forEach(function (c, i) {
+      if (i > 0) { var sp = document.createElement('span'); sp.className = 'cr-sep'; sp.textContent = '›'; nav.appendChild(sp); }
+      var el;
+      if (c.href && i < trail.length - 1) { el = document.createElement('a'); el.href = c.href; el.textContent = c.label; }
+      else { el = document.createElement('span'); el.className = 'cr-cur'; el.textContent = c.label; }
+      nav.appendChild(el);
+    });
+    var h1 = main.querySelector('h1');
+    var head = h1 ? h1.closest('.page-head, .page-title') : null;
+    if (head && head.parentElement) head.parentElement.insertBefore(nav, head);
+    else if (h1 && h1.parentElement) h1.parentElement.insertBefore(nav, h1);
+    else main.insertBefore(nav, main.firstChild);
+  }
+
   function run() {
+    enhanceBreadcrumb();
     document.querySelectorAll('select').forEach(enhanceSelect);
     document.querySelectorAll('input[type="date"]').forEach(enhanceDate);
     document.querySelectorAll('.ad-close').forEach(enhanceAdClose);

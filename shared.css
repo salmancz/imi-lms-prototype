@@ -4,12 +4,12 @@
 */
 
 :root {
-  /* surface */
-  --bg:            #F2EDE3;
-  --bg-alt:        #EAE4D8;
-  --paper:         #FDFCFA;
-  --paper-2:       #F7F2EA;
-  --surface-3:     #ECE3D2;
+  /* surface - white Variant 2 (client-approved) */
+  --bg:            #F6F3EC;
+  --bg-alt:        #EFEAE1;
+  --paper:         #FFFFFF;
+  --paper-2:       #F8F6F1;
+  --surface-3:     #EDE7DC;
 
   /* ink */
   --ink:           #2A1108;
