@@ -323,9 +323,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Image Based
             </button>
-            <button class="btn btn-ghost btn-sm is-disabled" disabled title="Essay grading ships in Phase 2">
+            <button class="btn btn-ghost btn-sm add-q" data-toggle="add-question" data-qtype="Essay">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Essay <span class="ph2-tag">Phase 2</span>
+              Essay
             </button>
           </div>
         </div>
@@ -334,7 +334,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q1 &middot; MCQ &middot; 5 pts</span>
+                <span class="q-eyebrow">Q1 &middot; MCQ</span>
                 <div class="q-prompt">Which DAMA-DMBOK function defines stewardship roles?</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -344,7 +344,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q2 &middot; True / False &middot; 3 pts</span>
+                <span class="q-eyebrow">Q2 &middot; True / False</span>
                 <div class="q-prompt">Master data must always be unique across all systems.</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -354,7 +354,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q3 &middot; Image Based &middot; 8 pts</span>
+                <span class="q-eyebrow">Q3 &middot; Image Based</span>
                 <div class="q-prompt">Identify the quality dimension shown in this scorecard.</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -364,7 +364,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q4 &middot; MCQ &middot; 5 pts</span>
+                <span class="q-eyebrow">Q4 &middot; MCQ</span>
                 <div class="q-prompt">Which of the following best describes data lineage?</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -374,7 +374,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q5 &middot; True / False &middot; 3 pts</span>
+                <span class="q-eyebrow">Q5 &middot; True / False</span>
                 <div class="q-prompt">A data dictionary and a data catalog serve the same purpose.</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -384,7 +384,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q6 &middot; MCQ &middot; 5 pts</span>
+                <span class="q-eyebrow">Q6 &middot; MCQ</span>
                 <div class="q-prompt">What is the primary goal of data profiling in a quality management process?</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -394,7 +394,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q7 &middot; True / False &middot; 3 pts</span>
+                <span class="q-eyebrow">Q7 &middot; True / False</span>
                 <div class="q-prompt">Metadata management is considered a sub-discipline within DAMA-DMBOK.</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -404,7 +404,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q8 &middot; MCQ &middot; 8 pts</span>
+                <span class="q-eyebrow">Q8 &middot; MCQ</span>
                 <div class="q-prompt">Which governance body is typically responsible for resolving data ownership disputes?</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -414,7 +414,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q9 &middot; Image Based &middot; 8 pts</span>
+                <span class="q-eyebrow">Q9 &middot; Image Based</span>
                 <div class="q-prompt">Based on the chart shown, identify the data domain with the lowest completeness score.</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -424,7 +424,7 @@
           <div class="card q-card">
             <div class="q-card-top">
               <div>
-                <span class="q-eyebrow">Q10 &middot; MCQ &middot; 5 pts</span>
+                <span class="q-eyebrow">Q10 &middot; MCQ</span>
                 <div class="q-prompt">Which technique is most appropriate for deduplicating customer records across source systems?</div>
               </div>
               <button class="btn btn-ghost btn-sm toggle-edit">Edit</button>
@@ -447,7 +447,7 @@
           </div>
           <div class="field">
             <label>Retry attempts</label>
-            <select class="input">
+            <select class="input" id="retryAttemptsSelect">
               <option>1 attempt</option>
               <option selected>2 attempts</option>
               <option>3 attempts</option>
@@ -477,10 +477,11 @@
 </div>
 
 <style>
+  /* ---- Question modal ---- */
   .q-modal { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
   .q-modal.open { display: flex; }
   .q-modal-scrim { position: absolute; inset: 0; background: var(--scrim); }
-  .q-modal-card { position: relative; width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-card); padding: 26px 28px; }
+  .q-modal-card { position: relative; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--r-lg); box-shadow: var(--shadow-card); padding: 26px 28px; }
   .q-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; }
   .q-modal-title { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h1); color: var(--ink); }
   .q-modal-type { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-deep); background: var(--c-clay-wash); padding: 5px 11px; border-radius: var(--r-pill); white-space: nowrap; }
@@ -496,29 +497,83 @@
   .q-opt-del { width: 32px; height: 32px; border-radius: var(--r-sm); display: grid; place-items: center; color: var(--ink-mute); border: 1px solid var(--line); background: none; cursor: pointer; flex-shrink: 0; font-size: var(--fs-h3); }
   .q-opt-del:hover { color: var(--c-danger); border-color: var(--c-danger); }
   .q-add-opt { margin-top: 6px; font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 700; color: var(--accent-deep); background: none; border: 0; cursor: pointer; padding: 4px 0; }
-  .q-img-drop { border: 1.5px dashed var(--line-strong); border-radius: var(--r-sm); background: var(--paper-2); padding: 22px; text-align: center; font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; cursor: pointer; }
+  .q-img-drop { border: 1.5px dashed var(--line-strong); border-radius: var(--r-sm); background: var(--paper-2); padding: 22px; text-align: center; font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; cursor: pointer; position: relative; overflow: hidden; }
+  .q-img-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .q-img-preview { display: none; max-width: 100%; border-radius: var(--r-sm); margin-top: 10px; }
   .q-modal-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  /* Essay manual-grade notice */
+  .essay-notice { background: var(--c-honey-wash); border: 1px solid var(--c-honey-soft); border-radius: var(--r-sm); padding: 10px 14px; font-size: var(--fs-meta); color: var(--c-honey-text); font-family: var(--font-label); letter-spacing: 0.02em; margin-bottom: 16px; }
+  /* Image-based sub-question block */
+  .img-subq-list { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+  .img-subq { border: 1px solid var(--line-strong); border-radius: var(--r-sm); padding: 14px 16px; background: var(--paper-2); }
+  .img-subq-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .img-subq-label { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-mute); }
+  .img-subq-del { width: 28px; height: 28px; border-radius: var(--r-sm); display: grid; place-items: center; color: var(--ink-mute); border: 1px solid var(--line); background: none; cursor: pointer; font-size: var(--fs-body); flex-shrink: 0; }
+  .img-subq-del:hover { color: var(--c-danger); border-color: var(--c-danger); }
+  .q-add-subq { display: flex; align-items: center; gap: 7px; margin-top: 10px; font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 700; color: var(--accent-deep); background: none; border: 1px dashed var(--line-strong); border-radius: var(--r-sm); padding: 8px 14px; cursor: pointer; width: 100%; justify-content: center; }
+  .q-add-subq:hover { background: var(--paper-2); }
 </style>
-<div class="q-modal" id="qModal">
+
+<!-- Question editor modal -->
+<div class="q-modal" id="qModal" role="dialog" aria-modal="true" aria-labelledby="qmTitle">
   <div class="q-modal-scrim" data-close></div>
   <div class="q-modal-card">
     <div class="q-modal-head">
       <span class="q-modal-title" id="qmTitle">Add question</span>
       <span class="q-modal-type" id="qmType">MCQ</span>
     </div>
+
+    <!-- ESSAY: manual-grade notice -->
+    <div class="essay-notice" id="qmEssayNotice" style="display:none">
+      Essay responses are graded manually by the SME reviewer. This question will not be auto-scored.
+    </div>
+
+    <!-- Standard prompt (all types) -->
     <div class="q-field"><label>Question prompt</label><textarea id="qmPrompt" placeholder="Type the question here..."></textarea></div>
-    <div class="q-field" id="qmImgWrap" style="display:none"><label>Question image</label><div class="q-img-drop">Click to upload an image (PNG or JPG)</div></div>
-    <div class="q-field" id="qmOptWrap"><label id="qmOptLabel">Answer options (select the correct one)</label><div class="q-opts" id="qmOpts"></div><button type="button" class="q-add-opt" id="qmAddOpt">+ Add option</button></div>
-    <div class="q-field" style="max-width:170px"><label>Points</label><input type="number" id="qmPoints" value="1" min="1"></div>
+
+    <!-- IMAGE BASED: image upload + sub-questions -->
+    <div id="qmImageSection" style="display:none">
+      <div class="q-field">
+        <label>Question image</label>
+        <div class="q-img-drop" id="qmImgDrop">
+          <input type="file" accept="image/png,image/jpeg,image/gif,image/webp" id="qmImgFile" aria-label="Upload image">
+          <span id="qmImgHint">Click to upload an image (PNG, JPG, or GIF)</span>
+          <img id="qmImgPreview" class="q-img-preview" alt="Uploaded preview">
+        </div>
+      </div>
+      <div class="q-field">
+        <label>Questions about this image</label>
+        <div class="img-subq-list" id="qmSubqList"></div>
+        <button type="button" class="q-add-subq" id="qmAddSubq">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add question about this image
+        </button>
+      </div>
+    </div>
+
+    <!-- MCQ / True-False options -->
+    <div class="q-field" id="qmOptWrap">
+      <label id="qmOptLabel">Answer options (select the correct one)</label>
+      <div class="q-opts" id="qmOpts"></div>
+      <button type="button" class="q-add-opt" id="qmAddOpt">+ Add option</button>
+    </div>
+
+    <!-- ESSAY: answer guidance / rubric -->
+    <div class="q-field" id="qmEssayRubric" style="display:none">
+      <label>Answer guidance / rubric (visible to SME grader only)</label>
+      <textarea id="qmRubric" placeholder="Describe what a complete answer should cover..."></textarea>
+    </div>
+
     <div class="q-modal-foot">
       <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
       <button type="button" class="btn btn-primary btn-sm" id="qmSave">Save question</button>
     </div>
   </div>
 </div>
+
 <script>
 (function () {
-  var LS_KEY = 'imi_assessment_questions';
+  var LS_KEY = 'imi_assessment_questions_v2';
 
   /* ---- helpers ---- */
   function readLS() {
@@ -529,29 +584,132 @@
     var cards = stack.querySelectorAll('.q-card');
     var list = [];
     cards.forEach(function (c) {
-      var eyebrow = c.querySelector('.q-eyebrow').textContent; // e.g. "Q1 · MCQ · 5 pts"
+      var eyebrow = c.querySelector('.q-eyebrow').textContent;
       var parts = eyebrow.split('\xb7');
       var qtype = parts.length > 1 ? parts[1].trim() : 'MCQ';
-      var ptsStr = parts.length > 2 ? parts[2].trim().replace(/\s*pts$/, '') : '1';
       var text = c.querySelector('.q-prompt').textContent.trim();
-      list.push({ qtype: qtype, text: text, pts: parseInt(ptsStr, 10) || 1 });
+      list.push({ qtype: qtype, text: text });
     });
     localStorage.setItem(LS_KEY, JSON.stringify(list));
   }
+
   function updateCounters() {
     var stack = document.querySelector('.q-stack');
     var cards = stack.querySelectorAll('.q-card');
     var em = document.querySelector('.q-head h2 em');
     if (em) em.textContent = '(' + cards.length + ')';
-    var statVal = document.querySelector('.assess-stat .as-value');
-    if (statVal) statVal.textContent = cards.length;
+    // update stat strip "Questions" value
+    var statVals = document.querySelectorAll('.assess-stat');
+    statVals.forEach(function (stat) {
+      var lbl = stat.querySelector('.as-label');
+      if (lbl && lbl.textContent.trim() === 'Questions') {
+        var val = stat.querySelector('.as-value');
+        if (val) val.textContent = cards.length;
+      }
+    });
+  }
+
+  /* ---- retry attempts stat reactivity ---- */
+  var retrySelect = document.getElementById('retryAttemptsSelect');
+  var attemptsStat = null;
+  document.querySelectorAll('.assess-stat').forEach(function (stat) {
+    var lbl = stat.querySelector('.as-label');
+    if (lbl && lbl.textContent.trim() === 'Attempts') attemptsStat = stat.querySelector('.as-value');
+  });
+  if (retrySelect && attemptsStat) {
+    retrySelect.addEventListener('change', function () {
+      var sel = retrySelect.options[retrySelect.selectedIndex];
+      var txt = sel ? sel.textContent : '';
+      if (/unlimited/i.test(txt)) {
+        attemptsStat.textContent = '';
+        attemptsStat.innerHTML = '<span style="font-size:var(--fs-body);font-weight:700">Unlimited</span>';
+      } else {
+        var m = txt.match(/\d+/);
+        attemptsStat.textContent = m ? m[0] : txt;
+      }
+    });
   }
 
   /* ---- modal refs ---- */
-  var modal = document.getElementById('qModal'), title = document.getElementById('qmTitle'), typeEl = document.getElementById('qmType');
-  var promptEl = document.getElementById('qmPrompt'), opts = document.getElementById('qmOpts'), imgWrap = document.getElementById('qmImgWrap'), addOpt = document.getElementById('qmAddOpt'), optLabel = document.getElementById('qmOptLabel'), points = document.getElementById('qmPoints'), save = document.getElementById('qmSave');
+  var modal = document.getElementById('qModal');
+  var titleEl = document.getElementById('qmTitle');
+  var typeEl = document.getElementById('qmType');
+  var promptEl = document.getElementById('qmPrompt');
+  var opts = document.getElementById('qmOpts');
+  var optWrap = document.getElementById('qmOptWrap');
+  var addOpt = document.getElementById('qmAddOpt');
+  var optLabel = document.getElementById('qmOptLabel');
+  var imgSection = document.getElementById('qmImageSection');
+  var imgFile = document.getElementById('qmImgFile');
+  var imgPreview = document.getElementById('qmImgPreview');
+  var imgHint = document.getElementById('qmImgHint');
+  var subqList = document.getElementById('qmSubqList');
+  var addSubq = document.getElementById('qmAddSubq');
+  var essayNotice = document.getElementById('qmEssayNotice');
+  var essayRubric = document.getElementById('qmEssayRubric');
+  var rubricEl = document.getElementById('qmRubric');
+  var save = document.getElementById('qmSave');
   var mode = 'add', editCard = null, curType = 'MCQ';
 
+  /* ---- image upload preview ---- */
+  imgFile.addEventListener('change', function () {
+    if (!imgFile.files || !imgFile.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      imgPreview.src = e.target.result;
+      imgPreview.style.display = 'block';
+      imgHint.style.display = 'none';
+    };
+    reader.readAsDataURL(imgFile.files[0]);
+  });
+
+  /* ---- sub-question builder (Image Based) ---- */
+  function subqOptRow(optsContainer, text, checked, fixed) {
+    var row = document.createElement('div'); row.className = 'q-opt';
+    row.innerHTML = '<input type="radio" name="sq_correct_' + optsContainer.dataset.sqid + '"' + (checked ? ' checked' : '') + '><input type="text" placeholder="Answer option" value="' + (text || '') + '"><button type="button" class="q-opt-del" aria-label="Remove option">&times;</button>';
+    if (fixed) { row.querySelector('input[type=text]').readOnly = true; row.querySelector('.q-opt-del').style.display = 'none'; }
+    else row.querySelector('.q-opt-del').addEventListener('click', function () { if (optsContainer.children.length > 2) row.remove(); });
+    return row;
+  }
+
+  var subqCounter = 0;
+  function addSubqBlock() {
+    subqCounter++;
+    var sqid = 'sq' + subqCounter;
+    var block = document.createElement('div'); block.className = 'img-subq';
+    var head = document.createElement('div'); head.className = 'img-subq-head';
+    var lbl = document.createElement('span'); lbl.className = 'img-subq-label'; lbl.textContent = 'Question ' + subqList.children.length + 1;
+    var del = document.createElement('button'); del.type = 'button'; del.className = 'img-subq-del'; del.setAttribute('aria-label', 'Remove question'); del.innerHTML = '&times;';
+    del.addEventListener('click', function () {
+      block.remove();
+      // re-number remaining
+      var blocks = subqList.querySelectorAll('.img-subq');
+      blocks.forEach(function (b, idx) {
+        var l = b.querySelector('.img-subq-label'); if (l) l.textContent = 'Question ' + (idx + 1);
+      });
+    });
+    head.appendChild(lbl); head.appendChild(del); block.appendChild(head);
+
+    var pField = document.createElement('div'); pField.className = 'q-field';
+    var pLabel = document.createElement('label'); pLabel.textContent = 'Question prompt';
+    var pArea = document.createElement('textarea'); pArea.placeholder = 'What does this image show...';
+    pField.appendChild(pLabel); pField.appendChild(pArea); block.appendChild(pField);
+
+    var oField = document.createElement('div'); oField.className = 'q-field';
+    var oLabel = document.createElement('label'); oLabel.textContent = 'Answer options (select the correct one)';
+    var oOpts = document.createElement('div'); oOpts.className = 'q-opts'; oOpts.dataset.sqid = sqid;
+    ['', '', '', ''].forEach(function (t, i) { oOpts.appendChild(subqOptRow(oOpts, t, i === 0, false)); });
+    var oAdd = document.createElement('button'); oAdd.type = 'button'; oAdd.className = 'q-add-opt'; oAdd.textContent = '+ Add option';
+    oAdd.addEventListener('click', function () { if (oOpts.children.length < 6) oOpts.appendChild(subqOptRow(oOpts, '', false, false)); });
+    oField.appendChild(oLabel); oField.appendChild(oOpts); oField.appendChild(oAdd); block.appendChild(oField);
+
+    subqList.appendChild(block);
+    pArea.focus();
+  }
+
+  addSubq.addEventListener('click', addSubqBlock);
+
+  /* ---- standard MCQ/T-F option row ---- */
   function optRow(text, checked, fixed) {
     var row = document.createElement('div'); row.className = 'q-opt';
     row.innerHTML = '<input type="radio" name="qmCorrect"' + (checked ? ' checked' : '') + '><input type="text" placeholder="Answer option" value="' + (text || '') + '"><button type="button" class="q-opt-del" aria-label="Remove">&times;</button>';
@@ -569,12 +727,35 @@
       ['', '', '', ''].forEach(function (t, i) { opts.appendChild(optRow(t, i === 0, false)); });
     }
   }
+
+  /* ---- show/hide sections by type ---- */
+  function applyType(type) {
+    var isImage = type === 'Image Based';
+    var isEssay = type === 'Essay';
+    var isStandard = !isImage && !isEssay;
+
+    imgSection.style.display = isImage ? '' : 'none';
+    optWrap.style.display = isStandard ? '' : 'none';
+    essayNotice.style.display = isEssay ? '' : 'none';
+    essayRubric.style.display = isEssay ? '' : 'none';
+
+    if (isStandard) buildOpts(type);
+    if (isImage) {
+      // reset image state
+      imgPreview.style.display = 'none'; imgPreview.src = '';
+      imgHint.style.display = ''; imgFile.value = '';
+      subqList.innerHTML = '';
+      subqCounter = 0;
+      addSubqBlock(); // start with one sub-question
+    }
+    if (isEssay) { rubricEl.value = ''; }
+  }
+
   function open(type, card) {
     curType = type; typeEl.textContent = type; mode = card ? 'edit' : 'add'; editCard = card || null;
-    title.textContent = (mode === 'edit' ? 'Edit ' : 'Add ') + 'question';
-    imgWrap.style.display = type === 'Image Based' ? '' : 'none';
+    titleEl.textContent = (mode === 'edit' ? 'Edit ' : 'Add ') + 'question';
     var pe = card && card.querySelector('.q-prompt'); promptEl.value = pe ? pe.textContent : '';
-    buildOpts(type); points.value = '1';
+    applyType(type);
     modal.classList.add('open');
     setTimeout(function () { promptEl.focus(); }, 40);
   }
@@ -587,16 +768,20 @@
   function wireEdit(btn) {
     btn.addEventListener('click', function () {
       var c = this.closest('.q-card');
-      var t = (c.querySelector('.q-eyebrow').textContent.split('·')[1] || 'MCQ').trim();
+      var eyebrow = c.querySelector('.q-eyebrow').textContent;
+      var parts = eyebrow.split('\xb7');
+      var t = (parts.length > 1 ? parts[1] : 'MCQ').trim();
       open(t, c);
     });
   }
 
-  function addCardToStack(n, qtype, text, pts) {
+  function addCardToStack(n, qtype, text) {
     var stack = document.querySelector('.q-stack');
     var card = document.createElement('div'); card.className = 'card q-card';
-    var ptsLabel = pts ? ' · ' + pts + ' pts' : '';
-    card.innerHTML = '<div class="q-card-top"><div><span class="q-eyebrow">Q' + n + ' · ' + qtype + ptsLabel + '</span><div class="q-prompt">' + text + '</div></div><button class="btn btn-ghost btn-sm toggle-edit">Edit</button></div>';
+    var subLabel = '';
+    if (qtype === 'Image Based') subLabel = '<p style="font-size:var(--fs-meta);color:var(--ink-mute);margin-top:4px">Image with multiple questions</p>';
+    if (qtype === 'Essay') subLabel = '<p style="font-size:var(--fs-meta);color:var(--ink-mute);margin-top:4px">Graded manually by SME reviewer</p>';
+    card.innerHTML = '<div class="q-card-top"><div><span class="q-eyebrow">Q' + n + ' \xb7 ' + qtype + '</span><div class="q-prompt">' + text + '</div>' + subLabel + '</div><button class="btn btn-ghost btn-sm toggle-edit">Edit</button></div>';
     wireEdit(card.querySelector('.toggle-edit'));
     stack.appendChild(card);
     return card;
@@ -604,25 +789,23 @@
 
   save.addEventListener('click', function () {
     var text = (promptEl.value || '').trim() || ('New ' + curType + ' question');
-    var ptsVal = parseInt(points.value, 10) || 1;
     if (mode === 'edit' && editCard) {
       editCard.querySelector('.q-prompt').textContent = text;
       var eyebrow = editCard.querySelector('.q-eyebrow');
       var parts = eyebrow.textContent.split('\xb7');
       var qnum = parts[0].trim();
-      var qtype = parts.length > 1 ? parts[1].trim() : curType;
-      eyebrow.textContent = qnum + ' \xb7 ' + qtype + ' \xb7 ' + ptsVal + ' pts';
+      eyebrow.textContent = qnum + ' \xb7 ' + curType;
     } else {
       var stack = document.querySelector('.q-stack');
       var n = stack.querySelectorAll('.q-card').length + 1;
-      addCardToStack(n, curType, text, ptsVal);
+      addCardToStack(n, curType, text);
     }
     updateCounters();
     writeLS();
     close();
   });
 
-  /* ---- "Save draft" button also persists ---- */
+  /* ---- "Save draft" button persists ---- */
   document.getElementById('btnSaveDraft').addEventListener('click', function () {
     var btn = this;
     btn.textContent = 'Saving…';
@@ -630,24 +813,13 @@
     setTimeout(function () { btn.textContent = 'Save draft'; }, 1200);
   });
 
-  document.querySelectorAll('.add-q').forEach(function (btn) { btn.addEventListener('click', function () { open(this.dataset.qtype); }); });
+  /* ---- wire "+ type" buttons ---- */
+  document.querySelectorAll('.add-q').forEach(function (btn) {
+    btn.addEventListener('click', function () { open(this.dataset.qtype); });
+  });
 
-  /* ---- on-load: populate from localStorage if data exists ---- */
-  (function loadFromLS() {
-    var saved = readLS();
-    if (!saved.length) {
-      // no saved data -- wire existing static cards and return
-      document.querySelectorAll('.toggle-edit').forEach(wireEdit);
-      return;
-    }
-    // Replace static q-stack contents with saved questions
-    var stack = document.querySelector('.q-stack');
-    stack.innerHTML = '';
-    saved.forEach(function (q, i) {
-      addCardToStack(i + 1, q.qtype, q.text, q.pts);
-    });
-    updateCounters();
-  })();
+  /* ---- on-load: wire static cards (no LS restore to avoid stale pts data) ---- */
+  document.querySelectorAll('.toggle-edit').forEach(wireEdit);
 })();
 </script>
 <script src="../ui-enhance.js"></script>

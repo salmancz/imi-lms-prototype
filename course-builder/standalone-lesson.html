@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Standalone lesson upload · IMI</title>
+<title>Standalone lesson · IMI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,27 +19,93 @@
     transition: color 0.15s; margin-bottom: 18px;
   }
   .back-link:hover { color: var(--accent); }
-  .type-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
-  .type-opt {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 16px; border: 1.5px solid var(--line-strong);
-    border-radius: var(--r-pill); font-size: var(--fs-body); font-weight: 600;
-    color: var(--ink-soft); background: var(--paper); cursor: pointer;
-    transition: border-color 0.18s, background 0.18s, color 0.18s;
-  }
-  .type-opt:hover { border-color: var(--ink-mute); }
-  .type-opt.is { border-color: var(--ink); background: var(--ink); color: var(--hero-bg); }
-  .type-opt .dotmark {
-    width: 13px; height: 13px; border-radius: 50%;
-    border: 2px solid var(--line-strong); display: inline-flex;
-    align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .type-opt.is .dotmark { border-color: var(--hero-bg); }
-  .type-opt.is .dotmark::after {
-    content: ""; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--hero-bg); display: block;
-  }
   .req { color: var(--accent); font-weight: 700; }
+  .section-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 28px 0 20px;
+  }
+  .section-divider .sd-label {
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .section-divider .sd-line { flex: 1; height: 1px; background: var(--line); }
+  .section-divider .sd-badge {
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-mute); background: var(--paper-2);
+    border: 1px solid var(--line); border-radius: var(--r-pill);
+    padding: 2px 9px;
+  }
+  .primary-banner {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--c-honey-wash); border: 1px solid rgba(201,155,46,0.22);
+    border-radius: var(--r-md); padding: 13px 16px; margin-bottom: 20px;
+  }
+  .primary-banner .pb-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--c-honey); color: var(--paper);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .primary-banner .pb-icon svg { width: 15px; height: 15px; }
+  .primary-banner .pb-text { font-size: var(--fs-body); color: var(--c-honey-text); line-height: 1.5; }
+  .primary-banner .pb-text strong { color: var(--ink); font-weight: 700; }
+  .support-accordion {
+    border: 1px solid var(--line); border-radius: var(--r-md);
+    background: var(--paper); overflow: hidden;
+  }
+  .support-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; cursor: pointer;
+    background: var(--paper-2); border: none; width: 100%; text-align: left;
+    font: inherit; transition: background 0.15s;
+  }
+  .support-toggle:hover { background: var(--surface-3); }
+  .support-toggle .st-left { display: flex; align-items: center; gap: 10px; }
+  .support-toggle .st-icon {
+    width: 28px; height: 28px; border-radius: var(--r-sm);
+    background: var(--c-sage-wash); color: var(--c-sage-text);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .support-toggle .st-icon svg { width: 14px; height: 14px; }
+  .support-toggle .st-label { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .support-toggle .st-sub { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 1px; }
+  .support-toggle .st-chevron {
+    width: 20px; height: 20px; color: var(--ink-mute); transition: transform 0.22s; flex-shrink: 0;
+  }
+  .support-toggle[aria-expanded="true"] .st-chevron { transform: rotate(180deg); }
+  .support-body { padding: 20px; border-top: 1px solid var(--line); display: none; }
+  .support-body.open { display: block; }
+  .support-section + .support-section {
+    margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--line);
+  }
+  .support-section-label {
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
+    letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
+    margin-bottom: 12px;
+  }
+  .pdf-entry {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--r-sm); padding: 14px 16px; margin-bottom: 10px;
+  }
+  .pdf-entry-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .pdf-entry-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .pdf-entry-title svg { width: 14px; height: 14px; color: var(--ink-mute); flex-shrink: 0; }
+  .text-body-area { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; }
+  .text-body-toolbar { display: flex; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--paper); }
+  .tb-btn {
+    padding: 4px 9px; border-radius: var(--r-xs);
+    font-size: var(--fs-meta); font-weight: 700; color: var(--ink-soft);
+    background: transparent; border: none; cursor: pointer; transition: background 0.15s, color 0.15s; font: inherit;
+  }
+  .tb-btn:hover { background: var(--surface-3); color: var(--ink); }
+  .text-body-input {
+    width: 100%; min-height: 130px; border: none; background: transparent;
+    padding: 14px 16px; font: inherit; font-size: var(--fs-body);
+    color: var(--ink); line-height: 1.65; resize: vertical; outline: none;
+  }
+  .text-body-input::placeholder { color: var(--ink-mute); }
+  .opt-label { color: var(--ink-mute); font-weight: 400; text-transform: none; letter-spacing: 0; }
   .field textarea.input { height: auto; min-height: 76px; padding: 10px 14px; line-height: 1.5; resize: vertical; }
   .field-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 540px) { .field-2 { grid-template-columns: 1fr; } }
@@ -125,7 +191,7 @@
     display: flex; align-items: center; justify-content: center;
     color: var(--ink-mute); transition: background 0.15s, color 0.15s; flex-shrink: 0;
   }
-  .fp-remove:hover { background: var(--c-rose-wash, #fdecea); color: #c0392b; }
+  .fp-remove:hover { background: var(--c-danger-wash); color: var(--c-danger); }
   .fp-remove svg { width: 14px; height: 14px; }
 
   /* Chip remove button */
@@ -142,8 +208,8 @@
     white-space: nowrap;
   }
   .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.t-sage { background: var(--c-sage-text,#2e5e28); }
-  .toast.t-clay { background: #b84e3b; }
+  .toast.t-sage { background: var(--c-sage-text); }
+  .toast.t-clay { background: var(--c-clay); }
 
   /* Upload progress bar */
   .upload-progress {
@@ -167,22 +233,16 @@
   }
   .up-status { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; }
   .up-status.done { color: var(--c-sage-text); font-weight: 600; }
-  .up-status.err  { color: #c0392b; font-weight: 600; }
+  .up-status.err  { color: var(--c-danger); font-weight: 600; }
 </style>
 </head>
 <body data-crumbs="Authoring|../role-views/content-dev-home.html;Standalone lesson">
-<div class="ad-strip">
-  <span class="ad-tag">Sponsored</span>
-  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">·</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
-  <a href="#" class="ad-cta">Learn more →</a>
-  <button class="ad-close" aria-label="Dismiss ad">×</button>
-</div>
 <header class="topbar">
   <a href="../role-views/content-dev-home.html" class="brand"><img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI"><span class="brand-text">IMI</span><span class="brand-sub">Studio</span></a>
   <div class="search"><input placeholder="Search my courses, drafts..."></div>
   <div class="topbar-actions">
-    <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
-    <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
+    <button class="icon-btn" title="Notifications" onclick="showToast('No new notifications.','')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="Help" onclick="showToast('Help centre opens in a new tab.','')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
     <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AB" alt="AB"></div><span class="ring-pct">68%</span></div>
   </div>
 </header>
@@ -212,8 +272,8 @@
 <div class="page-head" style="grid-template-columns:1fr;margin-bottom:22px">
   <div>
     <div class="eyebrow">Content Library</div>
-    <h1 class="page-title">Upload <em>standalone lesson</em></h1>
-    <p class="page-sub">A single video, PDF, or text lesson that can be added to any course later, or accessed from the Learner Library.</p>
+    <h1 class="page-title">Create <em>standalone lesson</em></h1>
+    <p class="page-sub">A video-based lesson with optional supporting materials. Can be added to any course later or accessed directly from the Learner Library.</p>
   </div>
 </div>
 
@@ -221,13 +281,9 @@
 
   <div class="form-card">
 
-    <div class="field">
-      <label>Lesson type <span class="req">*</span></label>
-      <div class="type-options" id="type-options">
-        <label class="type-opt is" data-type="Video" onclick="selectType('Video',this)"><span class="dotmark"></span>Video</label>
-        <label class="type-opt" data-type="PDF" onclick="selectType('PDF',this)"><span class="dotmark"></span>PDF</label>
-        <label class="type-opt" data-type="Text" onclick="selectType('Text',this)"><span class="dotmark"></span>Text</label>
-      </div>
+    <div class="section-divider" style="margin-top:0">
+      <span class="sd-label">Lesson details</span>
+      <span class="sd-line"></span>
     </div>
 
     <div class="field">
@@ -242,19 +298,19 @@
 
     <div class="field-2">
       <div class="field">
-        <label>Domain <span class="req">*</span></label>
+        <label>Subject / Field <span class="req">*</span></label>
         <select class="input" id="f-domain" onchange="updateSummary()">
           <option>Technology</option>
-          <option>Business</option>
-          <option>Leadership</option>
-          <option>Data &amp; Analytics</option>
-          <option>Compliance</option>
+          <option>Finance</option>
+          <option>Healthcare</option>
+          <option>Marketing</option>
+          <option>Data Science</option>
           <option>Knowledge Management</option>
         </select>
       </div>
       <div class="field">
-        <label>Duration estimate (minutes) <span class="req">*</span></label>
-        <input class="input" id="f-duration" placeholder="12" oninput="updateSummary()">
+        <label>Duration (minutes) <span class="req">*</span></label>
+        <input class="input" id="f-duration" type="number" min="1" placeholder="12" oninput="updateSummary()">
       </div>
     </div>
 
@@ -269,7 +325,7 @@
     </div>
 
     <div class="field">
-      <label>Subject tags <span class="req">*</span></label>
+      <label>Tags <span class="req">*</span></label>
       <input class="input" id="tag-input" placeholder="Add tag and press Enter" onkeydown="handleChipKey(event,'tag-chips')">
       <div class="chip-row" id="tag-chips">
         <span class="chip" data-chip>Knowledge mgmt <span class="chip-x" onclick="removeChip(this)">×</span></span>
@@ -284,6 +340,19 @@
         <span class="chip" data-chip>Taxonomy design <span class="chip-x" onclick="removeChip(this)">×</span></span>
         <span class="chip" data-chip>Metadata tagging <span class="chip-x" onclick="removeChip(this)">×</span></span>
       </div>
+    </div>
+
+    <div class="section-divider">
+      <span class="sd-label">Primary content</span>
+      <span class="sd-line"></span>
+      <span class="sd-badge">Video</span>
+    </div>
+
+    <div class="primary-banner">
+      <div class="pb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </div>
+      <div class="pb-text"><strong>Lessons are video-primary.</strong> The video is the lesson body. PDF documents and written notes are supporting materials you can add below.</div>
     </div>
 
     <div class="field">
@@ -301,7 +370,7 @@
           <div class="fp-name" id="fp-video-name">lesson-intro.mp4</div>
           <div class="fp-size" id="fp-video-size">124 MB</div>
         </div>
-        <button class="fp-remove" title="Remove file" onclick="removePick('video');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-video').style.display=''">
+        <button class="fp-remove" title="Remove file" onclick="removePick('video')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -314,7 +383,17 @@
         <div class="up-track"><div class="up-bar" id="up-video-bar"></div></div>
         <div class="up-status" id="up-video-status">Uploading...</div>
       </div>
-      <input class="input" style="margin-top:10px" placeholder="Or paste a video URL (e.g. Vimeo, hosted MP4)">
+      <input class="input" style="margin-top:10px" id="f-video-url" placeholder="Or paste a video URL (e.g. Vimeo, hosted MP4)">
+    </div>
+
+    <div class="field">
+      <label>Video title <span class="req">*</span></label>
+      <input class="input" id="f-video-title" placeholder="e.g. Intro to Knowledge Classification">
+    </div>
+
+    <div class="field">
+      <label>Video description <span class="req">*</span></label>
+      <textarea class="input" id="f-video-desc" rows="2" placeholder="Brief description shown below the video player"></textarea>
     </div>
 
     <div class="field">
@@ -330,7 +409,7 @@
           <div class="fp-name" id="fp-thumb-name"></div>
           <div class="fp-size" id="fp-thumb-size"></div>
         </div>
-        <button class="fp-remove" title="Remove file" onclick="removePick('thumb');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-thumb').style.display=''">
+        <button class="fp-remove" title="Remove file" onclick="removePick('thumb')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -345,7 +424,7 @@
     </div>
 
     <div class="field">
-      <label>Transcript / captions <span class="req">*</span></label>
+      <label>Subtitles / captions <span class="req">*</span></label>
       <div class="dropzone slim" id="dz-caption" onclick="document.getElementById('fi-caption').click()" style="cursor:pointer">
         <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
         <div class="dz-main">Upload .srt or .vtt file for accessibility</div>
@@ -357,7 +436,7 @@
           <div class="fp-name" id="fp-caption-name"></div>
           <div class="fp-size" id="fp-caption-size"></div>
         </div>
-        <button class="fp-remove" title="Remove file" onclick="removePick('caption');this.closest('.file-pending').classList.remove('visible');document.getElementById('dz-caption').style.display=''">
+        <button class="fp-remove" title="Remove file" onclick="removePick('caption')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -369,20 +448,106 @@
         <div class="up-track"><div class="up-bar" id="up-caption-bar"></div></div>
         <div class="up-status" id="up-caption-status">Uploading...</div>
       </div>
+      <div class="field-hint">Required for accessibility and governance. Accepted formats: .srt, .vtt.</div>
+    </div>
+
+    <div class="section-divider" style="margin-top:32px">
+      <span class="sd-label">Supporting materials</span>
+      <span class="sd-line"></span>
+      <span class="sd-badge">Optional</span>
+    </div>
+
+    <div class="support-accordion" id="support-accordion">
+      <button class="support-toggle" aria-expanded="false" aria-controls="support-body" onclick="toggleSupport(this)">
+        <div class="st-left">
+          <div class="st-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <div>
+            <div class="st-label">Add PDF documents and written notes</div>
+            <div class="st-sub">Downloadable slides, worksheets, and a text body shown alongside the video</div>
+          </div>
+        </div>
+        <svg class="st-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+
+      <div class="support-body" id="support-body">
+
+        <div class="support-section">
+          <div class="support-section-label">PDF / Document attachments</div>
+          <div id="pdf-entries">
+            <div class="pdf-entry" id="pdf-entry-1">
+              <div class="pdf-entry-head">
+                <div class="pdf-entry-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Document 1
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="removePdfEntry(this)" style="color:var(--c-danger);border-color:var(--c-danger-wash)">Remove</button>
+              </div>
+              <div class="field" style="margin-bottom:10px">
+                <label style="font-size:var(--fs-meta)">Document title <span class="req">*</span></label>
+                <input class="input" placeholder="e.g. Lesson 1 Slide Deck">
+              </div>
+              <div class="dropzone slim" onclick="this.nextElementSibling.click()" style="cursor:pointer">
+                <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                <div class="dz-main">Upload PDF or document</div>
+              </div>
+              <input type="file" accept=".pdf,.pptx,.docx" style="display:none" onchange="handlePdfPick(this)">
+              <div class="field" style="margin-top:10px">
+                <label style="font-size:var(--fs-meta)">Description</label>
+                <input class="input" placeholder="Brief note about this document (optional)">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="addPdfEntry()" style="margin-top:4px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add another document
+          </button>
+        </div>
+
+        <div class="support-section">
+          <div class="support-section-label">Lesson notes / text body</div>
+          <div class="field-hint" style="margin-bottom:12px">Long-form written content shown alongside the video player. Use for transcripts, extended explanations, or reading material.</div>
+          <div class="text-body-area">
+            <div class="text-body-toolbar">
+              <button class="tb-btn" title="Bold" onclick="document.getElementById('text-body').focus()"><strong>B</strong></button>
+              <button class="tb-btn" title="Italic" onclick="document.getElementById('text-body').focus()"><em>I</em></button>
+              <button class="tb-btn" title="Heading" onclick="document.getElementById('text-body').focus()">H1</button>
+              <button class="tb-btn" title="Bullet list" onclick="document.getElementById('text-body').focus()">List</button>
+              <button class="tb-btn" title="Link" onclick="document.getElementById('text-body').focus()">Link</button>
+            </div>
+            <textarea class="text-body-input" id="text-body" oninput="updateSummary()" placeholder="Add written notes, a lesson summary, or reading material that learners can reference alongside the video..."></textarea>
+          </div>
+        </div>
+
+        <div class="support-section">
+          <div class="support-section-label">Additional attachments</div>
+          <div class="field-hint" style="margin-bottom:12px">Worksheets, references, or extra files learners can download.</div>
+          <div class="dropzone slim" id="dz-attach" onclick="document.getElementById('fi-attach').click()" style="cursor:pointer">
+            <div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            <div class="dz-main">Upload worksheets, references, or extra files</div>
+          </div>
+          <input type="file" id="fi-attach" multiple style="display:none" onchange="handleAttachPick(this)">
+          <div id="attach-list" style="margin-top:8px;display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin-top:32px">
+      <span class="sd-label">Access &amp; visibility</span>
+      <span class="sd-line"></span>
     </div>
 
     <div class="field">
       <label>Visibility <span class="req">*</span></label>
       <select class="input" id="f-visibility" onchange="updateSummary()">
-        <option>Public library</option>
+        <option>Public catalog</option>
         <option>Tenant-only</option>
-        <option>Private (draft)</option>
       </select>
-      <div class="field-hint">Public library = available to all learners and content developers. Tenant-only = visible inside one tenant's portal.</div>
+      <div class="field-hint">Public catalog = available to all learners. Tenant-only = visible inside one tenant's portal only.</div>
     </div>
 
     <div class="field">
-      <label>Persona Access <span class="req">*</span></label>
+      <label>Persona access <span class="req">*</span></label>
       <input class="input" id="persona-input" placeholder="Add persona and press Enter" onkeydown="handleChipKey(event,'persona-chips')">
       <div class="chip-row" id="persona-chips">
         <span class="chip" data-chip>Learner / Member <span class="chip-x" onclick="removeChip(this);updateSummary()">×</span></span>
@@ -391,28 +556,36 @@
       <div class="field-hint">At least one persona must be assigned. Content without a persona assignment is not visible to any learner.</div>
     </div>
 
+    <div class="section-divider" style="margin-top:32px">
+      <span class="sd-label">Assessment</span>
+      <span class="sd-line"></span>
+      <span class="sd-badge">Optional</span>
+    </div>
+
     <div class="check-card">
       <label class="check-head">
-        <input type="checkbox" id="kc-toggle" checked onchange="toggleKnowledgeCheck(this)">
-        <span class="ch-title">Add quick knowledge check (optional)</span>
+        <input type="checkbox" id="kc-toggle" onchange="toggleKnowledgeCheck(this)">
+        <span class="ch-title">Add quick knowledge check</span>
       </label>
-      <p class="check-sub">Attach 1 to 3 questions learners answer after watching. Not a graded assessment, completion only.</p>
+      <p class="check-sub">Attach 1 to 3 questions learners answer after watching. Completion check only, not a graded assessment.</p>
 
-      <div class="check-questions" id="check-questions-area">
+      <div class="check-questions" id="check-questions-area" style="display:none">
         <div class="kpi-label" style="margin-bottom:12px">Knowledge check questions</div>
-        <div class="qcard">
-          <div class="qcard-head">
-            <span class="qcard-tag">Q1 · MCQ</span>
-            <button class="btn btn-ghost btn-sm" onclick="this.closest('.qcard').remove()">Remove</button>
-          </div>
-          <input class="input" placeholder="Question text" style="margin-bottom:10px">
-          <div class="qopts">
-            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option A"></label>
-            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option B"></label>
-            <label class="qopt"><input type="radio" name="q1"><input class="input" placeholder="Option C"></label>
+        <div id="qcard-list">
+          <div class="qcard">
+            <div class="qcard-head">
+              <span class="qcard-tag">Q1 &middot; MCQ</span>
+              <button class="btn btn-ghost btn-sm" onclick="this.closest('.qcard').remove()">Remove</button>
+            </div>
+            <input class="input" placeholder="Question text" style="margin-bottom:10px">
+            <div class="qopts">
+              <label class="qopt"><input type="radio" name="kc-q1"><input class="input" placeholder="Option A"></label>
+              <label class="qopt"><input type="radio" name="kc-q1"><input class="input" placeholder="Option B"></label>
+              <label class="qopt"><input type="radio" name="kc-q1"><input class="input" placeholder="Option C"></label>
+            </div>
           </div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="addQuestion(this);this.closest('.check-questions').querySelector('.qcard')&&void 0">+ Add question</button>
+        <button class="btn btn-ghost btn-sm" onclick="addQuestion()">+ Add question</button>
       </div>
     </div>
 
@@ -424,13 +597,13 @@
       <div class="card-head"><div class="card-title">Lesson <em>summary</em></div></div>
       <div class="card-body">
         <div class="stack">
-          <div class="summary-row"><span>Type</span><strong id="sum-type">Video</strong></div>
-          <div class="summary-row"><span>Domain</span><strong id="sum-domain">Technology</strong></div>
+          <div class="summary-row"><span>Subject / Field</span><strong id="sum-domain">Technology</strong></div>
           <div class="summary-row"><span>Language</span><strong id="sum-lang">English</strong></div>
-          <div class="summary-row"><span>Duration</span><strong id="sum-duration">12 min</strong></div>
-          <div class="summary-row"><span>Visibility</span><strong id="sum-visibility">Public library</strong></div>
+          <div class="summary-row"><span>Duration</span><strong id="sum-duration">--</strong></div>
+          <div class="summary-row"><span>Visibility</span><strong id="sum-visibility">Public catalog</strong></div>
           <div class="summary-row"><span>Persona access</span><strong id="sum-persona">2 assigned</strong></div>
-          <div class="summary-row"><span>Assessment</span><strong id="sum-assessment">Not added</strong></div>
+          <div class="summary-row"><span>Supporting materials</span><strong id="sum-support">None added</strong></div>
+          <div class="summary-row"><span>Knowledge check</span><strong id="sum-assessment">Not added</strong></div>
         </div>
       </div>
     </div>
@@ -467,7 +640,6 @@
   </main>
 </div>
 <script>
-/* ---- Toast ---- */
 function showToast(msg, type) {
   var t = document.getElementById('sl-toast');
   if (!t) return;
@@ -478,34 +650,14 @@ function showToast(msg, type) {
   t._timer = setTimeout(function() { t.classList.remove('visible'); }, 2400);
 }
 
-/* ---- Type toggle ---- */
-function selectType(type, el) {
-  document.querySelectorAll('.type-opt').forEach(function(o) { o.classList.remove('is'); });
-  el.classList.add('is');
-  document.getElementById('sum-type').textContent = type;
-  var videoField = document.getElementById('dz-video') && document.getElementById('dz-video').closest('.field');
-  if (videoField) {
-    videoField.querySelector('label').innerHTML = type + ' file or URL <span class="req">*</span>';
-    var dzMain = videoField.querySelector('.dz-main');
-    var dzMeta = videoField.querySelector('.dz-meta');
-    var fi = document.getElementById('fi-video');
-    if (type === 'PDF') {
-      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop PDF here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
-      if (dzMeta) dzMeta.textContent = 'PDF · max 200 MB';
-      if (fi) fi.accept = 'application/pdf';
-    } else if (type === 'Text') {
-      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop file here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
-      if (dzMeta) dzMeta.textContent = 'DOCX · TXT · HTML · max 50 MB';
-      if (fi) fi.accept = '.docx,.txt,.html';
-    } else {
-      if (dzMain) dzMain.innerHTML = 'Drag &amp; drop video here or <span style="color:var(--accent);text-decoration:underline">browse</span>';
-      if (dzMeta) dzMeta.textContent = 'MP4 · MOV · max 2 GB';
-      if (fi) fi.accept = 'video/mp4,video/quicktime';
-    }
-  }
+function toggleSupport(btn) {
+  var expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  var body = document.getElementById('support-body');
+  if (body) body.classList.toggle('open', !expanded);
+  updateSummary();
 }
 
-/* ---- Live summary update ---- */
 function updateSummary() {
   var domain = document.getElementById('f-domain');
   var lang   = document.getElementById('f-lang');
@@ -516,20 +668,29 @@ function updateSummary() {
 
   if (domain)  document.getElementById('sum-domain').textContent  = domain.value;
   if (lang)    document.getElementById('sum-lang').textContent    = lang.value;
-  if (dur)     document.getElementById('sum-duration').textContent = (dur.value ? dur.value + ' min' : '-');
+  if (dur)     document.getElementById('sum-duration').textContent = (dur.value ? dur.value + ' min' : '--');
   if (vis)     document.getElementById('sum-visibility').textContent = vis.value;
   document.getElementById('sum-persona').textContent = pchips.length + ' assigned';
   document.getElementById('sum-assessment').textContent = (kc && kc.checked) ? 'Added' : 'Not added';
+
+  var pdfCount = document.querySelectorAll('#pdf-entries .pdf-entry').length;
+  var textBodyEl = document.getElementById('text-body');
+  var textBody = textBodyEl ? textBodyEl.value : '';
+  var attachCount = document.querySelectorAll('#attach-list > div').length;
+  var parts = [];
+  if (pdfCount > 0) parts.push(pdfCount + ' PDF');
+  if (textBody.trim().length > 0) parts.push('Notes');
+  if (attachCount > 0) parts.push(attachCount + ' file' + (attachCount !== 1 ? 's' : ''));
+  var sumSupport = document.getElementById('sum-support');
+  if (sumSupport) sumSupport.textContent = parts.length ? parts.join(', ') : 'None added';
 }
 
-/* ---- Knowledge check toggle ---- */
 function toggleKnowledgeCheck(cb) {
   var area = document.getElementById('check-questions-area');
   if (area) area.style.display = cb.checked ? '' : 'none';
   updateSummary();
 }
 
-/* ---- Chip helpers ---- */
 function handleChipKey(e, containerId) {
   if (e.key !== 'Enter') return;
   e.preventDefault();
@@ -540,7 +701,7 @@ function handleChipKey(e, containerId) {
   var chip = document.createElement('span');
   chip.className = 'chip';
   chip.setAttribute('data-chip', '');
-  chip.innerHTML = val + ' <span class="chip-x" onclick="removeChip(this);updateSummary()">×</span>';
+  chip.innerHTML = val + ' <span class="chip-x" onclick="removeChip(this);updateSummary()">x</span>';
   container.appendChild(chip);
   input.value = '';
   updateSummary();
@@ -548,9 +709,9 @@ function handleChipKey(e, containerId) {
 
 function removeChip(xBtn) {
   xBtn.closest('[data-chip]').remove();
+  updateSummary();
 }
 
-/* ---- File pick ---- */
 function fmtSize(bytes) {
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
@@ -566,14 +727,55 @@ function handlePick(key, input) {
 }
 
 function removePick(key) {
-  document.getElementById('fi-' + key).value = '';
+  var fi = document.getElementById('fi-' + key);
+  if (fi) fi.value = '';
   var upEl = document.getElementById('up-' + key);
   if (upEl) upEl.classList.remove('visible');
   document.getElementById('fp-' + key).classList.remove('visible');
   document.getElementById('dz-' + key).style.display = '';
 }
 
-/* ---- Upload simulation ---- */
+function handlePdfPick(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var dz = input.previousElementSibling;
+  if (dz && dz.querySelector('.dz-main')) dz.querySelector('.dz-main').textContent = file.name + ' (' + fmtSize(file.size) + ')';
+  updateSummary();
+}
+
+function handleAttachPick(input) {
+  var files = input.files;
+  if (!files || !files.length) return;
+  var list = document.getElementById('attach-list');
+  Array.from(files).forEach(function(file) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 12px';
+    row.innerHTML = '<div class="fp-info"><div class="fp-name">' + file.name + '</div><div class="fp-size">' + fmtSize(file.size) + '</div></div><button class="fp-remove" title="Remove" onclick="this.parentElement.remove();updateSummary()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+    list.appendChild(row);
+  });
+  input.value = '';
+  updateSummary();
+}
+
+var pdfEntryCount = 1;
+function addPdfEntry() {
+  pdfEntryCount++;
+  var n = pdfEntryCount;
+  var entries = document.getElementById('pdf-entries');
+  var entry = document.createElement('div');
+  entry.className = 'pdf-entry';
+  entry.id = 'pdf-entry-' + n;
+  entry.innerHTML = '<div class="pdf-entry-head"><div class="pdf-entry-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--ink-mute)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Document ' + n + '</div><button class="btn btn-ghost btn-sm" onclick="removePdfEntry(this)" style="color:var(--c-danger);border-color:var(--c-danger-wash)">Remove</button></div><div class="field" style="margin-bottom:10px"><label style="font-size:var(--fs-meta)">Document title <span class="req">*</span></label><input class="input" placeholder="e.g. Supplementary Reading"></div><div class="dropzone slim" onclick="this.nextElementSibling.click()" style="cursor:pointer"><div class="dz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="dz-main">Upload PDF or document</div></div><input type="file" accept=".pdf,.pptx,.docx" style="display:none" onchange="handlePdfPick(this)"><div class="field" style="margin-top:10px"><label style="font-size:var(--fs-meta)">Description</label><input class="input" placeholder="Brief note about this document (optional)"></div>';
+  entries.appendChild(entry);
+  updateSummary();
+}
+
+function removePdfEntry(btn) {
+  var entry = btn.closest('.pdf-entry');
+  if (entry) entry.remove();
+  updateSummary();
+}
+
 function startUpload(key) {
   var pending  = document.getElementById('fp-' + key);
   var nameEl   = document.getElementById('fp-' + key + '-name');
@@ -583,13 +785,13 @@ function startUpload(key) {
   var upBar    = document.getElementById('up-' + key + '-bar');
   var upStatus = document.getElementById('up-' + key + '-status');
 
+  if (!pending || !upEl) return;
   pending.classList.remove('visible');
-  upName.textContent = nameEl.textContent;
+  if (upName) upName.textContent = nameEl ? nameEl.textContent : '';
   upEl.classList.add('visible');
-  upPct.textContent = '0%';
-  upBar.style.width = '0%';
-  upStatus.textContent = 'Uploading...';
-  upStatus.className = 'up-status';
+  if (upPct) upPct.textContent = '0%';
+  if (upBar) upBar.style.width = '0%';
+  if (upStatus) { upStatus.textContent = 'Uploading...'; upStatus.className = 'up-status'; }
 
   var pct = 0;
   var speed = key === 'video' ? 180 : 90;
@@ -597,21 +799,21 @@ function startUpload(key) {
     pct += Math.floor(Math.random() * 8) + 3;
     if (pct >= 100) {
       pct = 100; clearInterval(timer);
-      upBar.style.width = '100%'; upPct.textContent = '100%';
-      upStatus.textContent = 'Upload complete';
-      upStatus.className = 'up-status done';
+      if (upBar) upBar.style.width = '100%';
+      if (upPct) upPct.textContent = '100%';
+      if (upStatus) { upStatus.textContent = 'Upload complete'; upStatus.className = 'up-status done'; }
     } else {
-      upBar.style.width = pct + '%'; upPct.textContent = pct + '%';
+      if (upBar) upBar.style.width = pct + '%';
+      if (upPct) upPct.textContent = pct + '%';
     }
   }, speed);
 }
 
-/* ---- Submit ---- */
 function submitLesson() {
   var title = document.getElementById('f-title');
   if (!title || !title.value.trim()) {
     showToast('Please enter a lesson title.', 't-clay');
-    title && title.focus();
+    if (title) title.focus();
     return;
   }
   var pending = ['video', 'thumb', 'caption'].filter(function(k) {
@@ -634,7 +836,6 @@ function submitLesson() {
   }, 1400);
 }
 
-/* ---- Save draft ---- */
 function saveDraft() {
   var btn = document.getElementById('save-btn');
   if (btn) {
@@ -645,16 +846,15 @@ function saveDraft() {
   }
 }
 
-/* ---- Knowledge check add question ---- */
-function addQuestion(btn) {
-  var container = btn.closest('.check-questions');
+function addQuestion() {
+  var container = document.getElementById('qcard-list');
   var cards = container.querySelectorAll('.qcard');
   if (cards.length >= 3) { showToast('Maximum 3 questions allowed.', 't-clay'); return; }
   var n = cards.length + 1;
   var qcard = document.createElement('div');
   qcard.className = 'qcard';
-  qcard.innerHTML = '<div class="qcard-head"><span class="qcard-tag">Q' + n + ' · MCQ</span><button class="btn btn-ghost btn-sm" onclick="this.closest(\'.qcard\').remove()">Remove</button></div><input class="input" placeholder="Question text" style="margin-bottom:10px"><div class="qopts"><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option A"></label><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option B"></label><label class="qopt"><input type="radio" name="q' + n + '"><input class="input" placeholder="Option C"></label></div>';
-  container.insertBefore(qcard, btn);
+  qcard.innerHTML = '<div class="qcard-head"><span class="qcard-tag">Q' + n + ' &middot; MCQ</span><button class="btn btn-ghost btn-sm" onclick="this.closest(\'.qcard\').remove()">Remove</button></div><input class="input" placeholder="Question text" style="margin-bottom:10px"><div class="qopts"><label class="qopt"><input type="radio" name="kc-q' + n + '"><input class="input" placeholder="Option A"></label><label class="qopt"><input type="radio" name="kc-q' + n + '"><input class="input" placeholder="Option B"></label><label class="qopt"><input type="radio" name="kc-q' + n + '"><input class="input" placeholder="Option C"></label></div>';
+  container.appendChild(qcard);
 }
 
 document.addEventListener('DOMContentLoaded', updateSummary);

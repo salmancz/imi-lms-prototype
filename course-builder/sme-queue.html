@@ -36,12 +36,11 @@
   }
   @media (max-width: 1100px) { .stat-strip { grid-template-columns: repeat(2, 1fr); } }
 
-  /* queue list rows - priority indicator left border */
+  /* priority indicator left border on queue rows */
   .queue-row { border-left: 3px solid transparent; }
   .queue-row.priority-high { border-left-color: var(--c-clay); }
   .queue-row.priority-mid  { border-left-color: var(--c-honey); }
 
-  /* icon for list rows */
   .list-icon.overdue { background: var(--c-clay-wash); color: var(--c-clay); }
   .list-icon.normal  { background: var(--paper-2);     color: var(--ink-soft); }
 
@@ -52,7 +51,6 @@
     gap: 20px;
     align-items: stretch;
   }
-  /* Left column card fills the full column height so it matches the right rail */
   .queue-layout > .card {
     display: flex;
     flex-direction: column;
@@ -94,19 +92,90 @@
   .tab-panel { display: none; }
   .tab-panel.is-visible { display: block; }
 
-  /* table meta spans */
   .queue-time { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
   .item-title  { color: var(--ink); font-weight: 600; }
+
+  /* --- Path group header (new for hierarchy view) --- */
+  .path-group { margin-bottom: 6px; }
+  .path-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px 11px 16px;
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .path-group-header:hover { background: var(--c-honey-wash); }
+  .path-group-name {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    flex: 1;
+  }
+  .path-group-badge {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+  }
+  .path-group-chevron {
+    width: 14px;
+    height: 14px;
+    color: var(--ink-mute);
+    transition: transform 0.2s var(--tn);
+    flex-shrink: 0;
+  }
+  .path-group-header.open .path-group-chevron { transform: rotate(90deg); }
+  .path-group-body { display: none; }
+  .path-group-body.open { display: block; }
+
+  /* standalone item (no path) sits flush in list */
+  .standalone-group-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+
+  /* indent child rows within a path group */
+  .path-group-body .list-row {
+    padding-left: 28px;
+    position: relative;
+  }
+  .path-group-body .list-row::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--line);
+  }
+  .path-group-body .list-row:last-child::before {
+    bottom: 50%;
+  }
 </style>
 </head>
 <body data-crumbs="Authoring|../role-views/content-dev-home.html;SME queue">
-
-<div class="ad-strip">
-  <span class="ad-tag">Sponsored</span>
-  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
-  <a href="#" class="ad-cta">Learn more &rarr;</a>
-  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
-</div>
 
 <header class="topbar">
   <a class="brand" href="sme-queue.html">
@@ -144,7 +213,7 @@
       </a>
       <a href="sme-queue.html#reviewed" class="sidebar-link" data-nav="approved">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span>Approved</span><span class="badge">47</span>
+        <span>Reviewed</span><span class="badge">47</span>
       </a>
     </div>
     <div class="sidebar-section">
@@ -173,12 +242,11 @@
 
   <main class="main">
 
-    <!-- Hero / page-head -->
     <div class="page-head">
       <div>
         <div class="eyebrow">Review queue</div>
         <h1 class="page-title">SME review <em>queue</em></h1>
-        <p class="page-sub">Courses awaiting your approval. Logged in as <strong>Dr. Faris Al-Maamari</strong>.</p>
+        <p class="page-sub">Items awaiting your approval. Logged in as <strong>Dr. Faris Al-Maamari</strong>.</p>
       </div>
       <div class="page-actions">
         <span class="chip t-clay dot">4 pending</span>
@@ -186,7 +254,6 @@
       </div>
     </div>
 
-    <!-- KPI stat strip (flat, no gradients) -->
     <div class="stat-strip">
       <div class="stat-flat">
         <div class="stat-label">Pending</div>
@@ -206,13 +273,11 @@
       </div>
     </div>
 
-    <!-- Scope rule notice -->
     <div class="scope-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-      <div><strong>Scope rule:</strong> SME view shows only content assigned to Dr. Faris Al-Maamari. Super Admin view shows all queue items across all SMEs.</div>
+      <div><strong>Scope rule:</strong> SME view shows only content assigned to Dr. Faris Al-Maamari. Super Admin view shows all queue items across all SMEs. Items grouped by Career Path so you can review related content together.</div>
     </div>
 
-    <!-- Two-column layout: queue (main) + right rail -->
     <div class="queue-layout">
 
       <!-- Main queue card with tabs -->
@@ -232,63 +297,98 @@
           </div>
         </div>
 
-        <!-- Queue panel (items awaiting review) -->
+        <!-- Queue panel: grouped by Career Path -->
         <div id="panel-queue" class="tab-panel is-visible card-body flush">
-          <div class="list-row queue-row priority-high" data-priority="high" data-submitted="2026-05-18" style="cursor:pointer" onclick="location.href='sme-review.html'">
-            <div class="list-icon overdue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+
+          <!-- Path group 1: Data Governance Career Path -->
+          <div class="path-group" data-path="data-gov">
+            <div class="path-group-header open" onclick="togglePathGroup(this)" aria-label="Toggle Data Governance Career Path group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--c-sage-text)"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>
+              <span class="path-group-name">Data Governance Career Path</span>
+              <span class="path-group-badge">2 items</span>
+              <span class="chip t-sage" style="font-size:var(--fs-label)">Career Path</span>
+              <svg class="path-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
-            <div class="list-body">
-              <div class="list-title">Knowledge Mapping</div>
-              <div class="list-sub">A. Khalfan &middot; 2026-05-18, <span class="queue-time">09:14 GST</span> &middot; 9 lessons &middot; 6h <span class="chip t-info" style="margin-left:6px">Course &middot; KMP</span></div>
-            </div>
-            <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
-              <span class="chip t-clay dot">6h wait</span>
-              <a class="btn btn-sm btn-primary" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
+            <div class="path-group-body open">
+              <!-- Career Path itself is the first reviewable item in the group -->
+              <div class="list-row queue-row priority-high" data-priority="high" data-submitted="2026-05-12" style="cursor:pointer" onclick="location.href='sme-review.html'">
+                <div class="list-icon overdue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>
+                </div>
+                <div class="list-body">
+                  <div class="list-title">Data Governance Career Path <span class="chip t-sage" style="margin-left:6px;font-size:var(--fs-label)">Career Path &middot; CDMP</span></div>
+                  <div class="list-sub">R. Al-Zadjali &middot; 2026-05-12, <span class="queue-time">08:50 GST</span> &middot; 2 courses &middot; 16 lessons &middot; 13h</div>
+                </div>
+                <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
+                  <span class="chip t-clay dot">6d wait</span>
+                  <a class="btn btn-sm btn-primary" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
+                </div>
+              </div>
+              <!-- Course within that path -->
+              <div class="list-row queue-row priority-high" data-priority="high" data-submitted="2026-05-18" style="cursor:pointer" onclick="location.href='sme-review.html'">
+                <div class="list-icon overdue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="list-body">
+                  <div class="list-title">Knowledge Mapping <span class="chip t-info" style="margin-left:6px;font-size:var(--fs-label)">Course &middot; KMP</span></div>
+                  <div class="list-sub">A. Khalfan &middot; 2026-05-18, <span class="queue-time">09:14 GST</span> &middot; 9 lessons &middot; 6h</div>
+                </div>
+                <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
+                  <span class="chip t-clay dot">6h wait</span>
+                  <a class="btn btn-sm btn-primary" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="list-row queue-row priority-mid" data-priority="mid" data-submitted="2026-05-17" style="cursor:pointer" onclick="location.href='sme-review.html'">
-            <div class="list-icon t-honey">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+
+          <!-- Path group 2: KM Practitioner Path -->
+          <div class="path-group" data-path="km-prac">
+            <div class="path-group-header open" onclick="togglePathGroup(this)" aria-label="Toggle KM Practitioner Path group">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--c-sage-text)"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>
+              <span class="path-group-name">KM Practitioner Path</span>
+              <span class="path-group-badge">1 item</span>
+              <span class="chip t-sage" style="font-size:var(--fs-label)">Career Path</span>
+              <svg class="path-group-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
-            <div class="list-body">
-              <div class="list-title">ISO 15489 Deep Dive</div>
-              <div class="list-sub">N. Al-Rashid &middot; 2026-05-17, <span class="queue-time">14:32 GST</span> &middot; 12 lessons &middot; 8h <span class="chip t-info" style="margin-left:6px">Course &middot; ERM</span></div>
+            <div class="path-group-body open">
+              <div class="list-row queue-row priority-mid" data-priority="mid" data-submitted="2026-05-17" style="cursor:pointer" onclick="location.href='sme-review.html'">
+                <div class="list-icon t-honey">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="list-body">
+                  <div class="list-title">ISO 15489 Deep Dive <span class="chip t-info" style="margin-left:6px;font-size:var(--fs-label)">Course &middot; ERM</span></div>
+                  <div class="list-sub">N. Al-Rashid &middot; 2026-05-17, <span class="queue-time">14:32 GST</span> &middot; 12 lessons &middot; 8h</div>
+                </div>
+                <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
+                  <span class="chip t-honey dot">1d wait</span>
+                  <a class="btn btn-sm btn-ghost" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
+                </div>
+              </div>
             </div>
-            <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
-              <span class="chip t-honey dot">1d wait</span>
-              <a class="btn btn-sm btn-ghost" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
-            </div>
+          </div>
+
+          <!-- Standalone items (no path) -->
+          <div class="standalone-group-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Standalone (no career path)
           </div>
           <div class="list-row queue-row" data-priority="low" data-submitted="2026-05-15" style="cursor:pointer" onclick="location.href='sme-review.html'">
             <div class="list-icon normal">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             </div>
             <div class="list-body">
-              <div class="list-title">Records Retention 101</div>
-              <div class="list-sub">S. Al-Hinai &middot; 2026-05-15, <span class="queue-time">11:05 GST</span> &middot; 4 lessons &middot; 2.5h <span class="chip" style="margin-left:6px">Lesson &middot; Standalone</span></div>
+              <div class="list-title">Records Retention 101 <span class="chip" style="margin-left:6px;font-size:var(--fs-label)">Lesson &middot; Standalone</span></div>
+              <div class="list-sub">S. Al-Hinai &middot; 2026-05-15, <span class="queue-time">11:05 GST</span> &middot; 4 lessons &middot; 2.5h</div>
             </div>
             <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
               <span class="chip">3d wait</span>
               <a class="btn btn-sm btn-ghost" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
             </div>
           </div>
-          <div class="list-row queue-row" data-priority="low" data-submitted="2026-05-12" style="cursor:pointer" onclick="location.href='sme-review.html'">
-            <div class="list-icon normal">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
-            <div class="list-body">
-              <div class="list-title">Data Governance Career Path</div>
-              <div class="list-sub">R. Al-Zadjali &middot; 2026-05-12, <span class="queue-time">08:50 GST</span> &middot; 7 lessons &middot; 5h <span class="chip t-sage" style="margin-left:6px">Career Path &middot; CDMP</span></div>
-            </div>
-            <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
-              <span class="chip">6d wait</span>
-              <a class="btn btn-sm btn-ghost" href="sme-review.html" onclick="event.stopPropagation()">Review &rarr;</a>
-            </div>
-          </div>
+
         </div>
 
-        <!-- In progress panel (under review) -->
+        <!-- In progress panel -->
         <div id="panel-in-progress" class="tab-panel card-body flush">
           <div class="list-row queue-row priority-mid" style="cursor:pointer" onclick="location.href='sme-review.html'">
             <div class="list-icon t-honey">
@@ -297,15 +397,16 @@
             <div class="list-body">
               <div class="list-title">Information Architecture Basics</div>
               <div class="list-sub">A. Khalfan &middot; 2026-05-10, <span class="queue-time">10:00 GST</span> &middot; 8 lessons &middot; 5h <span class="chip t-info" style="margin-left:6px">Course &middot; KMP</span></div>
+              <div class="list-sub" style="margin-top:3px;color:var(--ink-mute)">Path: KM Practitioner Path</div>
             </div>
             <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
-              <span class="chip t-honey dot">In review</span>
+              <span class="chip t-honey dot">Under Review</span>
               <a class="btn btn-sm btn-primary" href="sme-review.html" onclick="event.stopPropagation()">Continue &rarr;</a>
             </div>
           </div>
         </div>
 
-        <!-- Reviewed panel (approved + rejected/done) -->
+        <!-- Reviewed panel -->
         <div id="panel-reviewed" class="tab-panel card-body flush">
           <div class="list-row queue-row" style="cursor:pointer" onclick="location.href='sme-review.html'">
             <div class="list-icon t-sage">
@@ -314,6 +415,7 @@
             <div class="list-body">
               <div class="list-title">Enterprise Content Management</div>
               <div class="list-sub">N. Al-Rashid &middot; 2026-05-08, <span class="queue-time">13:20 GST</span> &middot; 10 lessons &middot; 7h <span class="chip t-info" style="margin-left:6px">Course &middot; ERM</span></div>
+              <div class="list-sub" style="margin-top:3px;color:var(--ink-mute)">Path: KM Practitioner Path</div>
             </div>
             <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
               <span class="chip t-sage dot">Approved</span>
@@ -327,6 +429,7 @@
             <div class="list-body">
               <div class="list-title">Digital Preservation Intro</div>
               <div class="list-sub">S. Al-Hinai &middot; 2026-05-05, <span class="queue-time">09:45 GST</span> &middot; 3 lessons &middot; 1.5h <span class="chip" style="margin-left:6px">Lesson &middot; Standalone</span></div>
+              <div class="list-sub" style="margin-top:3px;color:var(--ink-mute)">No career path</div>
             </div>
             <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
               <span class="chip t-clay dot">Rejected</span>
@@ -340,6 +443,7 @@
             <div class="list-body">
               <div class="list-title">Metadata Standards Overview</div>
               <div class="list-sub">R. Al-Zadjali &middot; 2026-05-03, <span class="queue-time">15:10 GST</span> &middot; 6 lessons &middot; 4h <span class="chip t-sage" style="margin-left:6px">Course &middot; CDMP</span></div>
+              <div class="list-sub" style="margin-top:3px;color:var(--ink-mute)">Path: Data Governance Career Path</div>
             </div>
             <div class="col" style="align-items:flex-end;gap:5px;flex-shrink:0">
               <span class="chip t-clay dot">Rejected</span>
@@ -352,7 +456,6 @@
       <!-- Right rail -->
       <div class="col gap-lg">
 
-        <!-- Review velocity chart -->
         <div class="card">
           <div class="card-head">
             <div class="card-title">Review <em>velocity</em></div>
@@ -380,7 +483,6 @@
           </div>
         </div>
 
-        <!-- Open discussions -->
         <div class="card">
           <div class="card-head">
             <div class="card-title">Open <em>discussions</em></div>
@@ -409,7 +511,6 @@
           </div>
         </div>
 
-        <!-- Quick SME stats -->
         <div class="card">
           <div class="card-head">
             <div class="card-title">Your <em>stats</em></div>
@@ -447,38 +548,52 @@ var VALID_TABS = ['queue', 'in-progress', 'reviewed'];
 function switchTab(key) {
   if (VALID_TABS.indexOf(key) === -1) key = 'queue';
   var tabs = document.querySelectorAll('.card-head .tabs .tab');
-  tabs.forEach(function (t) {
+  tabs.forEach(function(t) {
     t.classList.toggle('is', t.getAttribute('data-tab') === key);
   });
-  VALID_TABS.forEach(function (k) {
+  VALID_TABS.forEach(function(k) {
     var panel = document.getElementById('panel-' + k);
     if (panel) panel.classList.toggle('is-visible', k === key);
   });
   history.replaceState(null, '', '#' + key);
 }
 
+function togglePathGroup(headerEl) {
+  var body = headerEl.nextElementSibling;
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  headerEl.classList.toggle('open', !isOpen);
+}
+
 function sortQueue(value) {
   var panel = document.getElementById('panel-queue');
   if (!panel) return;
-  var rows = Array.prototype.slice.call(panel.querySelectorAll('.queue-row'));
-  if (!rows.length) return;
-  rows.sort(function(a, b) {
-    if (value === 'overdue') {
-      var order = { high: 0, mid: 1, low: 2 };
-      return (order[a.dataset.priority] || 2) - (order[b.dataset.priority] || 2);
-    } else if (value === 'newest') {
-      var da = a.dataset.submitted || '0', db = b.dataset.submitted || '0';
-      return db.localeCompare(da);
-    }
-    return 0;
+  // sort path groups + standalone rows by priority/date of their highest-priority child
+  var rows = Array.prototype.slice.call(panel.querySelectorAll('.queue-row:not(.path-group-body .list-row)'));
+  // For simplicity reorder the visible flat-list rows (the path groups themselves don't have data attrs)
+  // Sort the actual list-rows within each path group body
+  var groups = panel.querySelectorAll('.path-group-body');
+  groups.forEach(function(body) {
+    var bodyRows = Array.prototype.slice.call(body.querySelectorAll('.list-row'));
+    bodyRows.sort(function(a, b) {
+      if (value === 'overdue') {
+        var order = { high: 0, mid: 1, low: 2 };
+        return (order[a.dataset.priority] || 2) - (order[b.dataset.priority] || 2);
+      } else if (value === 'newest') {
+        var da = a.dataset.submitted || '0', db = b.dataset.submitted || '0';
+        return db.localeCompare(da);
+      }
+      return 0;
+    });
+    bodyRows.forEach(function(r) { body.appendChild(r); });
   });
-  rows.forEach(function(r) { panel.appendChild(r); });
+  showToast('Queue sorted', '', 1500);
 }
 
 function applyQueueSearch(q) {
   if (!q) return;
   q = q.toLowerCase();
-  var allRows = document.querySelectorAll('#panel-queue .queue-row, #panel-in-progress .queue-row, #panel-reviewed .queue-row');
+  var allRows = document.querySelectorAll('#panel-queue .list-row, #panel-in-progress .list-row, #panel-reviewed .list-row');
   var shown = 0, total = allRows.length;
   allRows.forEach(function(r) {
     var title = (r.querySelector('.list-title') || {}).textContent || '';
@@ -491,14 +606,23 @@ function applyQueueSearch(q) {
   if (!count) {
     count = document.createElement('div');
     count.id = 'queue-search-count';
-    count.style.cssText = 'font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);margin:8px 16px 0';
+    count.style.cssText = 'font-family:var(--font-label);font-size:var(--fs-meta);color:var(--ink-mute);margin:8px 16px 0';
     var firstPanel = document.getElementById('panel-queue');
     if (firstPanel) firstPanel.parentNode.insertBefore(count, firstPanel);
   }
   count.textContent = 'Search: showing ' + shown + ' of ' + total + ' items for "' + q + '"';
 }
 
-(function () {
+function showToast(msg, type, duration) {
+  var t = document.getElementById('imi-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'imi-toast' + (type ? ' ' + type : '');
+  requestAnimationFrame(function() { t.classList.add('show'); });
+  setTimeout(function() { t.classList.remove('show'); }, duration || 3000);
+}
+
+(function() {
   var hash = (location.hash || '').replace('#', '');
   var initial = VALID_TABS.indexOf(hash) !== -1 ? hash : 'queue';
   switchTab(initial);
@@ -514,7 +638,7 @@ function applyQueueSearch(q) {
   var domain = params.get('domain');
   if (domain) {
     var domainLabel = domain === 'km' ? 'KM Standards' : domain === 'records' ? 'Records Mgmt' : domain;
-    var allRows = document.querySelectorAll('#panel-queue .queue-row, #panel-in-progress .queue-row, #panel-reviewed .queue-row');
+    var allRows = document.querySelectorAll('#panel-queue .list-row, #panel-in-progress .list-row, #panel-reviewed .list-row');
     var shown = 0, total = allRows.length;
     allRows.forEach(function(r) {
       var sub = (r.querySelector('.list-sub') || {}).textContent || '';
@@ -526,7 +650,7 @@ function applyQueueSearch(q) {
     if (!count) {
       count = document.createElement('div');
       count.id = 'queue-search-count';
-      count.style.cssText = 'font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);margin:8px 16px 0';
+      count.style.cssText = 'font-family:var(--font-label);font-size:var(--fs-meta);color:var(--ink-mute);margin:8px 16px 0';
       var firstPanel = document.getElementById('panel-queue');
       if (firstPanel) firstPanel.parentNode.insertBefore(count, firstPanel);
     }
@@ -536,6 +660,32 @@ function applyQueueSearch(q) {
   }
 })();
 </script>
+<style>
+  .imi-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--ink);
+    color: var(--hero-bg);
+    font-family: var(--font-label);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 12px 22px;
+    border-radius: var(--r-pill);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  .imi-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .imi-toast.t-sage { background: var(--c-sage); }
+  .imi-toast.t-clay { background: var(--c-clay); }
+</style>
+<div id="imi-toast" class="imi-toast"></div>
 <script src="../ui-enhance.js"></script>
 </body>
 </html>

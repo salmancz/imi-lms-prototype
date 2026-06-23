@@ -215,25 +215,39 @@
     text-transform: uppercase;
     color: var(--ink-mute);
   }
+  /* Locked (on, not clickable) */
   .toggle {
     width: 42px;
     height: 24px;
     border-radius: var(--r-pill);
     background: var(--ink);
-    opacity: 0.55;
     position: relative;
-    cursor: not-allowed;
     flex-shrink: 0;
+  }
+  .toggle.is-locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .toggle.is-optional {
+    opacity: 1;
+    cursor: pointer;
+    background: var(--line-strong);
+  }
+  .toggle.is-optional.is-on {
+    background: var(--ink);
   }
   .toggle .knob {
     position: absolute;
     top: 3px;
-    right: 3px;
     width: 18px;
     height: 18px;
     background: var(--paper);
     border-radius: 50%;
+    transition: right 0.18s, left 0.18s;
   }
+  .toggle.is-locked .knob,
+  .toggle.is-optional.is-on .knob { right: 3px; left: auto; }
+  .toggle.is-optional:not(.is-on) .knob { left: 3px; right: auto; }
 
   /* ---- file uploader drop zone ---- */
   .uploader {
@@ -256,6 +270,15 @@
 
   /* ---- inline divider ---- */
   .form-rule { height: 1px; background: var(--line); margin: 22px 0; }
+
+  /* ---- field group hide/show ---- */
+  [data-grp] { transition: opacity 0.18s; }
+  [data-grp].grp-hidden { display: none; }
+
+  /* new-path adder row */
+  .new-path-row {
+    margin-top: 12px;
+  }
 
   /* ---- sticky footer nav ---- */
   .builder-foot {
@@ -365,7 +388,7 @@
         <p class="page-sub">Define the core details that learners and administrators will see.</p>
       </div>
       <div class="page-actions">
-        <button class="btn btn-ghost" id="topSaveDraftBtn" onclick="(function(b){b.textContent='Saving...';var t=document.getElementById('cb1Toast');setTimeout(function(){b.textContent='Save draft';t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},2000);},600);})(this)">Save draft</button>
+        <button class="btn btn-ghost" id="topSaveDraftBtn">Save draft</button>
         <a class="btn btn-ghost" href="../role-views/cd-course-preview.html">Preview</a>
         <a class="btn btn-primary" href="course-builder-2.html">Next &rarr;</a>
       </div>
@@ -417,7 +440,7 @@
         <label style="font-size: var(--fs-label)">Publish type <span class="req">*</span></label>
         <div class="ptype-grid">
 
-          <div class="ptype is-selected" onclick="document.querySelectorAll('.ptype').forEach(function(p){p.classList.remove('is-selected')});this.classList.add('is-selected')">
+          <div class="ptype is-selected" id="ptype-cpc" role="radio" aria-checked="true" tabindex="0">
             <div class="ptype-top">
               <div class="radio"></div>
               <span class="ptype-name">Career Path Course</span>
@@ -434,7 +457,7 @@
             </div>
           </div>
 
-          <div class="ptype" onclick="document.querySelectorAll('.ptype').forEach(function(p){p.classList.remove('is-selected')});this.classList.add('is-selected')">
+          <div class="ptype" id="ptype-sac" role="radio" aria-checked="false" tabindex="0">
             <div class="ptype-top">
               <div class="radio"></div>
               <span class="ptype-name">Standalone Course</span>
@@ -449,7 +472,7 @@
             </div>
           </div>
 
-          <div class="ptype" onclick="document.querySelectorAll('.ptype').forEach(function(p){p.classList.remove('is-selected')});this.classList.add('is-selected')">
+          <div class="ptype" id="ptype-sal" role="radio" aria-checked="false" tabindex="0">
             <div class="ptype-top">
               <div class="radio"></div>
               <span class="ptype-name">Standalone Lesson</span>
@@ -466,40 +489,69 @@
       </div>
     </div>
 
-    <!-- Section: Path and visibility -->
+    <!-- Section: Visibility (always visible, path group controlled by data-grp) -->
     <div class="form-section">
       <div class="section-head">Path &amp; <em>visibility</em></div>
-      <div class="grid-2-eq" style="margin-bottom:0">
-        <div class="field" style="margin:0">
-          <label>Career path / Learning path</label>
-          <input class="input" value="CDMP &#9660;" placeholder="Select a path" aria-label="Career or learning path">
-          <div class="hint">Enabled only when &ldquo;Career Path Course&rdquo; is selected above.</div>
+
+      <!-- CAREER PATH group: career path select + new path input -->
+      <div data-grp="path">
+        <div class="grid-2-eq" style="margin-bottom:0;align-items:start">
+          <div class="field" style="margin:0">
+            <label for="careerPathSelect">Career path <span class="req">*</span></label>
+            <select id="careerPathSelect" class="input" aria-label="Select career path">
+              <option value="">Select a career path</option>
+              <option value="cdmp" selected>CDMP - Certified Data Management Professional</option>
+              <option value="cip">CIP - Certified Information Professional</option>
+              <option value="igp">IGP - Information Governance Professional</option>
+              <option value="erm">ERM - Enterprise Records Management</option>
+              <option value="kmp">KMP - Knowledge Management Professional</option>
+              <option value="dsa">DSA - Data Science &amp; Analytics</option>
+            </select>
+            <div class="hint">The career path this course belongs to.</div>
+          </div>
+          <div class="field" style="margin:0">
+            <label for="newPathInput">Or add a new career path</label>
+            <input type="text" id="newPathInput" class="input" placeholder="e.g. AI Literacy Programme" aria-label="New career path name">
+            <div class="hint">Type a new path name to create it alongside this course.</div>
+          </div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Visibility <span class="req">*</span></label>
-          <input class="input" value="Public catalog &#9660;" aria-label="Visibility setting">
-          <div class="hint">Public = visible to all learners. Tenant-only = hidden from public catalog.</div>
-        </div>
+        <div class="form-rule"></div>
       </div>
 
-      <div class="form-rule"></div>
-
-      <div class="field" style="margin:0">
-        <label>Corporate tenant <span class="opt-tag">optional</span></label>
-        <input class="input" value="Bank Muscat &#9660;" aria-label="Corporate tenant">
-        <div class="hint">If set, the course is visible only inside that tenant&rsquo;s portal.</div>
+      <!-- Visibility + Corporate (always shown) -->
+      <div class="grid-2-eq" style="margin-bottom:0">
+        <div class="field" style="margin:0">
+          <label for="visibilitySelect">Visibility <span class="req">*</span></label>
+          <select id="visibilitySelect" class="input" aria-label="Visibility setting">
+            <option value="public" selected>Public catalog</option>
+            <option value="tenant">Tenant-only</option>
+            <option value="hidden">Hidden (draft)</option>
+          </select>
+          <div class="hint">Public = visible to all learners. Tenant-only = hidden from public catalog.</div>
+        </div>
+        <div class="field" style="margin:0">
+          <label for="corporateTenantSelect">Corporate tenant <span class="opt-tag">optional</span></label>
+          <select id="corporateTenantSelect" class="input" aria-label="Corporate tenant">
+            <option value="">None</option>
+            <option value="bm" selected>Bank Muscat</option>
+            <option value="mof">Ministry of Finance</option>
+            <option value="opal">OPAL</option>
+            <option value="shell">Shell Oman</option>
+          </select>
+          <div class="hint">If set, the course is visible only inside that tenant&rsquo;s portal.</div>
+        </div>
       </div>
     </div>
 
-    <!-- Assessment locked strip -->
-    <div class="lock-strip">
+    <!-- Assessment strip (controlled by setPublishType) -->
+    <div class="lock-strip" id="assessmentStrip">
       <div>
-        <div class="ls-label">Assessment required</div>
-        <div class="hint" style="margin-top:3px">Mandatory for Career Path + Standalone courses. Toggle available for Standalone Lesson only.</div>
+        <div class="ls-label" id="assessmentLabel">Assessment required</div>
+        <div class="hint" id="assessmentHint" style="margin-top:3px">Mandatory for Career Path and Standalone courses.</div>
       </div>
       <div class="ls-right">
-        <span class="lock-tag">Locked on</span>
-        <div class="toggle" aria-disabled="true" title="Locked on for this publish type"><div class="knob"></div></div>
+        <span class="lock-tag" id="assessmentTag">LOCKED ON</span>
+        <div class="toggle is-locked" id="assessmentToggle" aria-disabled="true" title="Locked on for this publish type"><div class="knob"></div></div>
       </div>
     </div>
 
@@ -507,50 +559,119 @@
     <div class="grid-2-eq">
       <div class="form-section" style="margin-bottom:0">
         <div class="section-head">Basic <em>information</em></div>
+
+        <!-- Title label changes: "Course title" vs "Lesson title" -->
         <div class="field">
-          <label>Course title <span class="req">*</span></label>
-          <input class="input" placeholder="e.g. Data Quality Foundations" aria-label="Course title">
-        </div>
-        <div class="field">
-          <label>Tagline</label>
-          <input class="input" placeholder="One-line description shown on cards" aria-label="Course tagline">
+          <label for="contentTitle"><span id="titleLabel">Course title</span> <span class="req">*</span></label>
+          <input type="text" id="contentTitle" class="input" placeholder="e.g. Data Quality Foundations" aria-label="Content title">
         </div>
         <div class="field">
-          <label>Full description <span class="req">*</span></label>
-          <textarea class="input" rows="4" placeholder="What this course covers, who it&rsquo;s for&hellip;" aria-label="Full description"></textarea>
+          <label for="taglineInput">Tagline</label>
+          <input type="text" id="taglineInput" class="input" placeholder="One-line description shown on cards" aria-label="Tagline">
         </div>
-        <div class="grid-2-eq">
-          <div class="field">
-            <label>Subject / Field <span class="req">*</span></label>
-            <input class="input" placeholder="Technology &#9660;" aria-label="Subject or field">
+        <div class="field">
+          <label for="descInput">Full description <span class="req">*</span></label>
+          <textarea id="descInput" class="input" rows="4" placeholder="What this course covers, who it&rsquo;s for&hellip;" aria-label="Full description"></textarea>
+        </div>
+
+        <!-- COURSE group fields: Subject, Category, Difficulty, Duration hours, Learning outcomes -->
+        <div data-grp="course">
+          <div class="grid-2-eq">
+            <div class="field">
+              <label for="subjectSelect">Subject / Field <span class="req">*</span></label>
+              <select id="subjectSelect" class="input" aria-label="Subject or field">
+                <option value="">Select subject</option>
+                <option value="tech" selected>Technology</option>
+                <option value="biz">Business</option>
+                <option value="mgmt">Management</option>
+                <option value="data">Data &amp; Analytics</option>
+                <option value="finance">Finance</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="categorySelect">Category <span class="req">*</span></label>
+              <select id="categorySelect" class="input" aria-label="Category">
+                <option value="">Select category</option>
+                <option value="dq" selected>Data quality</option>
+                <option value="dg">Data governance</option>
+                <option value="meta">Metadata</option>
+                <option value="arch">Architecture</option>
+                <option value="sec">Security</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2-eq">
+            <div class="field">
+              <label for="difficultySelect">Difficulty <span class="req">*</span></label>
+              <select id="difficultySelect" class="input" aria-label="Difficulty level">
+                <option value="">Select difficulty</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate" selected>Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="expert">Expert</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="durationHours">Duration (hours) <span class="req">*</span></label>
+              <input type="number" id="durationHours" class="input" placeholder="4" min="1" step="0.5" aria-label="Duration in hours">
+            </div>
           </div>
           <div class="field">
-            <label>Category <span class="req">*</span></label>
-            <input class="input" placeholder="Data quality &#9660;" aria-label="Category">
+            <label for="learningOutcomes">Learning outcomes</label>
+            <textarea id="learningOutcomes" class="input" rows="3" placeholder="One outcome per line" aria-label="Learning outcomes"></textarea>
           </div>
         </div>
-        <div class="grid-2-eq">
+
+        <!-- LESSON group fields: Lesson Type, Duration minutes, Language, Subtitles, Primary content -->
+        <div data-grp="lesson" class="grp-hidden">
+          <div class="grid-2-eq">
+            <div class="field">
+              <label for="durationMinutes">Duration (minutes) <span class="req">*</span></label>
+              <input type="number" id="durationMinutes" class="input" placeholder="20" min="1" step="1" aria-label="Duration in minutes">
+            </div>
+            <div class="field">
+              <label for="languageSelect">Language <span class="req">*</span></label>
+              <select id="languageSelect" class="input" aria-label="Lesson language">
+                <option value="en" selected>English</option>
+                <option value="ar">Arabic</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
           <div class="field">
-            <label>Difficulty <span class="req">*</span></label>
-            <input class="input" placeholder="Intermediate &#9660;" aria-label="Difficulty level">
+            <label for="primaryVideo">Video <span class="req">*</span> <span class="opt-tag" style="background:var(--ink);color:var(--hero-bg)">primary content</span></label>
+            <input type="text" id="primaryVideo" class="input" placeholder="Paste a video URL, or upload below" aria-label="Video URL">
+            <div class="uploader" id="contentUploader" style="height:60px;position:relative;cursor:pointer;margin-top:8px" role="button" tabindex="0" aria-label="Upload video file" onclick="document.getElementById('contentFile').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('contentFile').click()">
+              <input type="file" id="contentFile" accept="video/*" style="display:none" onchange="(function(f){if(!f)return;document.getElementById('contentUploader').textContent=f.name;})(this.files[0])">
+              Video file (MP4 / MOV) &middot; or paste URL above
+            </div>
+            <div class="hint">Video is the primary content of every lesson.</div>
           </div>
           <div class="field">
-            <label>Duration (hours) <span class="req">*</span></label>
-            <input class="input" placeholder="4" aria-label="Duration in hours">
+            <label>Supporting materials <span class="opt-tag">optional</span></label>
+            <div class="uploader" id="supportUploader" style="height:60px;position:relative;cursor:pointer" role="button" tabindex="0" aria-label="Upload supporting materials" onclick="document.getElementById('supportFile').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('supportFile').click()">
+              <input type="file" id="supportFile" accept=".pdf,.doc,.docx,.ppt,.pptx" multiple style="display:none" onchange="(function(files){document.getElementById('supportUploader').textContent=Array.from(files).map(function(f){return f.name;}).join(', ')||'PDF / slides / documents that support the video';})(this.files)">
+              PDF / slides / documents that support the video
+            </div>
+          </div>
+          <div class="field" style="margin:0">
+            <label>Subtitles / captions <span class="req">*</span></label>
+            <div class="uploader" id="subtitlesUploader" style="height:60px;position:relative;cursor:pointer" role="button" tabindex="0" aria-label="Upload subtitles file" onclick="document.getElementById('subtitlesFile').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('subtitlesFile').click()">
+              <input type="file" id="subtitlesFile" accept=".srt,.vtt" style="display:none" onchange="(function(f){if(!f)return;document.getElementById('subtitlesUploader').textContent=f.name;})(this.files[0])">
+              .srt or .vtt &middot; Mandatory
+            </div>
+            <div class="hint">Subtitles are required for all lessons.</div>
           </div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Learning outcomes</label>
-          <textarea class="input" rows="3" placeholder="One outcome per line" aria-label="Learning outcomes"></textarea>
-        </div>
+
       </div>
 
       <div class="form-section" style="margin-bottom:0">
         <div class="section-head">Media &amp; <em>metadata</em></div>
         <div class="field">
           <label>Thumbnail <span class="req">*</span></label>
-          <div class="uploader" id="thumbUploader" style="height:120px;position:relative" role="button" tabindex="0" aria-label="Upload thumbnail image" onclick="document.getElementById('thumbFile').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('thumbFile').click()">
-            <input type="file" id="thumbFile" accept="image/*" style="display:none" onchange="(function(f){if(!f)return;var r=new FileReader();r.onload=function(e){var u=document.getElementById('thumbUploader');u.innerHTML='<img src=\\''+e.target.result+'\\' style=\\'width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);\\'>';};r.readAsDataURL(f);})(this.files[0])">
+          <div class="uploader" id="thumbUploader" style="height:120px;position:relative" role="button" tabindex="0" aria-label="Upload thumbnail image">
+            <input type="file" id="thumbFile" accept="image/*" style="display:none" onchange="(function(f){if(!f)return;var r=new FileReader();r.onload=function(e){var u=document.getElementById('thumbUploader');u.innerHTML='<img src=\''+e.target.result+'\' style=\'width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);\'>';};r.readAsDataURL(f);})(this.files[0])">
             <div id="thumbPlaceholder">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;margin-bottom:6px;display:block;margin-left:auto;margin-right:auto"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               Drag image &middot; 16:10 &middot; Min 1280&times;800
@@ -558,28 +679,33 @@
           </div>
         </div>
         <div class="field">
-          <label>Tags <span style="color:var(--ink-faint);font-weight:600">(comma-separated)</span></label>
-          <input class="input" placeholder="dama, dmbok, quality, governance" aria-label="Course tags">
+          <label for="tagsInput">Tags <span style="color:var(--ink-faint);font-weight:600">(comma-separated)</span></label>
+          <input type="text" id="tagsInput" class="input" placeholder="dama, dmbok, quality, governance" aria-label="Content tags">
         </div>
-        <div class="field">
-          <label>Skills students will gain</label>
-          <div style="display:flex;gap:8px">
-            <input class="input" id="skillInput" placeholder="Type a skill and press Enter" aria-label="Add skill" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();var v=this.value.trim();if(v){var c=document.createElement('span');c.className='chip skill-chip';c.innerHTML=v+' <span class=\\'chip-x\\' onclick=\\'event.stopPropagation();this.parentElement.remove();\\'>&times;</span>';document.getElementById('skillChips').appendChild(c);this.value='';}}">
-            <button type="button" class="btn btn-ghost btn-sm" onclick="(function(){var inp=document.getElementById('skillInput');var v=inp.value.trim();if(!v)return;var c=document.createElement('span');c.className='chip skill-chip';c.innerHTML=v+' <span class=&quot;chip-x&quot; onclick=&quot;event.stopPropagation();this.parentElement.remove()&quot;>&times;</span>';document.getElementById('skillChips').appendChild(c);inp.value='';})()">Add</button>
+
+        <!-- Skills: shown for course types; hidden for standalone lesson -->
+        <div data-grp="course">
+          <div class="field">
+            <label>Skills students will gain</label>
+            <div style="display:flex;gap:8px">
+              <input type="text" class="input" id="skillInput" placeholder="Type a skill and press Enter" aria-label="Add skill" style="flex:1">
+              <button type="button" class="btn btn-ghost btn-sm" id="addSkillBtn">Add</button>
+            </div>
+            <div class="chip-row" id="skillChips">
+              <span class="chip skill-chip">Data profiling <span class="chip-x">&times;</span></span>
+              <span class="chip skill-chip">Quality metrics <span class="chip-x">&times;</span></span>
+              <span class="chip skill-chip">Root cause analysis <span class="chip-x">&times;</span></span>
+            </div>
           </div>
-          <div class="chip-row" id="skillChips">
-            <span class="chip skill-chip">Data profiling <span class="chip-x" onclick="event.stopPropagation();this.parentElement.remove()">&times;</span></span>
-            <span class="chip skill-chip">Quality metrics <span class="chip-x" onclick="event.stopPropagation();this.parentElement.remove()">&times;</span></span>
-            <span class="chip skill-chip">Root cause analysis <span class="chip-x" onclick="event.stopPropagation();this.parentElement.remove()">&times;</span></span>
+          <div class="field" style="margin:0">
+            <label>Attachments</label>
+            <div class="uploader" id="attachUploader" style="height:60px;position:relative;cursor:pointer" role="button" tabindex="0" aria-label="Upload attachments">
+              <input type="file" id="attachFile" multiple accept=".pdf,.ppt,.pptx,.doc,.docx" style="display:none" onchange="(function(files){var names=Array.from(files).map(function(f){return f.name;}).join(', ');document.getElementById('attachUploader').textContent=names||'PDF / slides \xb7 up to 25 MB';})(this.files)">
+              PDF / slides &middot; up to 25 MB
+            </div>
           </div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Attachments</label>
-          <div class="uploader" id="attachUploader" style="height:60px;position:relative;cursor:pointer" role="button" tabindex="0" aria-label="Upload attachments" onclick="document.getElementById('attachFile').click()" onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('attachFile').click()">
-            <input type="file" id="attachFile" multiple accept=".pdf,.ppt,.pptx,.doc,.docx" style="display:none" onchange="(function(files){var names=Array.from(files).map(function(f){return f.name;}).join(', ');document.getElementById('attachUploader').textContent=names||'PDF / slides \xb7 up to 25 MB';})(this.files)">
-            PDF / slides &middot; up to 25 MB
-          </div>
-        </div>
+
       </div>
     </div>
 
@@ -587,7 +713,7 @@
     <div class="builder-foot">
       <span class="foot-note">Step 1 of 4 &middot; Info</span>
       <div class="page-actions">
-        <button class="btn btn-ghost" id="saveDraftBtn1" onclick="(function(b){b.textContent='Saving...';var t=document.getElementById('cb1Toast');setTimeout(function(){b.textContent='Save draft';t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(80px)';},2000);},600);})(this)">Save draft</button>
+        <button class="btn btn-ghost" id="saveDraftBtn1">Save draft</button>
         <a class="btn btn-primary" href="course-builder-2.html">Next: Lessons &rarr;</a>
       </div>
     </div>
@@ -605,57 +731,204 @@
 
 <script>
 (function(){
-  // Wizard step navigation
+  /* ---- Publish type switching ---- */
+  var currentType = 'cpc';
+
+  function setPublishType(type) {
+    currentType = type;
+
+    // Update card selection + ARIA
+    var cards = { cpc: 'ptype-cpc', sac: 'ptype-sac', sal: 'ptype-sal' };
+    Object.keys(cards).forEach(function(k) {
+      var el = document.getElementById(cards[k]);
+      if (k === type) {
+        el.classList.add('is-selected');
+        el.setAttribute('aria-checked', 'true');
+      } else {
+        el.classList.remove('is-selected');
+        el.setAttribute('aria-checked', 'false');
+      }
+    });
+
+    // Show/hide data-grp groups
+    // path: only cpc
+    // course: cpc + sac
+    // lesson: sal only
+    var pathGrps = document.querySelectorAll('[data-grp="path"]');
+    var courseGrps = document.querySelectorAll('[data-grp="course"]');
+    var lessonGrps = document.querySelectorAll('[data-grp="lesson"]');
+
+    pathGrps.forEach(function(el) {
+      if (type === 'cpc') { el.classList.remove('grp-hidden'); }
+      else { el.classList.add('grp-hidden'); }
+    });
+
+    courseGrps.forEach(function(el) {
+      if (type === 'cpc' || type === 'sac') { el.classList.remove('grp-hidden'); }
+      else { el.classList.add('grp-hidden'); }
+    });
+
+    lessonGrps.forEach(function(el) {
+      if (type === 'sal') { el.classList.remove('grp-hidden'); }
+      else { el.classList.add('grp-hidden'); }
+    });
+
+    // Update title label
+    var titleLabelEl = document.getElementById('titleLabel');
+    if (type === 'sal') {
+      titleLabelEl.textContent = 'Lesson title';
+      document.getElementById('contentTitle').setAttribute('aria-label', 'Lesson title');
+      document.getElementById('contentTitle').setAttribute('placeholder', 'e.g. Introduction to Data Quality');
+    } else {
+      titleLabelEl.textContent = 'Course title';
+      document.getElementById('contentTitle').setAttribute('aria-label', 'Course title');
+      document.getElementById('contentTitle').setAttribute('placeholder', 'e.g. Data Quality Foundations');
+    }
+
+    // Update assessment strip
+    var toggle = document.getElementById('assessmentToggle');
+    var tag = document.getElementById('assessmentTag');
+    var label = document.getElementById('assessmentLabel');
+    var hint = document.getElementById('assessmentHint');
+
+    if (type === 'sal') {
+      // Optional, toggleable, default off
+      toggle.classList.remove('is-locked');
+      toggle.classList.add('is-optional');
+      toggle.classList.remove('is-on');
+      toggle.setAttribute('aria-disabled', 'false');
+      toggle.setAttribute('title', 'Toggle assessment on or off');
+      toggle.removeAttribute('aria-disabled');
+      tag.textContent = 'OPTIONAL';
+      label.textContent = 'Assessment (optional)';
+      hint.textContent = 'Toggle to include or exclude a quiz for this standalone lesson.';
+    } else {
+      // Locked on
+      toggle.classList.add('is-locked');
+      toggle.classList.remove('is-optional');
+      toggle.classList.remove('is-on');
+      toggle.setAttribute('aria-disabled', 'true');
+      toggle.setAttribute('title', 'Locked on for this publish type');
+      tag.textContent = 'LOCKED ON';
+      label.textContent = 'Assessment required';
+      hint.textContent = 'Mandatory for Career Path and Standalone courses.';
+    }
+  }
+
+  // Wire up ptype card clicks
+  document.getElementById('ptype-cpc').addEventListener('click', function() { setPublishType('cpc'); });
+  document.getElementById('ptype-sac').addEventListener('click', function() { setPublishType('sac'); });
+  document.getElementById('ptype-sal').addEventListener('click', function() { setPublishType('sal'); });
+
+  // Keyboard support for ptype cards
+  ['ptype-cpc', 'ptype-sac', 'ptype-sal'].forEach(function(id) {
+    var types = { 'ptype-cpc': 'cpc', 'ptype-sac': 'sac', 'ptype-sal': 'sal' };
+    document.getElementById(id).addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPublishType(types[id]); }
+    });
+  });
+
+  // Assessment optional toggle click
+  document.getElementById('assessmentToggle').addEventListener('click', function() {
+    if (!this.classList.contains('is-optional')) return;
+    this.classList.toggle('is-on');
+    var tag = document.getElementById('assessmentTag');
+    tag.textContent = this.classList.contains('is-on') ? 'ON' : 'OPTIONAL';
+  });
+
+  // Run on load for default (Career Path Course)
+  setPublishType('cpc');
+
+  /* ---- Wizard step navigation ---- */
   var stepLinks = ['course-builder-1.html','course-builder-2.html','course-builder-3.html','course-builder-4.html'];
   document.querySelectorAll('.wizard-step').forEach(function(s,i){
-    if(i>0){
-      s.style.cursor='pointer';
-      s.addEventListener('click',function(){
-        location.href=stepLinks[i];
-      });
+    if (i > 0) {
+      s.style.cursor = 'pointer';
+      s.addEventListener('click', function(){ location.href = stepLinks[i]; });
     } else {
-      s.style.cursor='default';
+      s.style.cursor = 'default';
     }
   });
 
-  // Thumb uploader drag support
-  var thumbUp=document.getElementById('thumbUploader');
-  if(thumbUp){
-    thumbUp.addEventListener('dragover',function(e){e.preventDefault();this.style.borderColor='var(--ink)';});
-    thumbUp.addEventListener('dragleave',function(){this.style.borderColor='';});
-    thumbUp.addEventListener('drop',function(e){
-      e.preventDefault();this.style.borderColor='';
-      var f=e.dataTransfer.files[0];if(!f||!f.type.startsWith('image/'))return;
-      var r=new FileReader();r.onload=function(ev){
-        thumbUp.innerHTML='<img src="'+ev.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);">';
-      };r.readAsDataURL(f);
+  /* ---- Save draft toast ---- */
+  function saveDraft(btn) {
+    btn.textContent = 'Saving...';
+    var t = document.getElementById('cb1Toast');
+    setTimeout(function() {
+      btn.textContent = 'Save draft';
+      t.style.opacity = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      setTimeout(function() {
+        t.style.opacity = '0';
+        t.style.transform = 'translateX(-50%) translateY(80px)';
+      }, 2000);
+    }, 600);
+  }
+  document.getElementById('topSaveDraftBtn').addEventListener('click', function() { saveDraft(this); });
+  document.getElementById('saveDraftBtn1').addEventListener('click', function() { saveDraft(this); });
+
+  /* ---- Thumb uploader ---- */
+  var thumbUp = document.getElementById('thumbUploader');
+  if (thumbUp) {
+    thumbUp.addEventListener('click', function() { document.getElementById('thumbFile').click(); });
+    thumbUp.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') document.getElementById('thumbFile').click(); });
+    thumbUp.addEventListener('dragover', function(e){ e.preventDefault(); this.style.borderColor='var(--ink)'; });
+    thumbUp.addEventListener('dragleave', function(){ this.style.borderColor=''; });
+    thumbUp.addEventListener('drop', function(e){
+      e.preventDefault(); this.style.borderColor='';
+      var f = e.dataTransfer.files[0]; if (!f || !f.type.startsWith('image/')) return;
+      var r = new FileReader(); r.onload = function(ev) {
+        thumbUp.innerHTML = '<img src="' + ev.target.result + '" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-sm);">';
+      }; r.readAsDataURL(f);
     });
   }
 
-  // Path / visibility / corporate selects - convert fake inputs to real selects
-  (function(){
-    var pathSels = [
-      {el:document.querySelector('input[aria-label="Career or learning path"]'), opts:['CDMP','Data Leadership Path','Analytics Track','Core IT Path']},
-      {el:document.querySelector('input[aria-label="Visibility setting"]'),      opts:['Public catalog','Tenant-only','Hidden (draft)']},
-      {el:document.querySelector('input[aria-label="Corporate tenant"]'),         opts:['Bank Muscat','Ministry of Finance','OPAL','Shell Oman']},
-      {el:document.querySelector('input[aria-label="Subject or field"]'),         opts:['Technology','Business','Management','Data & Analytics','Finance']},
-      {el:document.querySelector('input[aria-label="Category"]'),                 opts:['Data quality','Data governance','Metadata','Architecture','Security']},
-      {el:document.querySelector('input[aria-label="Difficulty level"]'),         opts:['Beginner','Intermediate','Advanced','Expert']},
-    ];
-    pathSels.forEach(function(item){
-      if(!item.el) return;
-      var sel=document.createElement('select');
-      sel.className=item.el.className;
-      sel.setAttribute('aria-label',item.el.getAttribute('aria-label')||'');
-      item.opts.forEach(function(o){
-        var opt=document.createElement('option');
-        opt.textContent=o;
-        if(item.el.value.indexOf(o.split(' ')[0])>=0) opt.selected=true;
-        sel.appendChild(opt);
-      });
-      item.el.parentNode.replaceChild(sel,item.el);
-    });
-  })();
+  /* ---- Subtitles uploader click ---- */
+  var subtitlesUp = document.getElementById('subtitlesUploader');
+  if (subtitlesUp) {
+    subtitlesUp.addEventListener('click', function() { document.getElementById('subtitlesFile').click(); });
+    subtitlesUp.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') document.getElementById('subtitlesFile').click(); });
+  }
+
+  /* ---- Primary content uploader click ---- */
+  var contentUp = document.getElementById('contentUploader');
+  if (contentUp) {
+    contentUp.addEventListener('click', function() { document.getElementById('contentFile').click(); });
+    contentUp.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') document.getElementById('contentFile').click(); });
+  }
+
+  /* ---- Attachments uploader click ---- */
+  var attachUp = document.getElementById('attachUploader');
+  if (attachUp) {
+    attachUp.addEventListener('click', function() { document.getElementById('attachFile').click(); });
+    attachUp.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') document.getElementById('attachFile').click(); });
+  }
+
+  /* ---- Skills chip input ---- */
+  function addSkillChip(val) {
+    if (!val) return;
+    var c = document.createElement('span');
+    c.className = 'chip skill-chip';
+    var x = document.createElement('span');
+    x.className = 'chip-x';
+    x.textContent = '×';
+    x.addEventListener('click', function() { c.remove(); });
+    c.appendChild(document.createTextNode(val + ' '));
+    c.appendChild(x);
+    document.getElementById('skillChips').appendChild(c);
+  }
+  document.getElementById('skillInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addSkillChip(this.value.trim()); this.value = ''; }
+  });
+  document.getElementById('addSkillBtn').addEventListener('click', function() {
+    var inp = document.getElementById('skillInput');
+    addSkillChip(inp.value.trim()); inp.value = '';
+  });
+  // Wire existing chip-x removers
+  document.querySelectorAll('#skillChips .chip-x').forEach(function(x) {
+    x.addEventListener('click', function() { this.parentElement.remove(); });
+  });
+
 })();
 </script>
 

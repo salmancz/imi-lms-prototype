@@ -10,7 +10,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  /* page-specific: 3-pane review layout */
+  /* page-specific: 3-pane review layout with 3-level hierarchy tree */
   .review-top {
     display: flex;
     align-items: center;
@@ -38,7 +38,7 @@
 
   .pane-grid {
     display: grid;
-    grid-template-columns: 248px minmax(0, 1fr) 340px;
+    grid-template-columns: 262px minmax(0, 1fr) 340px;
     gap: 0;
     align-items: stretch;
     border: 1px solid var(--line);
@@ -67,52 +67,267 @@
   }
   .pane-scroll { flex: 1; overflow-y: auto; min-height: 0; }
 
-  /* outline pane */
-  .outline-item {
+  /* --- 3-level tree outline --- */
+  /* Level 1: Career Path */
+  .tree-l1 {
+    padding: 0;
+  }
+  .tree-l1-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 18px;
+    gap: 9px;
+    padding: 10px 18px 10px 14px;
+    cursor: pointer;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .tree-l1-header:hover { background: var(--paper-2); }
+  .tree-l1-header.is {
+    background: var(--c-honey-wash);
+    border-left: 2px solid var(--accent);
+    padding-left: 12px;
+  }
+  .tree-l1-chevron {
+    margin-left: auto;
+    width: 14px;
+    height: 14px;
+    color: var(--ink-mute);
+    transition: transform 0.2s var(--tn);
+    flex-shrink: 0;
+  }
+  .tree-l1-header.open .tree-l1-chevron { transform: rotate(90deg); }
+
+  /* Level 2: Course */
+  .tree-l2-wrap { display: none; }
+  .tree-l2-wrap.open { display: block; }
+  .tree-l2-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 18px 8px 28px;
+    cursor: pointer;
     font-size: var(--fs-body);
     color: var(--ink-soft);
-    cursor: default;
+    font-weight: 500;
     transition: background 0.15s;
+    user-select: none;
   }
-  .outline-item:hover { background: var(--paper-2); }
-  .outline-item.is {
+  .tree-l2-item:hover { background: var(--paper-2); }
+  .tree-l2-item.is {
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--c-honey-wash);
+    border-left: 2px solid var(--accent);
+    padding-left: 26px;
+  }
+
+  /* Level 3: Lesson */
+  .tree-l3-wrap { display: none; }
+  .tree-l3-wrap.open { display: block; }
+  .tree-l3-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 18px 7px 40px;
+    cursor: pointer;
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .tree-l3-item:hover { background: var(--paper-2); }
+  .tree-l3-item.is {
     font-weight: 600;
     color: var(--ink);
     background: var(--c-honey-wash);
     border-left: 2px solid var(--accent);
-    padding-left: 16px;
+    padding-left: 38px;
   }
+  .tree-assess {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 18px 7px 40px;
+    font-size: var(--fs-meta);
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    font-style: italic;
+  }
+
   .o-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: var(--line-strong); }
   .o-dot.ok { background: var(--c-sage); }
   .o-dot.warn { background: var(--c-honey); }
   .o-dot.bad { background: var(--accent); }
-  .outline-group {
-    padding: 12px 18px 4px;
-    border-top: 1px solid var(--line);
-    margin-top: 4px;
-  }
-  .outline-group-label {
+
+  .tree-type-chip {
     font-family: var(--font-label);
     font-size: var(--fs-label);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--ink-mute);
     font-weight: 700;
-    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
   }
-  .outline-sub { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: var(--fs-body); color: var(--ink-soft); }
+  .tree-type-path { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .tree-type-course { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .tree-type-lesson { background: var(--paper-2); color: var(--ink-mute); }
 
-  /* content pane */
-  .content-pane { padding: 22px 26px; overflow-y: auto; }
+  /* content pane panels */
+  .content-pane { padding: 22px 26px; overflow-y: auto; height: 100%; }
+
+  /* panel switcher */
+  .review-panel { display: none; }
+  .review-panel.active { display: block; }
+
+  /* --- career path level panel --- */
+  .path-panel-title {
+    font-family: var(--font-serif);
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .path-panel-sub {
+    font-size: var(--fs-meta);
+    color: var(--ink-mute);
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+    margin-bottom: 18px;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .meta-cell {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+  }
+  .meta-cell-label {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 5px;
+  }
+  .meta-cell-val {
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .section-label {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .outcome-block {
+    background: var(--c-sage-wash);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    font-size: var(--fs-body);
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin-bottom: 22px;
+  }
+
+  .course-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    background: var(--paper);
+  }
+  .course-list-item:hover { background: var(--c-honey-wash); border-color: rgba(201, 155, 46, 0.3); }
+  .course-list-num {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    width: 20px;
+    flex-shrink: 0;
+  }
+  .course-list-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); flex: 1; }
+  .course-list-meta { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; }
+
+  /* --- course level panel --- */
+  .course-panel-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .course-panel-title {
+    font-family: var(--font-serif);
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .course-meta-desc {
+    font-size: var(--fs-body);
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .course-lessons-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+  .course-lessons-table th {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .course-lessons-table td {
+    font-size: var(--fs-body);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    vertical-align: middle;
+  }
+  .course-lessons-table td:first-child { color: var(--ink-mute); font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.06em; }
+  .course-lessons-table td.lesson-name-cell { font-weight: 600; color: var(--ink); cursor: pointer; }
+  .course-lessons-table td.lesson-name-cell:hover { color: var(--accent-deep); }
+  .course-lessons-table tr:last-child td { border-bottom: none; }
+
+  .assess-summary {
+    display: flex;
+    gap: 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    font-size: var(--fs-body);
+    flex-wrap: wrap;
+  }
+  .assess-stat { display: flex; flex-direction: column; gap: 3px; }
+  .assess-stat-val { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); }
+  .assess-stat-label { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.08em; color: var(--ink-mute); text-transform: uppercase; }
+
+  /* --- lesson level panel (video) --- */
   .content-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
   .content-lesson-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
   .content-tags { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); }
 
-  /* video area: flat dark fill, no gradient */
   .video-area {
     aspect-ratio: 16 / 8.2;
     background: var(--ink) url(../img/video-thumb.png) center / cover;
@@ -283,15 +498,24 @@
   .btn-reject:hover { background: var(--c-clay-wash); transform: translateY(-1px); }
   .btn-approve { width: 100%; justify-content: center; }
   .verdict-note { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 14px; line-height: 1.55; }
+
+  /* context info bar shown at top of comments pane per level */
+  .comment-ctx {
+    background: var(--c-honey-wash);
+    border-bottom: 1px solid rgba(201, 155, 46, 0.22);
+    padding: 10px 16px;
+    font-size: var(--fs-meta);
+    color: var(--c-honey-text);
+    font-family: var(--font-label);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    flex-shrink: 0;
+    display: none;
+  }
+  .comment-ctx.active { display: block; }
 </style>
 </head>
 <body data-crumbs="Authoring|../role-views/content-dev-home.html;SME queue|sme-queue.html;SME review">
-<div class="ad-strip">
-  <span class="ad-tag">Sponsored</span>
-  <div class="ad-body"><strong>Ad placeholder</strong><span class="sep">&middot;</span><span class="copy">Featured course, partner promo, or new program launch</span></div>
-  <a href="#" class="ad-cta">Learn more &rarr;</a>
-  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
-</div>
 <header class="topbar">
   <a href="../role-views/sme-home.html" class="brand">
     <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
@@ -300,6 +524,7 @@
   </a>
   <div class="search"><input placeholder="Search review queue..." onkeydown="if(event.key==='Enter'&&this.value.trim())location.href='sme-queue.html?q='+encodeURIComponent(this.value.trim())"></div>
   <div class="topbar-actions">
+    <span class="role-pill">SME REVIEWER</span>
     <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
     <button class="icon-btn" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
     <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-FH" alt="FH"></div><span class="ring-pct">68%</span></div>
@@ -330,8 +555,8 @@
         <a href="sme-queue.html" class="back-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>Back to queue</a>
         <span class="review-divider"></span>
         <div>
-          <span class="review-name">Reviewing: Knowledge Mapping</span>
-          <span class="review-meta">Submitted by A. Khalfan &middot; 6h ago</span>
+          <span class="review-name">Reviewing: Data Governance Career Path</span>
+          <span class="review-meta">Submitted by R. Al-Zadjali &middot; 6d ago</span>
         </div>
         <span class="chip t-honey dot">Under Review</span>
       </div>
@@ -340,87 +565,297 @@
 
     <div class="pane-grid">
 
-      <!-- Pane 1: Course outline -->
+      <!-- Pane 1: 3-level hierarchy outline -->
       <div class="pane">
         <div class="pane-head">
-          <div class="pane-title">Course outline</div>
-          <div class="pane-sub">9 lessons &middot; 12 quiz questions</div>
+          <div class="pane-title">Review outline</div>
+          <div class="pane-sub" id="outline-sub">1 career path &middot; 2 courses &middot; 16 lessons</div>
         </div>
         <div class="pane-scroll">
-          <div style="padding:8px 0">
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,1,'What is knowledge mapping','ok')"><span class="o-dot ok"></span><span>1. What is knowledge mapping</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,2,'Tacit vs explicit knowledge','warn')"><span class="o-dot warn"></span><span>2. Tacit vs explicit knowledge</span></div>
-            <div class="outline-item is" style="cursor:pointer" onclick="switchLesson(this,3,'Knowledge audits','bad')"><span class="o-dot bad"></span><span>3. Knowledge audits</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,4,'Mapping frameworks','')"><span class="o-dot"></span><span>4. Mapping frameworks</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,5,'Implementation','')"><span class="o-dot"></span><span>5. Implementation</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,6,'Measurement','')"><span class="o-dot"></span><span>6. Measurement</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,7,'Case studies','warn')"><span class="o-dot warn"></span><span>7. Case studies</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,8,'Common pitfalls','')"><span class="o-dot"></span><span>8. Common pitfalls</span></div>
-            <div class="outline-item" style="cursor:pointer" onclick="switchLesson(this,9,'Knowledge transfer','')"><span class="o-dot"></span><span>9. Knowledge transfer</span></div>
+          <div class="tree-l1" id="tree-root">
 
-            <div class="outline-group">
-              <div class="outline-sub" style="font-weight:600;color:var(--ink-soft)"><span class="o-dot bad"></span><span>Assessment (12 questions)</span></div>
+            <!-- Level 1: Career Path -->
+            <div class="tree-l1-header open" id="node-path-1" onclick="selectPathNode(this,'path-1')" aria-label="Select career path: Data Governance Career Path">
+              <span class="o-dot warn"></span>
+              <span>Data Governance Career Path</span>
+              <span class="tree-type-chip tree-type-path">PATH</span>
+              <svg class="tree-l1-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
 
-            <div class="outline-group">
-              <div class="outline-group-label">Course-level</div>
-              <div class="outline-sub"><span class="o-dot"></span><span>Course info</span></div>
-              <div class="outline-sub"><span class="o-dot"></span><span>Thumbnail</span></div>
-              <div class="outline-sub"><span class="o-dot warn"></span><span>Learning outcomes</span></div>
+            <!-- Level 2: Course A (expanded, active) -->
+            <div class="tree-l2-wrap open" id="wrap-path-1">
+
+              <div class="tree-l2-item" id="node-course-km" onclick="selectCourseNode(this,'course-km')" aria-label="Select course: Knowledge Mapping">
+                <span class="o-dot warn"></span>
+                <span>Knowledge Mapping</span>
+                <span class="tree-type-chip tree-type-course">COURSE</span>
+                <svg class="tree-l1-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:0"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+
+              <!-- Level 3: Lessons under Course A -->
+              <div class="tree-l3-wrap open" id="wrap-course-km">
+                <div class="tree-l3-item" id="node-l1" onclick="selectLessonNode(this,'lesson-1',1,'What is knowledge mapping','ok')" aria-label="Select lesson: What is knowledge mapping"><span class="o-dot ok"></span><span>1. What is knowledge mapping</span></div>
+                <div class="tree-l3-item" id="node-l2" onclick="selectLessonNode(this,'lesson-2',2,'Tacit vs explicit knowledge','warn')" aria-label="Select lesson: Tacit vs explicit knowledge"><span class="o-dot warn"></span><span>2. Tacit vs explicit knowledge</span></div>
+                <div class="tree-l3-item is" id="node-l3" onclick="selectLessonNode(this,'lesson-3',3,'Knowledge audits','bad')" aria-label="Select lesson: Knowledge audits"><span class="o-dot bad"></span><span>3. Knowledge audits</span></div>
+                <div class="tree-l3-item" id="node-l4" onclick="selectLessonNode(this,'lesson-4',4,'Mapping frameworks','')" aria-label="Select lesson: Mapping frameworks"><span class="o-dot"></span><span>4. Mapping frameworks</span></div>
+                <div class="tree-l3-item" id="node-l5" onclick="selectLessonNode(this,'lesson-5',5,'Implementation','')" aria-label="Select lesson: Implementation"><span class="o-dot"></span><span>5. Implementation</span></div>
+                <div class="tree-l3-item" id="node-l6" onclick="selectLessonNode(this,'lesson-6',6,'Measurement','')" aria-label="Select lesson: Measurement"><span class="o-dot"></span><span>6. Measurement</span></div>
+                <div class="tree-l3-item" id="node-l7" onclick="selectLessonNode(this,'lesson-7',7,'Case studies','warn')" aria-label="Select lesson: Case studies"><span class="o-dot warn"></span><span>7. Case studies</span></div>
+                <div class="tree-l3-item" id="node-l8" onclick="selectLessonNode(this,'lesson-8',8,'Common pitfalls','')" aria-label="Select lesson: Common pitfalls"><span class="o-dot"></span><span>8. Common pitfalls</span></div>
+                <div class="tree-l3-item" id="node-l9" onclick="selectLessonNode(this,'lesson-9',9,'Knowledge transfer','')" aria-label="Select lesson: Knowledge transfer"><span class="o-dot"></span><span>9. Knowledge transfer</span></div>
+                <div class="tree-assess"><span class="o-dot bad"></span><span>Assessment (12 questions)</span></div>
+              </div>
+
+              <!-- Course B (collapsed) -->
+              <div class="tree-l2-item" id="node-course-dg" onclick="selectCourseNode(this,'course-dg')" aria-label="Select course: Data Governance Fundamentals">
+                <span class="o-dot ok"></span>
+                <span>Data Governance Fundamentals</span>
+                <span class="tree-type-chip tree-type-course">COURSE</span>
+                <svg class="tree-l1-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:0"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+
+              <!-- Level 3: Lessons under Course B (collapsed) -->
+              <div class="tree-l3-wrap" id="wrap-course-dg">
+                <div class="tree-l3-item" id="node-dg-l1" onclick="selectLessonNode(this,'dg-lesson-1',1,'Data governance overview','ok')" aria-label="Select lesson: Data governance overview"><span class="o-dot ok"></span><span>1. Data governance overview</span></div>
+                <div class="tree-l3-item" id="node-dg-l2" onclick="selectLessonNode(this,'dg-lesson-2',2,'Roles and responsibilities','ok')" aria-label="Select lesson: Roles and responsibilities"><span class="o-dot ok"></span><span>2. Roles and responsibilities</span></div>
+                <div class="tree-l3-item" id="node-dg-l3" onclick="selectLessonNode(this,'dg-lesson-3',3,'Policy frameworks','ok')" aria-label="Select lesson: Policy frameworks"><span class="o-dot ok"></span><span>3. Policy frameworks</span></div>
+                <div class="tree-l3-item" id="node-dg-l4" onclick="selectLessonNode(this,'dg-lesson-4',4,'Data quality metrics','ok')" aria-label="Select lesson: Data quality metrics"><span class="o-dot ok"></span><span>4. Data quality metrics</span></div>
+                <div class="tree-l3-item" id="node-dg-l5" onclick="selectLessonNode(this,'dg-lesson-5',5,'Compliance and audit','ok')" aria-label="Select lesson: Compliance and audit"><span class="o-dot ok"></span><span>5. Compliance and audit</span></div>
+                <div class="tree-l3-item" id="node-dg-l6" onclick="selectLessonNode(this,'dg-lesson-6',6,'Technology stack','ok')" aria-label="Select lesson: Technology stack"><span class="o-dot ok"></span><span>6. Technology stack</span></div>
+                <div class="tree-l3-item" id="node-dg-l7" onclick="selectLessonNode(this,'dg-lesson-7',7,'Implementation roadmap','ok')" aria-label="Select lesson: Implementation roadmap"><span class="o-dot ok"></span><span>7. Implementation roadmap</span></div>
+                <div class="tree-assess"><span class="o-dot ok"></span><span>Assessment (8 questions)</span></div>
+              </div>
+
             </div>
+            <!-- end path-1 tree -->
+
           </div>
         </div>
       </div>
 
-      <!-- Pane 2: Content preview -->
+      <!-- Pane 2: Content preview - switches per level -->
       <div class="pane">
-        <div class="content-pane">
-          <div class="content-chips">
-            <span class="chip t-ink">Lesson 3 of 9</span>
-            <span class="content-lesson-name">Knowledge audits</span>
-            <span class="chip">Video + PDF</span>
-            <span class="chip">45 min</span>
+
+        <!-- PANEL A: Career Path primary details -->
+        <div class="content-pane review-panel" id="panel-path-1">
+          <div class="course-panel-chips">
+            <span class="chip t-sage">Career Path</span>
+            <span class="chip">CDMP</span>
+            <span class="chip">Data Science</span>
+          </div>
+          <div class="path-panel-title">Data Governance Career Path</div>
+          <div class="path-panel-sub">Submitted by R. Al-Zadjali &middot; 2026-05-12 &middot; 6d wait</div>
+
+          <div class="meta-grid">
+            <div class="meta-cell">
+              <div class="meta-cell-label">Subject / Field</div>
+              <div class="meta-cell-val">Data Science</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Difficulty</div>
+              <div class="meta-cell-val">Intermediate</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Estimated Duration</div>
+              <div class="meta-cell-val">13h (auto-calculated)</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Persona Mapping</div>
+              <div class="meta-cell-val">Data Analysts, IT Managers</div>
+            </div>
+          </div>
+
+          <div class="section-label">Learning Outcome</div>
+          <div class="outcome-block">Learners will be able to design, implement, and audit a knowledge governance framework aligned to ISO 30401 and DAMA-DMBOK standards. On completion, participants can perform knowledge audits, map knowledge flows, and apply data quality metrics in a GCC government context.</div>
+
+          <div class="section-label">Constituent Courses</div>
+          <div class="course-list-item" onclick="selectCourseNode(document.getElementById('node-course-km'),'course-km')" aria-label="Drill into course: Knowledge Mapping">
+            <span class="course-list-num">01</span>
+            <div style="flex:1">
+              <div class="course-list-name">Knowledge Mapping</div>
+              <div class="course-list-meta">9 lessons &middot; 6h &middot; Mandatory</div>
+            </div>
+            <span class="chip t-honey">Mandatory</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--ink-mute)"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="course-list-item" onclick="selectCourseNode(document.getElementById('node-course-dg'),'course-dg')" aria-label="Drill into course: Data Governance Fundamentals">
+            <span class="course-list-num">02</span>
+            <div style="flex:1">
+              <div class="course-list-name">Data Governance Fundamentals</div>
+              <div class="course-list-meta">7 lessons &middot; 7h &middot; Mandatory</div>
+            </div>
+            <span class="chip t-honey">Mandatory</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--ink-mute)"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- PANEL B: Course primary details (Knowledge Mapping) -->
+        <div class="content-pane review-panel" id="panel-course-km">
+          <div class="course-panel-chips">
+            <span class="chip t-honey">Course</span>
+            <span class="chip">KMP</span>
+            <span class="chip">IT</span>
+            <span class="chip">Intermediate</span>
+          </div>
+          <div class="course-panel-title">Knowledge Mapping</div>
+          <p class="course-meta-desc">A comprehensive course on knowledge audit methodologies and mapping frameworks. Learners explore tacit vs explicit knowledge, conduct ISO 30401-aligned audits, and produce structured knowledge maps using industry-standard tools.</p>
+
+          <div class="meta-grid">
+            <div class="meta-cell">
+              <div class="meta-cell-label">Category</div>
+              <div class="meta-cell-val">Knowledge Management</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Duration</div>
+              <div class="meta-cell-val">6 hours</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Difficulty</div>
+              <div class="meta-cell-val">Intermediate</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Assessment required</div>
+              <div class="meta-cell-val">Yes</div>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-bottom:8px">Lessons (9)</div>
+          <table class="course-lessons-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Lesson</th>
+                <th>Duration</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>L1</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l1'),'lesson-1',1,'What is knowledge mapping','ok')" title="Open lesson">What is knowledge mapping</td><td>28 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L2</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l2'),'lesson-2',2,'Tacit vs explicit knowledge','warn')" title="Open lesson">Tacit vs explicit knowledge</td><td>35 min</td><td><span class="chip t-honey" style="font-size:var(--fs-label)">1 suggestion</span></td></tr>
+              <tr><td>L3</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l3'),'lesson-3',3,'Knowledge audits','bad')" title="Open lesson">Knowledge audits</td><td>45 min</td><td><span class="chip t-clay" style="font-size:var(--fs-label)">1 required</span></td></tr>
+              <tr><td>L4</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l4'),'lesson-4',4,'Mapping frameworks','')" title="Open lesson">Mapping frameworks</td><td>40 min</td><td><span class="chip" style="font-size:var(--fs-label)">No comments</span></td></tr>
+              <tr><td>L5</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l5'),'lesson-5',5,'Implementation','')" title="Open lesson">Implementation</td><td>50 min</td><td><span class="chip" style="font-size:var(--fs-label)">No comments</span></td></tr>
+              <tr><td>L6</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l6'),'lesson-6',6,'Measurement','')" title="Open lesson">Measurement</td><td>32 min</td><td><span class="chip" style="font-size:var(--fs-label)">No comments</span></td></tr>
+              <tr><td>L7</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l7'),'lesson-7',7,'Case studies','warn')" title="Open lesson">Case studies</td><td>38 min</td><td><span class="chip t-honey" style="font-size:var(--fs-label)">1 suggestion</span></td></tr>
+              <tr><td>L8</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l8'),'lesson-8',8,'Common pitfalls','')" title="Open lesson">Common pitfalls</td><td>28 min</td><td><span class="chip" style="font-size:var(--fs-label)">No comments</span></td></tr>
+              <tr><td>L9</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-l9'),'lesson-9',9,'Knowledge transfer','')" title="Open lesson">Knowledge transfer</td><td>30 min</td><td><span class="chip" style="font-size:var(--fs-label)">No comments</span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="section-label" style="margin-bottom:8px">Assessment summary</div>
+          <div class="assess-summary">
+            <div class="assess-stat"><div class="assess-stat-val">12</div><div class="assess-stat-label">Questions</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">70%</div><div class="assess-stat-label">Pass score</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">3</div><div class="assess-stat-label">Retry limit</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">MCQ, T/F, Essay</div><div class="assess-stat-label">Types</div></div>
+          </div>
+        </div>
+
+        <!-- PANEL C: Course primary details (Data Governance Fundamentals) -->
+        <div class="content-pane review-panel" id="panel-course-dg">
+          <div class="course-panel-chips">
+            <span class="chip t-honey">Course</span>
+            <span class="chip">CDMP</span>
+            <span class="chip">Data Science</span>
+            <span class="chip">Advanced</span>
+          </div>
+          <div class="course-panel-title">Data Governance Fundamentals</div>
+          <p class="course-meta-desc">Covers the principles and practices of enterprise data governance aligned to DAMA-DMBOK. Learners will define governance roles, build data quality frameworks, and produce compliant audit reports for GCC regulatory environments.</p>
+
+          <div class="meta-grid">
+            <div class="meta-cell">
+              <div class="meta-cell-label">Category</div>
+              <div class="meta-cell-val">Data Management</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Duration</div>
+              <div class="meta-cell-val">7 hours</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Difficulty</div>
+              <div class="meta-cell-val">Advanced</div>
+            </div>
+            <div class="meta-cell">
+              <div class="meta-cell-label">Assessment required</div>
+              <div class="meta-cell-val">Yes</div>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-bottom:8px">Lessons (7)</div>
+          <table class="course-lessons-table">
+            <thead>
+              <tr><th>#</th><th>Lesson</th><th>Duration</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>L1</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l1'),'dg-lesson-1',1,'Data governance overview','ok')" title="Open lesson">Data governance overview</td><td>40 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L2</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l2'),'dg-lesson-2',2,'Roles and responsibilities','ok')" title="Open lesson">Roles and responsibilities</td><td>35 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L3</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l3'),'dg-lesson-3',3,'Policy frameworks','ok')" title="Open lesson">Policy frameworks</td><td>45 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L4</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l4'),'dg-lesson-4',4,'Data quality metrics','ok')" title="Open lesson">Data quality metrics</td><td>50 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L5</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l5'),'dg-lesson-5',5,'Compliance and audit','ok')" title="Open lesson">Compliance and audit</td><td>55 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L6</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l6'),'dg-lesson-6',6,'Technology stack','ok')" title="Open lesson">Technology stack</td><td>38 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+              <tr><td>L7</td><td class="lesson-name-cell" onclick="selectLessonNode(document.getElementById('node-dg-l7'),'dg-lesson-7',7,'Implementation roadmap','ok')" title="Open lesson">Implementation roadmap</td><td>37 min</td><td><span class="chip t-sage" style="font-size:var(--fs-label)">Clear</span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="section-label" style="margin-bottom:8px">Assessment summary</div>
+          <div class="assess-summary">
+            <div class="assess-stat"><div class="assess-stat-val">8</div><div class="assess-stat-label">Questions</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">70%</div><div class="assess-stat-label">Pass score</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">Unlimited</div><div class="assess-stat-label">Retry limit</div></div>
+            <div class="assess-stat"><div class="assess-stat-val">MCQ, T/F</div><div class="assess-stat-label">Types</div></div>
+          </div>
+        </div>
+
+        <!-- PANEL D: Lesson content (video-primary) -->
+        <div class="content-pane review-panel active" id="panel-lesson">
+          <div class="content-chips" id="lesson-chips">
+            <span class="chip t-ink" id="lesson-pos">Lesson 3 of 9</span>
+            <span class="content-lesson-name" id="lesson-title">Knowledge audits</span>
+            <span class="chip">Video</span>
+            <span class="chip" id="lesson-dur">45 min</span>
             <span class="content-tags">Tags: audit, knowledge gaps</span>
           </div>
 
           <div class="video-area">
             <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
-            <span class="v-caption">Lesson 3 &middot; Knowledge audits &middot; 04:32 / 45:18</span>
+            <span class="v-caption" id="video-caption">Lesson 3 &middot; Knowledge audits &middot; 04:32 / 45:18</span>
           </div>
-          <div class="video-scrub"><span></span></div>
+          <div class="video-scrub"><span id="scrub-bar" style="width:10%"></span></div>
 
           <div class="player-bar">
-            <button class="pbtn" type="button" onclick="this.closest('.content-pane').querySelector('.video-scrub span').style.width='0%'" title="Restart / skip back"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button>
+            <button class="pbtn" type="button" onclick="document.getElementById('scrub-bar').style.width='0%'" title="Restart"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button>
             <button class="pbtn play-main" id="play-btn" type="button" onclick="togglePlay(this)"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <button class="pbtn" type="button" onclick="this.closest('.content-pane').querySelector('.video-scrub span').style.width='20%'" title="Skip forward"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button>
+            <button class="pbtn" type="button" onclick="var s=document.getElementById('scrub-bar'),w=parseFloat(s.style.width||'10');s.style.width=Math.min(w+10,100)+'%'" title="Skip forward"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button>
             <span style="flex:1"></span>
             <span class="player-time">04:32 / 45:18</span>
-            <button class="pbtn" type="button" onclick="var speeds=['1x','1.5x','2x'];var i=speeds.indexOf(this.textContent);this.textContent=speeds[(i+1)%speeds.length];this.closest('.player-bar').dataset.speed=this.textContent;" title="Playback speed">1x</button>
+            <button class="pbtn" type="button" onclick="var s=['1x','1.5x','2x'];var i=s.indexOf(this.textContent);this.textContent=s[(i+1)%s.length];" title="Playback speed">1x</button>
           </div>
 
           <div class="lesson-block-title">About this lesson</div>
-          <p class="lesson-text">This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories. Learners will apply the ISO 30401 KMS framework to a sample organisation and produce a structured audit report.</p>
+          <p class="lesson-text" id="lesson-desc">This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories. Learners will apply the ISO 30401 KMS framework to a sample organisation and produce a structured audit report.</p>
 
           <div class="attach-row shade">
             <span class="a-tag">PDF</span>
             <span class="a-name">knowledge-audit-template.pdf</span>
-            <a href="#" class="a-action" title="Download PDF" data-file="knowledge-audit-template.pdf" onclick="event.preventDefault();(function(){var blob=new Blob(['IMI Learning - Knowledge Audit Template\n\nPlaceholder download from the IMI prototype.'],{type:'application/octet-stream'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='knowledge-audit-template.pdf';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);showToast('Download started','t-sage');})()">Download</a>
+            <a href="#" class="a-action" title="Download PDF" onclick="event.preventDefault();(function(){var b=new Blob(['IMI Learning - Knowledge Audit Template\n\nPlaceholder download.'],{type:'application/octet-stream'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download='knowledge-audit-template.pdf';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);showToast('Download started','t-sage');})()">Download</a>
           </div>
 
           <div class="attach-row">
             <span class="a-name">Transcript</span>
             <span class="a-meta">&middot; 8,400 words</span>
-            <a href="#" class="a-action" title="Prototype - expands transcript inline" onclick="event.preventDefault();var r=this.closest('.attach-row');var e=r.querySelector('.transcript-body');if(!e){e=document.createElement('p');e.className='transcript-body lesson-text';e.style.marginTop='8px';e.textContent='Transcript: This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories...';r.appendChild(e);this.textContent='Collapse';}else{e.remove();this.textContent='Click to expand';}">Click to expand</a>
+            <a href="#" class="a-action" title="Expand transcript inline" onclick="event.preventDefault();var r=this.closest('.attach-row');var e=r.querySelector('.transcript-body');if(!e){e=document.createElement('p');e.className='transcript-body lesson-text';e.style.marginTop='8px';e.textContent='Transcript: This lesson covers knowledge audit methodologies including current-state mapping, gap identification, and stakeholder knowledge inventories...';r.appendChild(e);this.textContent='Collapse';}else{e.remove();this.textContent='Click to expand';}">Click to expand</a>
           </div>
         </div>
+
       </div>
 
       <!-- Pane 3: Comments + verdict -->
       <div class="pane comment-pane">
         <div class="pane-head">
           <div class="pane-title">Comments</div>
-          <div class="pane-sub">4 open &middot; 2 resolved</div>
+          <div class="pane-sub" id="comment-pane-sub">4 open &middot; 2 resolved</div>
         </div>
+        <div class="comment-ctx active" id="comment-ctx">Viewing: Lesson 3 &middot; Knowledge audits</div>
         <div class="pane-scroll" style="padding:16px">
 
           <div class="comment-card required">
@@ -436,7 +871,7 @@
             </div>
             <div class="cc-actions">
               <button class="cc-btn" type="button" onclick="var f=this.closest('.comment-card').querySelector('.cc-reply-input');if(!f){f=document.createElement('textarea');f.className='input cc-reply-input';f.rows=2;f.placeholder='Write a reply...';f.style.marginTop='8px';f.style.width='100%';this.closest('.cc-actions').insertAdjacentElement('beforebegin',f);f.focus();}else{f.remove();}">Reply</button>
-              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();">Mark resolved</button>
+              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();updateVerdictSummary();">Mark resolved</button>
             </div>
           </div>
 
@@ -449,7 +884,7 @@
             <div class="cc-author">Dr. Faris &middot; 2h ago</div>
             <div class="cc-actions">
               <button class="cc-btn" type="button" onclick="var f=this.closest('.comment-card').querySelector('.cc-reply-input');if(!f){f=document.createElement('textarea');f.className='input cc-reply-input';f.rows=2;f.placeholder='Write a reply...';f.style.marginTop='8px';f.style.width='100%';this.closest('.cc-actions').insertAdjacentElement('beforebegin',f);f.focus();}else{f.remove();}">Reply</button>
-              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();">Mark resolved</button>
+              <button class="cc-btn" type="button" onclick="var c=this.closest('.comment-card');c.className=c.className.replace('required','resolved').replace('suggestion','resolved');var chip=c.querySelector('.chip');chip.className='chip chip-resolved';chip.textContent='Resolved';this.closest('.cc-actions').remove();updateVerdictSummary();">Mark resolved</button>
             </div>
           </div>
 
@@ -461,7 +896,7 @@
             <p class="cc-body">"Is the assessment auto-graded?"</p>
             <div class="cc-author">Dr. Faris</div>
             <div class="cc-reply">
-              <p>Yes, MCQ + T/F. Essay manually graded by SME within 48h.</p>
+              <p>MCQ + T/F auto-graded. Essay manually graded by SME.</p>
               <div class="cc-author">A. Khalfan</div>
             </div>
           </div>
@@ -479,7 +914,6 @@
           <div class="verdict-btns">
             <button class="btn btn-primary btn-approve" type="button" onclick="doApprove()">Approve &amp; publish</button>
             <button class="btn btn-reject" type="button" onclick="doReject()">Reject &amp; return</button>
-            <button class="btn btn-ghost" type="button" style="width:100%;justify-content:center;margin-top:2px" onclick="doRequestChanges()">Request changes</button>
           </div>
           <p class="verdict-note">Approval gated until all Required comments are resolved. Reject requires a reason in comments.</p>
         </div>
@@ -517,6 +951,9 @@
 </style>
 <div id="imi-toast" class="imi-toast"></div>
 <script>
+var isPlaying = false;
+var playInterval = null;
+
 function showToast(msg, type, duration) {
   var t = document.getElementById('imi-toast');
   t.textContent = msg;
@@ -525,38 +962,135 @@ function showToast(msg, type, duration) {
   setTimeout(function() { t.classList.remove('show'); }, duration || 3000);
 }
 
-var isPlaying = false;
-var playInterval = null;
+function stopPlay() {
+  if (playInterval) { clearInterval(playInterval); playInterval = null; }
+  isPlaying = false;
+  var btn = document.getElementById('play-btn');
+  if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+}
 
 function togglePlay(btn) {
   isPlaying = !isPlaying;
-  var scrub = document.querySelector('.video-scrub span');
+  var scrub = document.getElementById('scrub-bar');
   if (isPlaying) {
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
     playInterval = setInterval(function() {
       var w = parseFloat(scrub.style.width || '10');
       w = Math.min(w + 0.5, 100);
       scrub.style.width = w + '%';
-      if (w >= 100) { clearInterval(playInterval); isPlaying = false; btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>'; }
+      if (w >= 100) { stopPlay(); }
     }, 200);
   } else {
     clearInterval(playInterval);
+    playInterval = null;
     btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
   }
 }
 
-function switchLesson(el, num, name, status) {
-  document.querySelectorAll('.outline-item').forEach(function(i) { i.classList.remove('is'); });
+/* ---- panel switching ---- */
+function showPanel(id) {
+  var panels = document.querySelectorAll('.review-panel');
+  panels.forEach(function(p) { p.classList.remove('active'); });
+  var target = document.getElementById(id);
+  if (target) target.classList.add('active');
+}
+
+function clearTreeSelection() {
+  document.querySelectorAll('.tree-l1-header').forEach(function(n) { n.classList.remove('is'); });
+  document.querySelectorAll('.tree-l2-item').forEach(function(n) { n.classList.remove('is'); });
+  document.querySelectorAll('.tree-l3-item').forEach(function(n) { n.classList.remove('is'); });
+}
+
+/* Level 1: Career Path */
+function selectPathNode(el, panelId) {
+  clearTreeSelection();
   el.classList.add('is');
-  var chip = document.querySelector('.content-chips .chip.t-ink');
-  if (chip) chip.textContent = 'Lesson ' + num + ' of 9';
-  var title = document.querySelector('.content-lesson-name');
-  if (title) title.textContent = name;
-  if (playInterval) { clearInterval(playInterval); isPlaying = false; }
-  var btn = document.getElementById('play-btn');
-  if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-  var scrub = document.querySelector('.video-scrub span');
+  // always expand the path subtree when selecting a path node
+  var wrapId = 'wrap-' + panelId;
+  var wrap = document.getElementById(wrapId);
+  if (wrap) {
+    wrap.classList.add('open');
+    el.classList.add('open');
+  }
+  showPanel('panel-' + panelId);
+  updateCommentCtx('Career Path: Data Governance Career Path');
+  stopPlay();
+}
+
+/* Level 2: Course */
+function selectCourseNode(el, panelId) {
+  clearTreeSelection();
+  el.classList.add('is');
+  // close sibling lesson wraps, open this one
+  var allL3 = document.querySelectorAll('.tree-l3-wrap');
+  allL3.forEach(function(w) { w.classList.remove('open'); });
+  var myWrap = document.getElementById('wrap-' + panelId);
+  if (myWrap) myWrap.classList.add('open');
+  // also make sure parent l1 is expanded
+  var parentPath = el.closest('.tree-l2-wrap');
+  if (parentPath) {
+    var pathId = parentPath.id.replace('wrap-', '');
+    var pathHeader = document.getElementById('node-' + pathId);
+    if (pathHeader) {
+      pathHeader.classList.add('open');
+      var pathWrap = document.getElementById('wrap-' + pathId);
+      if (pathWrap) pathWrap.classList.add('open');
+    }
+  }
+  showPanel('panel-' + panelId);
+  var name = el.querySelector('span:nth-child(2)') ? el.querySelector('span:nth-child(2)').textContent : 'Course';
+  updateCommentCtx('Course: ' + name);
+  stopPlay();
+}
+
+/* Level 3: Lesson */
+function selectLessonNode(el, id, num, name, status) {
+  clearTreeSelection();
+  if (el) el.classList.add('is');
+  // ensure parent l2 is active (selected) and l3 wrap is open
+  var parentWrap = el ? el.closest('.tree-l3-wrap') : null;
+  if (parentWrap) {
+    parentWrap.classList.add('open');
+    var courseId = parentWrap.id.replace('wrap-', '');
+    var courseNode = document.getElementById('node-' + courseId);
+    if (courseNode) courseNode.classList.add('is');
+  }
+  // update lesson panel content
+  var posEl = document.getElementById('lesson-pos');
+  if (posEl) posEl.textContent = 'Lesson ' + num + ' of 9';
+  var titleEl = document.getElementById('lesson-title');
+  if (titleEl) titleEl.textContent = name;
+  var capEl = document.getElementById('video-caption');
+  if (capEl) capEl.textContent = 'Lesson ' + num + ' · ' + name + ' · 00:00 / 45:18';
+  showPanel('panel-lesson');
+  updateCommentCtx('Lesson ' + num + ': ' + name);
+  stopPlay();
+  var scrub = document.getElementById('scrub-bar');
   if (scrub) scrub.style.width = '0%';
+}
+
+function updateCommentCtx(label) {
+  var ctx = document.getElementById('comment-ctx');
+  if (ctx) {
+    ctx.textContent = 'Viewing: ' + label;
+    ctx.classList.add('active');
+  }
+}
+
+function updateVerdictSummary() {
+  var blocking = document.querySelectorAll('.comment-card.required').length;
+  var suggestions = document.querySelectorAll('.comment-card.suggestion').length;
+  var s = document.getElementById('verdict-summary');
+  if (s) {
+    if (blocking === 0 && suggestions === 0) {
+      s.innerHTML = 'All comments resolved. Ready to approve.';
+    } else {
+      var parts = [];
+      if (blocking > 0) parts.push('Required changes: <strong>' + blocking + ' blocking</strong>');
+      if (suggestions > 0) parts.push('Suggestions: <strong>' + suggestions + ' open</strong>');
+      s.innerHTML = parts.join(' &middot; ');
+    }
+  }
 }
 
 function addComment() {
@@ -568,11 +1102,12 @@ function addComment() {
   var container = document.querySelector('.pane-scroll');
   var addArea = document.querySelector('.add-comment');
   var card = document.createElement('div');
-  var cls = typeVal === 'Required' ? 'required' : typeVal === 'Question' ? 'suggestion' : 'suggestion';
+  var cls = typeVal === 'Required' ? 'required' : 'suggestion';
   card.className = 'comment-card ' + cls;
-  card.innerHTML = '<div class="cc-head"><span class="chip' + (cls === 'required' ? ' chip-required' : '') + '">' + typeVal + '</span><span class="cc-stamp">Just now</span></div><p class="cc-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p><div class="cc-author">Dr. Faris Al-Maamari (SME) &middot; just now</div><div class="cc-actions"><button class="cc-btn" type="button" onclick="var f=this.closest(\'.comment-card\').querySelector(\'.cc-reply-input\');if(!f){f=document.createElement(\'textarea\');f.className=\'input cc-reply-input\';f.rows=2;f.placeholder=\'Write a reply...\';f.style.marginTop=\'8px\';f.style.width=\'100%\';this.closest(\'.cc-actions\').insertAdjacentElement(\'beforebegin\',f);f.focus();}else{f.remove();}">Reply</button><button class="cc-btn" type="button" onclick="var c=this.closest(\'.comment-card\');c.className=c.className.replace(\'required\',\'resolved\').replace(\'suggestion\',\'resolved\');var chip=c.querySelector(\'.chip\');chip.className=\'chip chip-resolved\';chip.textContent=\'Resolved\';this.closest(\'.cc-actions\').remove();">Mark resolved</button></div>';
+  card.innerHTML = '<div class="cc-head"><span class="chip' + (cls === 'required' ? ' chip-required' : '') + '">' + typeVal + '</span><span class="cc-stamp">Just now</span></div><p class="cc-body">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</p><div class="cc-author">Dr. Faris Al-Maamari (SME) &middot; just now</div><div class="cc-actions"><button class="cc-btn" type="button" onclick="var f=this.closest(\'.comment-card\').querySelector(\'.cc-reply-input\');if(!f){f=document.createElement(\'textarea\');f.className=\'input cc-reply-input\';f.rows=2;f.placeholder=\'Write a reply...\';f.style.marginTop=\'8px\';f.style.width=\'100%\';this.closest(\'.cc-actions\').insertAdjacentElement(\'beforebegin\',f);f.focus();}else{f.remove();}">Reply</button><button class="cc-btn" type="button" onclick="var c=this.closest(\'.comment-card\');c.className=c.className.replace(\'required\',\'resolved\').replace(\'suggestion\',\'resolved\');var chip=c.querySelector(\'.chip\');chip.className=\'chip chip-resolved\';chip.textContent=\'Resolved\';this.closest(\'.cc-actions\').remove();updateVerdictSummary();">Mark resolved</button></div>';
   container.insertBefore(card, addArea);
   txt.value = '';
+  updateVerdictSummary();
   showToast('Comment added', 't-sage');
 }
 
@@ -582,7 +1117,7 @@ function doApprove() {
     showToast('Resolve all Required comments first (' + blocking + ' remaining)', 't-clay', 4000);
     return;
   }
-  if (!confirm('Approve "Knowledge Mapping" and publish to learners?')) return;
+  if (!confirm('Approve "Data Governance Career Path" and publish to learners?')) return;
   showToast('Approved and published', 't-sage');
   setTimeout(function() { location.href = 'sme-queue.html'; }, 1500);
 }
@@ -595,23 +1130,13 @@ function doReject() {
     if (reason) reason.focus();
     return;
   }
-  if (!confirm('Reject "Knowledge Mapping" and return to author with your comments?')) return;
+  if (!confirm('Reject "Data Governance Career Path" and return to author?')) return;
   showToast('Rejected and returned to author', 't-clay');
   setTimeout(function() { location.href = 'sme-queue.html'; }, 1800);
 }
 
-function doRequestChanges() {
-  var reason = document.getElementById('new-comment-text');
-  var text = reason ? reason.value.trim() : '';
-  if (!text) {
-    showToast('Write the changes needed in the comment box', 't-honey', 4000);
-    if (reason) reason.focus();
-    return;
-  }
-  if (!confirm('Send change request to author?')) return;
-  showToast('Change request sent to author', 't-honey');
-  setTimeout(function() { location.href = 'sme-queue.html'; }, 1800);
-}
+// init: show lesson panel by default (lesson 3 is pre-selected)
+showPanel('panel-lesson');
 </script>
 <script src="../ui-enhance.js"></script>
 </body>

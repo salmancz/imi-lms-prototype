@@ -209,7 +209,7 @@
   <aside class="sidebar">
     <div class="sidebar-section">
       <a href="content-dev-home.html" class="sidebar-link is-active" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
-      <a href="content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Courses</span><span class="badge">12</span></a>
+      <a href="content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Content</span><span class="badge">12</span></a>
       <a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Drafts</span><span class="badge">3</span></a>
       <a href="content-dev-home.html#published" class="sidebar-link" data-nav="published"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Published</span><span class="badge">9</span></a>
     </div>
@@ -236,7 +236,7 @@
       </div>
       <div class="page-actions">
         <a class="btn btn-ghost" href="../course-builder/course-builder-1.html">Templates</a>
-        <a class="btn btn-primary" href="../course-builder/course-builder-1.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New course</a>
+        <a class="btn btn-primary" href="create-content.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Create new</a>
       </div>
     </div>
 
@@ -269,9 +269,7 @@
         <div class="cc-label">Create new</div>
         <div class="cc-title">Start a new course or lesson</div>
         <div class="cta-row">
-          <a class="btn btn-primary btn-sm" href="../course-builder/course-builder-1.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Career Path Course</a>
-          <a class="btn btn-ghost btn-sm" href="../course-builder/standalone-course.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Standalone Course</a>
-          <a class="btn btn-ghost btn-sm" href="../course-builder/standalone-lesson.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Standalone Lesson</a>
+          <a class="btn btn-primary btn-sm" href="create-content.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> + Create new</a>
         </div>
       </div>
     </div>
@@ -283,18 +281,18 @@
         <!-- My courses table -->
         <div class="card">
           <div class="card-head">
-            <div class="card-title">My <em>courses</em></div>
-            <a class="card-link" href="cd-course-overview.html">ALL COURSES &rarr;</a>
+            <div class="card-title">My <em>content</em></div>
+            <a class="card-link" href="cd-course-overview.html">ALL CONTENT &rarr;</a>
           </div>
           <div class="card-body" style="padding-bottom:0;padding-top:14px">
             <div class="tabs" id="course-tabs">
-              <button class="tab is" data-tab="my-courses" onclick="switchTab('my-courses')">My Courses</button>
+              <button class="tab is" data-tab="my-courses" onclick="switchTab('my-courses')">All</button>
               <button class="tab" data-tab="drafts" onclick="switchTab('drafts')">Drafts</button>
               <button class="tab" data-tab="published" onclick="switchTab('published')">Published</button>
             </div>
           </div>
           <div class="tbl-meta">
-            <span class="tbl-count" id="tbl-count-label"><strong>6</strong> of 6 courses</span>
+            <span class="tbl-count" id="tbl-count-label"><strong>6</strong> of 6 items</span>
           </div>
           <div class="card-body flush">
             <table class="tbl">
@@ -352,7 +350,7 @@
         <!-- Published course cards (canonical .crs, real cover photos) -->
         <div class="card">
           <div class="card-head">
-            <div class="card-title">Published <em>courses</em></div>
+            <div class="card-title">Published <em>content</em></div>
             <a class="card-link" href="cd-course-overview.html">ALL PUBLISHED &rarr;</a>
           </div>
           <div class="card-body">
@@ -533,7 +531,7 @@ function applyFilter() {
   /* update count label */
   var label = document.getElementById('tbl-count-label');
   if (label) {
-    label.innerHTML = '<strong>' + visible + '</strong> of ' + total + ' courses';
+    label.innerHTML = '<strong>' + visible + '</strong> of ' + total + ' items';
   }
 
   /* update tab button counts */

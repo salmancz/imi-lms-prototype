@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cream">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create content &middot; IMI Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css">
+<style>
+  /* ---- back link ---- */
+  .cc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+    transition: color 0.15s;
+  }
+  .cc-back:hover { color: var(--ink); }
+  .cc-back svg { width: 14px; height: 14px; }
+
+  /* ---- option card grid ---- */
+  .cc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 36px;
+  }
+  @media (max-width: 1000px) { .cc-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 680px)  { .cc-grid { grid-template-columns: 1fr; } }
+
+  /* ---- individual option card ---- */
+  .cc-opt {
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.18s var(--tn), box-shadow 0.22s var(--tn), transform 0.18s var(--tn);
+    position: relative;
+    overflow: hidden;
+  }
+  .cc-opt:hover {
+    border-color: var(--ink-soft);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-3px);
+  }
+  .cc-opt:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+  /* top accent bar - visible on hover */
+  .cc-opt::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+  .cc-opt:hover::before { opacity: 1; }
+  .cc-opt.opt-path::before { background: var(--c-honey); }
+  .cc-opt.opt-course::before { background: var(--c-sage); }
+  .cc-opt.opt-lesson::before { background: var(--c-clay); }
+
+  /* icon block */
+  .cc-icon {
+    width: 48px; height: 48px;
+    border-radius: var(--r-md);
+    display: grid; place-items: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+  }
+  .cc-icon svg { width: 22px; height: 22px; }
+  .opt-path  .cc-icon { background: var(--c-honey-wash); color: var(--c-honey-text); }
+  .opt-course .cc-icon { background: var(--c-sage-wash); color: var(--c-sage-text); }
+  .opt-lesson .cc-icon { background: var(--c-clay-wash); color: var(--accent-deep); }
+
+  /* type label */
+  .cc-type-label {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .opt-path  .cc-type-label { color: var(--c-honey-text); }
+  .opt-course .cc-type-label { color: var(--c-sage-text); }
+  .opt-lesson .cc-type-label { color: var(--accent-deep); }
+
+  /* title */
+  .cc-opt-title {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  /* description */
+  .cc-opt-desc {
+    font-size: var(--fs-body);
+    color: var(--ink-soft);
+    line-height: 1.55;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  /* hierarchy breadcrumb */
+  .cc-hierarchy {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    margin-bottom: 22px;
+    padding: 10px 12px;
+    background: var(--paper-2);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--line);
+  }
+  .cc-hierarchy .h-sep {
+    font-size: var(--fs-label);
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .cc-hierarchy .h-node {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .cc-hierarchy .h-node.h-opt {
+    color: var(--ink-mute);
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  /* cta arrow */
+  .cc-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink);
+    transition: gap 0.15s var(--tn);
+  }
+  .cc-opt:hover .cc-arrow { gap: 10px; }
+  .cc-arrow svg { width: 16px; height: 16px; }
+
+  /* ---- info note ---- */
+  .cc-note {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    margin-top: 32px;
+  }
+  .cc-note .note-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--r-sm);
+    background: var(--c-honey-wash);
+    color: var(--c-honey-text);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .cc-note .note-icon svg { width: 15px; height: 15px; }
+  .cc-note p { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.55; }
+  .cc-note p strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- topbar -->
+<header class="topbar">
+  <a href="content-dev-home.html" class="brand">
+    <img src="../img/imi-mark-ink.png" class="brand-logo-mark" alt="IMI">
+    <span class="brand-text">IMI</span>
+    <span class="brand-sub">Studio</span>
+  </a>
+  <div class="search"><input placeholder="Search my courses, drafts..."></div>
+  <div class="topbar-actions">
+    <span class="role-pill">CONTENT DEV</span>
+    <a class="icon-btn" href="../profile/notifications.html" title="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></a>
+    <a class="icon-btn" href="../profile/help-center.html" title="Help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></a>
+    <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-AK" alt="AK"></div><span class="ring-pct">68%</span></div>
+  </div>
+</header>
+
+<div class="app">
+  <!-- sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <a href="content-dev-home.html" class="sidebar-link" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+      <a href="content-dev-home.html#my-courses" class="sidebar-link" data-nav="my-content"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>My Content</span><span class="badge">12</span></a>
+      <a href="content-dev-home.html#drafts" class="sidebar-link" data-nav="drafts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Drafts</span><span class="badge">3</span></a>
+      <a href="content-dev-home.html#published" class="sidebar-link" data-nav="published"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Published</span><span class="badge">9</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">FEEDBACK</div>
+      <a href="cd-feedback.html#sme-reviews" class="sidebar-link" data-nav="sme-reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>SME Reviews</span><span class="badge">2</span></a>
+      <a href="cd-feedback.html#qa" class="sidebar-link" data-nav="qa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span>Learner Q&amp;A</span><span class="badge">8</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">INSIGHTS</div>
+      <a href="../course-builder/cb-reports.html" class="sidebar-link" data-nav="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg><span>Analytics</span></a>
+      <a href="cd-settings.html" class="sidebar-link" data-nav="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- breadcrumb auto-rendered by ui-enhance.js; keep data-crumbs for it -->
+    <nav class="breadcrumbs" data-crumbs='[{"label":"Home","href":"content-dev-home.html"},{"label":"Create content"}]' aria-label="Breadcrumb"></nav>
+
+    <a href="content-dev-home.html" class="cc-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to workspace
+    </a>
+
+    <!-- page header -->
+    <div class="page-head" style="grid-template-columns:1fr;margin-bottom:0">
+      <div>
+        <div class="eyebrow">Content Developer workspace</div>
+        <h1 class="page-title">What would you like to <em>create?</em></h1>
+        <p class="page-sub">Choose a content type. Each type routes through SME review before publishing.</p>
+      </div>
+    </div>
+
+    <!-- 3 option cards -->
+    <div class="cc-grid">
+
+      <!-- Career Path Course -->
+      <a class="cc-opt opt-path" href="../course-builder/course-builder-1.html" aria-label="Create a Career Path Course">
+        <div class="cc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="2"/><path d="M12 10v6"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M12 16l-4.24 2"/><path d="M12 16l4.24 2"/></svg>
+        </div>
+        <div class="cc-type-label">Career Path Course</div>
+        <div class="cc-opt-title">Structured course inside a career path</div>
+        <div class="cc-opt-desc">Create a course that sits inside an existing career path. Learners must complete all mandatory courses in the path to earn a career credential.</div>
+        <div class="cc-hierarchy">
+          <span class="h-node">Career Path</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node">Course</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node">Lessons</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node h-opt">Quiz</span>
+        </div>
+        <span class="cc-arrow">Start building <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <!-- Standalone Course -->
+      <a class="cc-opt opt-course" href="../course-builder/course-builder-1.html" aria-label="Create a Standalone Course">
+        <div class="cc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="cc-type-label">Standalone Course</div>
+        <div class="cc-opt-title">Independent course with its own enrollment</div>
+        <div class="cc-opt-desc">Create a self-contained course that learners can enroll in directly. Includes lessons, an optional quiz, and a standalone completion certificate.</div>
+        <div class="cc-hierarchy">
+          <span class="h-node">Course</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node">Lessons</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node h-opt">Quiz</span>
+        </div>
+        <span class="cc-arrow">Start building <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <!-- Standalone Lesson -->
+      <a class="cc-opt opt-lesson" href="../course-builder/standalone-lesson.html" aria-label="Create a Standalone Lesson">
+        <div class="cc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </div>
+        <div class="cc-type-label">Standalone Lesson</div>
+        <div class="cc-opt-title">Single video lesson, no course required</div>
+        <div class="cc-opt-desc">Create a single video-primary lesson that stands alone. Attach supporting PDFs and text, and optionally add a quiz. No course or path enrollment needed.</div>
+        <div class="cc-hierarchy">
+          <span class="h-node">Lesson</span>
+          <span class="h-sep">&#8250;</span>
+          <span class="h-node h-opt">Quiz (optional)</span>
+        </div>
+        <span class="cc-arrow">Start building <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+    </div>
+
+    <!-- role note -->
+    <div class="cc-note">
+      <div class="note-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      </div>
+      <p><strong>All content routes through SME review before publishing.</strong> Save a draft at any time. Once submitted, your assigned SME will review and approve or return with feedback. You cannot publish directly.</p>
+    </div>
+
+  </main>
+</div>
+<script src="../ui-enhance.js"></script>
+</body>
+</html>
