@@ -27,19 +27,19 @@
     z-index: 10;
   }
   .quiz-topbar-l { display: flex; align-items: center; gap: 14px; }
-  .quiz-sep { color: var(--ink-faint); font-size: 18px; font-weight: 300; }
+  .quiz-sep { color: var(--ink-faint); font-size: var(--fs-h2); font-weight: 300; }
   .quiz-course-label {
     font-family: var(--font-label);
     text-transform: uppercase;
     letter-spacing: 0.10em;
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     color: var(--ink-soft);
   }
   .quiz-topbar-r { display: flex; align-items: center; gap: 20px; }
   .quiz-prog-label {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-mute);
@@ -95,7 +95,7 @@
   .qsw-icon svg { width: 30px; height: 30px; }
   .qsw-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -104,7 +104,7 @@
   }
   .qsw-title {
     font-family: var(--font-sans);
-    font-size: 27px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.15;
@@ -118,7 +118,7 @@
     color: var(--ink-soft);
   }
   .qsw-lead {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
     max-width: 440px;
@@ -138,7 +138,7 @@
     gap: 12px;
     padding: 13px 0;
     border-bottom: 1px solid var(--line);
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.45;
   }
@@ -176,7 +176,7 @@
     flex-shrink: 0;
     cursor: pointer;
   }
-  .qsw-ack span { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .qsw-ack span { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; }
   .qsw-ack span strong { color: var(--ink); font-weight: 600; }
   .qsw-actions {
     display: flex;
@@ -187,7 +187,7 @@
     width: 100%;
     justify-content: center;
     padding: 14px 18px;
-    font-size: 14px;
+    font-size: var(--fs-body);
   }
 </style>
 </head>

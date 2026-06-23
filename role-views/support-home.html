@@ -71,7 +71,7 @@
     padding-right: 14px;
     border: 1px solid var(--line-strong);
     background: var(--bg);
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink);
     font-family: var(--font-sans);
     transition: border 0.18s, box-shadow 0.18s;
@@ -387,18 +387,18 @@
     padding: 28px 30px 24px;
   }
   .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
-  .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1.3; }
+  .modal-title { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1.3; }
   .modal-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
-  .modal-close { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-mute); font-size: 18px; flex-shrink: 0; transition: background 0.15s, color 0.15s; }
+  .modal-close { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-mute); font-size: var(--fs-h2); flex-shrink: 0; transition: background 0.15s, color 0.15s; }
   .modal-close:hover { background: var(--paper-2); color: var(--ink); }
-  .modal-body { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
+  .modal-body { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
   .toast {
     position: fixed; bottom: 28px; left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: var(--ink); color: var(--paper);
-    font-size: 13px; font-family: var(--font-sans);
+    font-size: var(--fs-body); font-family: var(--font-sans);
     padding: 10px 20px; border-radius: var(--r-pill);
     opacity: 0; pointer-events: none;
     transition: opacity 0.2s, transform 0.2s;
@@ -414,13 +414,13 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="qa-modal-title"></div>
-        <div style="font-size:13px;color:var(--ink-mute);margin-top:4px" id="qa-modal-sub"></div>
+        <div style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px" id="qa-modal-sub"></div>
       </div>
       <button class="modal-close" id="btn-qa-close" aria-label="Close">&times;</button>
     </div>
     <p class="modal-body" id="qa-modal-body"></p>
     <div style="margin-bottom:16px">
-      <label style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
+      <label style="display:block;font-size: var(--fs-meta);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
       <input id="qa-action-email" class="input" style="width:100%;box-sizing:border-box" placeholder="learner@example.com" type="email">
     </div>
     <div class="modal-actions">
@@ -436,13 +436,13 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="reissue-modal-title">Re-issue <em>completion proof</em></div>
-        <div style="font-size:13px;color:var(--ink-mute);margin-top:4px">Look up the user first to confirm the course</div>
+        <div style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px">Look up the user first to confirm the course</div>
       </div>
       <button class="modal-close" id="btn-reissue-close" aria-label="Close">&times;</button>
     </div>
     <p class="modal-body">Enter the learner's email to re-generate their completion certificate and send a new download link. This action is written to the audit log.</p>
     <div style="margin-bottom:16px">
-      <label style="display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
+      <label style="display:block;font-size: var(--fs-meta);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mute);margin-bottom:6px">Learner email</label>
       <input id="reissue-email" class="input" style="width:100%;box-sizing:border-box" placeholder="learner@example.com" type="email">
     </div>
     <div class="modal-actions">

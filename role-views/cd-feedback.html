@@ -56,7 +56,7 @@
   .fb-thread-reply-box.open { display: block; }
   .fb-thread-reply-box textarea {
     width: 100%; height: 68px; resize: vertical;
-    font-size: 13px; line-height: 1.5;
+    font-size: var(--fs-body); line-height: 1.5;
     border: 1px solid var(--line); border-radius: var(--r-xs);
     padding: 8px 10px; background: var(--paper);
     font-family: var(--font-body); color: var(--ink);
@@ -66,7 +66,7 @@
   .fb-thread-reply-actions { display: flex; gap: 8px; }
   .fb-loc {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.06em;
     color: var(--ink-mute);
@@ -75,7 +75,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
-    font-size: 16.5px;
+    font-size: var(--fs-h3);
     line-height: 1.5;
     color: var(--ink);
     margin: 0 0 8px;
@@ -84,7 +84,7 @@
   }
   .fb-byline {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     margin-bottom: 0;
@@ -109,7 +109,7 @@
   }
   .fb-gate-title {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -117,7 +117,7 @@
     margin-bottom: 4px;
   }
   .fb-gate-sub {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
     margin: 0 0 14px;
@@ -134,7 +134,7 @@
     display: flex;
     align-items: center;
     gap: 11px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
   }
   .fb-gate-item .chip {
@@ -164,7 +164,7 @@
   }
   .fb-bar .fb-bar-note {
     font-family: var(--font-label);
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -192,7 +192,7 @@
   .fb-toast {
     position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
     background: var(--ink); color: var(--paper); border-radius: var(--r-pill);
-    padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+    padding: 10px 22px; font-size: var(--fs-body); font-weight: 600;
     box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
     transition: opacity 0.22s, transform 0.22s; z-index: 999; white-space: nowrap;
   }
@@ -207,7 +207,7 @@
   .qa-reply-box.open { display: block; }
   .qa-reply-box textarea {
     width: 100%; height: 70px; resize: vertical;
-    font-size: 13px; line-height: 1.5;
+    font-size: var(--fs-body); line-height: 1.5;
     border: 1px solid var(--line); border-radius: var(--r-xs);
     padding: 8px 10px; background: var(--paper);
     font-family: var(--font-body); color: var(--ink);
@@ -236,14 +236,14 @@
     margin-bottom: 10px;
   }
   .qa-question {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     margin: 0 0 8px;
     line-height: 1.45;
   }
   .qa-answer {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
     margin: 0 0 8px;
@@ -257,13 +257,13 @@
   }
   .qa-meta {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
   }
   .qa-unanswered {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.05em;
     color: var(--c-honey-text);
@@ -435,7 +435,7 @@
           </div>
           <blockquote class="fb-quote">"Consider adding a GCC ministry case study. Current examples are all Western."</blockquote>
           <div class="fb-byline">Dr. Faris Al-Maamari &middot; 2h ago</div>
-          <p style="font-size:12px;color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
+          <p style="font-size: var(--fs-meta);color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
           <div class="fb-thread-reply-box" id="fb-t2-reply">
             <textarea placeholder="Write a reply..."></textarea>
             <div class="fb-thread-reply-actions">
@@ -457,7 +457,7 @@
           </div>
           <blockquote class="fb-quote">"Outcome 4 overlaps with outcome 2. Consider merging."</blockquote>
           <div class="fb-byline">Dr. Faris Al-Maamari &middot; 2h ago</div>
-          <p style="font-size:12px;color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
+          <p style="font-size: var(--fs-meta);color:var(--ink-mute);margin:6px 0 0">Optional: does not block resubmission.</p>
           <div class="fb-thread-reply-box" id="fb-t3-reply">
             <textarea placeholder="Write a reply..."></textarea>
             <div class="fb-thread-reply-actions">

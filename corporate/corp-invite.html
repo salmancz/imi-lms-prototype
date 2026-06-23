@@ -53,13 +53,13 @@
     place-items: center;
   }
   .dropzone .dz-icon svg { width: 26px; height: 26px; }
-  .dropzone .dz-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.01em; }
-  .dropzone .dz-sub { font-size: 13px; color: var(--ink-mute); margin-bottom: 18px; }
-  .dropzone .dz-note { font-size: 12.5px; color: var(--ink-mute); margin-top: 18px; }
+  .dropzone .dz-title { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); margin-bottom: 4px; letter-spacing: -0.01em; }
+  .dropzone .dz-sub { font-size: var(--fs-body); color: var(--ink-mute); margin-bottom: 18px; }
+  .dropzone .dz-note { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 18px; }
   .dropzone .dz-note a { color: var(--ink); text-decoration: underline; font-weight: 600; }
   .dropzone .dz-flag {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-faint);
@@ -68,7 +68,7 @@
 
   /* ── Preview table heading ── */
   .preview-head {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -80,7 +80,7 @@
   }
   .preview-head span {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -88,7 +88,7 @@
   }
 
   /* ── Status chips ── */
-  .status-cell { font-size: 12px; color: var(--ink-soft); }
+  .status-cell { font-size: var(--fs-meta); color: var(--ink-soft); }
   .chip .pip {
     width: 7px;
     height: 7px;
@@ -113,7 +113,7 @@
     border: 1px solid var(--line);
     border-radius: var(--r-md);
   }
-  .summary-text { font-size: 13px; color: var(--ink-soft); }
+  .summary-text { font-size: var(--fs-body); color: var(--ink-soft); }
   .summary-text strong { color: var(--ink); font-weight: 700; }
 
   /* ── Format / info sidebar card ── */
@@ -122,16 +122,16 @@
     background: var(--surface-3);
     border-radius: 4px;
     padding: 1px 5px;
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink);
   }
-  .fmt-card p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
-  .fmt-card .fmt-foot { font-size: 12px; color: var(--ink-mute); margin-top: 12px; }
+  .fmt-card p { font-size: var(--fs-meta); color: var(--ink-soft); line-height: 1.6; }
+  .fmt-card .fmt-foot { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 12px; }
 
   /* ── Section label inside tabs ── */
   .section-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.09em;
     text-transform: uppercase;
@@ -157,7 +157,7 @@
   .group-select-search input {
     border: none;
     background: transparent;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink);
     outline: none;
     width: 100%;
@@ -176,8 +176,8 @@
   .group-item:last-child { border-bottom: none; }
   .group-item:hover { background: var(--paper-2); }
   .group-item input[type="checkbox"] { accent-color: var(--c-honey); width: 14px; height: 14px; cursor: pointer; }
-  .group-item-name { font-size: 13px; color: var(--ink); font-weight: 500; flex: 1; }
-  .group-item-count { font-size: 12px; color: var(--ink-mute); white-space: nowrap; }
+  .group-item-name { font-size: var(--fs-body); color: var(--ink); font-weight: 500; flex: 1; }
+  .group-item-count { font-size: var(--fs-meta); color: var(--ink-mute); white-space: nowrap; }
   .group-select-footer {
     padding: 10px 14px;
     border-top: 1px solid var(--line);
@@ -186,9 +186,9 @@
     justify-content: space-between;
     background: var(--paper-2);
   }
-  .group-select-footer .sel-count { font-size: 12px; color: var(--ink-soft); }
+  .group-select-footer .sel-count { font-size: var(--fs-meta); color: var(--ink-soft); }
   .select-all-btn {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--c-honey-text);
     font-weight: 600;
     background: none;
@@ -216,7 +216,7 @@
   .user-search-input input {
     border: none;
     background: transparent;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink);
     outline: none;
     width: 100%;
@@ -241,7 +241,7 @@
     border-radius: 50%;
     background: var(--c-honey-wash);
     color: var(--c-honey-text);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -250,8 +250,8 @@
     border: 1px solid var(--line);
   }
   .user-item-info { flex: 1; min-width: 0; }
-  .user-item-name { font-size: 13px; color: var(--ink); font-weight: 500; }
-  .user-item-email { font-size: 11.5px; color: var(--ink-mute); }
+  .user-item-name { font-size: var(--fs-body); color: var(--ink); font-weight: 500; }
+  .user-item-email { font-size: var(--fs-meta); color: var(--ink-mute); }
   .user-select-footer {
     padding: 10px 14px;
     border-top: 1px solid var(--line);
@@ -260,11 +260,11 @@
     justify-content: space-between;
     background: var(--paper-2);
   }
-  .user-select-footer .sel-count { font-size: 12px; color: var(--ink-soft); }
+  .user-select-footer .sel-count { font-size: var(--fs-meta); color: var(--ink-soft); }
 
   /* ── Paste emails textarea panel ── */
   .paste-hint {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 10px;
     line-height: 1.6;
@@ -274,13 +274,13 @@
     background: var(--surface-3);
     border-radius: 4px;
     padding: 1px 5px;
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink);
   }
 
   /* ── Group preview note ── */
   .group-preview-note {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     padding: 10px 0 0;
   }
@@ -298,7 +298,7 @@
     border: 1px solid var(--line-strong);
     border-radius: var(--r-sm);
     background: var(--paper-2);
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     font-family: var(--font-label);
     letter-spacing: 0.02em;
@@ -310,7 +310,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.06em;
     color: var(--c-honey-text);
@@ -334,14 +334,14 @@
     gap: 12px;
   }
   .pending-section-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.01em;
   }
   .pending-section-count {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -349,7 +349,7 @@
   }
   .resend-btn {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -364,8 +364,8 @@
   }
   .resend-btn:hover { background: rgba(201,155,46,0.18); border-color: rgba(201,155,46,0.50); }
   .resend-btn:disabled { opacity: 0.5; cursor: default; }
-  .pending-meta { font-size: 12px; color: var(--ink-mute); }
-  .pending-expires { font-size: 11.5px; color: var(--ink-mute); }
+  .pending-meta { font-size: var(--fs-meta); color: var(--ink-mute); }
+  .pending-expires { font-size: var(--fs-meta); color: var(--ink-mute); }
   .pending-expires.urgent { color: var(--accent); font-weight: 600; }
 </style>
 </head>
@@ -836,7 +836,7 @@
 </div>
 
 <!-- Toast -->
-<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size: var(--fs-body);font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
 
 <script>
 /* ── toast ── */

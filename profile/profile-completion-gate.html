@@ -54,7 +54,7 @@
     align-items: center;
     gap: 9px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -73,7 +73,7 @@
   .gate-lock svg { width: 28px; height: 28px; }
   .gate-title {
     font-family: var(--font-sans);
-    font-size: 26px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.15;
@@ -87,7 +87,7 @@
     color: var(--accent);
   }
   .gate-sub {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
     max-width: 420px;
@@ -103,7 +103,7 @@
   .gate-bar .progress { flex: 1; height: 8px; }
   .gate-bar .gate-pct {
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
@@ -120,7 +120,7 @@
   }
   .gate-missing-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -132,7 +132,7 @@
     display: flex;
     align-items: center;
     gap: 11px;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
   }
   .gate-missing li .x {
@@ -146,16 +146,16 @@
   .gate-missing li .x svg { width: 12px; height: 12px; }
   .gate-missing li .seg {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
   .gate-actions { display: flex; flex-direction: column; gap: 10px; }
-  .gate-actions .btn { width: 100%; justify-content: center; padding: 12px 18px; font-size: 14px; }
+  .gate-actions .btn { width: 100%; justify-content: center; padding: 12px 18px; font-size: var(--fs-body); }
   .gate-foot {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 16px;
     line-height: 1.5;
@@ -213,15 +213,15 @@
     <div class="gate-bd-row">
       <div class="card" style="flex:1;padding:18px 20px">
         <div class="eyebrow" style="margin-bottom:8px">Completed on</div>
-        <div style="font-size:20px;font-weight:700;color:var(--ink)">12 May 2026</div>
+        <div style="font-size: var(--fs-h2);font-weight:700;color:var(--ink)">12 May 2026</div>
       </div>
       <div class="card" style="flex:1;padding:18px 20px">
         <div class="eyebrow" style="margin-bottom:8px">Final score</div>
-        <div style="font-size:20px;font-weight:700;color:var(--ink)">91%</div>
+        <div style="font-size: var(--fs-h2);font-weight:700;color:var(--ink)">91%</div>
       </div>
       <div class="card" style="flex:1;padding:18px 20px">
         <div class="eyebrow" style="margin-bottom:8px">Modules</div>
-        <div style="font-size:20px;font-weight:700;color:var(--ink)">5 of 5</div>
+        <div style="font-size: var(--fs-h2);font-weight:700;color:var(--ink)">5 of 5</div>
       </div>
     </div>
   </div>

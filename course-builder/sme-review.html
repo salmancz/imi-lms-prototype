@@ -25,7 +25,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -33,8 +33,8 @@
   .back-link svg { width: 14px; height: 14px; }
   .back-link:hover { color: var(--ink); }
   .review-divider { width: 1px; height: 18px; background: var(--line-strong); }
-  .review-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
-  .review-meta { font-size: 12.5px; color: var(--ink-mute); margin-left: 8px; }
+  .review-name { font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .review-meta { font-size: var(--fs-meta); color: var(--ink-mute); margin-left: 8px; }
 
   .pane-grid {
     display: grid;
@@ -57,10 +57,10 @@
     border-bottom: 1px solid var(--line);
     flex-shrink: 0;
   }
-  .pane-title { font-size: 13px; font-weight: 700; letter-spacing: -0.005em; color: var(--ink); }
+  .pane-title { font-size: var(--fs-body); font-weight: 700; letter-spacing: -0.005em; color: var(--ink); }
   .pane-sub {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.06em;
     color: var(--ink-mute);
     margin-top: 3px;
@@ -73,7 +73,7 @@
     align-items: center;
     gap: 10px;
     padding: 9px 18px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     cursor: default;
     transition: background 0.15s;
@@ -97,20 +97,20 @@
   }
   .outline-group-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--ink-mute);
     font-weight: 700;
     margin-bottom: 6px;
   }
-  .outline-sub { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; color: var(--ink-soft); }
+  .outline-sub { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: var(--fs-body); color: var(--ink-soft); }
 
   /* content pane */
   .content-pane { padding: 22px 26px; overflow-y: auto; }
   .content-chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-  .content-lesson-name { font-size: 14px; font-weight: 700; color: var(--ink); }
-  .content-tags { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .content-lesson-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .content-tags { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); }
 
   /* video area: flat dark fill, no gradient */
   .video-area {
@@ -139,7 +139,7 @@
   .video-area .play svg { width: 22px; height: 22px; margin-left: 3px; }
   .video-area .v-caption {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: rgba(252, 247, 174, 0.85);
     position: relative;
@@ -164,7 +164,7 @@
     border: 1.5px solid var(--line-strong);
     background: var(--paper);
     color: var(--ink);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     display: inline-flex;
     align-items: center;
@@ -174,10 +174,10 @@
   .pbtn:hover { background: var(--paper-2); transform: translateY(-1px); }
   .pbtn.play-main { background: var(--ink); color: var(--hero-bg); border-color: var(--ink); padding: 0 18px; }
   .pbtn svg { width: 13px; height: 13px; }
-  .player-time { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .player-time { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); }
 
-  .lesson-block-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
-  .lesson-text { font-size: 13px; color: var(--ink-soft); line-height: 1.65; margin-bottom: 18px; }
+  .lesson-block-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+  .lesson-text { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.65; margin-bottom: 18px; }
 
   .attach-row {
     display: flex;
@@ -186,14 +186,14 @@
     padding: 11px 14px;
     border: 1px solid var(--line);
     border-radius: var(--r-md);
-    font-size: 13px;
+    font-size: var(--fs-body);
     margin-bottom: 12px;
     background: var(--paper);
   }
   .attach-row.shade { background: var(--paper-2); }
   .attach-row .a-tag {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--accent-deep);
@@ -203,7 +203,7 @@
   }
   .attach-row .a-name { color: var(--ink); font-weight: 600; }
   .attach-row .a-meta { color: var(--ink-mute); }
-  .attach-row .a-action { margin-left: auto; font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); }
+  .attach-row .a-action { margin-left: auto; font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.04em; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); }
   .attach-row .a-action:hover { color: var(--ink); }
 
   /* comments pane */
@@ -219,21 +219,21 @@
   .comment-card.suggestion { border-left: 3px solid var(--ink-mute); }
   .comment-card.resolved { border-left: 3px solid var(--c-sage); opacity: 0.8; }
   .cc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
-  .cc-stamp { font-family: var(--font-label); font-size: 10px; letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
-  .cc-body { font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 9px; }
-  .cc-author { font-family: var(--font-label); font-size: 11.5px; letter-spacing: 0.03em; color: var(--ink-mute); margin-bottom: 8px; }
+  .cc-stamp { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
+  .cc-body { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.6; margin-bottom: 9px; }
+  .cc-author { font-family: var(--font-label); font-size: var(--fs-meta); letter-spacing: 0.03em; color: var(--ink-mute); margin-bottom: 8px; }
   .cc-reply {
     background: var(--paper-2);
     border-radius: var(--r-sm);
     padding: 10px 13px;
     margin-bottom: 10px;
   }
-  .cc-reply p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; }
+  .cc-reply p { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.6; }
   .cc-reply .cc-author { margin: 4px 0 0; }
   .cc-actions { display: flex; gap: 6px; }
   .cc-btn {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.03em;
     padding: 5px 11px;
@@ -266,7 +266,7 @@
   }
   .verdict-summary {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.02em;
     color: var(--ink-soft);
     margin-bottom: 16px;
@@ -282,7 +282,7 @@
   }
   .btn-reject:hover { background: var(--c-clay-wash); transform: translateY(-1px); }
   .btn-approve { width: 100%; justify-content: center; }
-  .verdict-note { font-size: 11.5px; color: var(--ink-mute); margin-top: 14px; line-height: 1.55; }
+  .verdict-note { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 14px; line-height: 1.55; }
 </style>
 </head>
 <body data-crumbs="Authoring|../role-views/content-dev-home.html;SME queue|sme-queue.html;SME review">
@@ -498,7 +498,7 @@
     background: var(--ink);
     color: var(--hero-bg);
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 600;
     letter-spacing: 0.02em;
     padding: 12px 22px;

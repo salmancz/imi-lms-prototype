@@ -13,7 +13,7 @@
   /* breadcrumb */
   .crumb {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -30,21 +30,21 @@
   .gd-search { width: 320px; max-width: 100%; }
   .gd-search input { height: 38px; border-radius: var(--r-pill); padding: 0 16px 0 36px; }
   .tbl td .mname { font-weight: 600; color: var(--ink); }
-  .tbl td .memail { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .tbl td .memail { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; }
   .tbl .checkcell { width: 36px; }
   .tbl input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; vertical-align: middle; }
   .tbl-foot {
     text-align: center;
     padding: 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
   }
   .tbl-foot a { color: var(--accent); font-weight: 600; }
   .row-link {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.06em;
     color: var(--ink-soft);
@@ -61,7 +61,7 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
@@ -71,14 +71,14 @@
   .danger-zone { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 20px; }
   .danger-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--c-clay);
     font-weight: 700;
     margin-bottom: 12px;
   }
-  .danger-note { font-size: 12.5px; color: var(--ink-mute); margin-top: 10px; max-width: 520px; line-height: 1.5; }
+  .danger-note { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 10px; max-width: 520px; line-height: 1.5; }
 
   /* tab panel animation */
   [data-panel] { animation: fade 0.2s var(--tn); }
@@ -109,14 +109,14 @@
   }
   .crs-assign-meta .am-label {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
   .crs-assign-meta .am-val {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     color: var(--ink);
   }
@@ -288,7 +288,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:78%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">78%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">78%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -301,7 +301,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:92%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">92%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">92%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -314,7 +314,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:45%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">45%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">45%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -327,7 +327,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:23%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">23%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">23%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -340,7 +340,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:8%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">8%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">8%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -353,7 +353,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:67%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">67%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">67%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -366,7 +366,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:54%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">54%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">54%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -379,7 +379,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:88%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">88%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">88%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -392,7 +392,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:15%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">15%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">15%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -405,7 +405,7 @@
                 <td>
                   <div class="row gap">
                     <div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:38%"></div></div>
-                    <span style="font-size:12px;width:34px;font-weight:600">38%</span>
+                    <span style="font-size: var(--fs-meta);width:34px;font-weight:600">38%</span>
                   </div>
                 </td>
                 <td><a class="row-link" href="corp-learner-detail.html">View &rarr;</a></td>
@@ -580,11 +580,11 @@
 </div>
 
 <div id="gd-crs-menu" style="display:none;position:fixed;background:var(--paper);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:500;min-width:160px;padding:4px 0">
-  <div style="padding:8px 16px;font-size:13px;cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('edit')">Edit assignment</div>
-  <div style="padding:8px 16px;font-size:13px;cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('view')">View course</div>
-  <div style="padding:8px 16px;font-size:13px;color:var(--c-clay);cursor:pointer;transition:background 0.12s;border-top:1px solid var(--line);margin-top:4px" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('unassign')">Unassign</div>
+  <div style="padding:8px 16px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('edit')">Edit assignment</div>
+  <div style="padding:8px 16px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('view')">View course</div>
+  <div style="padding:8px 16px;font-size: var(--fs-body);color:var(--c-clay);cursor:pointer;transition:background 0.12s;border-top:1px solid var(--line);margin-top:4px" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''" onclick="gdCrsAction('unassign')">Unassign</div>
 </div>
-<div id="gd-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)"></div>
+<div id="gd-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size: var(--fs-body);z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)"></div>
 
 <script>
   var _gdActiveCrs = '';

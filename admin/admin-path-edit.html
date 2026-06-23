@@ -15,7 +15,7 @@
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
+    font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
     color: var(--ink-mute); margin-bottom: 14px;
     transition: color 0.15s;
   }
@@ -23,7 +23,7 @@
 
   .section-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--ink-mute); margin-bottom: 20px;
     padding-bottom: 14px; border-bottom: 1px solid var(--line);
   }
@@ -31,10 +31,10 @@
   .req { color: var(--accent); font-weight: 700; }
 
   .field .hint {
-    font-size: 12px; color: var(--ink-mute); margin-top: 6px; line-height: 1.45;
+    font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 6px; line-height: 1.45;
   }
   .field .hint.inline {
-    display: inline; margin: 0; font-size: 11px;
+    display: inline; margin: 0; font-size: var(--fs-label);
     text-transform: none; letter-spacing: 0; font-weight: 500;
   }
   .field textarea.input {
@@ -46,7 +46,7 @@
   .persona-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
   .persona-opt {
     display: flex; align-items: center; gap: 9px;
-    font-size: 13.5px; color: var(--ink); cursor: pointer;
+    font-size: var(--fs-body); color: var(--ink); cursor: pointer;
   }
   .persona-opt input { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
 
@@ -59,30 +59,30 @@
   .course-row:hover { background: var(--paper-2); }
 
   .course-drag {
-    color: var(--ink-faint); font-size: 15px; cursor: grab; line-height: 1;
+    color: var(--ink-faint); font-size: var(--fs-h3); cursor: grab; line-height: 1;
   }
   .course-num {
     font-family: var(--font-label); font-variant-numeric: tabular-nums;
-    font-size: 12px; font-weight: 700; color: var(--ink-mute); min-width: 18px;
+    font-size: var(--fs-meta); font-weight: 700; color: var(--ink-mute); min-width: 18px;
   }
-  .course-title { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .course-title { flex: 1; font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
 
   .btn-remove {
     font-family: var(--font-label);
-    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
     color: var(--accent); padding: 5px 10px; border-radius: var(--r-pill);
     transition: background 0.15s;
   }
   .btn-remove:hover { background: var(--c-clay-wash); }
 
   .course-duration {
-    font-size: 12px; color: var(--ink-mute); font-family: var(--font-label);
+    font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label);
     font-variant-numeric: tabular-nums; min-width: 60px; text-align: right;
   }
 
   .toggle-mand {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
     border: 1px solid var(--line); border-radius: var(--r-pill);
     padding: 4px 10px; cursor: pointer;
@@ -104,7 +104,7 @@
     margin-top: 22px; padding: 14px 18px;
     background: var(--c-honey-wash); border: 1px solid rgba(201,155,46,0.20);
     border-radius: var(--r-md);
-    font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+    font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5;
   }
   .save-note svg { width: 17px; height: 17px; color: var(--c-honey); flex-shrink: 0; margin-top: 1px; }
   .save-note strong { color: var(--ink); font-weight: 700; }
@@ -340,8 +340,8 @@
 <!-- Add course picker modal -->
 <div id="modal-add-course" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.32);display:none;align-items:center;justify-content:center;">
   <div style="background:var(--paper);border-radius:var(--r-lg);padding:28px 32px;min-width:480px;max-width:560px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.18);position:relative;">
-    <div style="font-family:var(--font-serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px;">Add course to path</div>
-    <div style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;">Select a published course to add to this learning path.</div>
+    <div style="font-family:var(--font-serif);font-size: var(--fs-h2);font-weight:700;color:var(--ink);margin-bottom:4px;">Add course to path</div>
+    <div style="font-size: var(--fs-body);color:var(--ink-soft);margin-bottom:18px;">Select a published course to add to this learning path.</div>
     <input id="modal-course-search" class="input" placeholder="Search courses..." style="margin-bottom:14px;">
     <div id="modal-course-list" style="border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;max-height:280px;overflow-y:auto;"></div>
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:18px;">
@@ -366,8 +366,8 @@
     var list = document.getElementById('modal-course-list');
     var items = COURSES.filter(function(c){ return !filter || c.toLowerCase().indexOf(filter.toLowerCase()) > -1; });
     list.innerHTML = items.map(function(c,i){
-      return '<div class="modal-course-item" data-course="'+c+'" style="padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--line);font-size:13.5px;font-weight:500;color:var(--ink);transition:background 0.15s;">'+c+'</div>';
-    }).join('') || '<div style="padding:16px;color:var(--ink-mute);font-size:13px;">No courses found</div>';
+      return '<div class="modal-course-item" data-course="'+c+'" style="padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--line);font-size: var(--fs-body);font-weight:500;color:var(--ink);transition:background 0.15s;">'+c+'</div>';
+    }).join('') || '<div style="padding:16px;color:var(--ink-mute);font-size: var(--fs-body);">No courses found</div>';
     list.querySelectorAll('.modal-course-item').forEach(function(item){
       item.addEventListener('mouseenter', function(){ this.style.background='var(--paper-2)'; });
       item.addEventListener('mouseleave', function(){ this.style.background=this.classList.contains('is-selected')?'var(--c-honey-wash)':''; });

@@ -15,16 +15,16 @@
   .pe-actions { display: flex; align-items: center; gap: 14px; }
   .pe-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
   .pe-bar .progress { flex: 1; height: 8px; }
-  .pe-bar .pe-val { font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--ink); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+  .pe-bar .pe-val { font-family: var(--font-label); font-size: var(--fs-body); font-weight: 700; color: var(--ink); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
   .pe-tabs { display: flex; gap: 6px; padding: 4px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-pill); margin-bottom: 26px; width: fit-content; max-width: 100%; flex-wrap: wrap; }
-  .pe-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 16px; border-radius: var(--r-pill); font-family: var(--font-sans); font-size: 12.5px; font-weight: 600; color: var(--ink-soft); transition: background 0.18s, color 0.18s; }
+  .pe-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 16px; border-radius: var(--r-pill); font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600; color: var(--ink-soft); transition: background 0.18s, color 0.18s; }
   .pe-tabs button.is { background: var(--ink); color: var(--hero-bg); }
   .pe-tabs button:not(.is):hover { color: var(--ink); }
-  .pe-tabs .frac { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 1px 7px; border-radius: var(--r-pill); background: var(--paper-2); color: var(--ink-mute); }
+  .pe-tabs .frac { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.04em; padding: 1px 7px; border-radius: var(--r-pill); background: var(--paper-2); color: var(--ink-mute); }
   .pe-tabs button.is .frac { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
   .pe-tabs .frac.ok { color: var(--c-sage-text); background: var(--c-sage-wash); }
   .pe-tabs button.is .frac.ok { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
-  .pe-section-label { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; }
+  .pe-section-label { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; }
   .pe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
   .pe-stack { display: flex; flex-direction: column; gap: 4px; }
   .pe-grid .field, .pe-stack .field { margin-bottom: 0; }
@@ -32,23 +32,23 @@
   .field .opt { color: var(--ink-mute); font-weight: 400; letter-spacing: 0.04em; text-transform: none; }
   .field .req { color: var(--accent); margin-left: 2px; }
   .field label { color: var(--ink); }
-  .field .hint { font-size: 12px; color: var(--ink); margin-top: 7px; line-height: 1.45; }
+  .field .hint { font-size: var(--fs-meta); color: var(--ink); margin-top: 7px; line-height: 1.45; }
   .field .hint.warn { color: var(--c-honey-text); }
   .field .input { color: var(--ink); }
   .field select.input { color: var(--ink); }
-  .pe-upload { display: flex; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); background: var(--paper-2); color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; padding: 16px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s; }
+  .pe-upload { display: flex; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); background: var(--paper-2); color: var(--ink-soft); font-size: var(--fs-meta); line-height: 1.5; padding: 16px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s; }
   .pe-upload:hover { border-color: var(--accent); background: var(--paper); }
   .pe-upload input[type="file"] { display: none; }
   .pe-file { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 14px 16px; }
-  .pe-file .pf-info { font-size: 13px; color: var(--ink); }
-  .pe-file .pf-meta { font-size: 12px; color: var(--ink); margin-top: 3px; font-family: var(--font-label); letter-spacing: 0.03em; }
+  .pe-file .pf-info { font-size: var(--fs-body); color: var(--ink); }
+  .pe-file .pf-meta { font-size: var(--fs-meta); color: var(--ink); margin-top: 3px; font-family: var(--font-label); letter-spacing: 0.03em; }
   /* Pending file (selected, not yet uploaded) */
   .pf-pending { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 12px 16px; margin-top: 10px; }
   .pf-pending .pf-icon { width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--paper-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .pf-pending .pf-icon svg { width: 16px; height: 16px; color: var(--ink-soft); }
   .pf-pending .pf-body { flex: 1; min-width: 0; }
-  .pf-pending .pf-name { font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pf-pending .pf-size { font-size: 11.5px; color: var(--ink); font-family: var(--font-label); margin-top: 2px; }
+  .pf-pending .pf-name { font-size: var(--fs-body); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pf-pending .pf-size { font-size: var(--fs-meta); color: var(--ink); font-family: var(--font-label); margin-top: 2px; }
   .pf-pending .pf-remove { flex-shrink: 0; background: none; border: none; cursor: pointer; color: var(--ink-mute); padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: color 0.15s, background 0.15s; }
   .pf-pending .pf-remove:hover { color: #c0392b; background: #fdecea; }
   .pf-pending .pf-remove svg { width: 15px; height: 15px; }
@@ -56,9 +56,9 @@
   .pf-progress-wrap { margin-top: 8px; }
   .pf-progress-track { height: 5px; background: var(--paper-2); border-radius: 99px; overflow: hidden; margin-bottom: 5px; }
   .pf-progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width 0.25s ease; }
-  .pf-progress-label { font-size: 11.5px; color: var(--ink); font-family: var(--font-label); display: flex; justify-content: space-between; }
+  .pf-progress-label { font-size: var(--fs-meta); color: var(--ink); font-family: var(--font-label); display: flex; justify-content: space-between; }
   .pf-progress-label .pf-pct { font-weight: 700; color: var(--ink); }
-  .pf-status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-family: var(--font-label); padding: 3px 9px; border-radius: var(--r-pill); margin-top: 6px; }
+  .pf-status { display: inline-flex; align-items: center; gap: 5px; font-size: var(--fs-meta); font-family: var(--font-label); padding: 3px 9px; border-radius: var(--r-pill); margin-top: 6px; }
   .pf-status.uploading { background: #fff9e0; color: #a07800; }
   .pf-status.done { background: var(--c-sage-wash); color: var(--c-sage-text); }
   .pf-status.err { background: #fdecea; color: #c0392b; }
@@ -94,7 +94,7 @@
   .pe-link-type {
     flex: 0 0 140px;
     height: 40px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
     appearance: none;
     padding-right: 28px;
@@ -145,7 +145,7 @@
     gap: 6px;
     margin-top: 4px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -159,7 +159,7 @@
   /* doc title select */
   .pe-doc-title-select {
     height: 40px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
     appearance: none;
     padding-right: 28px;
@@ -476,7 +476,7 @@ main .input::placeholder { color: var(--ink-faint) !important; }
     if (!t) {
       t = document.createElement('div');
       t.id = 'pf-toast';
-      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
+      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size: var(--fs-body);font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
       document.body.appendChild(t);
     }
     t.textContent = msg;

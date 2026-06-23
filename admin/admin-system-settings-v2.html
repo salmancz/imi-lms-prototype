@@ -19,7 +19,7 @@
 
   .panel-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -35,7 +35,7 @@
     display: grid;
     place-items: center;
     text-align: center;
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.04em;
@@ -48,7 +48,7 @@
   .swatch-field { display: flex; align-items: center; gap: 10px; }
   .swatch { width: 32px; height: 32px; border-radius: var(--r-sm); border: 1px solid var(--line-strong); flex-shrink: 0; cursor: pointer; }
 
-  .test-line { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--c-sage-text); font-weight: 600; }
+  .test-line { display: inline-flex; align-items: center; gap: 7px; font-size: var(--fs-meta); color: var(--c-sage-text); font-weight: 600; }
 
   /* tab panes */
   .tab-pane { display: none; flex-direction: column; gap: 22px; }
@@ -65,8 +65,8 @@
   }
   .toggle-row:last-child { border-bottom: none; }
   .toggle-body { flex: 1; min-width: 0; }
-  .toggle-label { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
-  .toggle-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+  .toggle-label { font-size: var(--fs-body); font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .toggle-desc { font-size: var(--fs-meta); color: var(--ink-soft); line-height: 1.5; }
 
   /* pill toggle */
   .pill-toggle { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
@@ -95,7 +95,7 @@
   /* section divider inside card */
   .card-section-head {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -141,7 +141,7 @@
     background: var(--c-honey-wash);
     border: 1px solid rgba(201,155,46,0.30);
     border-radius: var(--r-sm);
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--c-honey-text);
     line-height: 1.5;
   }
@@ -742,7 +742,7 @@
         <div class="card-body">
 
           <!-- Complexity -->
-          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Complexity requirements</div>
+          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size: var(--fs-label);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Complexity requirements</div>
 
           <div class="set-grid" style="margin-bottom:20px">
             <div class="field">
@@ -796,23 +796,23 @@
           </div>
 
           <div style="height:1px;background:var(--line);margin:20px 0 16px"></div>
-          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Expiry &amp; reuse</div>
+          <div class="panel-eyebrow" style="margin-bottom:12px;font-family:var(--font-label);font-size: var(--fs-label);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-mute)">Expiry &amp; reuse</div>
 
           <div class="set-grid">
             <div class="field">
               <label for="pw-expiry">Password expiry (days)</label>
               <input id="pw-expiry" class="input" type="number" min="0" max="365" value="90" aria-label="Password expiry in days">
-              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Set to 0 to disable expiry.</div>
+              <div class="hint" style="font-size: var(--fs-meta);color:var(--ink-mute);margin-top:6px">Set to 0 to disable expiry.</div>
             </div>
             <div class="field">
               <label for="pw-history">Password history / reuse prevention (count)</label>
               <input id="pw-history" class="input" type="number" min="0" max="24" value="5" aria-label="Number of previous passwords that cannot be reused">
-              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Prevents reuse of last N passwords. Set to 0 to disable.</div>
+              <div class="hint" style="font-size: var(--fs-meta);color:var(--ink-mute);margin-top:6px">Prevents reuse of last N passwords. Set to 0 to disable.</div>
             </div>
             <div class="field">
               <label for="pw-lockout">Max failed login attempts before lockout</label>
               <input id="pw-lockout" class="input" type="number" min="1" max="20" value="5" aria-label="Failed attempts before account lockout">
-              <div class="hint" style="font-size:12px;color:var(--ink-mute);margin-top:6px">Account locks after this many consecutive failures. Admins can unlock from user detail.</div>
+              <div class="hint" style="font-size: var(--fs-meta);color:var(--ink-mute);margin-top:6px">Account locks after this many consecutive failures. Admins can unlock from user detail.</div>
             </div>
           </div>
 

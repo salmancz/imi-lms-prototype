@@ -23,7 +23,7 @@
     border: 1px solid var(--line);
     background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center / 14px;
     border-radius: var(--r-sm);
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink);
     min-width: 150px;
     appearance: none;
@@ -43,7 +43,7 @@
     border-radius: var(--r-pill);
     border: 1px solid var(--line-strong);
     background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat 16px center / 17px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
     transition: border 0.2s, box-shadow 0.2s;
   }
@@ -75,7 +75,7 @@
   }
   .stat-flat .sf-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -86,7 +86,7 @@
     gap: 6px;
   }
   .stat-flat .sf-value {
-    font-size: 26px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: -0.025em;
     color: var(--ink);
@@ -96,7 +96,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     margin-left: 3px;
   }
@@ -114,15 +114,15 @@
     margin-bottom: 12px;
   }
   .results-note {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     max-width: 500px;
   }
 
   /* table tweaks */
   .tbl td .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tbl .mono { font-family: var(--font-label); font-size: 11.5px; letter-spacing: 0.01em; }
-  .tbl .login-cell { font-family: var(--font-label); font-size: 11.5px; color: var(--ink-mute); white-space: nowrap; }
+  .tbl .mono { font-family: var(--font-label); font-size: var(--fs-meta); letter-spacing: 0.01em; }
+  .tbl .login-cell { font-family: var(--font-label); font-size: var(--fs-meta); color: var(--ink-mute); white-space: nowrap; }
   .tbl tr.is-flagged { background: var(--c-honey-wash); }
   .tbl tr.is-flagged:hover { background: var(--c-honey-wash); }
 
@@ -149,7 +149,7 @@
   }
   .scope-bar .scope-icon svg { width: 15px; height: 15px; }
   .scope-bar .scope-text {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.45;
   }
@@ -303,7 +303,7 @@
 
     <!-- Results header -->
     <div class="results-head">
-      <div class="eyebrow" style="margin:0">Results <em id="results-count" style="font-family:var(--font-serif);font-style:italic;font-weight:400;font-size:13px;color:var(--ink-soft);text-transform:none;letter-spacing:0">(8 shown)</em></div>
+      <div class="eyebrow" style="margin:0">Results <em id="results-count" style="font-family:var(--font-serif);font-style:italic;font-weight:400;font-size: var(--fs-body);color:var(--ink-soft);text-transform:none;letter-spacing:0">(8 shown)</em></div>
       <p class="results-note">Support can assist accounts but cannot change roles or delete users (Super Admin only).</p>
     </div>
 
@@ -461,17 +461,17 @@
     padding: 28px 30px 24px;
   }
   .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
-  .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1.3; }
+  .modal-title { font-size: var(--fs-h2); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1.3; }
   .modal-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
-  .modal-close { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-mute); font-size: 18px; flex-shrink: 0; transition: background 0.15s, color 0.15s; }
+  .modal-close { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-mute); font-size: var(--fs-h2); flex-shrink: 0; transition: background 0.15s, color 0.15s; }
   .modal-close:hover { background: var(--paper-2); color: var(--ink); }
-  .modal-body { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
+  .modal-body { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
   .toast {
     position: fixed; bottom: 28px; left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: var(--ink); color: var(--paper);
-    font-size: 13px; font-family: var(--font-sans);
+    font-size: var(--fs-body); font-family: var(--font-sans);
     padding: 10px 20px; border-radius: var(--r-pill);
     opacity: 0; pointer-events: none;
     transition: opacity 0.2s, transform 0.2s;
@@ -487,7 +487,7 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="user-action-title">Confirm <em>action</em></div>
-        <div style="font-size:13px;color:var(--ink-mute);margin-top:4px" id="user-action-email"></div>
+        <div style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px" id="user-action-email"></div>
       </div>
       <button class="modal-close" id="btn-ua-close" aria-label="Close">&times;</button>
     </div>

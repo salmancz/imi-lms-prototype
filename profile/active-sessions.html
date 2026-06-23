@@ -49,7 +49,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     letter-spacing: -0.005em;
@@ -58,7 +58,7 @@
   }
 
   .session-meta {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.02em;
@@ -74,7 +74,7 @@
     background: var(--c-honey-wash);
     border: 1px solid rgba(201, 155, 46, 0.22);
     border-radius: var(--r-md);
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
   }
@@ -226,7 +226,7 @@
     t.textContent = msg;
     t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' +
       (danger ? 'var(--c-danger)' : 'var(--ink)') +
-      ';color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);';
+      ';color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size: var(--fs-body);font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);';
     document.body.appendChild(t);
     setTimeout(function(){ t.remove(); }, 3200);
   }
@@ -263,7 +263,7 @@
       var remaining = document.querySelectorAll('#sessionStack .card').length;
       if (remaining === 0) {
         document.getElementById('sessionStack').innerHTML =
-          '<p style="font-size:14px;color:var(--ink-mute);padding:12px 0">No active sessions. <a href="../auth/login.html" style="color:var(--accent)">Sign in again</a></p>';
+          '<p style="font-size: var(--fs-body);color:var(--ink-mute);padding:12px 0">No active sessions. <a href="../auth/login.html" style="color:var(--accent)">Sign in again</a></p>';
       }
       showToast('Session revoked.', true);
     }, 320);

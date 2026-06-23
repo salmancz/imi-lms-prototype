@@ -15,7 +15,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -46,17 +46,17 @@
   }
   .dq-policy .pol-icon svg { width: 17px; height: 17px; }
   .dq-policy p {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
   }
   .dq-policy p strong { color: var(--ink); font-weight: 700; }
   .dq-user-name { font-weight: 600; color: var(--ink); }
-  .dq-user-email { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
+  .dq-user-email { font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
   .dq-actions { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
   .dq-act {
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
   }
@@ -74,7 +74,7 @@
     gap: 14px;
     margin-top: 18px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.03em;
     color: var(--ink-mute);
   }
@@ -157,7 +157,7 @@
         <tr data-initiator="user">
           <td><div class="dq-user-name">Ahmed Al-Balushi</div><div class="dq-user-email">ahmed@example.om</div></td>
           <td><span class="chip">Self-requested</span></td>
-          <td><span style="font-size:12px;color:var(--ink-soft)">User</span></td>
+          <td><span style="font-size: var(--fs-meta);color:var(--ink-soft)">User</span></td>
           <td class="numeric">2025-05-15</td>
           <td class="numeric">2025-06-14</td>
           <td><span class="chip t-honey" style="font-variant-numeric:tabular-nums">6d</span></td>
@@ -167,7 +167,7 @@
         <tr data-initiator="user">
           <td><div class="dq-user-name">Fatima Al-Hinai</div><div class="dq-user-email">fatima@example.om</div><div class="dq-user-email" style="color:var(--c-sage-text);margin-top:2px;">Locally certified #IM-00412</div></td>
           <td><span class="chip">Self-requested</span></td>
-          <td><span style="font-size:12px;color:var(--ink-soft)">User</span></td>
+          <td><span style="font-size: var(--fs-meta);color:var(--ink-soft)">User</span></td>
           <td class="numeric">2025-05-10</td>
           <td class="numeric">Retained</td>
           <td><span class="chip t-sage">Never</span></td>
@@ -177,7 +177,7 @@
         <tr data-initiator="admin">
           <td><div class="dq-user-name">Salma Al-Lawati</div><div class="dq-user-email">salma@example.om</div></td>
           <td><span class="chip">Admin-initiated</span></td>
-          <td><span style="font-size:12px;color:var(--ink-soft)">Admin</span></td>
+          <td><span style="font-size: var(--fs-meta);color:var(--ink-soft)">Admin</span></td>
           <td class="numeric">2025-05-21</td>
           <td class="numeric">2025-06-20</td>
           <td><span class="chip t-honey" style="font-variant-numeric:tabular-nums">12d</span></td>
@@ -187,7 +187,7 @@
         <tr data-initiator="admin">
           <td><div class="dq-user-name">Khalid Al-Rashidi</div><div class="dq-user-email">khalid@example.om</div></td>
           <td><span class="chip">Admin-initiated</span></td>
-          <td><span style="font-size:12px;color:var(--ink-soft)">Admin</span></td>
+          <td><span style="font-size: var(--fs-meta);color:var(--ink-soft)">Admin</span></td>
           <td class="numeric">2025-05-04</td>
           <td class="numeric">2025-06-03</td>
           <td><span class="chip" style="background:var(--accent-soft,#fce8e8);color:var(--accent);font-variant-numeric:tabular-nums">0d</span></td>

@@ -29,7 +29,7 @@
     border-radius: var(--r-md);
     padding: 14px 18px;
     margin-bottom: 28px;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--c-honey-text);
     line-height: 1.5;
   }
@@ -67,7 +67,7 @@
     bottom: 16px;
     left: 18px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -86,7 +86,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     padding: 8px 0;
   }
   .cp-meta-row + .cp-meta-row { border-top: 1px solid var(--line); }
@@ -96,7 +96,7 @@
   /* Section eyebrow titles */
   .cp-section-title {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -116,7 +116,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.45;
   }
@@ -144,14 +144,14 @@
   .lesson-mark.quiz { background: var(--c-honey-wash); color: var(--c-honey-text); }
   .lesson-body { flex: 1; min-width: 0; }
   .lesson-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .lesson-meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .lesson-meta { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; }
   .lesson-num { font-weight: 700; }
 
   /* Right-rail enrol card */
@@ -164,7 +164,7 @@
     position: sticky;
     top: 110px;
   }
-  .enrol-note { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
+  .enrol-note { font-size: var(--fs-body); color: var(--ink-soft); margin-bottom: 20px; }
   .btn-full { width: 100%; justify-content: center; }
 
   /* Ask-a-question placeholder */
@@ -178,7 +178,7 @@
   }
   .ask-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -192,7 +192,7 @@
     border: 1px solid var(--line);
     background: var(--paper);
     padding: 0 14px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-family: var(--font-body, inherit);
     color: var(--ink-mute);
     display: block;
@@ -203,7 +203,7 @@
     cursor: not-allowed;
     background: var(--paper);
   }
-  .ask-hint { font-size: 11px; color: var(--ink-mute); margin-top: 8px; }
+  .ask-hint { font-size: var(--fs-label); color: var(--ink-mute); margin-top: 8px; }
 
   /* Course category pill */
   .course-label {
@@ -211,7 +211,7 @@
     align-items: center;
     gap: 5px;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -229,7 +229,7 @@
     align-items: center;
     gap: 5px;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -254,7 +254,7 @@
     border: 1px solid rgba(126, 155, 111, 0.25);
   }
   .level-badge.basic .level-star { color: var(--c-sage); }
-  .level-star { font-size: 11px; line-height: 1; }
+  .level-star { font-size: var(--fs-label); line-height: 1; }
 
   /* Duration badge */
   .duration-badge {
@@ -262,7 +262,7 @@
     align-items: center;
     gap: 5px;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -309,7 +309,7 @@
     align-items: center;
     gap: 10px;
     padding: 9px 16px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     cursor: pointer;
     transition: background 0.12s, color 0.12s;
@@ -334,7 +334,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -506,7 +506,7 @@
 
       <div class="cp-meta-card" style="margin-top:18px">
         <div class="cp-meta-row"><span class="k">Instructor</span><span class="v">Dr. Faris Al-Maamari</span></div>
-        <div class="cp-meta-row"><span class="k">Earn</span><span class="v">Course Completed proof<br><a href="completed-proof-detail.html" style="font-size:11px;font-weight:500;color:var(--ink-mute);text-decoration:underline;text-underline-offset:2px" target="_self">Verifiable at imi.om/verify</a></span></div>
+        <div class="cp-meta-row"><span class="k">Earn</span><span class="v">Course Completed proof<br><a href="completed-proof-detail.html" style="font-size: var(--fs-label);font-weight:500;color:var(--ink-mute);text-decoration:underline;text-underline-offset:2px" target="_self">Verifiable at imi.om/verify</a></span></div>
         <div class="cp-meta-row"><span class="k">Access</span><span class="v">Free</span></div>
       </div>
 
@@ -521,7 +521,7 @@
   </main>
 </div>
 <!-- Toast -->
-<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);z-index:10000;background:var(--ink);color:var(--hero-bg);font-size:13px;font-family:var(--font-label);font-weight:600;letter-spacing:0.06em;border-radius:var(--r-pill);padding:10px 20px;opacity:0;pointer-events:none;transition:opacity 0.22s,transform 0.22s"></div>
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);z-index:10000;background:var(--ink);color:var(--hero-bg);font-size: var(--fs-body);font-family:var(--font-label);font-weight:600;letter-spacing:0.06em;border-radius:var(--r-pill);padding:10px 20px;opacity:0;pointer-events:none;transition:opacity 0.22s,transform 0.22s"></div>
 
 <script>
 var _cpWishlisted = false;

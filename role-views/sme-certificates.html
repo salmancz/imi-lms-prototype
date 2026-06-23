@@ -18,7 +18,7 @@
     background: var(--c-honey-wash);
     border: 1px solid rgba(201, 155, 46, 0.20);
     border-radius: var(--r-md);
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
     margin-bottom: 28px;
@@ -63,7 +63,7 @@
   .kpi-flat .kf-body { flex: 1; min-width: 0; }
   .kpi-flat .kf-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -71,7 +71,7 @@
     margin-bottom: 4px;
   }
   .kpi-flat .kf-value {
-    font-size: 24px;
+    font-size: var(--fs-h1);
     font-weight: 800;
     letter-spacing: -0.025em;
     color: var(--ink);
@@ -82,7 +82,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     margin-left: 2px;
   }
@@ -100,12 +100,12 @@
   /* Table column styles */
   .cert-tbl td.col-mono,
   .cert-tbl th.col-mono { font-family: var(--font-label); }
-  .cert-tbl td.col-mono { font-size: 12.5px; color: var(--ink-soft); letter-spacing: 0.02em; }
+  .cert-tbl td.col-mono { font-size: var(--fs-meta); color: var(--ink-soft); letter-spacing: 0.02em; }
   .cert-tbl td.col-count { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
 
   .table-foot {
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     margin-top: 14px;
@@ -214,7 +214,7 @@
       <select class="input" id="filt-date" onchange="applyCertFilters()"><option value="">Date range</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="365">This year</option></select>
       <button class="btn btn-ghost btn-sm" onclick="clearCertFilters()">Clear</button>
     </div>
-    <div id="cert-filter-count" style="font-family:var(--font-label);font-size:12px;color:var(--ink-mute);margin-bottom:10px;display:none"></div>
+    <div id="cert-filter-count" style="font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);margin-bottom:10px;display:none"></div>
 
     <div class="card mb">
       <table class="tbl cert-tbl">

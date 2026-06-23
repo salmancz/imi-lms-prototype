@@ -30,7 +30,7 @@
   }
   .preview-banner .pb-tag {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -39,13 +39,13 @@
   }
   .preview-banner .pb-sep { opacity: 0.4; }
   .preview-banner .pb-copy {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: rgba(252, 247, 174, 0.82);
     line-height: 1.45;
   }
   .preview-banner .pb-exit {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -76,12 +76,12 @@
     background: var(--paper);
     margin-bottom: 30px;
   }
-  .cp-instructor .avatar { width: 42px; height: 42px; font-size: 14px; }
-  .cp-instructor .ci-name { font-size: 14px; font-weight: 700; color: var(--ink); }
-  .cp-instructor .ci-role { font-size: 12.5px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
+  .cp-instructor .avatar { width: 42px; height: 42px; font-size: var(--fs-body); }
+  .cp-instructor .ci-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cp-instructor .ci-role { font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.02em; }
 
   .cp-section-title {
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -106,7 +106,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.45;
   }
@@ -130,16 +130,16 @@
     border: 1px solid var(--line);
     display: grid;
     place-items: center;
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     color: var(--ink-soft);
     flex-shrink: 0;
     font-variant-numeric: tabular-nums;
   }
   .cp-lesson .cl-main { display: flex; align-items: center; gap: 13px; min-width: 0; }
-  .cp-lesson .cl-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .cp-lesson .cl-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .cp-lesson.is-final .cl-title { color: var(--ink-soft); }
-  .cp-lesson .cl-meta { font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 2px; }
+  .cp-lesson .cl-meta { font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 2px; }
 
   .cp-review { display: flex; gap: 13px; padding: 16px 0; border-bottom: 1px solid var(--line); }
   .cp-review:last-child { border-bottom: none; }
@@ -148,10 +148,10 @@
     background: var(--c-sage); flex-shrink: 0; margin-top: 7px;
   }
   .cp-review .cr-body { flex: 1; min-width: 0; }
-  .cp-review .cr-name { font-size: 13.5px; font-weight: 700; color: var(--ink); }
-  .cp-review .cr-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 3px; }
+  .cp-review .cr-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cp-review .cr-text { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; margin-top: 3px; }
   .cp-review .cr-when {
-    font-family: var(--font-label); font-size: 11px; color: var(--ink-mute);
+    font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute);
     letter-spacing: 0.06em; white-space: nowrap;
   }
 
@@ -164,8 +164,8 @@
     padding: 24px;
     box-shadow: var(--shadow-sm);
   }
-  .cp-price { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
-  .cp-price-sub { font-size: 13px; color: var(--ink-mute); margin: 4px 0 18px; }
+  .cp-price { font-size: var(--fs-h1); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .cp-price-sub { font-size: var(--fs-body); color: var(--ink-mute); margin: 4px 0 18px; }
 
   .btn.full { width: 100%; justify-content: center; }
   .btn.is-disabled {
@@ -175,7 +175,7 @@
   }
   .cp-disabled-note {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     color: var(--ink-mute);
     text-align: center;
     margin-top: 8px;
@@ -192,7 +192,7 @@
   }
   .cp-earn-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -208,15 +208,15 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 7.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.04em;
     line-height: 1.1;
     color: var(--c-honey-text);
     text-align: center;
   }
-  .cp-earn-name { font-size: 13px; font-weight: 700; color: var(--ink); }
-  .cp-earn-meta { font-size: 11.5px; color: var(--ink-mute); line-height: 1.5; margin-top: 3px; }
+  .cp-earn-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .cp-earn-meta { font-size: var(--fs-meta); color: var(--ink-mute); line-height: 1.5; margin-top: 3px; }
 
   /* ---- share modal ---- */
   .share-overlay {
@@ -241,13 +241,13 @@
   }
   .share-modal h3 {
     font-family: var(--font-sans);
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 800;
     letter-spacing: -0.01em;
     color: var(--ink);
     margin: 0 0 6px;
   }
-  .share-modal p { font-size: 13px; color: var(--ink-soft); margin: 0 0 20px; }
+  .share-modal p { font-size: var(--fs-body); color: var(--ink-soft); margin: 0 0 20px; }
   .share-url-row {
     display: flex;
     gap: 8px;
@@ -258,7 +258,7 @@
     padding: 10px 14px;
     margin-bottom: 20px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     letter-spacing: 0.02em;
     overflow: hidden;
@@ -274,7 +274,7 @@
     display: grid; place-items: center;
     cursor: pointer;
     color: var(--ink-soft);
-    font-size: 16px;
+    font-size: var(--fs-h3);
     line-height: 1;
   }
   .share-close-btn:hover { background: var(--ink); color: var(--paper); }
@@ -313,7 +313,7 @@
     gap: 16px;
   }
   .lesson-modal-head h3 {
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 800;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -321,7 +321,7 @@
   }
   .lesson-modal-head .lm-meta {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     margin-top: 5px;
@@ -351,13 +351,13 @@
     bottom: 16px;
     left: 16px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.08em;
     color: rgba(252,247,238,0.7);
     text-transform: uppercase;
   }
   .lesson-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
-  .lesson-modal-body p { font-size: 14px; color: var(--ink-soft); line-height: 1.65; margin: 0 0 14px; }
+  .lesson-modal-body p { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.65; margin: 0 0 14px; }
   .lesson-modal-foot {
     padding: 16px 24px;
     border-top: 1px solid var(--line);

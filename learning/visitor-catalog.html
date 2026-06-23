@@ -43,7 +43,7 @@
   }
   .vnav-brand .brand-text {
     font-weight: 700;
-    font-size: 14px;
+    font-size: var(--fs-body);
     letter-spacing: -0.01em;
     color: var(--ink);
   }
@@ -51,7 +51,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     margin-left: 2px;
   }
@@ -64,7 +64,7 @@
     text-decoration: none;
     color: var(--ink-soft);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 500;
     transition: color 0.15s var(--tn);
   }
@@ -78,7 +78,7 @@
     text-decoration: none;
     color: var(--ink);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 600;
   }
   .vnav-signup {
@@ -86,7 +86,7 @@
     background: var(--ink);
     color: var(--hero-bg);
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 600;
     padding: 8px 18px;
     border-radius: var(--r-pill);
@@ -109,7 +109,7 @@
   }
   .v-hero .eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -132,7 +132,7 @@
     color: var(--accent);
   }
   .v-hero .v-hero-sub {
-    font-size: 15.5px;
+    font-size: var(--fs-h3);
     color: var(--ink-soft);
     line-height: 1.55;
     max-width: 580px;
@@ -151,7 +151,7 @@
   }
   .v-hero-stat { display: flex; flex-direction: column; gap: 4px; text-align: center; }
   .v-hero-stat .hs-value {
-    font-size: 22px;
+    font-size: var(--fs-h1);
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -159,7 +159,7 @@
   }
   .v-hero-stat .hs-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -185,7 +185,7 @@
     background: transparent;
     padding: 0 18px 0 46px;
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
     box-sizing: border-box;
     transition: border 0.2s, box-shadow 0.2s;
@@ -216,7 +216,7 @@
     background: transparent;
     border-radius: var(--r-pill);
     font-family: var(--font-sans);
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     font-weight: 500;
     color: var(--ink-soft);
     cursor: pointer;
@@ -245,7 +245,7 @@
   }
   .v-section-label {
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -253,7 +253,7 @@
   }
   .v-section-count {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     letter-spacing: 0.04em;
   }
@@ -319,7 +319,7 @@
     right: 10px;
     z-index: 1;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     background: rgba(42,17,8,0.78);
@@ -329,7 +329,7 @@
   }
   .vid-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
   .vid-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     line-height: 1.35;
     color: var(--ink);
@@ -337,7 +337,7 @@
   }
   .vid-meta {
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     letter-spacing: 0.03em;
     margin-top: auto;
@@ -367,7 +367,7 @@
     border: 1px solid var(--line);
     border-radius: var(--r-pill);
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -381,7 +381,7 @@
   /* ── wishlist heart ── */
   .crs-wish {
     color: var(--ink-mute);
-    font-size: 18px;
+    font-size: var(--fs-h2);
     line-height: 1;
     cursor: pointer;
     transition: color 0.15s;
@@ -403,7 +403,7 @@
   }
   .v-footer-cta h2 {
     font-family: var(--font-sans);
-    font-size: 26px;
+    font-size: var(--fs-h1);
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -416,7 +416,7 @@
     color: var(--accent);
   }
   .v-footer-cta p {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     color: var(--ink-soft);
     margin-bottom: 24px;
     max-width: 520px;
@@ -508,7 +508,7 @@
   </div>
 
   <!-- Completion-status sign-up nudge (hidden by default) -->
-  <div id="completion-nudge" style="display:none;background:var(--c-honey-wash);border:1px solid rgba(201,155,46,.30);border-radius:var(--r-md);padding:16px 20px;margin-bottom:24px;font-size:13.5px;color:var(--c-honey-text);line-height:1.55;">
+  <div id="completion-nudge" style="display:none;background:var(--c-honey-wash);border:1px solid rgba(201,155,46,.30);border-radius:var(--r-md);padding:16px 20px;margin-bottom:24px;font-size: var(--fs-body);color:var(--c-honey-text);line-height:1.55;">
     <strong>Track your progress by signing up.</strong> Completion status filters (Not started / In progress / Completed) require a free account. <a href="../auth/signup.html" style="color:var(--c-honey-text);font-weight:700;text-decoration:underline;">Sign up free &rarr;</a>
   </div>
 
@@ -595,7 +595,7 @@
             <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'CDMP Practitioner Prep'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
           </div>
         </div>
-        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">20 lessons &middot; 12 h</div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">20 lessons &middot; 12 h</div>
         <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
       </div>
     </article>
@@ -624,7 +624,7 @@
             <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Knowledge Mapping Fundamentals'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
           </div>
         </div>
-        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">6 lessons &middot; 3 h</div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">6 lessons &middot; 3 h</div>
         <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
       </div>
     </article>
@@ -653,7 +653,7 @@
             <button class="crs-ic" title="Share" onclick="navigator.share?navigator.share({title:'Data Retention Schedules'}).catch(function(){}):alert('Share link copied')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
           </div>
         </div>
-        <div style="font-family:var(--font-label);font-size:11.5px;color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">8 lessons &middot; 4 h</div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-mute);letter-spacing:0.03em;margin-bottom:12px;">8 lessons &middot; 4 h</div>
         <a class="crs-enrol-lock" href="../auth/signup.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Sign up to enrol</a>
       </div>
     </article>

@@ -22,17 +22,17 @@
   .field-block .field { margin-bottom: 0; }
   .field-block .input { height: 40px; }
   .field-hint {
-    font-family: var(--font-label); font-size: 11px; letter-spacing: 0.03em;
+    font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.03em;
     color: var(--ink-mute); margin-top: 7px;
   }
   .input[disabled], select.input { color: var(--ink); }
   .input[disabled] { background: var(--paper-2); cursor: not-allowed; }
 
   .set-sessions { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .set-sessions .sess-text { font-size: 14px; color: var(--ink-soft); }
+  .set-sessions .sess-text { font-size: var(--fs-body); color: var(--ink-soft); }
   .set-sessions .sess-text strong { color: var(--ink); font-weight: 700; }
   .set-divider { height: 1px; background: var(--line); margin: 18px 0; }
-  .set-note { font-size: 12px; color: var(--ink-mute); line-height: 1.6; }
+  .set-note { font-size: var(--fs-meta); color: var(--ink-mute); line-height: 1.6; }
 
   /* Notification preferences grid */
   .notif-scroll { overflow-x: auto; margin: 0 -4px; }
@@ -46,29 +46,29 @@
     cursor: pointer; vertical-align: middle;
   }
   .notif-tbl input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.45; }
-  .notif-foot { font-size: 12px; color: var(--ink-mute); line-height: 1.6; margin-top: 14px; }
+  .notif-foot { font-size: var(--fs-meta); color: var(--ink-mute); line-height: 1.6; margin-top: 14px; }
 
   /* Danger zone - clay border only, solid fill from token */
   .card.danger { border-color: rgba(193, 42, 28, 0.32); background: var(--c-danger-wash); }
   .card.danger .card-title { color: var(--c-danger); }
   .danger-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
-  .danger-row .d-text { font-size: 13px; color: var(--ink-soft); }
+  .danger-row .d-text { font-size: var(--fs-body); color: var(--ink-soft); }
   .danger-otp {
     background: rgba(250, 246, 240, 0.6);
     border: 1px dashed rgba(193, 42, 28, 0.40);
     border-radius: var(--r-sm);
     padding: 14px 16px;
   }
-  .danger-otp p { font-size: 12px; color: var(--c-danger); line-height: 1.65; }
+  .danger-otp p { font-size: var(--fs-meta); color: var(--c-danger); line-height: 1.65; }
   .danger-otp strong { font-weight: 700; }
 
   .help-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .help-row .h-text { font-size: 14px; color: var(--ink-soft); }
+  .help-row .h-text { font-size: var(--fs-body); color: var(--ink-soft); }
 
   .field-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .field-label-row label { margin-bottom: 0; }
   .field-change {
-    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.04em; color: var(--accent-deep);
     text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
   }
@@ -77,7 +77,7 @@
   /* Section card header (matches .card-head from shared.css, inlined for form sections) */
   .set-section-head {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -121,9 +121,9 @@
     padding: 14px 0;
   }
   .toggle-row + .toggle-row { border-top: 1px solid var(--line); }
-  .toggle-row .tr-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .toggle-row .tr-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .toggle-row .tr-sub {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 3px;
     line-height: 1.55;
@@ -374,7 +374,7 @@
     if (!t) {
       t = document.createElement('div');
       t.id = 'settings-toast';
-      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
+      t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:var(--r-md);font-size: var(--fs-body);font-weight:600;font-family:var(--font-sans);box-shadow:0 4px 18px rgba(0,0,0,.14);transition:opacity 0.25s,transform 0.25s;opacity:0;transform:translateY(8px);pointer-events:none;max-width:340px;';
       document.body.appendChild(t);
     }
     t.textContent = msg;

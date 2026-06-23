@@ -14,7 +14,7 @@
 
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
     margin-bottom: 14px; transition: color 0.15s;
   }
@@ -27,11 +27,11 @@
     border-bottom: 1px solid var(--line);
   }
   .form-card .sec-title {
-    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
   }
   .form-card .sec-num {
-    font-family: var(--font-label); font-size: 10px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-faint);
   }
   .form-card .form-body { padding: 24px 28px 28px; }
@@ -45,7 +45,7 @@
   .field select.input { height: 40px; padding-top: 0; padding-bottom: 0; }
   .field input[readonly] { background: var(--bg-alt); color: var(--ink-mute); cursor: default; }
   .field .hint {
-    font-size: 11.5px; color: var(--ink-mute); margin-top: 6px;
+    font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 6px;
     font-family: var(--font-sans); letter-spacing: 0;
   }
 
@@ -87,13 +87,13 @@
     background: var(--c-honey-wash);
   }
   .expiry-opt-val {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     color: var(--ink);
     line-height: 1;
   }
   .expiry-opt-unit {
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.06em;
@@ -108,7 +108,7 @@
     background: var(--c-honey-wash);
     border: 1px solid rgba(201, 155, 46, 0.20);
     border-radius: var(--r-md);
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     line-height: 1.5;
     color: var(--ink-soft);
     margin-top: 8px;
@@ -284,7 +284,7 @@
 </div>
 
 <!-- Toast -->
-<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size: var(--fs-body);font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
 
 <script>
 (function () {

@@ -16,7 +16,7 @@
     align-items: center;
     gap: 7px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -30,7 +30,7 @@
   /* ---- meta line ---- */
   .co-meta {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     display: flex;
@@ -64,7 +64,7 @@
     flex-shrink: 0;
   }
   .co-banner .bn-icon svg { width: 16px; height: 16px; }
-  .co-banner .bn-copy { font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+  .co-banner .bn-copy { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; }
   .co-banner .bn-copy a {
     font-weight: 700;
     color: var(--ink);
@@ -107,16 +107,16 @@
   .struct-row.is-flagged:hover { background: var(--c-honey-wash); }
   .struct-num {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     color: var(--ink-mute);
     min-width: 22px;
     font-variant-numeric: tabular-nums;
   }
-  .struct-title { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .struct-title { flex: 1; min-width: 0; font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .struct-dur {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.03em;
     color: var(--ink-mute);
     white-space: nowrap;
@@ -127,7 +127,7 @@
   .struct-dot.warn { background: var(--c-honey); }
   .flag-pill {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -146,7 +146,7 @@
   .struct-row.assessment .struct-title { font-weight: 700; }
   .struct-meta-sm {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.03em;
     color: var(--ink-mute);
     white-space: nowrap;
@@ -156,7 +156,7 @@
   .info-card { padding: 20px 22px; }
   .info-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -179,23 +179,23 @@
   .tl-line { width: 1px; flex: 1; min-height: 14px; background: var(--line-strong); margin: 4px 0; }
   .tl-content { padding-bottom: 16px; }
   .tl-step:last-child .tl-content { padding-bottom: 0; }
-  .tl-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .tl-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .tl-title.current { font-weight: 700; }
-  .tl-sub { font-size: 13px; color: var(--ink-mute); margin-top: 2px; }
+  .tl-sub { font-size: var(--fs-body); color: var(--ink-mute); margin-top: 2px; }
 
   /* ---- SME info ---- */
-  .sme-name { font-size: 15px; font-weight: 700; color: var(--ink); }
-  .sme-domain { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+  .sme-name { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); }
+  .sme-domain { font-size: var(--fs-body); color: var(--ink-soft); margin-top: 3px; }
   .sme-turn {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.03em;
     color: var(--ink-mute);
     margin-top: 8px;
   }
 
   /* ---- quick stats placeholder ---- */
-  .stats-empty { font-size: 14px; color: var(--ink-mute); line-height: 1.55; }
+  .stats-empty { font-size: var(--fs-body); color: var(--ink-mute); line-height: 1.55; }
 
   /* ---- section title above card ---- */
   .section-head {
@@ -206,7 +206,7 @@
   }
   .section-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -340,7 +340,7 @@
       </div>
       <div class="stat-flat">
         <div class="stat-label">Total duration</div>
-        <div class="stat-value" style="font-size:24px;">190<em style="font-family:var(--font-serif);font-style:italic;font-size:14px;color:var(--ink-soft);margin-left:3px;">min</em></div>
+        <div class="stat-value" style="font-size: var(--fs-h1);">190<em style="font-family:var(--font-serif);font-style:italic;font-size: var(--fs-body);color:var(--ink-soft);margin-left:3px;">min</em></div>
       </div>
       <div class="stat-flat">
         <div class="stat-label">Open feedback</div>
@@ -348,7 +348,7 @@
       </div>
       <div class="stat-flat">
         <div class="stat-label">Submission version</div>
-        <div class="stat-value" style="font-size:24px;">v3</div>
+        <div class="stat-value" style="font-size: var(--fs-h1);">v3</div>
       </div>
     </div>
 

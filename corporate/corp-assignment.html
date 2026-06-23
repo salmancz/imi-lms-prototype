@@ -27,7 +27,7 @@
   }
   .step-num {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -39,7 +39,7 @@
     flex-shrink: 0;
   }
   .step-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.01em;
@@ -55,7 +55,7 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     font-weight: 500;
     color: var(--ink-soft);
     cursor: pointer;
@@ -83,7 +83,7 @@
     box-shadow: var(--shadow-xs);
   }
   .summary-text {
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
   }
@@ -91,7 +91,7 @@
 
   /* Field label helper */
   .field-hint {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 6px;
     font-family: var(--font-label);
@@ -220,11 +220,11 @@
             <label>Course(s)</label>
             <input class="input" id="course-search" placeholder="Search courses...">
             <div id="course-dropdown" style="display:none;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-top:4px;max-height:160px;overflow-y:auto;position:relative;z-index:10;">
-              <div class="assign-option" data-value="CDMP Practitioner" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">CDMP Practitioner</div>
-              <div class="assign-option" data-value="Records Retention" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Retention</div>
-              <div class="assign-option" data-value="Data Governance Essentials" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Data Governance Essentials</div>
-              <div class="assign-option" data-value="ISO 30401 KM Standard" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">ISO 30401 KM Standard</div>
-              <div class="assign-option" data-value="Records Management Fundamentals" style="padding:8px 14px;font-size:13px;cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Management Fundamentals</div>
+              <div class="assign-option" data-value="CDMP Practitioner" style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">CDMP Practitioner</div>
+              <div class="assign-option" data-value="Records Retention" style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Retention</div>
+              <div class="assign-option" data-value="Data Governance Essentials" style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Data Governance Essentials</div>
+              <div class="assign-option" data-value="ISO 30401 KM Standard" style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">ISO 30401 KM Standard</div>
+              <div class="assign-option" data-value="Records Management Fundamentals" style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;transition:background 0.12s;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Records Management Fundamentals</div>
             </div>
             <div class="chips-row" id="course-chips">
               <span class="chip t-clay" data-course="CDMP Practitioner">CDMP Practitioner <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
@@ -257,10 +257,10 @@
               <label>Users</label>
               <input class="input" id="user-search" placeholder="Search users...">
               <div id="user-dropdown" style="display:none;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;margin-top:4px;max-height:160px;overflow-y:auto;position:relative;z-index:10;">
-                <div class="user-option" data-value="Layla A." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Layla Al-Hashimi</div>
-                <div class="user-option" data-value="Ahmed S." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Ahmed Al-Said</div>
-                <div class="user-option" data-value="Fatma H." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Fatma Al-Hajri</div>
-                <div class="user-option" data-value="Tariq B." style="padding:8px 14px;font-size:13px;cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Tariq Al-Balushi</div>
+                <div class="user-option" data-value="Layla A." style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Layla Al-Hashimi</div>
+                <div class="user-option" data-value="Ahmed S." style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Ahmed Al-Said</div>
+                <div class="user-option" data-value="Fatma H." style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Fatma Al-Hajri</div>
+                <div class="user-option" data-value="Tariq B." style="padding:8px 14px;font-size: var(--fs-body);cursor:pointer;" onmouseenter="this.style.background='var(--paper-2)'" onmouseleave="this.style.background=''">Tariq Al-Balushi</div>
               </div>
               <div class="chips-row" id="user-chips">
                 <span class="chip t-sage" data-user="Layla A.">Layla A. <span class="chip-x" style="cursor:pointer;margin-left:2px;font-weight:700;" role="button">&times;</span></span>
@@ -302,7 +302,7 @@
 
           <!-- tab panel 3: all corporate users -->
           <div id="assignee-panel-3" style="display:none;">
-            <p style="font-size:13.5px;color:var(--ink-soft);padding:14px 0 0;">Assignment will be sent to <strong>all 487 active corporate users</strong>.</p>
+            <p style="font-size: var(--fs-body);color:var(--ink-soft);padding:14px 0 0;">Assignment will be sent to <strong>all 487 active corporate users</strong>.</p>
           </div>
         </div>
       </div>
@@ -350,7 +350,7 @@
 </div>
 
 <!-- Toast -->
-<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size: var(--fs-body);font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
 
 <script>
 (function () {

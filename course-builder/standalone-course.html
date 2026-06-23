@@ -15,7 +15,7 @@
 
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
     transition: color 0.15s; margin-bottom: 18px;
   }
@@ -26,7 +26,7 @@
   .field textarea.input { height: auto; min-height: 76px; padding: 10px 14px; line-height: 1.5; resize: vertical; }
   .field-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 540px) { .field-2 { grid-template-columns: 1fr; } }
-  .field-hint { font-size: 12px; color: var(--ink-mute); margin-top: 7px; line-height: 1.5; }
+  .field-hint { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 7px; line-height: 1.5; }
   .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .chip-x { cursor: pointer; margin-left: 4px; opacity: 0.7; }
   .chip-x:hover { opacity: 1; }
@@ -36,7 +36,7 @@
   .form-section:first-child { padding-top: 0; margin-top: 0; border-top: none; }
 
   .section-label {
-    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute);
     margin-bottom: 16px;
   }
@@ -55,7 +55,7 @@
   .lesson-row .drag-handle:hover { opacity: 1; }
   .lesson-row .drag-handle svg { width: 15px; height: 15px; }
   .lesson-row .lesson-seq {
-    font-family: var(--font-label); font-size: 10.5px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.06em; color: var(--ink-mute); width: 18px; flex-shrink: 0;
   }
   .lesson-row .lesson-icon {
@@ -65,8 +65,8 @@
   }
   .lesson-row .lesson-icon svg { width: 13px; height: 13px; }
   .lesson-row .lesson-info { flex: 1; min-width: 0; }
-  .lesson-row .lesson-title { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lesson-row .lesson-meta { font-family: var(--font-label); font-size: 10.5px; color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 2px; }
+  .lesson-row .lesson-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lesson-row .lesson-meta { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 2px; }
   .lesson-row .lesson-acts { display: flex; gap: 4px; flex-shrink: 0; }
   .lesson-row .lesson-act {
     width: 26px; height: 26px; border-radius: 50%;
@@ -95,9 +95,9 @@
   }
   .dropzone.slim .dz-icon { margin-bottom: 0; }
   .dropzone .dz-icon svg { width: 18px; height: 18px; }
-  .dropzone .dz-main { font-size: 13.5px; font-weight: 600; color: var(--ink); }
-  .dropzone.slim .dz-main { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
-  .dropzone .dz-meta { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); text-transform: uppercase; }
+  .dropzone .dz-main { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+  .dropzone.slim .dz-main { font-size: var(--fs-body); font-weight: 500; color: var(--ink-soft); }
+  .dropzone .dz-meta { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.06em; color: var(--ink-mute); text-transform: uppercase; }
 
   .file-pending {
     display: none; align-items: center; gap: 10px;
@@ -112,8 +112,8 @@
   }
   .fp-icon svg { width: 15px; height: 15px; }
   .fp-info { flex: 1; min-width: 0; }
-  .fp-name { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .fp-size { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 1px; }
+  .fp-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fp-size { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 1px; }
   .fp-remove {
     width: 26px; height: 26px; border-radius: 50%;
     border: none; background: transparent; cursor: pointer;
@@ -123,16 +123,16 @@
   .fp-remove:hover { background: var(--c-rose-wash, #fdecea); color: #c0392b; }
   .fp-remove svg { width: 14px; height: 14px; }
 
-  .summary-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+  .summary-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-body); }
   .summary-row span { color: var(--ink-soft); }
   .summary-row strong { color: var(--ink); font-weight: 700; }
   .summary-card .stack { display: flex; flex-direction: column; gap: 12px; }
 
-  .review-step { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+  .review-step { display: flex; gap: 12px; align-items: flex-start; font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.45; }
   .review-num {
     width: 20px; height: 20px; border-radius: 50%; background: var(--ink);
     color: var(--hero-bg); display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     flex-shrink: 0; margin-top: 1px;
   }
 
@@ -143,7 +143,7 @@
   .gate-note {
     display: flex; gap: 12px; align-items: flex-start;
     background: var(--c-sage-wash); border: 1px solid rgba(126,155,111,0.22);
-    border-radius: var(--r-md); padding: 14px 16px; font-size: 13px;
+    border-radius: var(--r-md); padding: 14px 16px; font-size: var(--fs-body);
     color: var(--c-sage-text); line-height: 1.5; margin-top: 24px;
   }
   .gate-note + .gate-note { margin-top: 12px; }
@@ -168,7 +168,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 22px; border-bottom: 1px solid var(--line); flex-shrink: 0;
   }
-  .modal-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .modal-title { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); }
   .modal-close {
     width: 30px; height: 30px; border-radius: 50%;
     border: none; background: transparent; cursor: pointer;
@@ -205,8 +205,8 @@
   }
   .lib-ic svg { width: 14px; height: 14px; }
   .lib-info { flex: 1; min-width: 0; }
-  .lib-title { font-size: 13.5px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lib-meta { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 2px; }
+  .lib-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lib-meta { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 2px; }
   .modal-foot {
     display: flex; align-items: center; justify-content: flex-end; gap: 10px;
     padding: 14px 22px; border-top: 1px solid var(--line); flex-shrink: 0;
@@ -377,7 +377,7 @@
         <!-- Section 2: Lessons -->
         <div class="form-card" style="margin-bottom:18px">
           <div class="section-label">Course lessons</div>
-          <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px">Add lessons from your library or create a new standalone lesson. Drag to reorder.</p>
+          <p style="font-size: var(--fs-body);color:var(--ink-soft);line-height:1.5;margin-bottom:18px">Add lessons from your library or create a new standalone lesson. Drag to reorder.</p>
 
           <div class="lessons-list" id="lessons-list">
             <div class="lesson-row" draggable="true" data-seq="1" data-dur="14">
@@ -422,8 +422,8 @@
             <label class="check-head" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer">
               <input type="checkbox" id="assessment-toggle" onchange="toggleAssessment(this)" style="margin-top:3px;width:17px;height:17px;flex-shrink:0;accent-color:var(--ink)">
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink)">Add a final course assessment</div>
-                <div style="font-size:12.5px;color:var(--ink-soft);margin-top:5px;line-height:1.5">Pass mark required for certificate of completion. Recommended: 5 to 10 questions, passing score 70%+.</div>
+                <div style="font-size: var(--fs-body);font-weight:700;color:var(--ink)">Add a final course assessment</div>
+                <div style="font-size: var(--fs-meta);color:var(--ink-soft);margin-top:5px;line-height:1.5">Pass mark required for certificate of completion. Recommended: 5 to 10 questions, passing score 70%+.</div>
               </div>
             </label>
             <div id="assessment-fields" style="display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)">
@@ -455,8 +455,8 @@
             <label class="check-head" style="display:flex;align-items:flex-start;gap:12px;cursor:pointer">
               <input type="checkbox" id="cert-toggle" checked onchange="updateSummary()" style="margin-top:3px;width:17px;height:17px;flex-shrink:0;accent-color:var(--ink)">
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--ink)">Issue completion certificate</div>
-                <div style="font-size:12.5px;color:var(--ink-soft);margin-top:5px;line-height:1.5">Learners receive a verifiable IMI certificate after passing the final assessment (or completing all lessons if no assessment).</div>
+                <div style="font-size: var(--fs-body);font-weight:700;color:var(--ink)">Issue completion certificate</div>
+                <div style="font-size: var(--fs-meta);color:var(--ink-soft);margin-top:5px;line-height:1.5">Learners receive a verifiable IMI certificate after passing the final assessment (or completing all lessons if no assessment).</div>
               </div>
             </label>
           </div>

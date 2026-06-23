@@ -23,14 +23,14 @@
   .ticket-meta-item { display: flex; flex-direction: column; gap: 3px; }
   .ticket-meta-item .meta-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
   .ticket-meta-item .meta-value {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     font-weight: 500;
     color: var(--ink);
   }
@@ -56,17 +56,17 @@
     flex-wrap: wrap;
   }
   .thread-item .thread-author {
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
   }
   .thread-item .thread-time {
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
   }
   .thread-item .thread-body {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.6;
   }
@@ -83,7 +83,7 @@
     border-radius: var(--r-sm);
     background: var(--bg);
     padding: 10px 14px;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     font-family: var(--font-sans);
     color: var(--ink);
     transition: border 0.18s, box-shadow 0.18s;
@@ -105,7 +105,7 @@
     transform: translateX(-50%) translateY(20px);
     background: var(--ink);
     color: var(--paper);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-family: var(--font-sans);
     padding: 10px 20px;
     border-radius: var(--r-pill);
@@ -147,7 +147,7 @@
     margin-bottom: 14px;
   }
   .modal-title {
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -156,11 +156,11 @@
   .modal-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
   .modal-close {
     width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
-    color: var(--ink-mute); font-size: 18px; flex-shrink: 0;
+    color: var(--ink-mute); font-size: var(--fs-h2); flex-shrink: 0;
     transition: background 0.15s, color 0.15s;
   }
   .modal-close:hover { background: var(--paper-2); color: var(--ink); }
-  .modal-body { font-size: 13.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
+  .modal-body { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 </style>
 </head>
@@ -354,7 +354,7 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="modal-resolve-title">Mark ticket <em>resolved</em></div>
-        <div class="modal-meta" style="font-size:13px;color:var(--ink-mute);margin-top:4px">Ticket #T-1042</div>
+        <div class="modal-meta" style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px">Ticket #T-1042</div>
       </div>
       <button class="modal-close" onclick="closeModal('resolve')" aria-label="Close">&times;</button>
     </div>
@@ -372,7 +372,7 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="modal-reissue-title">Re-issue <em>completion proof</em></div>
-        <div class="modal-meta" style="font-size:13px;color:var(--ink-mute);margin-top:4px">For layla.omar@example.com</div>
+        <div class="modal-meta" style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px">For layla.omar@example.com</div>
       </div>
       <button class="modal-close" onclick="closeModal('reissue')" aria-label="Close">&times;</button>
     </div>
@@ -390,7 +390,7 @@
     <div class="modal-head">
       <div>
         <div class="modal-title" id="modal-otp-title">Resend <em>OTP</em></div>
-        <div class="modal-meta" style="font-size:13px;color:var(--ink-mute);margin-top:4px">For layla.omar@example.com</div>
+        <div class="modal-meta" style="font-size: var(--fs-body);color:var(--ink-mute);margin-top:4px">For layla.omar@example.com</div>
       </div>
       <button class="modal-close" onclick="closeModal('otp')" aria-label="Close">&times;</button>
     </div>

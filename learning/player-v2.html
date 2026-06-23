@@ -18,7 +18,7 @@
     margin-bottom: 18px;
   }
   .lesson-bar .lb-meta {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
   }
   .lesson-bar .lb-actions { margin-left: auto; }
@@ -34,7 +34,7 @@
 
   .lesson-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -43,7 +43,7 @@
   }
   .lesson-title {
     font-family: var(--font-sans);
-    font-size: 33px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.1;
@@ -65,7 +65,7 @@
   }
   .format-card .fc-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -102,7 +102,7 @@
     left: 16px;
     bottom: 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--hero-bg);
@@ -143,7 +143,7 @@
   }
   .player-controls .pc-chip {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -153,7 +153,7 @@
     padding: 3px 10px;
   }
   .player-controls .auto-note {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -175,7 +175,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-mute);
@@ -200,7 +200,7 @@
     50% { opacity: 0.3; box-shadow: 0 0 0 4px rgba(184,82,62,0); }
   }
   .ask-hook .phase-tag {
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -215,14 +215,14 @@
   .transcript-row {
     display: flex;
     gap: 14px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     line-height: 1.65;
     color: var(--ink-soft);
     padding: 8px 0;
   }
   .transcript-row .ts-time {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     color: var(--ink-mute);
     flex-shrink: 0;
@@ -248,14 +248,14 @@
   }
   .note-card .nc-time {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 6px;
   }
-  .note-card .nc-body { font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .note-card .nc-body { font-size: var(--fs-body); line-height: 1.55; color: var(--ink); }
   .note-add {
     display: flex;
     align-items: center;
@@ -267,7 +267,7 @@
   }
   .note-add .na-stamp {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -282,7 +282,7 @@
     flex: 1;
     border: none;
     background: transparent;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink);
     height: 30px;
   }
@@ -308,14 +308,14 @@
     place-items: center;
     flex-shrink: 0;
     font-family: var(--font-label);
-    font-size: 9px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
   }
   .res-ico.pdf { background: var(--c-clay-wash); border: 1px solid rgba(184,101,78,0.20); color: #8C4534; }
   .res-ico.link { background: var(--c-sage-wash); border: 1px solid rgba(126,155,111,0.22); color: var(--c-sage-text); }
   .res-body { flex: 1; min-width: 0; }
-  .res-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .res-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
 
   /* progress rail */
   .rail-card {
@@ -326,7 +326,7 @@
   }
   .rail-head {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -342,7 +342,7 @@
   .rail-progress .progress { flex: 1; }
   .rail-progress .rp-val {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
@@ -375,7 +375,7 @@
   .pl-dot.current { border-color: var(--accent); background: var(--accent); position: relative; }
   .pl-dot.current::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
   .pl-body { flex: 1; min-width: 0; }
-  .pl-name { font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .pl-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
   .pl-item.is-current .pl-name { font-weight: 700; }
 
   /* next up card */
@@ -388,16 +388,16 @@
   }
   .nextup-card .nu-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--c-sage-text);
     margin-bottom: 5px;
   }
-  .nextup-card .nu-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .nextup-card .nu-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
   .nextup-card .nu-meta {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--c-sage-text);
     margin-top: 3px;
     font-family: var(--font-label);
@@ -484,8 +484,8 @@
 
     <div class="player-controls">
       <div class="pc-meta">
-        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var speeds=['1x','1.25x','1.5x','2x'];var cur=speeds.indexOf(btn.dataset.speed||'1x');var next=speeds[(cur+1)%speeds.length];btn.dataset.speed=next;btn.textContent='Speed '+next;imiToast('Playback speed: '+next);})(this)">Speed 1x</button>
-        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var on=btn.dataset.cc!=='off';btn.dataset.cc=on?'off':'on';btn.textContent=on?'Captions OFF':'Captions ON';imiToast(on?'Captions turned off':'Captions turned on');})(this)">Captions ON</button>
+        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size: var(--fs-label);font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var speeds=['1x','1.25x','1.5x','2x'];var cur=speeds.indexOf(btn.dataset.speed||'1x');var next=speeds[(cur+1)%speeds.length];btn.dataset.speed=next;btn.textContent='Speed '+next;imiToast('Playback speed: '+next);})(this)">Speed 1x</button>
+        <button class="pc-chip" style="cursor:pointer;background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-family:var(--font-label);font-size: var(--fs-label);font-weight:600;letter-spacing:0.04em;color:var(--ink-soft);" onclick="(function(btn){var on=btn.dataset.cc!=='off';btn.dataset.cc=on?'off':'on';btn.textContent=on?'Captions OFF':'Captions ON';imiToast(on?'Captions turned off':'Captions turned on');})(this)">Captions ON</button>
         <span class="pc-chip">HD</span>
       </div>
       <span class="auto-note">Auto-progress: 90% watched</span>

@@ -14,7 +14,7 @@
   .cr-back {
     display: inline-flex; align-items: center; gap: 7px;
     font-family: var(--font-label);
-    font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
+    font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
     color: var(--ink-mute);
     transition: color 0.15s;
     margin-bottom: 10px;
@@ -24,7 +24,7 @@
 
   .cr-access {
     display: flex; align-items: flex-start; gap: 10px;
-    font-size: 13px; color: var(--ink-soft); line-height: 1.5;
+    font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5;
     margin: 6px 0 26px; max-width: 680px;
   }
   .cr-access svg { width: 16px; height: 16px; color: var(--ink-mute); flex-shrink: 0; margin-top: 2px; }
@@ -49,15 +49,15 @@
     width: 40px; height: 40px; border-radius: var(--r-sm);
     background: var(--paper-2); border: 1px solid var(--line);
     display: grid; place-items: center;
-    font-family: var(--font-label); font-size: 9px; font-weight: 700; letter-spacing: 0.06em;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em;
     color: var(--ink-mute); flex-shrink: 0;
   }
   .cr-tag.pdf { background: var(--c-clay-wash); border-color: rgba(184,101,78,0.20); color: #8C4534; }
   .cr-tag.link { background: var(--c-sage-wash); border-color: rgba(126,155,111,0.22); color: var(--c-sage-text); }
 
   .cr-body { flex: 1; min-width: 0; }
-  .cr-name { font-size: 14.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
-  .cr-meta { font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 3px; }
+  .cr-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .cr-meta { font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em; margin-top: 3px; }
 
   .cr-footer {
     display: flex; align-items: center; gap: 8px;
@@ -66,7 +66,7 @@
     border: 1px solid var(--line);
     border-radius: var(--r-md);
     background: var(--paper);
-    font-size: 12px; color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em;
+    font-size: var(--fs-meta); color: var(--ink-mute); font-family: var(--font-label); letter-spacing: 0.03em;
   }
   .cr-footer svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--ink-faint); }
   .cr-footer strong { color: var(--ink-soft); font-weight: 600; }
@@ -166,7 +166,7 @@
       <button class="btn btn-ghost btn-sm" type="button" onclick="var b=this;b.disabled=true;b.textContent='Downloading…';setTimeout(function(){b.disabled=false;b.textContent='Download';},1500)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download</button>
     </div>
   </div>
-  <div id="cr-empty" style="display:none;padding:28px 20px;text-align:center;font-size:14px;color:var(--ink-mute);font-family:var(--font-label);letter-spacing:0.04em">No resources in this category.</div>
+  <div id="cr-empty" style="display:none;padding:28px 20px;text-align:center;font-size: var(--fs-body);color:var(--ink-mute);font-family:var(--font-label);letter-spacing:0.04em">No resources in this category.</div>
 
   <div class="cr-footer">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>

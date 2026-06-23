@@ -28,13 +28,13 @@
     place-items: center;
     color: var(--hero-bg);
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     flex-shrink: 0;
   }
   .course-bar .cb-title {
-    font-size: 16px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -49,7 +49,7 @@
   .course-bar .cb-progress .progress { flex: 1; }
   .course-bar .cb-pct {
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
@@ -66,7 +66,7 @@
 
   .lesson-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -75,7 +75,7 @@
   }
   .lesson-title {
     font-family: var(--font-sans);
-    font-size: 33px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.1;
@@ -113,7 +113,7 @@
     left: 16px;
     bottom: 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--hero-bg);
@@ -130,7 +130,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--hero-bg);
@@ -172,7 +172,7 @@
     flex-wrap: wrap;
   }
   .player-controls .auto-note {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -195,7 +195,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-mute);
@@ -208,7 +208,7 @@
   }
   .ask-hook svg { width: 15px; height: 15px; }
   .ask-hook .phase-tag {
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -228,7 +228,7 @@
   }
   .notes-panel .np-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -243,7 +243,7 @@
     display: grid;
     place-items: center;
     color: var(--ink-faint);
-    font-size: 13px;
+    font-size: var(--fs-body);
   }
 
   /* playlist rail */
@@ -255,7 +255,7 @@
   }
   .rail-head {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -288,9 +288,9 @@
   .pl-dot.current { border-color: var(--accent); background: var(--accent); }
   .pl-dot.current::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
   .pl-body { flex: 1; min-width: 0; }
-  .pl-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .pl-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
   .pl-meta {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 2px;
     font-family: var(--font-label);
@@ -311,7 +311,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -339,17 +339,17 @@
   }
   .nextup-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .nextup-body { flex: 1; min-width: 0; }
-  .nextup-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
-  .nextup-meta { font-size: 11.5px; color: var(--ink-mute); margin-top: 2px; font-family: var(--font-label); letter-spacing: 0.02em; }
+  .nextup-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .nextup-meta { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; font-family: var(--font-label); letter-spacing: 0.02em; }
   .nextup-reason {
-    font-size: 11px;
+    font-size: var(--fs-label);
     color: var(--ink-soft);
     margin-top: 8px;
     line-height: 1.4;
   }
   .nextup-reason .why-tag {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -366,7 +366,7 @@
   }
   .attach-head {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -392,15 +392,15 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 9px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: #8C4534;
     flex-shrink: 0;
   }
   .attach-body { flex: 1; min-width: 0; }
-  .attach-name { font-size: 12.5px; font-weight: 700; color: var(--ink); }
-  .attach-meta { font-size: 11px; color: var(--ink-mute); margin-top: 1px; font-family: var(--font-label); letter-spacing: 0.02em; }
+  .attach-name { font-size: var(--fs-meta); font-weight: 700; color: var(--ink); }
+  .attach-meta { font-size: var(--fs-label); color: var(--ink-mute); margin-top: 1px; font-family: var(--font-label); letter-spacing: 0.02em; }
   .attach-dl {
     width: 30px; height: 30px;
     border-radius: var(--r-xs);
@@ -435,7 +435,7 @@
     gap: 6px;
     padding: 6px 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -455,7 +455,7 @@
     gap: 6px;
     padding: 6px 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -586,28 +586,28 @@
       <div class="np-label">Your notes (auto-saved)</div>
       <div id="notesList" style="margin-bottom:10px;"></div>
       <div style="display:flex;gap:8px;align-items:flex-start;">
-        <textarea id="noteInput" style="flex:1;min-height:90px;padding:10px 12px;font-size:13px;color:var(--ink);background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:var(--r-sm);resize:vertical;font-family:var(--font-label);" placeholder="Type to add notes..."></textarea>
-        <button class="btn btn-primary btn-sm" style="flex-shrink:0;margin-top:2px;" onclick="(function(){var ta=document.getElementById('noteInput');var txt=ta.value.trim()||'Key insight from this lesson.';var list=document.getElementById('notesList');var card=document.createElement('div');card.className='np-field';card.style.cssText='padding:10px 12px;margin-bottom:8px;text-align:left;font-size:13px;color:var(--ink);';card.innerHTML='<span style=&quot;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-mute);display:block;margin-bottom:4px;&quot;>Just now</span>'+txt;list.appendChild(card);ta.value='';imiToast('Note saved');})()">Save note</button>
+        <textarea id="noteInput" style="flex:1;min-height:90px;padding:10px 12px;font-size: var(--fs-body);color:var(--ink);background:var(--paper-2);border:1px dashed var(--line-strong);border-radius:var(--r-sm);resize:vertical;font-family:var(--font-label);" placeholder="Type to add notes..."></textarea>
+        <button class="btn btn-primary btn-sm" style="flex-shrink:0;margin-top:2px;" onclick="(function(){var ta=document.getElementById('noteInput');var txt=ta.value.trim()||'Key insight from this lesson.';var list=document.getElementById('notesList');var card=document.createElement('div');card.className='np-field';card.style.cssText='padding:10px 12px;margin-bottom:8px;text-align:left;font-size: var(--fs-body);color:var(--ink);';card.innerHTML='<span style=&quot;font-size: var(--fs-label);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-mute);display:block;margin-bottom:4px;&quot;>Just now</span>'+txt;list.appendChild(card);ta.value='';imiToast('Note saved');})()">Save note</button>
       </div>
     </div>
     <div class="notes-panel tab-panel" id="tab-transcript" hidden>
       <div class="np-label">Transcript</div>
       <div style="padding:0 4px;">
-        <div style="display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-family:var(--font-label);font-size:12px;font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">00:24</span><span style="font-size:14px;line-height:1.65;color:var(--ink-soft);">A senior records officer explains a retention schedule. They reach for a whiteboard.</span></div>
-        <div style="display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-family:var(--font-label);font-size:12px;font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">00:58</span><span style="font-size:14px;line-height:1.65;color:var(--ink-soft);">Joseph Novak formalised this technique in the 1970s while studying how children build scientific understanding.</span></div>
-        <div style="display:flex;gap:14px;padding:10px 14px;background:var(--c-honey-wash);border-radius:var(--r-sm);margin:4px 0;"><span style="font-family:var(--font-label);font-size:12px;font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">14:32</span><span style="font-size:14px;line-height:1.65;color:var(--ink);font-weight:600;">What makes a good profiling run is precision of definition, not breadth of columns scanned.</span></div>
+        <div style="display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-family:var(--font-label);font-size: var(--fs-meta);font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">00:24</span><span style="font-size: var(--fs-body);line-height:1.65;color:var(--ink-soft);">A senior records officer explains a retention schedule. They reach for a whiteboard.</span></div>
+        <div style="display:flex;gap:14px;padding:8px 0;border-bottom:1px solid var(--line);"><span style="font-family:var(--font-label);font-size: var(--fs-meta);font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">00:58</span><span style="font-size: var(--fs-body);line-height:1.65;color:var(--ink-soft);">Joseph Novak formalised this technique in the 1970s while studying how children build scientific understanding.</span></div>
+        <div style="display:flex;gap:14px;padding:10px 14px;background:var(--c-honey-wash);border-radius:var(--r-sm);margin:4px 0;"><span style="font-family:var(--font-label);font-size: var(--fs-meta);font-weight:600;color:var(--ink-mute);width:44px;flex-shrink:0;">14:32</span><span style="font-size: var(--fs-body);line-height:1.65;color:var(--ink);font-weight:600;">What makes a good profiling run is precision of definition, not breadth of columns scanned.</span></div>
       </div>
     </div>
     <div class="notes-panel tab-panel" id="tab-resources" hidden>
       <div class="np-label">Resources</div>
       <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper-2);margin-bottom:8px;">
-        <span style="width:32px;height:32px;background:var(--c-clay-wash);border:1px solid rgba(184,101,78,0.20);border-radius:var(--r-xs);display:grid;place-items:center;font-family:var(--font-label);font-size:9px;font-weight:700;color:#8C4534;flex-shrink:0;">PDF</span>
-        <div style="flex:1;"><div style="font-size:12.5px;font-weight:700;color:var(--ink);">Profiling worksheet</div><div style="font-size:11px;color:var(--ink-mute);margin-top:1px;font-family:var(--font-label);">PDF &middot; 340 KB</div></div>
+        <span style="width:32px;height:32px;background:var(--c-clay-wash);border:1px solid rgba(184,101,78,0.20);border-radius:var(--r-xs);display:grid;place-items:center;font-family:var(--font-label);font-size: var(--fs-label);font-weight:700;color:#8C4534;flex-shrink:0;">PDF</span>
+        <div style="flex:1;"><div style="font-size: var(--fs-meta);font-weight:700;color:var(--ink);">Profiling worksheet</div><div style="font-size: var(--fs-label);color:var(--ink-mute);margin-top:1px;font-family:var(--font-label);">PDF &middot; 340 KB</div></div>
         <button class="btn btn-ghost btn-sm" onclick="imiToast('Downloading Profiling worksheet...')">Download</button>
       </div>
       <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper-2);">
-        <span style="width:32px;height:32px;background:var(--c-clay-wash);border:1px solid rgba(184,101,78,0.20);border-radius:var(--r-xs);display:grid;place-items:center;font-family:var(--font-label);font-size:9px;font-weight:700;color:#8C4534;flex-shrink:0;">PDF</span>
-        <div style="flex:1;"><div style="font-size:12.5px;font-weight:700;color:var(--ink);">Slide deck</div><div style="font-size:11px;color:var(--ink-mute);margin-top:1px;font-family:var(--font-label);">PDF &middot; 1.2 MB</div></div>
+        <span style="width:32px;height:32px;background:var(--c-clay-wash);border:1px solid rgba(184,101,78,0.20);border-radius:var(--r-xs);display:grid;place-items:center;font-family:var(--font-label);font-size: var(--fs-label);font-weight:700;color:#8C4534;flex-shrink:0;">PDF</span>
+        <div style="flex:1;"><div style="font-size: var(--fs-meta);font-weight:700;color:var(--ink);">Slide deck</div><div style="font-size: var(--fs-label);color:var(--ink-mute);margin-top:1px;font-family:var(--font-label);">PDF &middot; 1.2 MB</div></div>
         <button class="btn btn-ghost btn-sm" onclick="imiToast('Downloading Slide deck...')">Download</button>
       </div>
     </div>

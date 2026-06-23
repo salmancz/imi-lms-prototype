@@ -32,7 +32,7 @@
   }
   .settings-nav .nav-eyebrow {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -45,14 +45,14 @@
     gap: 10px;
     padding: 9px 12px;
     border-radius: var(--r-sm);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 500;
     color: var(--ink-soft);
     transition: background 0.15s var(--tn), color 0.15s, transform 0.12s var(--tn);
   }
   .settings-nav a .nav-num {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--ink-faint);
@@ -78,7 +78,7 @@
     margin-bottom: 4px;
   }
   .sec-head h2 {
-    font-size: 20px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.015em;
     color: var(--ink);
@@ -90,7 +90,7 @@
     color: var(--ink-soft);
   }
   .sec-head p {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
     max-width: 640px;
@@ -112,7 +112,7 @@
 
   .card-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -128,7 +128,7 @@
   @media (max-width: 720px) { .field-grid { grid-template-columns: 1fr; } }
   .field-grid .field { margin-bottom: 0; }
   .field .hint {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-top: 7px;
     line-height: 1.5;
@@ -141,7 +141,7 @@
 
   .tag-sys {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     background: var(--surface-3);
@@ -160,7 +160,7 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     text-align: center;
@@ -176,9 +176,9 @@
   }
   .toggle-row + .toggle-row { border-top: 1px solid var(--line); }
   .toggle-row.bordered { border-top: 1px solid var(--line); }
-  .toggle-row .tr-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .toggle-row .tr-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
   .toggle-row .tr-sub {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     margin-top: 3px;
     line-height: 1.5;
@@ -190,7 +190,7 @@
 
   .pill-on {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     background: var(--ink);
@@ -230,7 +230,7 @@
     border: 1px solid var(--line-strong);
     border-radius: var(--r-sm);
     padding: 14px 16px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.7;
     margin-bottom: 8px;
@@ -251,7 +251,7 @@
     flex-wrap: wrap;
     padding: 16px 20px;
   }
-  .summary-card .s-item { font-size: 13px; color: var(--ink-soft); }
+  .summary-card .s-item { font-size: var(--fs-body); color: var(--ink-soft); }
   .summary-card .s-item strong { color: var(--ink); font-weight: 700; }
   .summary-card .s-sep { color: var(--line-strong); }
   .panel-collapsed { opacity: 0.62; }
@@ -275,7 +275,7 @@
     display: inline-flex;
     align-items: center;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -292,7 +292,7 @@
     align-items: flex-start;
   }
   .corp-p2-note {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-mute);
     line-height: 1.6;
     max-width: 520px;
@@ -483,7 +483,7 @@
             <input class="input" value="1 day">
           </div>
         </div>
-        <a href="otp-configuration.html" style="display:inline-block;margin-top:16px;font-family:var(--font-label);font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--accent-deep);text-decoration:underline;text-underline-offset:2px">Open full OTP configuration (resend attempts, cooldown) →</a>
+        <a href="otp-configuration.html" style="display:inline-block;margin-top:16px;font-family:var(--font-label);font-size: var(--fs-meta);font-weight:700;letter-spacing:.04em;color:var(--accent-deep);text-decoration:underline;text-underline-offset:2px">Open full OTP configuration (resend attempts, cooldown) →</a>
       </div>
 
       <div class="card panel-card">
@@ -531,7 +531,7 @@
           <span class="tag-sys" style="margin-right:6px">Read-only</span>
           100% of lessons completed <strong>+</strong> quiz score ≥70% <strong>+</strong> learner profile 100% complete
         </div>
-        <div class="hint" style="font-size:12px;color:var(--ink-mute)">Eligibility rule is defined in product logic. Contact engineering to modify.</div>
+        <div class="hint" style="font-size: var(--fs-meta);color:var(--ink-mute)">Eligibility rule is defined in product logic. Contact engineering to modify.</div>
       </div>
 
       <div class="card panel-card">
@@ -559,7 +559,7 @@
       <div class="card panel-card">
         <div class="card-eyebrow">Certificate template</div>
         <div class="upload-box" style="height:72px">Template upload placeholder · PDF / DOCX</div>
-        <div class="hint" style="margin-top:10px;font-size:12px;color:var(--ink-mute)">Uploaded template overrides the default IMI layout. Must include {learner_name}, {course}, {issue_date}, {cert_id} merge fields.</div>
+        <div class="hint" style="margin-top:10px;font-size: var(--fs-meta);color:var(--ink-mute)">Uploaded template overrides the default IMI layout. Must include {learner_name}, {course}, {issue_date}, {cert_id} merge fields.</div>
       </div>
 
       <div class="panel-actions">
@@ -762,7 +762,7 @@ function imiToast(msg, type) {
   if (!t) {
     t = document.createElement('div');
     t.id = 'imi-toast';
-    t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:8px;font-family:var(--font-label);font-size:13px;font-weight:700;letter-spacing:.04em;box-shadow:0 4px 18px rgba(42,17,8,.18);transition:opacity .25s,transform .25s;pointer-events:none;opacity:0;transform:translateY(8px);';
+    t.style.cssText = 'position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 20px;border-radius:8px;font-family:var(--font-label);font-size: var(--fs-body);font-weight:700;letter-spacing:.04em;box-shadow:0 4px 18px rgba(42,17,8,.18);transition:opacity .25s,transform .25s;pointer-events:none;opacity:0;transform:translateY(8px);';
     document.body.appendChild(t);
   }
   t.textContent = msg;

@@ -12,7 +12,7 @@
 <style>
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
     margin-bottom: 20px; transition: color 0.15s;
   }
@@ -50,7 +50,7 @@
 
   .dorm-eyebrow {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -75,7 +75,7 @@
   }
 
   .dorm-lead {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.6;
     max-width: 480px;
@@ -93,14 +93,14 @@
     border-radius: var(--r-pill);
     padding: 7px 18px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--c-honey-text);
     text-transform: uppercase;
   }
   .dorm-countdown svg { width: 14px; height: 14px; flex-shrink: 0; }
-  .dorm-countdown .days { font-size: 20px; font-family: var(--font-sans); letter-spacing: -0.02em; color: var(--ink); }
+  .dorm-countdown .days { font-size: var(--fs-h2); font-family: var(--font-sans); letter-spacing: -0.02em; color: var(--ink); }
 
   /* What happens card */
   .dorm-card {
@@ -121,7 +121,7 @@
   }
   .dorm-card-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -159,14 +159,14 @@
   .dorm-tl-body { flex: 1; min-width: 0; }
   .dorm-tl-when {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 4px;
   }
-  .dorm-tl-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; }
+  .dorm-tl-text { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; }
   .dorm-tl-text strong { color: var(--ink); font-weight: 700; }
 
   /* Reactivate CTA card */
@@ -180,7 +180,7 @@
   }
   .dorm-cta-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -188,14 +188,14 @@
     margin-bottom: 12px;
   }
   .dorm-cta-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     color: var(--ink);
     letter-spacing: -0.01em;
     margin-bottom: 6px;
   }
   .dorm-cta-sub {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
     margin-bottom: 18px;
@@ -209,7 +209,7 @@
 
   /* Dismiss note */
   .dorm-dismiss-note {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     line-height: 1.6;
     padding: 0 2px;
@@ -224,7 +224,7 @@
     gap: 12px;
     padding: 11px 0;
     border-bottom: 1px solid var(--line);
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.45;
   }

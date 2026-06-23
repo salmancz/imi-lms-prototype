@@ -19,8 +19,8 @@
   margin-bottom: 24px;
 }
 .audit-filters .input { height: 36px; width: auto; }
-.audit-filters .f-date { width: 160px; font-size: 13px; }
-.audit-filters .f-type { width: 210px; font-size: 13px; }
+.audit-filters .f-date { width: 160px; font-size: var(--fs-body); }
+.audit-filters .f-type { width: 210px; font-size: var(--fs-body); }
 .audit-filters .f-search {
   flex: 1;
   min-width: 200px;
@@ -46,14 +46,14 @@
 /* ── mono / reason in table ── */
 .tbl td .mono {
   font-family: var(--font-label);
-  font-size: 12px;
+  font-size: var(--fs-meta);
   letter-spacing: 0.02em;
   white-space: nowrap;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
 .tbl td .reason {
-  font-size: 12.5px;
+  font-size: var(--fs-meta);
   color: var(--ink-soft);
   line-height: 1.45;
 }
@@ -320,7 +320,7 @@ tr.impers-row { background: var(--paper-2); }
       </div>
     </div>
 
-    <div class="row between mt-lg" style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);letter-spacing:0.08em">
+    <div class="row between mt-lg" style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);letter-spacing:0.08em">
       <span id="pager-info">SHOWING 1-8 OF 8 ACTIONS</span>
       <div class="row gap">
         <button class="btn btn-ghost btn-sm" id="btn-prev" onclick="changePage(-1)">Previous</button>
@@ -439,7 +439,7 @@ tr.impers-row { background: var(--paper-2); }
   // initial render
   renderPage();
 </script>
-<div class="toast" id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);font-size:13px;font-family:var(--font-sans);padding:10px 20px;border-radius:var(--r-pill);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;white-space:nowrap;z-index:99"></div>
+<div class="toast" id="toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);font-size: var(--fs-body);font-family:var(--font-sans);padding:10px 20px;border-radius:var(--r-pill);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;white-space:nowrap;z-index:99"></div>
 <style>.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}</style>
 <script src="../ui-enhance.js"></script>
 </body>

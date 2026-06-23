@@ -21,7 +21,7 @@
     background: var(--paper);
     border-radius: var(--r-pill);
     font-family: var(--font-sans);
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     font-weight: 500;
     color: var(--ink-soft);
     cursor: pointer;
@@ -72,7 +72,7 @@
 
   .courses-tbl td:first-child { color: var(--ink); font-weight: 600; }
   .courses-tbl .c-author { font-family: var(--font-label); letter-spacing: 0.02em; color: var(--ink-soft); }
-  .courses-tbl .c-meta { color: var(--ink-soft); font-size: 12.5px; }
+  .courses-tbl .c-meta { color: var(--ink-soft); font-size: var(--fs-meta); }
   .courses-tbl .c-num { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
   .courses-tbl th.c-num-h { text-align: right; }
   .courses-tbl .c-time { font-family: var(--font-label); letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
@@ -85,7 +85,7 @@
     align-items: center;
     gap: 7px;
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.02em;
     white-space: nowrap;
@@ -108,13 +108,13 @@
 
   /* ---- row actions ---- */
   .tbl-actions { display: inline-flex; gap: 14px; }
-  .tbl-actions a { font-family: var(--font-label); font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); transition: color 0.15s; }
+  .tbl-actions a { font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); transition: color 0.15s; }
   .tbl-actions a:hover { color: var(--accent); }
   .courses-tbl tr.row-archived a { color: var(--ink-mute); }
 
   /* ---- pager ---- */
   .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
-  .pager .count { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .pager .count { font-family: var(--font-label); font-size: var(--fs-meta); letter-spacing: 0.04em; color: var(--ink-mute); }
 
   /* ---- admin note ---- */
   .admin-note {
@@ -128,7 +128,7 @@
     padding: 16px 20px;
   }
   .admin-note svg { width: 18px; height: 18px; color: var(--c-honey-text); flex-shrink: 0; margin-top: 1px; }
-  .admin-note p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .admin-note p { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.55; }
   .admin-note strong { color: var(--ink); font-weight: 700; }
 </style>
 </head>

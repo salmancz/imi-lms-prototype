@@ -38,7 +38,7 @@
   .kpi-flat.f-ink::before   { background: var(--ink); }
   .kf-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -50,7 +50,7 @@
   }
   .kf-label svg { width: 14px; height: 14px; }
   .kf-value {
-    font-size: 38px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.03em;
     color: var(--ink);
@@ -60,7 +60,7 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 500;
     margin-top: 8px;
   }
@@ -95,14 +95,14 @@
   }
   .report-card .rc-icon svg { width: 18px; height: 18px; }
   .report-card .rc-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
     line-height: 1.3;
   }
   .report-card .rc-desc {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
   }
@@ -116,7 +116,7 @@
 
   .section-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -131,7 +131,7 @@
     background: var(--paper);
     border-radius: var(--r-pill);
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     appearance: none;
@@ -165,14 +165,14 @@
   /* ---- bar chart card ---- */
   .bar-chart-wrap { padding: 20px 22px 14px; }
   .bar-chart-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink);
     margin-bottom: 4px;
     letter-spacing: -0.01em;
   }
   .bar-chart-sub {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     margin-bottom: 18px;
     font-family: var(--font-label);
@@ -189,7 +189,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     color: var(--ink-soft);
     letter-spacing: 0.04em;
   }
@@ -219,8 +219,8 @@
     text-align: center;
     pointer-events: none;
   }
-  .donut-center-txt .dv { font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1; }
-  .donut-center-txt .dl { font-family: var(--font-label); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
+  .donut-center-txt .dv { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); line-height: 1; }
+  .donut-center-txt .dl { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); }
   .donut-legend {
     display: flex;
     flex-direction: column;
@@ -232,7 +232,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
   }
   .donut-legend-swatch {
@@ -245,7 +245,7 @@
   .donut-legend-pct {
     font-weight: 700;
     color: var(--ink);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-variant-numeric: tabular-nums;
   }
 
@@ -260,7 +260,7 @@
   }
   .sparkline-item:last-child { border-bottom: none; }
   .sparkline-label {
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     min-width: 130px;
@@ -274,16 +274,16 @@
     justify-content: flex-end;
   }
   .sparkline-val {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
-  .sparkline-arrow { font-size: 16px; font-weight: 700; line-height: 1; }
+  .sparkline-arrow { font-size: var(--fs-h3); font-weight: 700; line-height: 1; }
   .sparkline-arrow.up   { color: var(--c-sage); }
   .sparkline-arrow.down { color: var(--c-clay); }
   .sparkline-delta {
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     font-family: var(--font-label);
     letter-spacing: 0.04em;
@@ -303,7 +303,7 @@
   .gauge-wrap svg { overflow: visible; }
   .gauge-score-row { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .gauge-score-num {
-    font-size: 40px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.04em;
     color: var(--ink);
@@ -311,7 +311,7 @@
   }
   .gauge-score-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -325,7 +325,7 @@
     padding: 0 14px;
     border-radius: var(--r-pill);
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -340,7 +340,7 @@
     max-width: 160px;
     padding: 0 4px;
   }
-  .gauge-ticks span { font-family: var(--font-label); font-size: 9.5px; color: var(--ink-mute); letter-spacing: 0.04em; }
+  .gauge-ticks span { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; }
 
   /* ---- top-performers table ---- */
   .kpi-grid-4 {
@@ -829,7 +829,7 @@
   /* ---- toast ---- */
   function toast(msg, type){
     var t=document.createElement('div');
-    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:var(--r-md);font-size:13.5px;font-family:var(--font-sans);font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px);max-width:340px;';
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:var(--r-md);font-size: var(--fs-body);font-family:var(--font-sans);font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px);max-width:340px;';
     if(type==='error') t.style.background='var(--c-clay)';
     if(type==='success') t.style.background='var(--c-sage)';
     t.textContent=msg;
@@ -895,7 +895,7 @@
     rfWrap.style.cssText='display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;';
     var rfInput=document.createElement('input');
     rfInput.placeholder='Search reports...';
-    rfInput.style.cssText='height:36px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);font-size:13px;color:var(--ink);font-family:var(--font-sans);flex:1;max-width:260px;';
+    rfInput.style.cssText='height:36px;padding:0 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--paper);font-size: var(--fs-body);color:var(--ink);font-family:var(--font-sans);flex:1;max-width:260px;';
     rfWrap.appendChild(rfInput);
     reportsGrid.parentNode.insertBefore(rfWrap, reportsGrid);
 

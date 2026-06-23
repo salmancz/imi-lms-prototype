@@ -30,23 +30,23 @@
   .path-head-info { flex: 1; min-width: 0; }
   .path-eyebrow {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 6px;
   }
-  .path-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
-  .path-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .path-title { font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .path-sub { font-size: var(--fs-body); color: var(--ink-soft); margin-top: 4px; }
   .path-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .path-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-top: 10px; max-width: 640px; }
+  .path-desc { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; margin-top: 10px; max-width: 640px; }
 
   /* Subject / field filter bar */
   .subject-filter { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
   .subject-filter-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -59,7 +59,7 @@
     background: var(--paper);
     border: 1.5px solid var(--line-strong);
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     color: var(--ink-soft);
     cursor: pointer;
@@ -79,14 +79,14 @@
   }
   .path-meta-block .path-meta-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 6px;
   }
-  .path-meta-block .path-meta-value { font-size: 13px; color: var(--ink); line-height: 1.5; }
+  .path-meta-block .path-meta-value { font-size: var(--fs-body); color: var(--ink); line-height: 1.5; }
   .path-instructor { display: flex; align-items: center; gap: 8px; }
   .path-instructor .ins-avatar {
     width: 24px;
@@ -97,7 +97,7 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     flex-shrink: 0;
   }
@@ -106,7 +106,7 @@
   .path-completion { text-align: right; }
   .path-completion-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -114,7 +114,7 @@
     margin-bottom: 4px;
   }
   .path-completion-value {
-    font-size: 20px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -145,7 +145,7 @@
 
   .path-section-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -196,18 +196,18 @@
     background: var(--surface-3);
     color: var(--ink-mute);
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
   }
   .chain-name {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     color: var(--ink);
     line-height: 1.3;
   }
   .chain-state {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -217,7 +217,7 @@
   .chain-tags { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
   .chain-flag {
     font-family: var(--font-label);
-    font-size: 9px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -229,7 +229,7 @@
   .chain-flag.is-optional { background: var(--surface-3); color: var(--ink-soft); }
   .chain-dur {
     font-family: var(--font-label);
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     color: var(--ink-mute);
     white-space: nowrap;
@@ -237,7 +237,7 @@
   .chain-arrow {
     color: var(--ink-faint);
     flex: 0 0 auto;
-    font-size: 16px;
+    font-size: var(--fs-h3);
     line-height: 1;
   }
 
@@ -248,7 +248,7 @@
     align-items: center;
     gap: 4px;
     font-family: var(--font-label);
-    font-size: 9px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -260,14 +260,14 @@
   }
   .milestone-flag svg { width: 10px; height: 10px; }
   .path-prereq {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     line-height: 1.5;
     margin-top: 14px;
   }
   .path-prereq strong { color: var(--ink); font-weight: 600; }
 
-  .path-empty { font-size: 13px; color: var(--ink-soft); }
+  .path-empty { font-size: var(--fs-body); color: var(--ink-soft); }
   .chip.not-started { background: var(--surface-3); border-color: transparent; color: var(--ink-soft); }
 
   .share-btn {
@@ -753,7 +753,7 @@
   function cpToast(msg) {
     var t = document.createElement('div');
     t.textContent = msg;
-    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:600;z-index:9999;pointer-events:none;max-width:360px;text-align:center;';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size: var(--fs-body);font-weight:600;z-index:9999;pointer-events:none;max-width:360px;text-align:center;';
     document.body.appendChild(t);
     setTimeout(function(){ t.remove(); }, 2600);
   }

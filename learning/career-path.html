@@ -30,21 +30,21 @@
   .path-head-info { flex: 1; min-width: 0; }
   .path-eyebrow {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 6px;
   }
-  .path-title { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
-  .path-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .path-title { font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+  .path-sub { font-size: var(--fs-body); color: var(--ink-soft); margin-top: 4px; }
 
   .path-head-right { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
   .path-completion { text-align: right; }
   .path-completion-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -52,7 +52,7 @@
     margin-bottom: 4px;
   }
   .path-completion-value {
-    font-size: 20px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -86,12 +86,12 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     margin-bottom: 16px;
   }
   .path-instructor .lbl {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -102,7 +102,7 @@
 
   .path-section-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -112,7 +112,7 @@
 
   .path-outcome { margin-bottom: 16px; }
   .path-outcome p {
-    font-size: 13px;
+    font-size: var(--fs-body);
     line-height: 1.5;
     color: var(--ink-soft);
     margin-top: 6px;
@@ -120,7 +120,7 @@
 
   .course-flag {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -144,16 +144,16 @@
   .course-item.is-locked { opacity: 0.6; }
   .course-meta {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 4px;
   }
-  .course-name { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .course-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
 
-  .path-empty { font-size: 13px; color: var(--ink-soft); }
+  .path-empty { font-size: var(--fs-body); color: var(--ink-soft); }
 
   .share-btn {
     width: 38px;
@@ -383,7 +383,7 @@
       e.stopPropagation();
       var t = document.createElement('div');
       t.textContent = 'Complete the previous mandatory course to unlock this one.';
-      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:600;z-index:9999;pointer-events:none;white-space:nowrap;';
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:var(--r-pill);font-size: var(--fs-body);font-weight:600;z-index:9999;pointer-events:none;white-space:nowrap;';
       document.body.appendChild(t);
       setTimeout(function(){ t.remove(); }, 2600);
     });

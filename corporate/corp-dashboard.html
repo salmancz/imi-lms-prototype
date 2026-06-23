@@ -25,8 +25,8 @@
   .kpi[onclick]:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); border-color: var(--line-strong); }
 
   /* Larger number tickers */
-  .kpi-value { font-size: 38px !important; }
-  .kpi-value em { font-size: 18px !important; }
+  .kpi-value { font-size: var(--fs-hero) !important; }
+  .kpi-value em { font-size: var(--fs-h2) !important; }
 
   /* Solid KPI color variants: flat, no gradients */
   .kpi.t-honey { background: var(--c-honey-wash); border-color: rgba(201,155,46,0.28); }
@@ -41,7 +41,7 @@
     margin-top: 8px;
   }
   .kpi-sparkline svg { display: block; }
-  .sparkline-arrow { font-size: 14px; font-weight: 700; line-height: 1; }
+  .sparkline-arrow { font-size: var(--fs-body); font-weight: 700; line-height: 1; }
   .sparkline-arrow.up   { color: var(--c-sage); }
   .sparkline-arrow.down { color: var(--c-clay); }
 
@@ -58,21 +58,21 @@
   /* Bar chart */
   .bar-chart { display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 18px; }
   .bar-row { display: flex; align-items: center; gap: 10px; }
-  .bar-label { font-size: 11.5px; color: var(--ink-soft); white-space: nowrap; width: 110px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; }
+  .bar-label { font-size: var(--fs-meta); color: var(--ink-soft); white-space: nowrap; width: 110px; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; }
   .bar-track { flex: 1; height: 10px; background: var(--bg-alt); border-radius: 6px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 6px; }
-  .bar-val { font-size: 11.5px; font-weight: 600; color: var(--ink); width: 32px; text-align: right; flex-shrink: 0; }
+  .bar-val { font-size: var(--fs-meta); font-weight: 600; color: var(--ink); width: 32px; text-align: right; flex-shrink: 0; }
 
   /* Donut legend */
   .donut-legend { display: flex; flex-direction: column; gap: 7px; padding: 0 20px 18px; }
-  .donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-soft); }
+  .donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: var(--fs-meta); color: var(--ink-soft); }
   .donut-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
   /* Score gauge */
   .gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px; }
   .gauge-svg { display: block; }
-  .gauge-label { font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
-  .gauge-state { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-pill); }
+  .gauge-label { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+  .gauge-state { font-size: var(--fs-meta); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--r-pill); }
   .gauge-state.pass { background: var(--c-sage-wash); color: var(--c-sage-text); }
   .gauge-state.fail { background: var(--c-clay-wash); color: var(--c-clay); }
 
@@ -138,7 +138,7 @@
     <div class="avatar-ring" style="--pct:68"><div class="avatar"><img src="https://i.pravatar.cc/100?u=imi-CA" alt="CA"></div><span class="ring-pct">68%</span></div>
   </div>
 </header>
-<div id="help-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)">Help centre coming soon.</div>
+<div id="help-toast" style="display:none;position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:var(--r-md);font-size: var(--fs-body);z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.18)">Help centre coming soon.</div>
 
 <div class="app">
   <aside class="sidebar">
@@ -165,7 +165,7 @@
       <div>
         <div class="eyebrow">Corporate &middot; Tenant view &middot; <span style="font-weight:700;color:var(--ink-soft)">Banking</span></div>
         <h1 class="page-title">Bank Muscat &middot; IMI <em>corporate</em></h1>
-        <p class="page-sub">64 active learners last 30 days &nbsp;&middot;&nbsp; <span style="color:var(--ink-mute);font-size:13px">Industry: <strong>Banking</strong></span></p>
+        <p class="page-sub">64 active learners last 30 days &nbsp;&middot;&nbsp; <span style="color:var(--ink-mute);font-size: var(--fs-body)">Industry: <strong>Banking</strong></span></p>
       </div>
       <div class="page-actions">
         <a class="btn btn-ghost" href="corp-submit-idea.html">Submit an idea</a>
@@ -184,7 +184,7 @@
           <svg width="60" height="20" viewBox="0 0 60 20" fill="none">
             <polyline points="0,16 10,14 20,15 30,11 40,9 50,6 60,4" stroke="#7E9B6F" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           </svg>
-          <span style="font-size:11px;color:var(--c-sage);font-weight:600;">+6 this month</span>
+          <span style="font-size: var(--fs-label);color:var(--c-sage);font-weight:600;">+6 this month</span>
         </div>
       </div>
       <div class="kpi t-sage" onclick="location.href='oa-team.html'" title="View active users">
@@ -195,7 +195,7 @@
           <svg width="60" height="20" viewBox="0 0 60 20" fill="none">
             <polyline points="0,18 10,15 20,13 30,10 40,8 50,5 60,3" stroke="#7E9B6F" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           </svg>
-          <span style="font-size:11px;color:var(--c-sage);font-weight:600;">89% engagement</span>
+          <span style="font-size: var(--fs-label);color:var(--c-sage);font-weight:600;">89% engagement</span>
         </div>
       </div>
       <div class="kpi t-honey" onclick="location.href='corp-reporting.html'" title="View enrollment reports">
@@ -206,7 +206,7 @@
           <svg width="60" height="20" viewBox="0 0 60 20" fill="none">
             <polyline points="0,17 10,15 20,14 30,11 40,9 50,7 60,5" stroke="#C99B2E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           </svg>
-          <span style="font-size:11px;color:var(--c-honey-text);font-weight:600;">+12% mo-on-mo</span>
+          <span style="font-size: var(--fs-label);color:var(--c-honey-text);font-weight:600;">+12% mo-on-mo</span>
         </div>
       </div>
       <div class="kpi" onclick="location.href='corp-reporting.html'" title="View completion reports">
@@ -217,7 +217,7 @@
           <svg width="60" height="20" viewBox="0 0 60 20" fill="none">
             <polyline points="0,4 10,6 20,5 30,8 40,10 50,12 60,14" stroke="#B8654E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           </svg>
-          <span style="font-size:11px;color:var(--c-clay);font-weight:600;">avg 2.4 wks</span>
+          <span style="font-size: var(--fs-label);color:var(--c-clay);font-weight:600;">avg 2.4 wks</span>
         </div>
       </div>
     </div>
@@ -323,7 +323,7 @@
             <div class="card-head"><div class="card-title">Top <em>performers</em></div><a class="card-link" href="oa-team.html">VIEW ALL &rarr;</a></div>
             <div class="card-body flush">
               <div class="list-row">
-                <div class="avatar" style="width:36px;height:36px;font-size:11px">FA</div>
+                <div class="avatar" style="width:36px;height:36px;font-size: var(--fs-label)">FA</div>
                 <div class="list-body">
                   <div class="list-title">Fatima Al-Hinai</div>
                   <div class="list-sub">42h &middot; 3 Course Completed</div>
@@ -331,7 +331,7 @@
                 <span class="chip t-sage">&#9650; 8</span>
               </div>
               <div class="list-row">
-                <div class="avatar" style="width:36px;height:36px;font-size:11px">RK</div>
+                <div class="avatar" style="width:36px;height:36px;font-size: var(--fs-label)">RK</div>
                 <div class="list-body">
                   <div class="list-title">Rajesh K.</div>
                   <div class="list-sub">38h &middot; 4 Course Completed</div>
@@ -339,7 +339,7 @@
                 <span class="chip t-sage">&#9650; 11</span>
               </div>
               <div class="list-row">
-                <div class="avatar" style="width:36px;height:36px;font-size:11px">PS</div>
+                <div class="avatar" style="width:36px;height:36px;font-size: var(--fs-label)">PS</div>
                 <div class="list-body">
                   <div class="list-title">Priya S.</div>
                   <div class="list-sub">35h &middot; 2 Course Completed</div>
@@ -388,8 +388,8 @@
         <!-- Compliance highlight card (flat, no gradient) -->
         <div class="compliance-card">
           <div class="eyebrow" style="color:var(--c-honey-text);margin-bottom:10px">COMPLIANCE</div>
-          <div style="font-family:var(--font-serif);font-style:italic;font-size:22px;line-height:1.25;color:var(--ink);margin-bottom:10px">KYC training<br><em>deadline in 5 days.</em></div>
-          <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;line-height:1.5">12 learners have not completed the required KYC Refresher. Send a reminder now.</p>
+          <div style="font-family:var(--font-serif);font-style:italic;font-size: var(--fs-h1);line-height:1.25;color:var(--ink);margin-bottom:10px">KYC training<br><em>deadline in 5 days.</em></div>
+          <p style="font-size: var(--fs-body);color:var(--ink-soft);margin-bottom:16px;line-height:1.5">12 learners have not completed the required KYC Refresher. Send a reminder now.</p>
           <button class="btn btn-ghost btn-sm" onclick="dashSendReminder()">Send reminder &rarr;</button>
         </div>
 

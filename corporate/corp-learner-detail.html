@@ -16,7 +16,7 @@
     align-items: center;
     gap: 7px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -44,7 +44,7 @@
     color: var(--hero-bg);
     display: grid;
     place-items: center;
-    font-size: 23px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: 0.03em;
     flex-shrink: 0;
@@ -61,7 +61,7 @@
   }
   .ld-name h1 {
     font-family: var(--font-sans);
-    font-size: 24px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -74,7 +74,7 @@
     color: var(--ink-soft);
   }
   .ld-meta {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
   }
@@ -97,7 +97,7 @@
   /* Section label */
   .ld-section-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -113,14 +113,14 @@
   }
   .ld-prog-card { padding: 20px 22px; }
   .ld-prog-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
     margin-bottom: 6px;
   }
   .ld-prog-meta {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -128,7 +128,7 @@
   }
   .ld-prog-bar { display: flex; align-items: center; gap: 12px; }
   .ld-prog-bar .pct {
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink-soft);
     min-width: 34px;
@@ -222,15 +222,15 @@
       <div class="ld-statgrid">
         <div class="stat-flat">
           <div class="stat-label">Hours learned</div>
-          <div class="stat-value">142.8<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:3px">h</span></div>
+          <div class="stat-value">142.8<span style="font-size: var(--fs-h3);font-weight:500;color:var(--ink-soft);margin-left:3px">h</span></div>
         </div>
         <div class="stat-flat">
           <div class="stat-label">Courses completed</div>
-          <div class="stat-value">5 <span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">/ 8</span></div>
+          <div class="stat-value">5 <span style="font-size: var(--fs-h3);font-weight:500;color:var(--ink-soft);margin-left:2px">/ 8</span></div>
         </div>
         <div class="stat-flat">
           <div class="stat-label">Avg score</div>
-          <div class="stat-value">84.2<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
+          <div class="stat-value">84.2<span style="font-size: var(--fs-h3);font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
         </div>
       </div>
 
@@ -263,14 +263,14 @@
           <table class="tbl">
             <thead><tr><th>Course</th><th>Status</th><th>Score</th><th>Progress</th></tr></thead>
             <tbody>
-              <tr><td>ISO 30401 KM Standard</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:62%"></div></div><span style="font-size:11px;width:30px">62%</span></div></td></tr>
-              <tr><td>Data Governance Essentials</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:28%"></div></div><span style="font-size:11px;width:30px">28%</span></div></td></tr>
-              <tr><td>Knowledge Capture Fundamentals</td><td><span class="chip t-sage dot">Course Completed</span></td><td>92%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
-              <tr><td>Information Security Annual</td><td><span class="chip t-sage dot">Course Completed</span></td><td>88%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
-              <tr><td>Data Lifecycle Management</td><td><span class="chip t-sage dot">Course Completed</span></td><td>81%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
-              <tr><td>Records &amp; Retention Policy</td><td><span class="chip t-sage dot">Course Completed</span></td><td>76%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
-              <tr><td>Metadata Standards Primer</td><td><span class="chip t-sage dot">Course Completed</span></td><td>84%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size:11px;width:30px">100%</span></div></td></tr>
-              <tr><td>Taxonomy Design Workshop</td><td><span class="chip t-clay dot">Dropped</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:15%"></div></div><span style="font-size:11px;width:30px">15%</span></div></td></tr>
+              <tr><td>ISO 30401 KM Standard</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill honey" style="width:62%"></div></div><span style="font-size: var(--fs-label);width:30px">62%</span></div></td></tr>
+              <tr><td>Data Governance Essentials</td><td><span class="chip t-progress">In progress</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:28%"></div></div><span style="font-size: var(--fs-label);width:30px">28%</span></div></td></tr>
+              <tr><td>Knowledge Capture Fundamentals</td><td><span class="chip t-sage dot">Course Completed</span></td><td>92%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size: var(--fs-label);width:30px">100%</span></div></td></tr>
+              <tr><td>Information Security Annual</td><td><span class="chip t-sage dot">Course Completed</span></td><td>88%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size: var(--fs-label);width:30px">100%</span></div></td></tr>
+              <tr><td>Data Lifecycle Management</td><td><span class="chip t-sage dot">Course Completed</span></td><td>81%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size: var(--fs-label);width:30px">100%</span></div></td></tr>
+              <tr><td>Records &amp; Retention Policy</td><td><span class="chip t-sage dot">Course Completed</span></td><td>76%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size: var(--fs-label);width:30px">100%</span></div></td></tr>
+              <tr><td>Metadata Standards Primer</td><td><span class="chip t-sage dot">Course Completed</span></td><td>84%</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill sage" style="width:100%"></div></div><span style="font-size: var(--fs-label);width:30px">100%</span></div></td></tr>
+              <tr><td>Taxonomy Design Workshop</td><td><span class="chip t-clay dot">Dropped</span></td><td>--</td><td><div class="row gap"><div class="progress" style="flex:1;min-width:90px"><div class="progress-fill clay" style="width:15%"></div></div><span style="font-size: var(--fs-label);width:30px">15%</span></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -342,7 +342,7 @@
     if (!t) {
       t = document.createElement('div');
       t.id = 'imi-toast';
-      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size: var(--fs-meta);font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
       document.body.appendChild(t);
     }
     t.textContent = msg;

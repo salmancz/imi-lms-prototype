@@ -17,7 +17,7 @@
     align-items: center;
     gap: 6px;
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -55,7 +55,7 @@
   }
   .warn-ic svg { width: 17px; height: 17px; }
   .warn-head h3 {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--c-danger);
@@ -64,7 +64,7 @@
   .warn-list li {
     display: flex;
     gap: 10px;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     line-height: 1.5;
     color: var(--ink-soft);
   }
@@ -97,7 +97,7 @@
   }
   .summary-cell .s-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.10em;
     text-transform: uppercase;
@@ -105,7 +105,7 @@
     margin-bottom: 8px;
   }
   .summary-cell .s-value {
-    font-size: 20px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--ink);
@@ -134,7 +134,7 @@
     flex-shrink: 0;
   }
   .confirm-check label {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
     margin: 0;
@@ -263,7 +263,7 @@
       <div class="summary-grid">
         <div class="summary-cell">
           <div class="s-label">Member since</div>
-          <div class="s-value" style="font-size:15px;font-weight:700">11 Apr 2024</div>
+          <div class="s-value" style="font-size: var(--fs-h3);font-weight:700">11 Apr 2024</div>
         </div>
         <div class="summary-cell">
           <div class="s-label">Courses enrolled</div>
@@ -275,7 +275,7 @@
         </div>
         <div class="summary-cell">
           <div class="s-label">Hours learned</div>
-          <div class="s-value" style="font-size:17px">142.8h</div>
+          <div class="s-value" style="font-size: var(--fs-h3)">142.8h</div>
         </div>
       </div>
 

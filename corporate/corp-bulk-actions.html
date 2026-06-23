@@ -15,7 +15,7 @@
   align-items: center;
   gap: 6px;
   font-family: var(--font-label);
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -34,7 +34,7 @@
 }
 .selected-panel .sp-label {
   font-family: var(--font-label);
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
 .selected-panel .chip {
   height: 28px;
   padding: 0 12px;
-  font-size: 11.5px;
+  font-size: var(--fs-meta);
 }
 .selected-panel .chip .x {
   margin-left: 2px;
@@ -96,14 +96,14 @@
 .action-card .ac-icon.t-sage  { background: var(--c-sage-wash);  color: var(--c-sage);  border-color: rgba(126,155,111,0.2); }
 .action-card .ac-icon.t-clay  { background: var(--c-clay-wash);  color: var(--c-clay);  border-color: rgba(184,101,78,0.2); }
 .action-card .ac-title {
-  font-size: 15px;
+  font-size: var(--fs-h3);
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: 5px;
 }
 .action-card .ac-desc {
-  font-size: 13px;
+  font-size: var(--fs-body);
   color: var(--ink-soft);
   line-height: 1.5;
   margin-bottom: 18px;
@@ -113,7 +113,7 @@
 .action-card .ac-field label {
   display: block;
   font-family: var(--font-label);
-  font-size: 10.5px;
+  font-size: var(--fs-label);
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -128,7 +128,7 @@
   background: transparent;
   border-radius: var(--r-sm);
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: var(--fs-body);
   color: var(--ink);
   width: 100%;
   transition: border 0.18s, box-shadow 0.18s;
@@ -264,7 +264,7 @@
   </main>
 </div>
 <!-- Toast -->
-<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size:13.5px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
+<div id="imi-toast" style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-family:var(--font-sans);font-size: var(--fs-body);font-weight:600;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 8px 32px rgba(42,17,8,0.28);opacity:0;transition:opacity 0.22s,transform 0.22s;pointer-events:none;z-index:999;white-space:nowrap;"></div>
 
 <script>
 (function () {

@@ -37,7 +37,7 @@
     display: block;
   }
   .course-bar .cb-title {
-    font-size: 16px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -52,7 +52,7 @@
   .course-bar .cb-progress .progress { flex: 1; }
   .course-bar .cb-pct {
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
@@ -69,7 +69,7 @@
 
   .lesson-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -88,7 +88,7 @@
   }
   .doc-title {
     font-family: var(--font-sans);
-    font-size: 33px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.12;
@@ -98,7 +98,7 @@
   .doc-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
   .doc-sheet p {
     font-family: var(--font-serif);
-    font-size: 16px;
+    font-size: var(--fs-h3);
     line-height: 1.75;
     color: var(--ink-soft);
     margin-bottom: 16px;
@@ -108,7 +108,7 @@
     padding-top: 16px;
     border-top: 1px solid var(--line);
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-style: normal;
     letter-spacing: 0.04em;
     color: var(--ink-mute);
@@ -130,7 +130,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-mute);
@@ -143,7 +143,7 @@
   }
   .ask-hook svg { width: 15px; height: 15px; }
   .ask-hook .phase-tag {
-    font-size: 9.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -168,7 +168,7 @@
   }
   .rail-head .rh-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -176,7 +176,7 @@
   }
   .rail-head .rh-count {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
@@ -209,7 +209,7 @@
   .pl-dot.current { border-color: var(--accent); background: var(--accent); }
   .pl-dot.current::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
   .pl-body { flex: 1; min-width: 0; }
-  .pl-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .pl-name { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
   .pl-name.muted { color: var(--ink-mute); font-weight: 600; }
 
   /* rail footer: auto-complete note + continue + policy line */
@@ -219,7 +219,7 @@
     text-align: center;
   }
   .rail-foot .auto-note {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -228,7 +228,7 @@
   .rail-foot .btn { width: 100%; justify-content: center; }
   .rail-foot .policy-note {
     margin-top: 10px;
-    font-size: 11px;
+    font-size: var(--fs-label);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -245,16 +245,16 @@
   }
   .nextup-card .nu-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--c-sage-text);
     margin-bottom: 5px;
   }
-  .nextup-card .nu-title { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
+  .nextup-card .nu-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); letter-spacing: -0.005em; }
   .nextup-card .nu-meta {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--c-sage-text);
     margin-top: 3px;
     font-family: var(--font-label);
@@ -279,7 +279,7 @@
   .notebook .nb-head svg { width: 16px; height: 16px; color: var(--ink-mute); }
   .notebook .nb-title {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -287,7 +287,7 @@
   }
   .notebook .nb-count {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--ink-mute);
     font-variant-numeric: tabular-nums;
@@ -301,14 +301,14 @@
   }
   .note-card .nc-time {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-bottom: 6px;
   }
-  .note-card .nc-body { font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .note-card .nc-body { font-size: var(--fs-body); line-height: 1.55; color: var(--ink); }
   .note-add {
     display: flex;
     align-items: center;
@@ -320,7 +320,7 @@
   }
   .note-add .na-stamp {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -334,7 +334,7 @@
     flex: 1;
     border: none;
     background: transparent;
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     color: var(--ink);
     height: 30px;
   }
@@ -517,7 +517,7 @@ function imiToast(msg) {
   if (!t) {
     t = document.createElement('div');
     t.id = '_imi_toast';
-    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.04em;padding:10px 22px;border-radius:var(--r-pill);z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;white-space:nowrap;';
+    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size: var(--fs-body);font-weight:600;letter-spacing:0.04em;padding:10px 22px;border-radius:var(--r-pill);z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;white-space:nowrap;';
     document.body.appendChild(t);
   }
   t.textContent = msg;

@@ -29,7 +29,7 @@
     height: 30px; padding: 0 13px;
     background: var(--ink); color: #FBF7EF;
     border-radius: var(--r-pill);
-    font-family: var(--font-label); font-weight: 700; font-size: 12.5px; letter-spacing: 0.01em;
+    font-family: var(--font-label); font-weight: 700; font-size: var(--fs-meta); letter-spacing: 0.01em;
     box-shadow: 0 4px 12px -4px rgba(42,17,8,0.45);
   }
   .crs-badge svg { width: 14px; height: 14px; }
@@ -46,9 +46,9 @@
     display: grid; place-items: center;
   }
   .crs-type-ic svg { width: 16px; height: 16px; }
-  .crs-type-label { font-family: var(--font-sans); font-weight: 700; font-size: 15px; color: var(--accent-deep); }
+  .crs-type-label { font-family: var(--font-sans); font-weight: 700; font-size: var(--fs-h3); color: var(--accent-deep); }
   .crs-title {
-    font-family: var(--font-sans); font-weight: 800; font-size: 22px; line-height: 1.2;
+    font-family: var(--font-sans); font-weight: 800; font-size: var(--fs-h1); line-height: 1.2;
     letter-spacing: -0.02em; color: var(--ink); margin: 0;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
@@ -56,7 +56,7 @@
   .crs-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
   .crs-by { display: flex; align-items: center; gap: 11px; min-width: 0; }
   .crs-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
-  .crs-by-txt { font-size: 13.5px; color: var(--ink-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crs-by-txt { font-size: var(--fs-body); color: var(--ink-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .crs-by-txt strong { color: var(--ink); font-weight: 700; }
   .crs-acts { display: flex; gap: 7px; flex-shrink: 0; }
   .crs-ic {
@@ -104,12 +104,12 @@
   .create-card .cc-icon svg { width: 22px; height: 22px; }
   .create-card .cc-body { flex: 1; min-width: 0; }
   .create-card .cc-label {
-    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--c-honey-text);
     margin-bottom: 4px;
   }
   .create-card .cc-title {
-    font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 12px;
+    font-size: var(--fs-h3); font-weight: 700; color: var(--ink); margin-bottom: 12px;
   }
 
   /* ---- feedback list ---- */
@@ -120,10 +120,10 @@
   .feedback-item .fb-dot.warn { background: var(--c-honey); }
   .feedback-item .fb-dot.ok   { background: var(--c-sage); }
   .feedback-item .fb-body { min-width: 0; flex: 1; }
-  .feedback-item .fb-title { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-  .feedback-item .fb-sub { font-size: 12.5px; color: var(--ink-soft); line-height: 1.45; }
+  .feedback-item .fb-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .feedback-item .fb-sub { font-size: var(--fs-meta); color: var(--ink-soft); line-height: 1.45; }
   .feedback-item .fb-foot { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-  .feedback-item .fb-when { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
+  .feedback-item .fb-when { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); }
 
   /* ---- role note info banner ---- */
   .role-note {
@@ -145,7 +145,7 @@
     flex-shrink: 0;
   }
   .role-note .rn-icon svg { width: 17px; height: 17px; }
-  .role-note p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; max-width: 760px; }
+  .role-note p { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.55; max-width: 760px; }
   .role-note p strong { color: var(--ink); font-weight: 700; }
 
   /* ---- status cell ---- */
@@ -166,7 +166,7 @@
   }
   .tbl-count {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
   }
@@ -306,42 +306,42 @@
                   <td>Knowledge Mapping Fundamentals</td>
                   <td><span class="chip">Career Path</span></td>
                   <td><span class="status-cell"><span class="chip t-clay dot">Changes requested</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">2h ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">2h ago</span></td>
                   <td><a class="card-link" href="cd-feedback.html">View feedback &rarr;</a></td>
                 </tr>
                 <tr data-status="draft" data-substatus="review" data-course="records-lifecycle" style="cursor:pointer">
                   <td>Records Lifecycle Management</td>
                   <td><span class="chip">Standalone</span></td>
                   <td><span class="status-cell"><span class="chip t-honey dot">In SME review</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">1d ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">1d ago</span></td>
                   <td><a class="card-link" href="cd-course-overview.html">View &rarr;</a></td>
                 </tr>
                 <tr data-status="draft" data-substatus="review" data-course="doc-control" style="cursor:pointer">
                   <td>Document Control Essentials</td>
                   <td><span class="chip">Standalone</span></td>
                   <td><span class="status-cell"><span class="chip t-honey dot">In SME review</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">2d ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">2d ago</span></td>
                   <td><a class="card-link" href="cd-course-overview.html">View &rarr;</a></td>
                 </tr>
                 <tr data-status="draft" data-substatus="draft" data-course="data-gov" style="cursor:pointer">
                   <td>Data Governance: Intro</td>
                   <td><span class="chip">Career Path</span></td>
                   <td><span class="status-cell"><span class="chip">Draft</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">3d ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">3d ago</span></td>
                   <td><a class="card-link" href="../course-builder/course-builder-1.html">Edit &rarr;</a></td>
                 </tr>
                 <tr data-status="draft" data-substatus="draft" data-course="content-tax" style="cursor:pointer">
                   <td>Content Taxonomy Basics</td>
                   <td><span class="chip">Lesson</span></td>
                   <td><span class="status-cell"><span class="chip">Draft</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">5d ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">5d ago</span></td>
                   <td><a class="card-link" href="../course-builder/standalone-lesson.html">Edit &rarr;</a></td>
                 </tr>
                 <tr data-status="published" data-substatus="published" data-course="ia-overview" style="cursor:pointer" onclick="location.href='cd-course-overview.html'">
                   <td>Information Architecture Overview</td>
                   <td><span class="chip">Career Path</span></td>
                   <td><span class="status-cell"><span class="chip t-sage dot">Published</span></span></td>
-                  <td><span class="numeric" style="font-size:11.5px;color:var(--ink-mute)">12d ago</span></td>
+                  <td><span class="numeric" style="font-size: var(--fs-meta);color:var(--ink-mute)">12d ago</span></td>
                   <td><a class="card-link" href="cd-course-overview.html">View &rarr;</a></td>
                 </tr>
               </tbody>
@@ -550,7 +550,7 @@ function applyFilter() {
     if (!existing) {
       existing = document.createElement('span');
       existing.className = 'tab-count';
-      existing.style.cssText = 'margin-left:6px;font-size:11px;font-family:var(--font-label);color:var(--ink-mute);font-weight:700;';
+      existing.style.cssText = 'margin-left:6px;font-size: var(--fs-label);font-family:var(--font-label);color:var(--ink-mute);font-weight:700;';
       btn.appendChild(existing);
     }
     existing.textContent = '(' + count + ')';

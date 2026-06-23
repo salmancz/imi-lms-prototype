@@ -34,7 +34,7 @@
   .rep-kpi:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
   .rep-kpi .rk-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -57,7 +57,7 @@
   .rep-kpi .rk-icon.ink { background: var(--surface-3); color: var(--ink-soft); }
   .rep-kpi .rk-value {
     font-family: var(--font-sans);
-    font-size: 34px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.03em;
     color: var(--ink);
@@ -68,7 +68,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 400;
-    font-size: 18px;
+    font-size: var(--fs-h2);
     color: var(--ink-soft);
     margin-left: 2px;
   }
@@ -91,7 +91,7 @@
     display: block;
   }
   .sparkline-arrow {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     line-height: 1;
     flex-shrink: 0;
@@ -99,7 +99,7 @@
   .sparkline-arrow.up   { color: var(--c-sage); }
   .sparkline-arrow.down { color: var(--c-clay); }
   .sparkline-pct {
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     font-family: var(--font-label);
     letter-spacing: 0.04em;
@@ -124,14 +124,14 @@
   .rep-filter .input { width: auto; min-width: 150px; }
   .rep-filter .rep-range-sep {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     padding-bottom: 7px;
   }
   .rep-filter .rep-range-note {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-faint);
     padding-bottom: 7px;
@@ -187,8 +187,8 @@
     text-align: center;
     line-height: 1.2;
   }
-  .donut-value { font-size: 17px; font-weight: 700; color: var(--ink); display: block; }
-  .donut-label { font-family: var(--font-label); font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); display: block; }
+  .donut-value { font-size: var(--fs-h3); font-weight: 700; color: var(--ink); display: block; }
+  .donut-label { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); display: block; }
 
   .donut-legend {
     display: flex;
@@ -201,7 +201,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
   }
   .donut-legend-item .dl-swatch {
@@ -224,13 +224,13 @@
   }
   .gauge-svg { display: block; overflow: visible; }
   .gauge-value-text {
-    font-size: 20px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     fill: var(--ink);
     font-family: 'Switzer', sans-serif;
   }
   .gauge-label-text {
-    font-size: 9px;
+    font-size: var(--fs-label);
     fill: var(--ink-mute);
     font-family: 'Barlow', sans-serif;
     letter-spacing: 0.12em;
@@ -241,7 +241,7 @@
     align-items: center;
     gap: 5px;
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.06em;
     padding: 3px 10px;
@@ -259,14 +259,14 @@
     margin-bottom: 16px;
   }
   .chart-title {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     font-weight: 600;
     color: var(--ink);
     letter-spacing: -0.01em;
   }
   .chart-sub {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     color: var(--ink-mute);
     letter-spacing: 0.06em;
     margin-top: 2px;
@@ -275,8 +275,8 @@
   /* ---- table ---- */
   .rep-table td .stat-num { font-variant-numeric: tabular-nums; }
   .rep-table .col-num { color: var(--ink); font-weight: 500; }
-  .rep-table .col-updated { font-family: var(--font-label); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
-  .rep-status { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); }
+  .rep-table .col-updated { font-family: var(--font-label); font-size: var(--fs-meta); letter-spacing: 0.04em; color: var(--ink-mute); white-space: nowrap; }
+  .rep-status { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); }
   .rep-status .s-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .rep-status .s-dot.ok { background: var(--c-sage); }
   .rep-status .s-dot.warn { background: var(--c-honey); }
@@ -549,7 +549,7 @@
             <button class="btn btn-ghost btn-sm sort-btn" data-col="3" onclick="sortTable(3,this)">Completion <span class="sort-arrow">↕</span></button>
           </div>
         </div>
-        <div id="rep-count" style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);letter-spacing:0.06em;margin-bottom:8px;">Showing 4 of 4</div>
+        <div id="rep-count" style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);letter-spacing:0.06em;margin-bottom:8px;">Showing 4 of 4</div>
       </div>
       <div class="card-body flush" style="padding-top:0;">
         <table class="tbl rep-table" id="rep-table">

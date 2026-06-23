@@ -14,7 +14,7 @@
   @media (max-width: 1100px) { .lesson-grid { grid-template-columns: 1fr; } }
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
-    font-family: var(--font-label); font-size: 11px; font-weight: 600;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
     transition: color 0.15s; margin-bottom: 18px;
   }
@@ -23,7 +23,7 @@
   .type-opt {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 9px 16px; border: 1.5px solid var(--line-strong);
-    border-radius: var(--r-pill); font-size: 13px; font-weight: 600;
+    border-radius: var(--r-pill); font-size: var(--fs-body); font-weight: 600;
     color: var(--ink-soft); background: var(--paper); cursor: pointer;
     transition: border-color 0.18s, background 0.18s, color 0.18s;
   }
@@ -44,7 +44,7 @@
   .field-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 540px) { .field-2 { grid-template-columns: 1fr; } }
   .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .field-hint { font-size: 12px; color: var(--ink-mute); margin-top: 7px; line-height: 1.5; }
+  .field-hint { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 7px; line-height: 1.5; }
   .dropzone {
     border: 1.5px dashed var(--line-strong); border-radius: var(--r-md);
     background: var(--paper-2); padding: 26px 20px;
@@ -58,33 +58,33 @@
     display: grid; place-items: center; margin-bottom: 4px;
   }
   .dropzone .dz-icon svg { width: 18px; height: 18px; }
-  .dropzone .dz-main { font-size: 13.5px; font-weight: 600; color: var(--ink); }
-  .dropzone .dz-meta { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-mute); text-transform: uppercase; }
+  .dropzone .dz-main { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+  .dropzone .dz-meta { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.06em; color: var(--ink-mute); text-transform: uppercase; }
   .dropzone.slim { flex-direction: row; padding: 16px 20px; gap: 12px; }
-  .dropzone.slim .dz-main { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .dropzone.slim .dz-main { font-size: var(--fs-body); font-weight: 500; color: var(--ink-soft); }
   .opt-label { color: var(--ink-mute); font-weight: 400; text-transform: none; letter-spacing: 0; }
   .check-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; }
   .check-head { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
   .check-head input { margin-top: 3px; width: 17px; height: 17px; flex-shrink: 0; accent-color: var(--ink); }
-  .check-head .ch-title { font-size: 14px; font-weight: 700; color: var(--ink); }
-  .check-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 7px; padding-left: 29px; line-height: 1.5; }
+  .check-head .ch-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .check-sub { font-size: var(--fs-meta); color: var(--ink-soft); margin-top: 7px; padding-left: 29px; line-height: 1.5; }
   .check-questions { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
   .qcard { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 14px 16px; margin-bottom: 12px; }
   .qcard-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .qcard-tag { font-family: var(--font-label); font-size: 10.5px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+  .qcard-tag { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
   .qopts { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
   .qopt { display: flex; align-items: center; gap: 10px; }
   .qopt input[type="radio"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--ink); }
-  .qopt .input { height: 30px; padding: 0 12px; font-size: 13px; }
-  .summary-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+  .qopt .input { height: 30px; padding: 0 12px; font-size: var(--fs-body); }
+  .summary-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--fs-body); }
   .summary-row span { color: var(--ink-soft); }
   .summary-row strong { color: var(--ink); font-weight: 700; }
   .summary-card .stack { display: flex; flex-direction: column; gap: 12px; }
-  .review-step { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+  .review-step { display: flex; gap: 12px; align-items: flex-start; font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.45; }
   .review-num {
     width: 20px; height: 20px; border-radius: 50%; background: var(--ink);
     color: var(--hero-bg); display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-label); font-size: 10px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     flex-shrink: 0; margin-top: 1px;
   }
   .side-stack { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 96px; }
@@ -93,7 +93,7 @@
   .gate-note {
     display: flex; gap: 12px; align-items: flex-start;
     background: var(--c-sage-wash); border: 1px solid rgba(126,155,111,0.22);
-    border-radius: var(--r-md); padding: 14px 16px; font-size: 13px;
+    border-radius: var(--r-md); padding: 14px 16px; font-size: var(--fs-body);
     color: var(--c-sage-text); line-height: 1.5; margin-top: 24px;
   }
   .gate-note + .gate-note { margin-top: 12px; }
@@ -117,8 +117,8 @@
   }
   .fp-icon svg { width: 15px; height: 15px; }
   .fp-info { flex: 1; min-width: 0; }
-  .fp-name { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .fp-size { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 1px; }
+  .fp-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fp-size { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; margin-top: 1px; }
   .fp-remove {
     width: 26px; height: 26px; border-radius: 50%;
     border: none; background: transparent; cursor: pointer;
@@ -136,7 +136,7 @@
   .toast {
     position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(12px);
     background: var(--ink); color: var(--paper); border-radius: var(--r-pill);
-    padding: 10px 22px; font-size: 13.5px; font-weight: 600;
+    padding: 10px 22px; font-size: var(--fs-body); font-weight: 600;
     box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
     transition: opacity 0.22s, transform 0.22s; z-index: 999;
     white-space: nowrap;
@@ -154,8 +154,8 @@
   }
   .upload-progress.visible { display: flex; }
   .up-head { display: flex; align-items: center; justify-content: space-between; }
-  .up-name { font-size: 13px; font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .up-pct { font-family: var(--font-label); font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: 0.06em; flex-shrink: 0; margin-left: 8px; }
+  .up-name { font-size: var(--fs-body); font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .up-pct { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; color: var(--ink-soft); letter-spacing: 0.06em; flex-shrink: 0; margin-left: 8px; }
   .up-track {
     height: 5px; border-radius: 99px;
     background: var(--line); overflow: hidden;
@@ -165,7 +165,7 @@
     background: var(--accent); width: 0%;
     transition: width 0.3s ease;
   }
-  .up-status { font-family: var(--font-label); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; }
+  .up-status { font-family: var(--font-label); font-size: var(--fs-label); color: var(--ink-mute); letter-spacing: 0.04em; }
   .up-status.done { color: var(--c-sage-text); font-weight: 600; }
   .up-status.err  { color: #c0392b; font-weight: 600; }
 </style>

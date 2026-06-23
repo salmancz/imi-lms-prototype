@@ -16,7 +16,7 @@
   .um-search input {
     width: 100%; height: 40px; border-radius: var(--r-pill);
     border: 1px solid var(--line); background: var(--paper);
-    padding: 0 16px 0 40px; font-size: 13.5px; color: var(--ink);
+    padding: 0 16px 0 40px; font-size: var(--fs-body); color: var(--ink);
     transition: border 0.18s, background 0.18s, box-shadow 0.18s;
   }
   .um-search input::placeholder { color: var(--ink-soft); }
@@ -34,7 +34,7 @@
   .um-select {
     height: 40px; padding: 0 14px;
     border: 1px solid var(--line); background: var(--paper);
-    border-radius: var(--r-pill); font-size: 13px; color: var(--ink);
+    border-radius: var(--r-pill); font-size: var(--fs-body); color: var(--ink);
     transition: border 0.18s, background 0.18s; cursor: pointer;
   }
   .um-select:focus { outline: none; border-color: var(--ink-mute); background: #fff; }
@@ -42,29 +42,29 @@
   /* ── filter grid ── */
   .um-filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
   .um-filter-col-label {
-    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.10em; text-transform: uppercase;
     color: var(--ink-mute); margin-bottom: 12px;
   }
   .um-check {
     display: flex; align-items: center; gap: 9px;
-    font-size: 13px; color: var(--ink-soft); margin-bottom: 9px; cursor: pointer;
+    font-size: var(--fs-body); color: var(--ink-soft); margin-bottom: 9px; cursor: pointer;
   }
   .um-check:last-child { margin-bottom: 0; }
   .um-check input { width: 14px; height: 14px; accent-color: var(--accent); flex-shrink: 0; }
   .um-filter-select {
     width: 100%; height: 36px; padding: 0 12px;
     border: 1px solid var(--line); background: var(--paper);
-    border-radius: var(--r-sm); font-size: 13px; color: var(--ink);
+    border-radius: var(--r-sm); font-size: var(--fs-body); color: var(--ink);
   }
   @media (max-width: 1100px) { .um-filter-grid { grid-template-columns: repeat(2, 1fr); } }
 
   /* ── user table ── */
-  .um-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .um-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-body); }
   .um-table th {
     text-align: left; font-family: var(--font-label); font-weight: 600;
     color: var(--ink-mute); padding: 13px 16px; border-bottom: 1px solid var(--line);
-    background: var(--paper-2); font-size: 10.5px; text-transform: uppercase;
+    background: var(--paper-2); font-size: var(--fs-label); text-transform: uppercase;
     letter-spacing: 0.08em;
   }
   .um-table th:first-child, .um-table td:first-child { padding-left: 20px; }
@@ -99,7 +99,7 @@
   /* ── row actions + kebab ── */
   .um-row-actions { display: inline-flex; align-items: center; gap: 6px; }
   .um-kebab-wrap { position: relative; }
-  .um-kebab { font-size: 15px; line-height: 1; padding: 3px 7px; }
+  .um-kebab { font-size: var(--fs-h3); line-height: 1; padding: 3px 7px; }
   .um-kebab-menu {
     position: absolute; right: 0; top: 100%; z-index: 300;
     background: var(--paper); border: 1px solid var(--line);
@@ -107,7 +107,7 @@
     min-width: 148px; padding: 4px 0; margin-top: 4px;
   }
   .um-mi {
-    display: block; padding: 9px 14px; font-size: 13px; font-weight: 500;
+    display: block; padding: 9px 14px; font-size: var(--fs-body); font-weight: 500;
     color: var(--ink); white-space: nowrap; transition: background 0.12s; text-decoration: none;
   }
   .um-mi:hover { background: var(--paper-2); }
@@ -117,7 +117,7 @@
   /* ── pager ── */
   .um-pager {
     display: flex; align-items: center; justify-content: space-between;
-    margin-top: 18px; font-size: 12.5px; color: var(--ink-mute);
+    margin-top: 18px; font-size: var(--fs-meta); color: var(--ink-mute);
     font-family: var(--font-label); letter-spacing: 0.03em;
   }
   .um-pager .pg-page { padding: 0 14px; font-weight: 600; color: var(--ink-soft); }
@@ -129,18 +129,18 @@
     border-radius: var(--r-md); padding: 10px 18px;
     margin-bottom: 14px; flex-wrap: wrap;
   }
-  .um-bulk-count { font-weight: 700; color: var(--ink); font-size: 13.5px; margin-right: 6px; white-space: nowrap; }
-  .um-bulk-bar .btn-ghost { font-size: 12.5px; height: 34px; padding: 0 14px; }
+  .um-bulk-count { font-weight: 700; color: var(--ink); font-size: var(--fs-body); margin-right: 6px; white-space: nowrap; }
+  .um-bulk-bar .btn-ghost { font-size: var(--fs-meta); height: 34px; padding: 0 14px; }
   .um-bulk-purge {
     background: var(--c-danger); color: #fff; border: none;
     border-radius: var(--r-pill); font-family: var(--font-label);
-    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    font-size: var(--fs-meta); font-weight: 700; letter-spacing: 0.06em;
     text-transform: uppercase; padding: 0 16px; height: 34px;
     cursor: pointer; white-space: nowrap;
   }
   .um-bulk-purge:hover { background: var(--c-danger-deep); }
   .um-bulk-meta {
-    margin-left: auto; font-family: var(--font-label); font-size: 11px;
+    margin-left: auto; font-family: var(--font-label); font-size: var(--fs-label);
     letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-mute); white-space: nowrap;
   }
 
@@ -464,7 +464,7 @@
     </div>
 
     <!-- Lifecycle note -->
-    <p class="page-sub" style="margin-top:24px;font-size:12.5px;color:var(--ink-mute)">
+    <p class="page-sub" style="margin-top:24px;font-size: var(--fs-meta);color:var(--ink-mute)">
       <strong style="color:var(--ink-soft)">Lifecycle note:</strong>
       No login for 6 months triggers auto-Deactivation (LIFE-09). Locally certified users (Course Completed) are retained permanently and cannot be hard purged (LIFE-08).
     </p>
@@ -497,7 +497,7 @@ function umBulkSoftDelete(btn){
   if(confirm('Soft delete ' + num + ' selected user(s)?\n\nAccounts move to the deletion queue. A 30-day grace period applies before permanent PII removal.')){
     var t = document.createElement('div');
     t.textContent = num + ' account(s) moved to deletion queue.';
-    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size: var(--fs-body);font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
     document.body.appendChild(t);
     setTimeout(function(){t.remove();location.href='admin-deletion-queue.html';},1800);
   }
@@ -510,7 +510,7 @@ function umSoftDelete(e, name){
     if(row){ row.style.opacity='0.38'; row.style.pointerEvents='none'; }
     var t = document.createElement('div');
     t.textContent = name + ' moved to deletion queue.';
-    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
+    t.style.cssText='position:fixed;bottom:28px;right:28px;z-index:9999;background:#2A1108;color:#FCF7AE;padding:12px 20px;border-radius:8px;font-size: var(--fs-body);font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.18);';
     document.body.appendChild(t);
     setTimeout(function(){t.remove();},2600);
   }

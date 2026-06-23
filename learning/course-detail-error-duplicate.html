@@ -34,15 +34,15 @@
   }
   .enrolled-seal svg { width: 26px; height: 26px; }
   .enrolled-title {
-    font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em;
     color: var(--ink); margin-bottom: 4px;
   }
   .enrolled-sub {
-    font-size: 13.5px; color: var(--c-sage-text); line-height: 1.5;
+    font-size: var(--fs-body); color: var(--c-sage-text); line-height: 1.5;
   }
 
   .cd-section-title {
-    font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+    font-size: var(--fs-h3); font-weight: 700; letter-spacing: -0.01em;
     color: var(--ink); margin-bottom: 14px;
   }
   .cd-section-title em {
@@ -58,15 +58,15 @@
   .progress-stats { display: flex; gap: 36px; flex-wrap: wrap; }
   .pstat { display: flex; flex-direction: column; gap: 4px; }
   .pstat .ps-label {
-    font-family: var(--font-label); font-size: 11px; font-weight: 700;
+    font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700;
     letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute);
   }
   .pstat .ps-value {
-    font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1;
+    font-size: var(--fs-h1); font-weight: 700; letter-spacing: -0.02em; color: var(--ink); line-height: 1;
   }
   .pstat .ps-value em {
     font-family: var(--font-serif); font-style: italic; font-weight: 400;
-    font-size: 14px; color: var(--ink-soft); margin-left: 2px;
+    font-size: var(--fs-body); color: var(--ink-soft); margin-left: 2px;
   }
 
   .lesson-row {
@@ -82,8 +82,8 @@
   .lesson-mark.done { background: var(--c-sage-wash); color: var(--c-sage-text); }
   .lesson-mark.current { background: var(--c-honey-wash); color: var(--c-honey-text); }
   .lesson-body { flex: 1; min-width: 0; }
-  .lesson-title { font-size: 14px; font-weight: 600; color: var(--ink); }
-  .lesson-meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .lesson-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+  .lesson-meta { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; }
 </style>
 </head>
 <body data-crumbs="Learn|dashboard.html;Catalog|catalog.html;Course Detail">
@@ -149,7 +149,7 @@
       <div class="card" style="margin-bottom:36px">
         <div class="card-body progress-card">
           <div class="progress-stats">
-            <div class="pstat"><span class="ps-label">Enrolled</span><span class="ps-value" style="font-size:15px;font-weight:600">12 Apr 2026</span></div>
+            <div class="pstat"><span class="ps-label">Enrolled</span><span class="ps-value" style="font-size: var(--fs-h3);font-weight:600">12 Apr 2026</span></div>
             <div class="pstat"><span class="ps-label">Lessons done</span><span class="ps-value">4 <em>of 9</em></span></div>
             <div class="pstat"><span class="ps-label">Completion</span><span class="ps-value">65<em>%</em></span></div>
           </div>
@@ -158,7 +158,7 @@
         <div class="card-body" style="border-top:1px solid var(--line);padding-top:18px">
           <div class="row gap" style="align-items:center">
             <div class="progress" style="flex:1"><div class="progress-fill sage" style="width:65%"></div></div>
-            <span style="font-family:var(--font-label);font-size:12px;color:var(--ink-soft);font-weight:600">65%</span>
+            <span style="font-family:var(--font-label);font-size: var(--fs-meta);color:var(--ink-soft);font-weight:600">65%</span>
           </div>
         </div>
       </div>

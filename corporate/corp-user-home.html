@@ -29,7 +29,7 @@
     display: grid;
     place-items: center;
     font-family: var(--font-label);
-    font-size: 13px;
+    font-size: var(--fs-body);
     font-weight: 800;
     color: var(--ink);
     letter-spacing: 0.04em;
@@ -37,7 +37,7 @@
   }
   .org-banner .ob-text { flex: 1; min-width: 0; }
   .org-banner .ob-greeting {
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -49,7 +49,7 @@
     font-weight: 400;
   }
   .org-banner .ob-sub {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: rgba(255,255,255,0.60);
     line-height: 1.4;
   }
@@ -62,7 +62,7 @@
     color: var(--paper);
     border-radius: var(--r-sm);
     font-family: var(--font-label);
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.05em;
     cursor: pointer;
@@ -103,11 +103,11 @@
     flex-shrink: 0;
     display: grid;
     place-items: center;
-    font-size: 22px;
+    font-size: var(--fs-h1);
   }
   .resume-body { flex: 1; min-width: 0; }
   .resume-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink);
     margin-bottom: 3px;
@@ -116,7 +116,7 @@
     text-overflow: ellipsis;
   }
   .resume-sub {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -148,13 +148,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: var(--fs-hero);
     border-bottom: 1px solid var(--line);
   }
   .course-mini .cm-body { padding: 14px 16px; }
   .course-mini .cm-cat {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -162,14 +162,14 @@
     margin-bottom: 5px;
   }
   .course-mini .cm-title {
-    font-size: 13.5px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--ink);
     line-height: 1.35;
     margin-bottom: 10px;
   }
   .course-mini .cm-meta {
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     font-family: var(--font-label);
     letter-spacing: 0.03em;
@@ -199,13 +199,13 @@
   }
   .deadline-alert .da-body { flex: 1; min-width: 0; }
   .deadline-alert .da-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     color: var(--c-clay);
     margin-bottom: 3px;
   }
   .deadline-alert .da-sub {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
   }
 
@@ -328,22 +328,22 @@
       <a href="../learning/my-learning.html" class="stat-flat" style="text-decoration:none;color:inherit">
         <div class="stat-label">Courses assigned</div>
         <div class="stat-value">4</div>
-        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">by Bank Muscat</div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">by Bank Muscat</div>
       </a>
       <a href="../learning/certificate.html" class="stat-flat" style="text-decoration:none;color:inherit">
         <div class="stat-label">Completed</div>
         <div class="stat-value"><span class="stat-dot" style="background:var(--c-sage)"></span>2</div>
-        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">of 4 assigned</div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">of 4 assigned</div>
       </a>
       <div class="stat-flat">
         <div class="stat-label">Hours learned</div>
-        <div class="stat-value">38<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">h</span></div>
-        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">this year</div>
+        <div class="stat-value">38<span style="font-size: var(--fs-h3);font-weight:500;color:var(--ink-soft);margin-left:2px">h</span></div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">this year</div>
       </div>
       <div class="stat-flat">
         <div class="stat-label">Avg score</div>
-        <div class="stat-value">81<span style="font-size:16px;font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
-        <div style="font-family:var(--font-label);font-size:11px;color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">across courses</div>
+        <div class="stat-value">81<span style="font-size: var(--fs-h3);font-weight:500;color:var(--ink-soft);margin-left:2px">%</span></div>
+        <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);margin-top:4px;letter-spacing:0.04em">across courses</div>
       </div>
     </div>
 
@@ -366,7 +366,7 @@
                 <div class="resume-sub">Module 2 of 4 &middot; last accessed today</div>
                 <div class="row gap" style="margin-top:0;max-width:400px">
                   <div class="progress" style="flex:1"><div class="progress-fill honey" style="width:38%"></div></div>
-                  <span style="font-family:var(--font-label);font-size:11.5px;font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">38%</span>
+                  <span style="font-family:var(--font-label);font-size: var(--fs-meta);font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">38%</span>
                 </div>
               </div>
               <a class="btn btn-primary btn-sm" href="../learning/player.html">Resume &rarr;</a>
@@ -378,7 +378,7 @@
                 <div class="resume-sub">Module 2 of 5 &middot; last accessed 3 days ago</div>
                 <div class="row gap" style="margin-top:0;max-width:400px">
                   <div class="progress" style="flex:1"><div class="progress-fill sage" style="width:22%"></div></div>
-                  <span style="font-family:var(--font-label);font-size:11.5px;font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">22%</span>
+                  <span style="font-family:var(--font-label);font-size: var(--fs-meta);font-weight:700;color:var(--ink-soft);min-width:30px;text-align:right">22%</span>
                 </div>
               </div>
               <a class="btn btn-ghost btn-sm" href="../learning/player.html">Resume &rarr;</a>

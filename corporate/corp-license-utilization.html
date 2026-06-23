@@ -16,14 +16,14 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-label);
-  font-size: 11.5px;
+  font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--ink-soft);
 }
 .date-filter select {
   font-family: var(--font-label);
-  font-size: 11.5px;
+  font-size: var(--fs-meta);
   font-weight: 600;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -38,15 +38,15 @@
 
 /* ---- larger KPI tickers for this page ---- */
 .kpi-xl .kpi-value {
-  font-size: 40px;
+  font-size: var(--fs-hero);
   font-weight: 800;
   letter-spacing: -0.03em;
 }
 .kpi-xl .kpi-value em {
-  font-size: 18px;
+  font-size: var(--fs-h2);
 }
 .kpi-xl .kpi-label {
-  font-size: 11px;
+  font-size: var(--fs-label);
 }
 
 /* ---- chart section ---- */
@@ -94,14 +94,14 @@
 .bar-chart .bc-col .bc-bar.ink   { background: var(--ink); }
 .bar-chart .bc-col .bc-label {
   font-family: var(--font-label);
-  font-size: 9.5px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
 .bar-chart .bc-col .bc-val {
   font-family: var(--font-label);
-  font-size: 10px;
+  font-size: var(--fs-label);
   font-weight: 700;
   color: var(--ink-soft);
 }
@@ -116,7 +116,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--font-label);
-  font-size: 10.5px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
 }
 .bar-legend .bl-dot {
@@ -153,7 +153,7 @@
 .bar-chart-grouped .bcg-group .bcg-bar.completed { background: var(--c-sage); }
 .bar-chart-grouped .bcg-label {
   font-family: var(--font-label);
-  font-size: 9px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   text-align: center;
   margin-top: 4px;
@@ -171,7 +171,7 @@
 .bar-chart-grouped-labels .bcg-lbl {
   flex: 1;
   font-family: var(--font-label);
-  font-size: 9px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   text-align: center;
   letter-spacing: 0.04em;
@@ -206,8 +206,8 @@
   z-index: 1;
   text-align: center;
 }
-.donut-center .dc-val  { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
-.donut-center .dc-lbl  { font-family: var(--font-label); font-size: 9px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+.donut-center .dc-val  { font-size: var(--fs-h2); font-weight: 800; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+.donut-center .dc-lbl  { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
 .donut-legend {
   display: flex;
   flex-direction: column;
@@ -226,18 +226,18 @@
   flex-shrink: 0;
 }
 .donut-legend .dl-name {
-  font-size: 12.5px;
+  font-size: var(--fs-meta);
   color: var(--ink-soft);
   flex: 1;
 }
 .donut-legend .dl-val {
-  font-size: 12.5px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
 .donut-legend .dl-pct {
-  font-size: 11px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   font-family: var(--font-label);
   min-width: 34px;
@@ -270,14 +270,14 @@
 .sparkline .sp-bar.down { background: var(--c-clay); }
 .sparkline .sp-bar.mid  { background: var(--surface-3); }
 .spark-arrow {
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   line-height: 1;
 }
 .spark-arrow.up   { color: var(--c-sage-text); }
 .spark-arrow.down { color: var(--c-clay); }
 .spark-val {
-  font-size: 11.5px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   font-family: var(--font-label);
 }
@@ -301,7 +301,7 @@
   text-align: center;
 }
 .gauge-score {
-  font-size: 34px;
+  font-size: var(--fs-hero);
   font-weight: 800;
   letter-spacing: -0.03em;
   color: var(--ink);
@@ -309,7 +309,7 @@
 }
 .gauge-label-sub {
   font-family: var(--font-label);
-  font-size: 10px;
+  font-size: var(--fs-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-mute);
@@ -322,7 +322,7 @@
   padding: 4px 12px;
   border-radius: 100px;
   font-family: var(--font-label);
-  font-size: 11px;
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -340,7 +340,7 @@
 }
 .util-progress .progress { flex: 1; height: 5px; }
 .util-progress .up-pct {
-  font-size: 11.5px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   color: var(--ink);
   min-width: 32px;
@@ -364,7 +364,7 @@
   padding: 10px 22px;
   border-top: 1px solid var(--line);
   font-family: var(--font-label);
-  font-size: 10.5px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   letter-spacing: 0.05em;
 }
@@ -375,7 +375,7 @@
 /* ---- score threshold line label ---- */
 .threshold-hint {
   font-family: var(--font-label);
-  font-size: 10px;
+  font-size: var(--fs-label);
   color: var(--ink-mute);
   letter-spacing: 0.08em;
   text-align: center;
@@ -512,84 +512,84 @@
                   <div class="bcg-bar enrolled" style="height:60px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:44px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jun</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Jun</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:72px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:55px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jul</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Jul</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:68px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:50px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Aug</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Aug</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:80px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:62px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Sep</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Sep</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:90px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:74px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Oct</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Oct</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:88px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:70px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Nov</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Nov</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:76px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:58px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Dec</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Dec</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:95px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:78px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Jan</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Jan</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:102px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:84px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Feb</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Feb</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:110px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:92px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Mar</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Mar</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:116px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:98px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">Apr</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">Apr</span>
               </div>
               <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;">
                 <div style="display:flex;align-items:flex-end;gap:3px;width:100%;">
                   <div class="bcg-bar enrolled" style="height:120px;flex:1;border-radius:3px 3px 0 0;background:var(--c-honey);"></div>
                   <div class="bcg-bar completed" style="height:108px;flex:1;border-radius:3px 3px 0 0;background:var(--c-sage);"></div>
                 </div>
-                <span style="font-family:var(--font-label);font-size:9px;color:var(--ink-mute);">May</span>
+                <span style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);">May</span>
               </div>
             </div>
           </div>
@@ -659,7 +659,7 @@
           <div style="display:flex;flex-direction:column;gap:12px;">
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Leadership Dev</span>
+                <span style="font-size: var(--fs-meta);font-weight:600;color:var(--ink);">Leadership Dev</span>
                 <div class="sparkline-wrap">
                   <div class="sparkline">
                     <div class="sp-bar up" style="height:10px;"></div>
@@ -680,7 +680,7 @@
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Safety &amp; Compliance</span>
+                <span style="font-size: var(--fs-meta);font-weight:600;color:var(--ink);">Safety &amp; Compliance</span>
                 <div class="sparkline-wrap">
                   <div class="sparkline">
                     <div class="sp-bar up" style="height:14px;"></div>
@@ -701,7 +701,7 @@
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Technical Skills</span>
+                <span style="font-size: var(--fs-meta);font-weight:600;color:var(--ink);">Technical Skills</span>
                 <div class="sparkline-wrap">
                   <div class="sparkline">
                     <div class="sp-bar up" style="height:18px;"></div>
@@ -722,7 +722,7 @@
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Onboarding</span>
+                <span style="font-size: var(--fs-meta);font-weight:600;color:var(--ink);">Onboarding</span>
                 <div class="sparkline-wrap">
                   <div class="sparkline">
                     <div class="sp-bar down" style="height:22px;"></div>
@@ -743,7 +743,7 @@
             </div>
             <div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-                <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Finance &amp; Reporting</span>
+                <span style="font-size: var(--fs-meta);font-weight:600;color:var(--ink);">Finance &amp; Reporting</span>
                 <div class="sparkline-wrap">
                   <div class="sparkline">
                     <div class="sp-bar down" style="height:20px;"></div>
@@ -795,12 +795,12 @@
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin-top:8px;">
             <div style="text-align:center;padding:10px;background:var(--paper-2);border-radius:var(--r-sm);border:1px solid var(--line);">
-              <div style="font-size:11px;font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Avg. time/week</div>
-              <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">2.4 h</div>
+              <div style="font-size: var(--fs-label);font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Avg. time/week</div>
+              <div style="font-size: var(--fs-h2);font-weight:800;color:var(--ink);letter-spacing:-0.02em;">2.4 h</div>
             </div>
             <div style="text-align:center;padding:10px;background:var(--paper-2);border-radius:var(--r-sm);border:1px solid var(--line);">
-              <div style="font-size:11px;font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Login frequency</div>
-              <div style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">3.1 x</div>
+              <div style="font-size: var(--fs-label);font-family:var(--font-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:4px;">Login frequency</div>
+              <div style="font-size: var(--fs-h2);font-weight:800;color:var(--ink);letter-spacing:-0.02em;">3.1 x</div>
             </div>
           </div>
         </div>
@@ -877,7 +877,7 @@
           </div>
           <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
             <div>
-              <div style="font-family:var(--font-label);font-size:10.5px;color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Period change</div>
+              <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Period change</div>
               <div class="sparkline-wrap">
                 <div class="sparkline">
                   <div class="sp-bar up" style="height:8px;"></div>
@@ -892,8 +892,8 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <div style="font-family:var(--font-label);font-size:10.5px;color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Utilization rate</div>
-              <div style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">82.4%</div>
+              <div style="font-family:var(--font-label);font-size: var(--fs-label);color:var(--ink-mute);letter-spacing:0.08em;margin-bottom:3px;">Utilization rate</div>
+              <div style="font-size: var(--fs-h1);font-weight:800;color:var(--ink);letter-spacing:-0.02em;">82.4%</div>
             </div>
           </div>
         </div>
@@ -1168,7 +1168,7 @@
     if (!t) {
       t = document.createElement('div');
       t.id = 'imi-toast';
-      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
+      t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size: var(--fs-meta);font-weight:600;letter-spacing:0.04em;padding:10px 18px;border-radius:var(--r-sm);opacity:0;transition:opacity 0.2s;pointer-events:none;max-width:320px;';
       document.body.appendChild(t);
     }
     t.textContent = msg;

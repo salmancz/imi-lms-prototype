@@ -21,7 +21,7 @@
   .reader-top .meta-left { display: flex; align-items: center; gap: 12px; }
   .reader-top .meta-note {
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
   }
@@ -41,7 +41,7 @@
   }
   .reader-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -50,7 +50,7 @@
   }
   .reader-title {
     font-family: var(--font-sans);
-    font-size: 33px;
+    font-size: var(--fs-hero);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.12;
@@ -64,7 +64,7 @@
     color: var(--accent);
   }
   .reader-lede {
-    font-size: 16px;
+    font-size: var(--fs-h3);
     line-height: 1.55;
     color: var(--ink-soft);
     margin-bottom: 30px;
@@ -73,7 +73,7 @@
   .reader-prose {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: 18px;
+    font-size: var(--fs-h2);
     line-height: 1.78;
     color: var(--ink);
   }
@@ -110,13 +110,13 @@
   .reader-ask .ask-copy { display: flex; flex-direction: column; gap: 3px; }
   .reader-ask .ask-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
-  .reader-ask .ask-sub { font-size: 13px; color: var(--ink-soft); }
+  .reader-ask .ask-sub { font-size: var(--fs-body); color: var(--ink-soft); }
   .reader-ask .btn[disabled] { opacity: 0.6; cursor: not-allowed; pointer-events: none; }
 
   .reader-notebook {
@@ -135,13 +135,13 @@
   }
   .reader-notebook .nb-title {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
-  .reader-notebook .nb-scope { font-size: 12px; color: var(--ink-soft); }
+  .reader-notebook .nb-scope { font-size: var(--fs-meta); color: var(--ink-soft); }
   .reader-notebook .nb-note {
     padding: 12px 14px;
     background: var(--surface-3);
@@ -150,12 +150,12 @@
   }
   .reader-notebook .nb-stamp {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.03em;
     color: var(--ink-mute);
     margin-bottom: 5px;
   }
-  .reader-notebook .nb-body { font-size: 14px; line-height: 1.5; color: var(--ink); }
+  .reader-notebook .nb-body { font-size: var(--fs-body); line-height: 1.5; color: var(--ink); }
   .reader-notebook .nb-add {
     display: flex;
     align-items: center;
@@ -165,7 +165,7 @@
   .reader-notebook .nb-field {
     flex: 1;
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     background: var(--surface-3);
     border: 1px solid var(--line);
@@ -186,18 +186,18 @@
   .reader-nextup .nu-copy { display: flex; flex-direction: column; gap: 4px; }
   .reader-nextup .nu-label {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
   }
   .reader-nextup .nu-title {
-    font-size: 15px;
+    font-size: var(--fs-h3);
     font-weight: 600;
     color: var(--ink);
   }
-  .reader-nextup .nu-meta { font-size: 12px; color: var(--ink-soft); }
+  .reader-nextup .nu-meta { font-size: var(--fs-meta); color: var(--ink-soft); }
 
   .lesson-toolbar {
     display: flex;
@@ -219,7 +219,7 @@
     gap: 6px;
     padding: 6px 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -239,7 +239,7 @@
     gap: 6px;
     padding: 6px 16px;
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--ink-soft);
@@ -352,7 +352,7 @@
       <div class="nb-body">Concentration = single points of failure. Map who holds critical knowledge before anyone leaves.</div>
     </div>
     <div class="nb-add" id="textNoteAdd">
-      <input id="textNoteInput" class="nb-field" style="flex:1;border:none;background:transparent;font-size:13px;color:var(--ink);height:auto;min-height:36px;" placeholder="Add a note for this lesson...">
+      <input id="textNoteInput" class="nb-field" style="flex:1;border:none;background:transparent;font-size: var(--fs-body);color:var(--ink);height:auto;min-height:36px;" placeholder="Add a note for this lesson...">
       <a class="btn btn-primary btn-sm" href="#" onclick="event.preventDefault();(function(btn){var inp=document.getElementById('textNoteInput');var txt=inp.value.trim();if(!txt)return;var nb=document.querySelector('.reader-notebook');var noteAdd=document.getElementById('textNoteAdd');var card=document.createElement('div');card.className='nb-note';card.innerHTML='<div class=&quot;nb-stamp&quot;>Lesson 3 &middot; just now</div><div class=&quot;nb-body&quot;>'+txt+'</div>';nb.insertBefore(card,noteAdd);inp.value='';btn.textContent='Saved';btn.style.opacity='0.6';setTimeout(function(){btn.textContent='Save note';btn.style.opacity='';},1200);imiToast('Note saved');})(this)">Save note</a>
     </div>
   </div>
@@ -389,7 +389,7 @@ function imiToast(msg) {
   if (!t) {
     t = document.createElement('div');
     t.id = '_imi_toast';
-    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.04em;padding:10px 22px;border-radius:var(--r-pill);z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;white-space:nowrap;';
+    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size: var(--fs-body);font-weight:600;letter-spacing:0.04em;padding:10px 22px;border-radius:var(--r-pill);z-index:9999;pointer-events:none;opacity:0;transition:opacity 0.22s,transform 0.22s;white-space:nowrap;';
     document.body.appendChild(t);
   }
   t.textContent = msg;

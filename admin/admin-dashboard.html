@@ -32,7 +32,7 @@
   .stat-flat:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
   .stat-flat .sf-label {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -44,7 +44,7 @@
   }
   .stat-flat .sf-label svg { width: 14px; height: 14px; color: var(--ink-faint); }
   .stat-flat .sf-value {
-    font-size: 28px;
+    font-size: var(--fs-h1);
     font-weight: 800;
     letter-spacing: -0.03em;
     color: var(--ink);
@@ -52,14 +52,14 @@
     margin-bottom: 6px;
   }
   .stat-flat .sf-foot {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
   }
   .stat-flat .sf-delta {
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: 11.5px;
+    font-size: var(--fs-meta);
     font-weight: 600;
     margin-top: 8px;
   }
@@ -87,8 +87,8 @@
   .sev-dot.bad  { background: var(--accent); }
   .sev-dot.warn { background: var(--c-honey); }
   .attention-body { flex: 1; min-width: 0; }
-  .attention-title { font-size: 13.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
-  .attention-sub   { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .attention-title { font-size: var(--fs-body); font-weight: 600; color: var(--ink); letter-spacing: -0.005em; }
+  .attention-sub   { font-size: var(--fs-meta); color: var(--ink-mute); margin-top: 2px; }
 
   /* activity dot */
   .act-dot {
@@ -134,7 +134,7 @@
     justify-content: space-between;
     margin-top: 8px;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     letter-spacing: 0.08em;
     color: var(--ink-faint);
   }
@@ -142,7 +142,7 @@
   /* top-courses table row completion bar */
   .tbl-bar-wrap { display: flex; align-items: center; gap: 10px; min-width: 120px; }
   .tbl-bar-wrap .progress { flex: 1; }
-  .tbl-bar-pct { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+  .tbl-bar-pct { font-size: var(--fs-meta); font-weight: 700; color: var(--ink-soft); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
 
   /* hero card (system health) */
   .hero-card {
@@ -155,7 +155,7 @@
     font-family: var(--font-serif);
     font-style: italic;
     font-weight: 300;
-    font-size: 26px;
+    font-size: var(--fs-h1);
     line-height: 1.25;
     color: var(--ink);
     margin-bottom: 16px;
@@ -166,7 +166,7 @@
     justify-content: space-between;
     padding: 8px 0;
     border-bottom: 1px solid var(--line);
-    font-size: 13px;
+    font-size: var(--fs-body);
   }
   .health-row:last-child { border-bottom: none; }
   .health-row .hr-label { color: var(--ink-soft); }

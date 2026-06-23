@@ -19,18 +19,18 @@
   .pillar-card.is-certified { border-top-color: var(--c-sage); }
   .pillar-card.is-progress, .pillar-card.is-renew { border-top-color: var(--c-honey); }
   .pillar-card.is-empty { border-top-color: var(--line-strong); }
-  .pillar-mark { width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: var(--r-xs); display: grid; place-items: center; font-family: var(--font-label); font-size: 11px; font-weight: 700; color: var(--ink); letter-spacing: 0.04em; }
+  .pillar-mark { width: 36px; height: 36px; border: 1.5px solid var(--ink); border-radius: var(--r-xs); display: grid; place-items: center; font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; color: var(--ink); letter-spacing: 0.04em; }
   .pillar-mark.muted { border-color: var(--ink-faint); border-style: dashed; color: var(--ink-mute); }
   .pillar-body { display: flex; flex-direction: column; gap: 4px; }
-  .pillar-cred { font-size: 13px; font-weight: 700; color: var(--ink); }
-  .pillar-issued { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.04em; color: var(--ink-mute); }
-  .pillar-status-active { font-size: 12px; font-weight: 600; color: var(--c-sage-text); margin-top: 2px; }
-  .pillar-link { font-family: var(--font-label); font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); border-bottom: 1.5px solid var(--ink); padding-bottom: 1px; align-self: flex-start; }
+  .pillar-cred { font-size: var(--fs-body); font-weight: 700; color: var(--ink); }
+  .pillar-issued { font-family: var(--font-label); font-size: var(--fs-label); letter-spacing: 0.04em; color: var(--ink-mute); }
+  .pillar-status-active { font-size: var(--fs-meta); font-weight: 600; color: var(--c-sage-text); margin-top: 2px; }
+  .pillar-link { font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 700; letter-spacing: 0.04em; color: var(--ink); border-bottom: 1.5px solid var(--ink); padding-bottom: 1px; align-self: flex-start; }
   .pillar-link.renew { color: var(--c-honey-text); border-color: var(--c-honey-text); }
   .pillar-link:hover { color: var(--accent); border-color: var(--accent); }
-  .cred-summary { font-family: var(--font-label); font-size: 12px; letter-spacing: 0.05em; color: var(--ink-soft); padding: 4px 2px 0; }
+  .cred-summary { font-family: var(--font-label); font-size: var(--fs-meta); letter-spacing: 0.05em; color: var(--ink-soft); padding: 4px 2px 0; }
   .cred-summary strong { color: var(--ink); font-weight: 700; }
-  .section-eyebrow { font-family: var(--font-label); font-size: 10px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
+  .section-eyebrow { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-mute); }
 
   /* Profile completion ring (minimal conic) */
   .profile-minimal { display: flex; align-items: center; gap: 18px; }
@@ -39,14 +39,14 @@
   .profile-ring-svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
   .ring-track { stroke: var(--bg-alt); }
   .ring-value { stroke: var(--c-sage); }
-  .profile-ring-pct { position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; font-weight: 800; color: var(--ink); font-family: var(--font-label); }
+  .profile-ring-pct { position: absolute; inset: 0; display: grid; place-items: center; font-size: var(--fs-body); font-weight: 800; color: var(--ink); font-family: var(--font-label); }
   .profile-text { flex: 1; min-width: 0; }
-  .profile-text .p-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-  .profile-text .p-missing { font-size: 12px; color: var(--ink-mute); margin-bottom: 9px; line-height: 1.5; }
-  .profile-ring-note { font-family: var(--font-label); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: var(--c-sage-text); background: var(--c-sage-wash); padding: 2px 8px; border-radius: var(--r-pill); display: inline-block; }
+  .profile-text .p-title { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .profile-text .p-missing { font-size: var(--fs-meta); color: var(--ink-mute); margin-bottom: 9px; line-height: 1.5; }
+  .profile-ring-note { font-family: var(--font-label); font-size: var(--fs-label); font-weight: 600; letter-spacing: 0.06em; color: var(--c-sage-text); background: var(--c-sage-wash); padding: 2px 8px; border-radius: var(--r-pill); display: inline-block; }
 
   /* Hero stat labels - raised to readable size */
-  .hero-stat .hs-label { font-size: 13px; }
+  .hero-stat .hs-label { font-size: var(--fs-body); }
 
   /* Recommended grid of canonical .crs cards */
   .crs-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(220px, 1fr)); gap: 20px; }
@@ -58,7 +58,7 @@
 
   .cl-thumb { width: 56px; height: 56px; border-radius: var(--r-md); overflow: hidden; flex-shrink: 0; background: var(--paper-2); border: 1px solid var(--line); }
   .cl-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .pct-tag { font-family: var(--font-label); font-size: 12px; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .pct-tag { font-family: var(--font-label); font-size: var(--fs-meta); font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
   .renewal-card { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--ink); border-radius: var(--r-md); padding: 18px 22px; display: flex; align-items: center; gap: 20px; }
   .renewal-card .renewal-body { flex: 1; min-width: 0; }
@@ -127,7 +127,7 @@
           <a class="hero-stat" href="my-learning.html" style="text-decoration:none;color:inherit;cursor:pointer" title="View enrolled courses"><span class="hs-label">Enrolled</span><span class="hs-value">8</span></a>
           <a class="hero-stat" href="certificate.html" style="text-decoration:none;color:inherit;cursor:pointer" title="View completed courses"><span class="hs-label">Completed</span><span class="hs-value">5 <span class="hs-trend up">&#8599; 12%</span></span></a>
           <a class="hero-stat" href="my-learning.html" style="text-decoration:none;color:inherit;cursor:pointer" title="View learning progress"><span class="hs-label">Avg score</span><span class="hs-value">84% <span class="hs-trend up">&#8599; 3%</span></span></a>
-          <a class="hero-stat" href="career-path.html" style="text-decoration:none;color:inherit;cursor:pointer" title="View career path"><span class="hs-label">Pillars</span><span class="hs-value">2 <span style="font-size:13px;font-weight:500;color:var(--ink-mute)">of 5</span></span></a>
+          <a class="hero-stat" href="career-path.html" style="text-decoration:none;color:inherit;cursor:pointer" title="View career path"><span class="hs-label">Pillars</span><span class="hs-value">2 <span style="font-size: var(--fs-body);font-weight:500;color:var(--ink-mute)">of 5</span></span></a>
         </div>
       </div>
       <div class="daily-card daily-card-compact">
@@ -144,7 +144,7 @@
     <div class="mb-lg">
       <div class="row between mb">
         <div class="row gap-lg" style="align-items:baseline">
-          <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.01em">Credential <em style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-soft)">Map</em></h2>
+          <h2 style="font-size: var(--fs-h2);font-weight:700;letter-spacing:-0.01em">Credential <em style="font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--ink-soft)">Map</em></h2>
           <span class="section-eyebrow">Your portfolio across IM's 5 pillars</span>
         </div>
         <a class="card-link" href="career-path.html">VIEW FULL PATH MAP &rarr;</a>
@@ -268,7 +268,7 @@
         <!-- Certification renewal banner -->
         <div class="renewal-card">
           <div class="renewal-body">
-            <div class="list-title" style="font-size:14px;margin-bottom:4px">CDMP Practitioner renews Sep 2026</div>
+            <div class="list-title" style="font-size: var(--fs-body);margin-bottom:4px">CDMP Practitioner renews Sep 2026</div>
             <div class="list-sub" style="margin-bottom:12px">Continue building your portfolio</div>
             <div class="row gap" style="max-width:380px">
               <div class="progress" style="flex:1"><div class="progress-fill" style="width:70%;background:var(--c-honey)"></div></div>
@@ -357,9 +357,9 @@
         <!-- Year highlight -->
         <div class="hero-card">
           <div class="eyebrow" style="color:var(--ink-soft);margin-bottom:14px">YOUR YEAR &middot; 2026</div>
-          <div style="font-family:var(--font-serif);font-style:italic;font-size:30px;line-height:1.2;margin-bottom:14px">Five courses<br>completed.</div>
-          <p style="font-size:13.5px;color:var(--ink-soft);margin-bottom:18px">On pace for your annual goal of twelve courses by year-end. Keep going.</p>
-          <div class="row" style="gap:10px;font-size:12px;color:var(--ink-soft);font-family:var(--font-label);letter-spacing:0.08em"><span>5 of 12</span><span>&middot;</span><span>7 months left</span></div>
+          <div style="font-family:var(--font-serif);font-style:italic;font-size: var(--fs-hero);line-height:1.2;margin-bottom:14px">Five courses<br>completed.</div>
+          <p style="font-size: var(--fs-body);color:var(--ink-soft);margin-bottom:18px">On pace for your annual goal of twelve courses by year-end. Keep going.</p>
+          <div class="row" style="gap:10px;font-size: var(--fs-meta);color:var(--ink-soft);font-family:var(--font-label);letter-spacing:0.08em"><span>5 of 12</span><span>&middot;</span><span>7 months left</span></div>
         </div>
 
         <!-- Profile completion -->
@@ -422,8 +422,8 @@
           <div class="card-body flush">
             <div class="list-row">
               <div style="width:48px;text-align:center;flex-shrink:0">
-                <div style="font-size:20px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">28</div>
-                <div style="font-family:var(--font-label);font-size:9.5px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">May</div>
+                <div style="font-size: var(--fs-h2);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">28</div>
+                <div style="font-family:var(--font-label);font-size: var(--fs-label);letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">May</div>
               </div>
               <div class="list-body">
                 <div class="list-title">ISO 30401 &middot; Module 5 quiz</div>
@@ -433,8 +433,8 @@
             </div>
             <div class="list-row">
               <div style="width:48px;text-align:center;flex-shrink:0">
-                <div style="font-size:20px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">15</div>
-                <div style="font-family:var(--font-label);font-size:9.5px;letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">Jun</div>
+                <div style="font-size: var(--fs-h2);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">15</div>
+                <div style="font-family:var(--font-label);font-size: var(--fs-label);letter-spacing:0.10em;text-transform:uppercase;color:var(--ink-mute)">Jun</div>
               </div>
               <div class="list-body">
                 <div class="list-title">Records Mgmt assignment</div>
@@ -452,7 +452,7 @@
             <div class="activity-item">
               <div class="activity-dot"></div>
               <div class="list-body">
-                <div class="list-title" style="font-size:13px">Lesson completed</div>
+                <div class="list-title" style="font-size: var(--fs-body)">Lesson completed</div>
                 <div class="list-sub">Knowledge Mapping &middot; Lesson 3</div>
               </div>
               <span class="list-meta">2h ago</span>
@@ -460,7 +460,7 @@
             <div class="activity-item">
               <div class="activity-dot"></div>
               <div class="list-body">
-                <div class="list-title" style="font-size:13px">Assessment passed</div>
+                <div class="list-title" style="font-size: var(--fs-body)">Assessment passed</div>
                 <div class="list-sub">Module 3 &middot; 82%</div>
               </div>
               <span class="list-meta">Yesterday</span>
@@ -468,7 +468,7 @@
             <div class="activity-item">
               <div class="activity-dot"></div>
               <div class="list-body">
-                <div class="list-title" style="font-size:13px">Credential issued</div>
+                <div class="list-title" style="font-size: var(--fs-body)">Credential issued</div>
                 <div class="list-sub">CDMP Practitioner</div>
               </div>
               <span class="list-meta">3d ago</span>
@@ -476,7 +476,7 @@
             <div class="activity-item">
               <div class="activity-dot pending"></div>
               <div class="list-body">
-                <div class="list-title" style="font-size:13px">Course enrolled</div>
+                <div class="list-title" style="font-size: var(--fs-body)">Course enrolled</div>
                 <div class="list-sub">Knowledge Mapping</div>
               </div>
               <span class="list-meta">5d ago</span>

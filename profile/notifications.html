@@ -58,18 +58,18 @@
 
   .notif-main  { flex: 1; min-width: 0; }
   .notif-title {
-    font-size: 14px;
+    font-size: var(--fs-body);
     font-weight: 700;
     letter-spacing: -0.005em;
     color: var(--ink);
     margin-bottom: 3px;
   }
-  .notif-body  { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .notif-body  { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; }
   .notif-body a { color: var(--accent); text-decoration: underline; font-weight: 600; }
 
   .notif-when {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     letter-spacing: 0.04em;
     color: var(--ink-mute);
     white-space: nowrap;
@@ -89,7 +89,7 @@
     background: var(--accent);
     color: #fff;
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     line-height: 16px;
     text-align: center;
@@ -133,7 +133,7 @@
     color: var(--ink-mute);
   }
   .notif-empty svg { width: 40px; height: 40px; margin-bottom: 14px; color: var(--ink-faint); }
-  .notif-empty p { font-size: 14px; }
+  .notif-empty p { font-size: var(--fs-body); }
 </style>
 </head>
 <body data-crumbs="Account|settings.html;Notifications">
@@ -350,7 +350,7 @@
   function showToast(msg) {
     var t = document.createElement('div');
     t.textContent = msg;
-    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size:13.5px;font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);white-space:nowrap;';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 22px;border-radius:var(--r-pill);font-size: var(--fs-body);font-family:var(--font-sans);font-weight:600;z-index:9999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.18);white-space:nowrap;';
     document.body.appendChild(t);
     setTimeout(function(){ t.remove(); }, 2800);
   }

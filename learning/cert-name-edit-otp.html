@@ -41,7 +41,7 @@
   }
   .modal-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -50,7 +50,7 @@
   }
   .modal-title {
     font-family: var(--font-sans);
-    font-size: 23px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -84,14 +84,14 @@
   }
 
   .panel-title {
-    font-size: 17px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
     margin-bottom: 6px;
   }
   .panel-desc {
-    font-size: 13px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.55;
     margin-bottom: 18px;
@@ -101,7 +101,7 @@
   .name-field label {
     display: block;
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     letter-spacing: 0.14em;
     font-weight: 600;
     text-transform: uppercase;
@@ -117,7 +117,7 @@
     border-radius: var(--r-sm);
     font-family: var(--font-serif);
     font-style: normal;
-    font-size: 18px;
+    font-size: var(--fs-h2);
     font-weight: 500;
     letter-spacing: 0.01em;
     color: var(--ink);
@@ -130,7 +130,7 @@
     box-shadow: 0 0 0 4px var(--focus-ring);
   }
   .helper {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     line-height: 1.55;
     margin-bottom: 20px;
@@ -140,7 +140,7 @@
     width: 100%;
     justify-content: center;
     padding: 13px 18px;
-    font-size: 14px;
+    font-size: var(--fs-body);
   }
 
   .modal-foot {
@@ -149,7 +149,7 @@
   }
   .modal-foot a {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -224,7 +224,7 @@
             <div class="name-field">
               <label for="cert-name">Name on proof</label>
               <input class="name-input" id="cert-name" type="text" value="Salman Ali" autocomplete="name">
-              <p id="name-error" style="color:var(--accent);font-size:12px;margin-top:6px;display:none;">Please enter a name before continuing.</p>
+              <p id="name-error" style="color:var(--accent);font-size: var(--fs-meta);margin-top:6px;display:none;">Please enter a name before continuing.</p>
             </div>
             <p class="helper">Use your name exactly as it appears on official ID. Name changes apply only to future Course Completed proofs.</p>
 
@@ -238,10 +238,10 @@
 
             <div class="name-field">
               <label for="cert-otp">Verification code</label>
-              <input class="name-input" id="cert-otp" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" style="letter-spacing:0.22em;font-family:var(--font-label);font-size:22px">
-              <p id="otp-error" style="color:var(--accent);font-size:12px;margin-top:6px;display:none;">Please enter the 6-digit code.</p>
+              <input class="name-input" id="cert-otp" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" style="letter-spacing:0.22em;font-family:var(--font-label);font-size: var(--fs-h1)">
+              <p id="otp-error" style="color:var(--accent);font-size: var(--fs-meta);margin-top:6px;display:none;">Please enter the 6-digit code.</p>
             </div>
-            <p class="helper" id="otp-resend-hint">Didn't receive it? <button type="button" id="btn-resend" style="background:none;border:none;padding:0;font-size:12px;font-family:var(--font-label);color:var(--accent);cursor:pointer;text-decoration:underline">Resend code</button></p>
+            <p class="helper" id="otp-resend-hint">Didn't receive it? <button type="button" id="btn-resend" style="background:none;border:none;padding:0;font-size: var(--fs-meta);font-family:var(--font-label);color:var(--accent);cursor:pointer;text-decoration:underline">Resend code</button></p>
 
             <button type="button" class="btn btn-primary full" id="btn-confirm-otp">Confirm name change</button>
           </div>
@@ -255,7 +255,7 @@
     </div>
   </main>
 </div>
-<div class="imi-toast" id="imi-toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.03em;padding:10px 20px;border-radius:100px;box-shadow:0 24px 48px -16px rgba(42,17,8,0.10);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:200;"></div>
+<div class="imi-toast" id="imi-toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--paper);font-family:var(--font-label);font-size: var(--fs-body);font-weight:600;letter-spacing:0.03em;padding:10px 20px;border-radius:100px;box-shadow:0 24px 48px -16px rgba(42,17,8,0.10);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:200;"></div>
 <script src="../ui-enhance.js"></script>
 <script>
 var _toastTimer;

@@ -16,7 +16,7 @@
   .settings-card + .settings-card { margin-top: 18px; }
 
   .settings-card h4 {
-    font-size: 16px;
+    font-size: var(--fs-h3);
     font-weight: 700;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -41,7 +41,7 @@
   }
 
   .hint {
-    font-size: 12px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     line-height: 1.5;
     margin-top: 7px;
@@ -53,7 +53,7 @@
     display: flex;
     align-items: center;
     gap: 11px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     color: var(--ink);
     cursor: pointer;
   }
@@ -72,7 +72,7 @@
     gap: 16px;
     padding: 12px 0;
   }
-  .sec-row .sec-text { font-size: 14px; color: var(--ink); }
+  .sec-row .sec-text { font-size: var(--fs-body); color: var(--ink); }
   .sec-row .sec-text strong { font-weight: 700; }
   .sec-divider { height: 1px; background: var(--line); }
 
@@ -87,7 +87,7 @@
     justify-content: space-between;
     gap: 20px;
   }
-  .danger-row .danger-copy { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .danger-row .danger-copy { font-size: var(--fs-body); color: var(--ink-soft); line-height: 1.5; }
 
   /* Reviewer preferences card */
   .reviewer-pref-card { border: 1.5px solid var(--line-strong); }
@@ -108,7 +108,7 @@
     border: 1px solid var(--line);
     border-radius: var(--r-pill);
     font-family: var(--font-label);
-    font-size: 12px;
+    font-size: var(--fs-meta);
     font-weight: 500;
     color: var(--ink-soft);
     background: var(--paper);
@@ -120,7 +120,7 @@
     font-weight: 700;
     background: var(--paper-2);
   }
-  .domain-chip .check-mark { font-size: 11px; }
+  .domain-chip .check-mark { font-size: var(--fs-label); }
 
   /* Toggle switch */
   .toggle-wrap {
@@ -130,8 +130,8 @@
     gap: 20px;
   }
   .toggle-copy { flex: 1; }
-  .toggle-copy strong { font-size: 14px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 4px; }
-  .toggle-copy small { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+  .toggle-copy strong { font-size: var(--fs-body); font-weight: 600; color: var(--ink); display: block; margin-bottom: 4px; }
+  .toggle-copy small { font-size: var(--fs-meta); color: var(--ink-soft); line-height: 1.5; }
   .toggle-btn {
     flex-shrink: 0;
     width: 42px;
@@ -158,7 +158,7 @@
   .toggle-btn[aria-checked="false"]::after { right: auto; left: 3px; }
   .toggle-label {
     font-family: var(--font-label);
-    font-size: 10px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--ink-mute);
@@ -306,7 +306,7 @@
       <div class="card settings-card reviewer-pref-card">
         <h4>
           Reviewer preferences
-          <span class="chip t-sage" style="font-size:10px;font-weight:600">SME only</span>
+          <span class="chip t-sage" style="font-size: var(--fs-label);font-weight:600">SME only</span>
         </h4>
         <p class="hint" style="margin-bottom:18px">Controls how IMI Review routes and reminds you about assigned courses.</p>
 
@@ -372,7 +372,7 @@
   </main>
 </div>
 <style>
-  .imi-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size:13px;font-weight:600;letter-spacing:0.02em;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;white-space:nowrap}
+  .imi-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--hero-bg);font-family:var(--font-label);font-size: var(--fs-body);font-weight:600;letter-spacing:0.02em;padding:12px 22px;border-radius:var(--r-pill);box-shadow:0 4px 20px rgba(0,0,0,0.18);opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;white-space:nowrap}
   .imi-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .imi-toast.t-sage{background:var(--c-sage)}
 </style>
@@ -382,9 +382,9 @@
   .sme-modal-scrim.open{display:grid}
   .sme-modal-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-card);width:100%;max-width:420px;padding:28px 30px 24px}
   .sme-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
-  .sme-modal-title{font-size:17px;font-weight:700;letter-spacing:-0.01em;color:var(--c-danger)}
-  .sme-modal-body{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px}
-  .sme-modal-close{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--ink-mute);font-size:18px}
+  .sme-modal-title{font-size: var(--fs-h3);font-weight:700;letter-spacing:-0.01em;color:var(--c-danger)}
+  .sme-modal-body{font-size: var(--fs-body);color:var(--ink-soft);line-height:1.6;margin-bottom:20px}
+  .sme-modal-close{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--ink-mute);font-size: var(--fs-h2)}
   .sme-modal-close:hover{background:var(--paper-2);color:var(--ink)}
   .sme-modal-actions{display:flex;gap:8px;justify-content:flex-end}
 </style>

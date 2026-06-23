@@ -20,7 +20,7 @@
     color: var(--ink);
     font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 15px;
+    font-size: var(--fs-h3);
     letter-spacing: -0.01em;
   }
   .sa-brand img { height: 28px; width: auto; display: block; }
@@ -44,7 +44,7 @@
   .auth-logo img { height: 38px; width: auto; display: block; }
   .auth-logo .word {
     font-family: var(--font-label);
-    font-size: 10.5px;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -52,7 +52,7 @@
   }
   .auth-eyebrow {
     font-family: var(--font-label);
-    font-size: 11px;
+    font-size: var(--fs-label);
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -61,7 +61,7 @@
   }
   .auth-title {
     font-family: var(--font-sans);
-    font-size: 33px;
+    font-size: var(--fs-hero);
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.12;
@@ -75,22 +75,22 @@
     color: var(--accent);
   }
   .auth-sub {
-    font-size: 14.5px;
+    font-size: var(--fs-body);
     color: var(--ink-soft);
     line-height: 1.5;
     margin-bottom: 26px;
   }
-  .auth-card .input { height: 44px; font-size: 14px; }
+  .auth-card .input { height: 44px; font-size: var(--fs-body); }
   .auth-card .btn.full {
     display: flex;
     width: 100%;
     justify-content: center;
     height: 46px;
-    font-size: 14px;
+    font-size: var(--fs-body);
     margin-bottom: 16px;
   }
   .auth-note {
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-mute);
     text-align: center;
     line-height: 1.6;
@@ -102,7 +102,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 12.5px;
+    font-size: var(--fs-meta);
     color: var(--ink-soft);
     line-height: 1.5;
   }
@@ -127,7 +127,7 @@
   <div class="field">
     <label for="admin-password" style="display:flex;align-items:center;justify-content:space-between">
       <span>Password</span>
-      <a href="admin-password-reset.html" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:0.01em" tabindex="-1">Forgot password?</a>
+      <a href="admin-password-reset.html" style="font-size: var(--fs-meta);font-weight:600;color:var(--accent);text-decoration:none;letter-spacing:0.01em" tabindex="-1">Forgot password?</a>
     </label>
     <div style="position:relative">
       <input class="input" id="admin-password" type="password" placeholder="Your password" autocomplete="current-password" style="padding-right:44px">
