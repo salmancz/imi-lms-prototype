@@ -10,76 +10,6 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body {
-    background: var(--bg);
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* top navigation strip */
-  .sa-top {
-    padding: 18px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .sa-brand img { height: 28px; width: auto; display: block; }
-  .sa-brand-text {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h3);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .sa-brand-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    margin-left: 2px;
-  }
-
-  /* centered layout */
-  .sa-wrap {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 480px; }
-
-  /* auth card */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-card);
-    padding: 44px 40px 36px;
-    text-align: center;
-  }
-
-  /* logo lockup inside card */
-  .auth-lockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 28px;
-    text-decoration: none;
-  }
-  .auth-lockup img { height: 38px; width: auto; display: block; }
-
   /* suspended icon */
   .status-mark {
     width: 64px;
@@ -94,56 +24,7 @@
   }
   .status-mark svg { width: 30px; height: 30px; }
 
-  /* eyebrow + title */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    color: var(--ink);
-    margin-bottom: 12px;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--accent);
-  }
-
-  /* body copy */
-  .auth-lead {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin-bottom: 8px;
-  }
-  .auth-lead strong { color: var(--ink); font-weight: 700; }
-  .auth-reason {
-    font-size: var(--fs-body);
-    color: var(--ink-mute);
-    line-height: 1.55;
-    max-width: 360px;
-    margin: 0 auto 24px;
-  }
-
-  /* divider */
-  .auth-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 0 0 24px;
-  }
-
-  /* action buttons */
+  /* full-width button helper */
   .auth-card .btn.full {
     display: flex;
     width: 100%;
@@ -160,10 +41,11 @@
     color: var(--ink-mute);
     margin-top: 8px;
     line-height: 1.5;
+    text-align: center;
   }
 
   /* footnote */
-  .auth-note {
+  .sus-note {
     font-size: var(--fs-meta);
     color: var(--ink-mute);
     text-align: center;
@@ -181,66 +63,114 @@
     padding-top: 18px;
     border-top: 1px solid var(--line);
   }
+
+  /* corporate vs personal section split */
+  .sus-section {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .sus-section-label {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .sus-section-body {
+    font-size: var(--fs-body);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .sus-section-body a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<!-- top navigation strip -->
-<div class="sa-top">
-  <a class="sa-brand" href="login.html">
-    <img src="../img/imi-mark-ink.png" alt="IMI">
-    <span class="sa-brand-text">IMI</span>
-    <span class="sa-brand-sub">Learning</span>
+  <a class="auth-logo" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" alt="IMI">
   </a>
-</div>
 
-<!-- centered main -->
-<div class="sa-wrap">
-  <main class="sa-main">
+  <div class="auth-split">
 
-    <div class="auth-card">
+    <div class="auth-split-left">
+      <main class="auth-card" style="text-align:center;">
 
-      <!-- logo lockup -->
-      <a class="auth-lockup" href="login.html">
-        <img src="../img/imi-logo.png" alt="IMI">
-      </a>
+        <div class="status-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
 
-      <!-- suspended icon -->
-      <div class="status-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      </div>
+        <p class="auth-eyebrow">Account Suspended</p>
+        <h1 class="auth-card-title">Access <em>restricted</em></h1>
+        <p class="auth-card-sub">Your account has been suspended by an administrator.</p>
 
-      <!-- heading -->
-      <div class="auth-eyebrow">Account Suspended</div>
-      <h1 class="auth-title">Access <em>restricted</em></h1>
+        <div class="auth-divider"></div>
 
-      <!-- body copy -->
-      <p class="auth-lead">Your account has been <strong>suspended</strong> by an administrator.</p>
-      <p class="auth-reason">This may be due to a policy violation, incomplete verification, or a request from your organisation. Please contact your administrator or IMI support to resolve this.</p>
+        <div class="sus-section">
+          <div class="sus-section-label">Corporate / organisation account</div>
+          <div class="sus-section-body">Contact your company administrator to reactivate. This may be due to a policy change, licence update, or incomplete verification. You can notify them directly below.</div>
+        </div>
 
-      <div class="auth-divider"></div>
+        <div class="sus-section">
+          <div class="sus-section-label">Personal account</div>
+          <div class="sus-section-body">Contact <a href="../profile/help-center.html">IMI support</a> to resolve the suspension. This may be due to a policy violation or incomplete verification. Your progress is safe and will be restored on reactivation.</div>
+        </div>
 
-      <!-- primary action -->
-      <div class="remind-admin-wrap">
-        <button class="btn btn-primary full" type="button" onclick="notifyAdmin(this)">Notify my administrator</button>
-        <p class="remind-admin-note">Your administrator will receive a notification to review your account status.</p>
-      </div>
+        <div class="auth-divider"></div>
 
-      <!-- secondary action -->
-      <a class="btn btn-ghost full" href="../profile/help-center.html">Contact IMI support</a>
+        <div class="remind-admin-wrap">
+          <button class="btn btn-primary full" type="button" onclick="notifyAdmin(this)">Notify my administrator</button>
+          <p class="remind-admin-note">Your administrator will receive a notification to review your account status.</p>
+        </div>
 
-      <!-- footnote -->
-      <p class="auth-note">Suspension is reversible. Once your administrator or IMI support resolves the issue, your access will be restored.</p>
+        <a class="btn btn-ghost full" href="../profile/help-center.html">Contact IMI support</a>
 
-      <!-- status chip -->
-      <div class="auth-states">
-        <span class="chip t-clay dot">Suspended</span>
-      </div>
+        <p class="sus-note">Suspension is reversible. Once your administrator or IMI support resolves the issue, your access will be restored.</p>
 
+        <div class="auth-states">
+          <span class="chip t-clay dot">Suspended</span>
+        </div>
+
+      </main>
     </div>
 
-  </main>
-</div>
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-3.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">Our team's certification completion rate went from 40% to 91% in one quarter with IMI.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-2.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Marcus Webb</div>
+            <div class="auth-cite-role">Head of Compliance, Meridian Group</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
+
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 function notifyAdmin(btn) {

@@ -10,58 +10,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; }
-
-  /* top nav bar */
-  .sa-top { padding: 24px 40px; }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: var(--fs-h2);
-    font-weight: 600;
-  }
-  .sa-brand img { width: 30px; height: 30px; border-radius: 8px; }
-
-  /* centred content wrap */
-  .sa-wrap {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 32px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 480px; }
-
-  /* suspended-state card */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-card);
-    padding: 44px 40px 36px;
-    text-align: center;
-  }
-
-  /* inline logo inside card */
-  .auth-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    margin-bottom: 26px;
-  }
-  .auth-logo img { height: 30px; width: auto; display: block; }
-  .auth-logo .word {
-    font-size: var(--fs-h3);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-
-  /* status circle icon */
+  /* status icon */
   .status-mark {
     width: 64px;
     height: 64px;
@@ -75,59 +24,7 @@
   }
   .status-mark svg { width: 30px; height: 30px; }
 
-  /* eyebrow */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  /* title */
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-hero);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.12;
-    color: var(--ink);
-    margin-bottom: 12px;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--accent);
-  }
-
-  /* body copy */
-  .auth-lead {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin-bottom: 8px;
-  }
-  .auth-lead strong { color: var(--ink); font-weight: 700; }
-
-  .auth-reason {
-    font-size: var(--fs-body);
-    color: var(--ink-mute);
-    line-height: 1.55;
-    max-width: 360px;
-    margin: 0 auto 24px;
-  }
-
-  /* divider */
-  .auth-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 0 0 24px;
-  }
-
-  /* full-width button */
+  /* full-width button helper */
   .auth-card .btn.full {
     display: flex;
     width: 100%;
@@ -143,9 +40,10 @@
     color: var(--ink-mute);
     margin-top: 8px;
     line-height: 1.5;
+    text-align: center;
   }
 
-  /* secondary links row */
+  /* secondary links column */
   .auth-links {
     display: flex;
     flex-direction: column;
@@ -153,8 +51,8 @@
     margin-bottom: 0;
   }
 
-  /* footer note */
-  .auth-note {
+  /* footnote */
+  .sus-note {
     font-size: var(--fs-meta);
     color: var(--ink-mute);
     text-align: center;
@@ -162,11 +60,7 @@
     margin-top: 16px;
   }
 
-  /* ensure notify button is flat solid fill, no gradient */
-  #notifyAdminBtn { background: var(--hero-bg); background-image: none; }
-  #notifyAdminBtn:hover { background: var(--hero-bg-deep); background-image: none; }
-
-  /* status chips row */
+  /* status chip row */
   .auth-states {
     display: flex;
     justify-content: center;
@@ -176,73 +70,129 @@
     padding-top: 18px;
     border-top: 1px solid var(--line);
   }
+
+  /* corporate vs personal section split */
+  .sus-section {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+  .sus-section-label {
+    font-family: var(--font-label);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .sus-section-body {
+    font-size: var(--fs-body);
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .sus-section-body a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  #notifyAdminBtn { background: var(--hero-bg); background-image: none; }
+  #notifyAdminBtn:hover { background: var(--hero-bg-deep); background-image: none; }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<!-- top nav -->
-<div class="sa-top">
-  <a class="sa-brand" href="login.html">
-    <img src="../img/imi-mark-ink.png" alt="IMI">
-    <span>IMI</span>
+  <a class="auth-logo" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" alt="IMI">
   </a>
-</div>
 
-<!-- centred card -->
-<div class="sa-wrap">
-  <main class="sa-main">
-    <div class="auth-card" role="alertdialog" aria-labelledby="sus-title">
+  <div class="auth-split">
 
-      <!-- card logo -->
-      <div class="auth-logo">
-        <img src="../img/imi-logo.png" alt="IMI">
-        <span class="word">IMI</span>
-      </div>
+    <div class="auth-split-left">
+      <main class="auth-card" role="alertdialog" aria-labelledby="sus-title" style="text-align:center;">
 
-      <!-- status icon: ban/no-entry circle -->
-      <div class="status-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
-        </svg>
-      </div>
+        <div class="status-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+        </div>
 
-      <div class="auth-eyebrow">Account Suspended</div>
-      <h2 class="auth-title" id="sus-title">Account <em>suspended</em></h2>
+        <p class="auth-eyebrow">Account Suspended</p>
+        <h1 class="auth-card-title" id="sus-title">Account <em>suspended</em></h1>
 
-      <p class="auth-lead">This account has been <strong>suspended</strong> by an administrator.</p>
-      <p class="auth-reason">Contact your administrator or IMI support for help reactivating. Suspended accounts retain your progress but cannot sign in.</p>
+        <p class="auth-card-sub">This account has been suspended by an administrator.</p>
 
-      <div class="auth-divider"></div>
+        <div class="auth-divider"></div>
 
-      <!-- notify admin (preserves original onclick behaviour) -->
-      <div class="remind-admin-wrap">
-        <button
-          class="btn btn-primary full"
-          type="button"
-          id="notifyAdminBtn"
-          onclick="this.disabled=true;this.textContent='Reminder sent';document.querySelector('#notifyNote').textContent='Your administrator has been notified. You can send another reminder after the cooldown period.';if(window.imiToast)window.imiToast('Administrator notified. They will review your account status.');"
-        >Notify my administrator</button>
-        <p class="remind-admin-note">Your administrator will receive a notification to review your account status.</p>
-      </div>
+        <div class="sus-section">
+          <div class="sus-section-label">Corporate / organisation account</div>
+          <div class="sus-section-body">Contact your company administrator to reactivate. You can notify them directly below.</div>
+        </div>
 
-      <!-- secondary actions -->
-      <div class="auth-links">
-        <a class="btn btn-ghost full" href="../profile/help-center.html">Contact support</a>
-        <a class="btn btn-ghost full" href="login.html">Back to home</a>
-      </div>
+        <div class="sus-section">
+          <div class="sus-section-label">Personal account</div>
+          <div class="sus-section-body">Contact <a href="../profile/help-center.html">IMI support</a> to resolve the suspension. Your progress is safe and will be restored on reactivation.</div>
+        </div>
 
-      <!-- cooldown note (updated by onclick) -->
-      <p class="auth-note" id="notifyNote">Suspended accounts retain progress but cannot sign in. You may send a reminder to your administrator once per cooldown period.</p>
+        <div class="auth-divider"></div>
 
-      <!-- status chip -->
-      <div class="auth-states">
-        <span class="chip t-clay dot">Suspended</span>
-      </div>
+        <div class="remind-admin-wrap">
+          <button
+            class="btn btn-primary full"
+            type="button"
+            id="notifyAdminBtn"
+            onclick="this.disabled=true;this.textContent='Reminder sent';document.querySelector('#notifyNote').textContent='Your administrator has been notified. You can send another reminder after the cooldown period.';if(window.imiToast)window.imiToast('Administrator notified. They will review your account status.');"
+          >Notify my administrator</button>
+          <p class="remind-admin-note">Your administrator will receive a notification to review your account status.</p>
+        </div>
 
+        <div class="auth-links">
+          <a class="btn btn-ghost full" href="../profile/help-center.html">Contact support</a>
+          <a class="btn btn-ghost full" href="login.html">Back to home</a>
+        </div>
+
+        <p class="sus-note" id="notifyNote">You may send a reminder to your administrator once per cooldown period.</p>
+
+        <div class="auth-states">
+          <span class="chip t-clay dot">Suspended</span>
+        </div>
+
+      </main>
     </div>
-  </main>
-</div>
+
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-3.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">Our team's certification completion rate went from 40% to 91% in one quarter with IMI.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-2.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Marcus Webb</div>
+            <div class="auth-cite-role">Head of Compliance, Meridian Group</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
+
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script src="../ui-enhance.js"></script>
 </body>

@@ -10,59 +10,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* ── centered auth top bar ── */
-  .auth-top {
-    padding: 20px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .auth-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-  }
-  .auth-logo img.lockup { height: 32px; width: auto; display: block; }
-
-  /* ── centering wrapper ── */
-  .auth-wrap {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .auth-main { width: 100%; max-width: 480px; }
-
-  /* ── card ── */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-card);
-    padding: 40px 38px 34px;
-    text-align: center;
-  }
-
-  /* ── eyebrow ── */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 22px;
-  }
-
-  /* ── error icon ── */
+  /* error icon */
   .auth-icon {
     width: 58px;
     height: 58px;
@@ -76,65 +24,7 @@
   }
   .auth-icon svg { width: 26px; height: 26px; }
 
-  /* ── heading ── */
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-
-  /* ── body copy ── */
-  .auth-body {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    max-width: 360px;
-    margin: 0 auto 24px;
-  }
-
-  /* ── field ── */
-  .auth-field {
-    text-align: left;
-    margin-bottom: 22px;
-  }
-  .auth-field label {
-    display: block;
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    letter-spacing: 0.14em;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 7px;
-  }
-  .auth-input {
-    width: 100%;
-    height: 44px;
-    padding: 0 14px;
-    border: 1.5px solid var(--c-danger);
-    background: var(--paper);
-    border-radius: var(--r-sm);
-    font-size: var(--fs-body);
-    color: var(--ink);
-    box-shadow: 0 0 0 3px var(--c-danger-wash);
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .auth-input:focus {
-    outline: none;
-    border-color: var(--c-danger-deep);
-    box-shadow: 0 0 0 4px var(--c-danger-wash);
-  }
-
-  /* ── inline error message ── */
+  /* inline error message */
   .auth-error {
     display: flex;
     align-items: center;
@@ -145,115 +35,97 @@
   }
   .auth-error svg { width: 13px; height: 13px; flex-shrink: 0; }
 
-  /* ── primary button ── */
-  .auth-card .btn.full {
-    width: 100%;
-    justify-content: center;
-    height: 46px;
-    font-size: var(--fs-body);
+  /* error-state input */
+  .input-error {
+    border-color: var(--c-danger);
+    box-shadow: 0 0 0 3px var(--c-danger-wash);
   }
-
-  /* ── footnote ── */
-  .auth-note {
-    font-size: var(--fs-meta);
-    color: var(--ink-mute);
-    line-height: 1.5;
-    margin-top: 16px;
+  .input-error:focus {
+    border-color: var(--c-danger-deep);
+    box-shadow: 0 0 0 4px var(--c-danger-wash);
   }
-
-  /* ── divider ── */
-  .auth-divider {
-    width: 40px;
-    height: 1px;
-    background: var(--line);
-    margin: 28px auto 0;
-  }
-
-  /* ── back link ── */
-  .auth-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-label);
-    font-size: var(--fs-meta);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: var(--ink-mute);
-    text-decoration: none;
-    margin-top: 20px;
-    transition: color 0.15s;
-  }
-  .auth-back:hover { color: var(--ink); }
-  .auth-back svg { width: 14px; height: 14px; }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<div class="auth-top">
   <a class="auth-logo" href="../learning/dashboard.html">
-    <img src="../img/imi-logo.png" class="lockup" alt="IMI">
+    <img src="../img/imi-logo.png" alt="IMI">
   </a>
-</div>
 
-<div class="auth-wrap">
-  <main class="auth-main">
+  <div class="auth-split">
 
-    <div class="auth-card">
+    <div class="auth-split-left">
+      <main class="auth-card" style="text-align:center;">
 
-      <div class="auth-eyebrow">Create your account</div>
-
-      <div class="auth-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      </div>
-
-      <h1 class="auth-title">Check the <em>email</em> format</h1>
-
-      <p class="auth-body">That doesn't look like a valid email address. Make sure you've included an @ and a domain (e.g. you@example.com).</p>
-
-      <form id="email-form" action="signup.html" method="get" onsubmit="return validateEmail(event)" novalidate>
-        <div class="auth-field">
-          <label for="email">Email address</label>
-          <input
-            class="auth-input"
-            id="email"
-            type="email"
-            value="salman.imi"
-            aria-invalid="true"
-            aria-describedby="email-err"
-            oninput="clearError()"
-          >
-          <div class="auth-error" id="email-err" role="alert">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span id="email-err-text">Enter a complete email address with an @ and domain.</span>
-          </div>
+        <div class="auth-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
         </div>
 
-        <button class="btn btn-primary full" type="submit">Edit email</button>
-      </form>
+        <p class="auth-eyebrow">Invalid format</p>
+        <h1 class="auth-card-title">Check the <em>email</em> format</h1>
+        <p class="auth-card-sub" style="text-align:left;">That doesn't look like a valid email address. Make sure you've included an @ and a domain (e.g. you@example.com).</p>
 
-      <p class="auth-note">We validate format before sending an OTP, to avoid wasted codes.</p>
+        <form id="email-form" action="signup.html" method="get" onsubmit="return validateEmail(event)" novalidate style="text-align:left;">
+          <div class="field">
+            <input
+              class="input input-error"
+              id="email"
+              type="email"
+              value="salman.imi"
+              aria-invalid="true"
+              aria-describedby="email-err"
+              oninput="clearError()"
+            >
+            <div class="auth-error" id="email-err" role="alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="email-err-text">Enter a complete email address with an @ and domain.</span>
+            </div>
+          </div>
 
-      <div class="auth-divider"></div>
+          <button class="btn btn-primary auth-submit" type="submit">Fix email &rarr;</button>
+        </form>
 
-      <a class="auth-back" href="login.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-        Back to login
-      </a>
+        <div class="auth-divider"></div>
+        <p class="auth-alt"><a href="login.html">Back to sign in</a></p>
 
+      </main>
     </div>
 
-  </main>
-</div>
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-1.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">IMI turned our compliance training from a chore into something the team actually finishes.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-2.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Priya Nair</div>
+            <div class="auth-cite-role">L&amp;D Lead, Acme Corp</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
+
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 function validateEmail(e) {
@@ -265,7 +137,7 @@ function validateEmail(e) {
   if (!valid) {
     e.preventDefault();
     input.setAttribute('aria-invalid', 'true');
-    input.style.borderColor = 'var(--c-danger)';
+    input.classList.add('input-error');
     errBox.style.display = 'flex';
     errText.textContent = 'Enter a complete email address with an @ and domain.';
     input.focus();
@@ -282,7 +154,7 @@ function clearError() {
   var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
   if (valid) {
     input.removeAttribute('aria-invalid');
-    input.style.borderColor = '';
+    input.classList.remove('input-error');
     errBox.style.display = 'none';
   }
 }

@@ -10,37 +10,6 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* top bar */
-  .sa-top {
-    padding: 20px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .sa-brand img { height: 28px; width: auto; display: block; }
-  .sa-brand-text { font-family: var(--font-sans); font-weight: 700; font-size: var(--fs-body); letter-spacing: -0.01em; color: var(--ink); }
-  .sa-brand-sub { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: var(--fs-body); color: var(--ink-soft); margin-left: 2px; }
-
-  /* centered layout */
-  .sa-wrap {
-    flex: 1;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 540px; }
-
   /* alert icon */
   .dl-icon-wrap {
     width: 60px;
@@ -55,42 +24,6 @@
   }
   .dl-icon-wrap svg { width: 26px; height: 26px; }
 
-  /* heading */
-  .dl-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  .dl-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    text-align: center;
-    margin-bottom: 10px;
-    line-height: 1.2;
-  }
-  .dl-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--accent);
-  }
-  .dl-sub {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.6;
-    text-align: center;
-    max-width: 380px;
-    margin: 0 auto 28px;
-  }
-
   /* device list */
   .dl-devices {
     display: flex;
@@ -103,17 +36,18 @@
     align-items: center;
     gap: 14px;
     padding: 16px 18px;
-    background: var(--paper);
+    background: var(--paper-2);
     border: 1px solid var(--line);
     border-radius: var(--r-md);
     transition: border-color 0.18s, box-shadow 0.2s;
+    text-align: left;
   }
   .dl-device:hover { border-color: var(--line-strong); box-shadow: var(--shadow-xs); }
   .dl-device-icon {
     width: 40px;
     height: 40px;
     border-radius: var(--r-sm);
-    background: var(--paper-2);
+    background: var(--paper);
     border: 1px solid var(--line);
     display: grid;
     place-items: center;
@@ -141,7 +75,6 @@
     text-overflow: ellipsis;
   }
 
-  /* foot note */
   .dl-foot {
     font-size: var(--fs-meta);
     color: var(--ink-mute);
@@ -155,58 +88,84 @@
   .btn.btn-block { width: 100%; justify-content: center; }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<div class="sa-top">
-  <a class="sa-brand" href="../learning/dashboard.html">
+  <a class="auth-logo" href="../learning/dashboard.html">
     <img src="../img/imi-logo.png" alt="IMI">
-    <span class="sa-brand-text">IMI</span>
-    <span class="sa-brand-sub">Learning</span>
   </a>
-</div>
 
-<div class="sa-wrap">
-  <main class="sa-main">
+  <div class="auth-split">
 
-    <div class="dl-icon-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+    <div class="auth-split-left">
+      <main class="auth-card" style="text-align:center;">
+
+        <div class="dl-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+
+        <p class="auth-eyebrow">Device limit reached</p>
+        <h1 class="auth-card-title">Too many <em>active</em> sessions</h1>
+        <p class="auth-card-sub">You are signed in on 2 devices already, which is the maximum allowed. Sign out one to continue.</p>
+
+        <div class="dl-devices">
+
+          <div class="dl-device">
+            <div class="dl-device-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="dl-device-body">
+              <div class="dl-device-name">Chrome 124 &middot; macOS</div>
+              <div class="dl-device-meta">Muscat, Oman &middot; Active 4 hr ago &middot; Current</div>
+            </div>
+            <span class="chip">This device</span>
+          </div>
+
+          <div class="dl-device">
+            <div class="dl-device-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div class="dl-device-body">
+              <div class="dl-device-name">Safari 17 &middot; iOS 17</div>
+              <div class="dl-device-meta">Muscat, Oman &middot; Active 2 days ago</div>
+            </div>
+            <button class="btn btn-danger-ghost btn-sm" id="sign-out-other-btn" onclick="signOutDevice(this)">Sign out</button>
+          </div>
+
+        </div>
+
+        <a class="btn btn-ghost btn-block" href="login.html">Cancel and sign out here instead</a>
+        <p class="dl-foot">Up to 2 devices per account, with one active session at a time.</p>
+
+      </main>
     </div>
 
-    <div class="dl-eyebrow">Device limit reached</div>
-    <h1 class="dl-title">Too many <em>active</em> sessions</h1>
-    <p class="dl-sub">You are signed in on 2 devices already, which is the maximum allowed. Sign out one to continue.</p>
-
-    <div class="dl-devices">
-
-      <div class="dl-device">
-        <div class="dl-device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-1.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">IMI turned our compliance training from a chore into something the team actually finishes.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-2.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Priya Nair</div>
+            <div class="auth-cite-role">L&amp;D Lead, Acme Corp</div>
+          </div>
         </div>
-        <div class="dl-device-body">
-          <div class="dl-device-name">Chrome 124 · macOS</div>
-          <div class="dl-device-meta">Muscat, Oman · Active 4 hr ago · Current</div>
-        </div>
-        <span class="chip">This device</span>
       </div>
+    </aside>
 
-      <div class="dl-device">
-        <div class="dl-device-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-        </div>
-        <div class="dl-device-body">
-          <div class="dl-device-name">Safari 17 · iOS 17</div>
-          <div class="dl-device-meta">Muscat, Oman · Active 2 days ago</div>
-        </div>
-        <button class="btn btn-danger-ghost btn-sm" id="sign-out-other-btn" onclick="signOutDevice(this)">Sign out</button>
-      </div>
+  </div>
 
-    </div>
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
 
-    <a class="btn btn-ghost btn-block" href="login.html">Cancel and sign out here instead</a>
-    <p class="dl-foot">Up to 2 devices per account, with one active session at a time.</p>
-
-  </main>
-</div>
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 function signOutDevice(btn) {

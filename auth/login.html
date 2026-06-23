@@ -9,257 +9,95 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
-<style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* ── top strip ── */
-  .sa-top {
-    padding: 18px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .sa-brand img { height: 28px; width: auto; display: block; }
-  .sa-brand-text {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h3);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .sa-brand-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    margin-left: 2px;
-  }
-
-  /* ── centered layout ── */
-  .sa-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 460px; }
-
-  /* ── auth card ── */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 44px 40px 36px;
-    box-shadow: var(--shadow-card);
-  }
-
-  /* centered logo lockup at card top */
-  .auth-lockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .auth-lockup img { height: 38px; width: auto; display: block; }
-
-  /* eyebrow + heading */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    color: var(--ink);
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-  .auth-sub {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin-bottom: 28px;
-    text-align: center;
-  }
-
-  /* form field sizing */
-  .auth-card .input { height: 46px; font-size: var(--fs-body); }
-  .auth-card .field { margin-bottom: 20px; }
-
-  /* primary CTA */
-  .auth-card .btn-full {
-    width: 100%;
-    justify-content: center;
-    height: 48px;
-    font-size: var(--fs-body);
-    border-radius: var(--r-md);
-  }
-
-  /* divider */
-  .auth-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0 20px;
-  }
-
-  /* footer links */
-  .auth-foot {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    text-align: center;
-    line-height: 1.6;
-  }
-  .auth-foot a {
-    color: var(--ink);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .auth-foot + .auth-foot { margin-top: 8px; }
-  .auth-foot.help a { font-weight: 500; color: var(--ink-soft); }
-  .auth-foot.help a:hover { color: var(--ink); }
-
-  /* legal strip */
-  .auth-legal {
-    margin-top: 28px;
-    text-align: center;
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    letter-spacing: 0.04em;
-    color: var(--ink-mute);
-    line-height: 1.7;
-  }
-  .auth-legal a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
-  .auth-legal a:hover { color: var(--ink); }
-  .auth-legal .sep { color: var(--ink-faint); margin: 0 7px; }
-  .auth-legal .copy { display: block; margin-top: 8px; color: var(--ink-faint); font-size: var(--fs-label); }
-
-  /* ── inline alert banners ── */
-  .alert-inline {
-    display: none;
-    border-radius: var(--r-sm);
-    padding: 12px 14px;
-    font-size: var(--fs-body);
-    line-height: 1.5;
-    font-weight: 500;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-  }
-  .alert-inline.alert-warn {
-    background: var(--c-clay-wash);
-    border-color: var(--c-clay-soft);
-    color: var(--accent-deep);
-  }
-  .alert-inline.alert-locked {
-    background: #fef3f2;
-    border-color: #fca5a5;
-    color: var(--c-danger-deep, #9e2014);
-  }
-  .alert-inline.alert-device {
-    background: var(--c-honey-wash);
-    border-color: var(--c-honey-soft);
-    color: var(--c-honey-text);
-  }
-  .alert-inline strong { display: block; margin-bottom: 2px; font-weight: 700; }
-  .alert-inline a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
-  .alert-inline.visible { display: block; }
-</style>
 </head>
-<body>
+<body class="auth-page">
 
-<!-- top navigation strip -->
-<div class="sa-top">
-  <a class="sa-brand" href="../learning/dashboard.html">
-    <img src="../img/imi-mark-ink.png" alt="IMI">
-    <span class="sa-brand-text">IMI</span>
-    <span class="sa-brand-sub">Learning</span>
+  <!-- LOGO: top-left of page, NOT in card -->
+  <a class="auth-logo" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" alt="IMI">
+    <span class="auth-logo-text">IMI</span>
+    <span class="auth-logo-sub">Learning</span>
   </a>
-</div>
 
-<!-- centered auth card -->
-<div class="sa-wrap">
-  <main class="sa-main">
+  <div class="auth-split">
 
-    <div class="auth-card">
+    <!-- LEFT: card + form -->
+    <div class="auth-split-left">
+      <main class="auth-card">
 
-      <!-- logo lockup -->
-      <a class="auth-lockup" href="../learning/dashboard.html">
-        <img src="../img/imi-logo.png" alt="IMI">
-      </a>
+        <p class="auth-eyebrow">welcome back</p>
+        <h1 class="auth-card-title">Sign in to <em>continue</em></h1>
 
-      <!-- heading -->
-      <p class="auth-eyebrow">Welcome back</p>
-      <h1 class="auth-title">Sign in to <em>continue</em></h1>
-      <p class="auth-sub">We'll send you a one-time code by email.</p>
+        <!-- error banner: wrong credentials / unrecognised email -->
+        <div class="auth-alert alert-warn" id="alert-wrong-creds" role="alert">
+          <strong>Email not recognised</strong>
+          No account found for this address. Check for a typo or <a href="signup.html">create a free account</a>.
+        </div>
 
-      <!-- inline error: wrong credentials / unrecognised email -->
-      <div class="alert-inline alert-warn" id="alert-wrong-creds" role="alert">
-        <strong>Email not recognised</strong>
-        No account found for this address. Check for a typo or <a href="signup.html">create a free account</a>.
+        <!-- error banner: account locked -->
+        <div class="auth-alert alert-locked" id="alert-locked" role="alert">
+          <strong>Account temporarily locked</strong>
+          Too many failed attempts. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
+        </div>
+
+        <!-- error banner: device limit reached -->
+        <div class="auth-alert alert-device" id="alert-device" role="alert">
+          <strong>Device limit reached</strong>
+          You have reached the maximum number of active devices. <a href="device-limit.html">Manage your devices</a> to sign in on this one.
+        </div>
+
+        <div class="field" id="email-field">
+          <label for="login-email">Email</label>
+          <input class="input" id="login-email" type="email" placeholder="you@example.com" autocomplete="email">
+          <div id="email-error" style="display:none;margin-top:6px;font-size:var(--fs-meta);color:var(--c-warn-text,#b85200);font-weight:500;"></div>
+        </div>
+
+        <button class="btn btn-primary auth-submit" id="btn-send-otp" type="button">Continue &rarr;</button>
+
+        <p style="font-size:var(--fs-meta);color:var(--ink-mute);text-align:center;margin-top:14px;line-height:1.55;">
+          By clicking Continue, you agree to our
+          <a href="../profile/help-center.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;">Privacy</a>,
+          <a href="../profile/help-center.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;">Terms of Use</a>,
+          and <a href="../profile/help-center.html" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px;">Cookie Policy</a>.
+        </p>
+
+        <div class="auth-divider"></div>
+
+        <p class="auth-alt">Are you new? <a href="signup.html">Join Now</a></p>
+        <p class="auth-alt"><a href="../profile/help-center.html">Need help?</a></p>
+
+      </main>
+    </div>
+
+    <!-- RIGHT: warm photo + testimonial -->
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-1.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">IMI turned our compliance training from a chore into something the team actually finishes.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-2.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Priya Nair</div>
+            <div class="auth-cite-role">L&amp;D Lead, Acme Corp</div>
+          </div>
+        </div>
       </div>
+    </aside>
 
-      <!-- inline error: account locked -->
-      <div class="alert-inline alert-locked" id="alert-locked" role="alert">
-        <strong>Account temporarily locked</strong>
-        Too many failed attempts. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
-      </div>
+  </div>
 
-      <!-- inline error: device limit reached -->
-      <div class="alert-inline alert-device" id="alert-device" role="alert">
-        <strong>Device limit reached</strong>
-        You have reached the maximum number of active devices. <a href="device-limit.html">Manage your devices</a> to sign in on this one.
-      </div>
+  <!-- FOOTER: policy links, page bottom -->
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+  </footer>
 
-      <!-- email field -->
-      <div class="field" id="email-field">
-        <label for="login-email">Email address</label>
-        <input class="input" id="login-email" type="email" placeholder="you@example.com" autocomplete="email">
-        <div id="email-error" style="display:none;margin-top:6px;font-size: var(--fs-meta);color:var(--c-warn-text,#b85200);font-weight:500;"></div>
-      </div>
-
-      <!-- primary CTA -->
-      <button class="btn btn-primary btn-full" id="btn-send-otp" type="button">Send OTP &rarr;</button>
-
-      <div class="auth-divider"></div>
-
-      <!-- footer links -->
-      <p class="auth-foot">New to IMI? <a href="signup.html">Create account</a></p>
-      <p class="auth-foot help"><a href="../profile/help-center.html">Need help?</a></p>
-
-      <!-- legal -->
-      <div class="auth-legal">
-        <a href="../profile/help-center.html">Privacy Policy</a><span class="sep">&middot;</span><a href="../profile/help-center.html">Terms of Service</a><span class="sep">&middot;</span><a href="../profile/help-center.html">Terms &amp; Conditions</a>
-        <span class="copy">IMI 2025</span>
-      </div>
-
-    </div><!-- /auth-card -->
-  </main>
-</div>
+  <!-- AI SUPPORT PILL: bottom-right -->
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 (function () {
@@ -272,9 +110,9 @@
   var alertDevice = document.getElementById('alert-device');
 
   function hideAlerts() {
-    alertWrong.classList.remove('visible');
-    alertLocked.classList.remove('visible');
-    alertDevice.classList.remove('visible');
+    alertWrong.classList.remove('is-visible');
+    alertLocked.classList.remove('is-visible');
+    alertDevice.classList.remove('is-visible');
   }
 
   function showFieldError(msg) {
@@ -295,9 +133,9 @@
   /* Prototype: read ?error= param to show inline states on load */
   var params = new URLSearchParams(window.location.search);
   var errParam = params.get('error');
-  if (errParam === 'wrong') alertWrong.classList.add('visible');
-  else if (errParam === 'locked') alertLocked.classList.add('visible');
-  else if (errParam === 'device') alertDevice.classList.add('visible');
+  if (errParam === 'wrong') alertWrong.classList.add('is-visible');
+  else if (errParam === 'locked') alertLocked.classList.add('is-visible');
+  else if (errParam === 'device') alertDevice.classList.add('is-visible');
 
   btn.addEventListener('click', function () {
     hideAlerts();

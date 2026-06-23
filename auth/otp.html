@@ -10,117 +10,16 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* top strip */
-  .sa-top {
-    padding: 18px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .sa-brand img { height: 28px; width: auto; display: block; }
-  .sa-brand-text {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h3);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .sa-brand-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    margin-left: 2px;
-  }
-
-  /* centered layout */
-  .sa-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 460px; }
-
-  /* auth card */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 44px 40px 36px;
-    box-shadow: var(--shadow-card);
-    text-align: center;
-  }
-
-  /* centered logo lockup */
-  .auth-lockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .auth-lockup img { height: 38px; width: auto; display: block; }
-
-  /* eyebrow + heading */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 8px;
-  }
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-  .auth-sub {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin-bottom: 6px;
-  }
-  .auth-email {
-    font-size: var(--fs-body);
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 28px;
-  }
-
   /* OTP digit row */
   .otp-row {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .otp-box {
-    width: 54px;
-    height: 64px;
+    width: 52px;
+    height: 60px;
     border: 1.5px solid var(--line-strong);
     border-radius: var(--r-md);
     background: var(--paper-2);
@@ -146,11 +45,12 @@
 
   /* expiry */
   .otp-expiry {
+    font-family: var(--font-label);
     font-size: var(--fs-body);
     color: var(--ink-mute);
-    margin-bottom: 24px;
-    font-family: var(--font-label);
+    margin-bottom: 22px;
     letter-spacing: 0.02em;
+    text-align: center;
   }
   .otp-expiry strong {
     color: var(--ink);
@@ -158,139 +58,143 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* primary CTA */
-  .btn-full {
-    width: 100%;
-    justify-content: center;
-    height: 48px;
-    font-size: var(--fs-body);
-    border-radius: var(--r-md);
-    display: flex;
-    align-items: center;
-  }
-
-  /* divider */
-  .auth-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0 20px;
-  }
-
-  /* footer links */
-  .auth-foot {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
+  /* inline error line */
+  .otp-err {
+    display: none;
     text-align: center;
-    line-height: 1.6;
+    font-size: var(--fs-meta);
+    color: var(--c-warn-text, #b85200);
+    font-weight: 500;
+    margin-bottom: 10px;
   }
-  .auth-foot a {
-    color: var(--ink);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .auth-foot + .auth-foot { margin-top: 8px; }
-  .auth-foot.help a { font-weight: 500; color: var(--ink-soft); }
-  .auth-foot.help a:hover { color: var(--ink); }
 
-  /* legal strip */
-  .auth-legal {
-    margin-top: 28px;
+  /* email display */
+  .auth-dest-email {
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 26px;
+  }
+
+  /* Back link */
+  .auth-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-family: var(--font-label);
     font-size: var(--fs-label);
-    letter-spacing: 0.04em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--ink-mute);
-    display: flex;
-    justify-content: center;
-    gap: 18px;
+    text-decoration: none;
+    margin-bottom: 28px;
+    transition: color 0.15s;
   }
-  .auth-legal a {
-    color: var(--ink-mute);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .auth-legal a:hover { color: var(--ink); }
+  .auth-back:hover { color: var(--ink); }
+  .auth-back svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-  /* inline alert banners */
-  .alert-inline {
-    display: none;
-    border-radius: var(--r-sm);
-    padding: 12px 14px;
+  /* resend line */
+  .otp-resend-line {
+    text-align: center;
     font-size: var(--fs-body);
-    line-height: 1.5;
-    font-weight: 500;
-    margin-bottom: 16px;
-    border: 1px solid transparent;
-    text-align: left;
+    color: var(--ink);
   }
-  .alert-inline.alert-locked {
-    background: #fef3f2;
-    border-color: #fca5a5;
-    color: var(--c-danger-deep, #9e2014);
-  }
-  .alert-inline strong { display: block; margin-bottom: 2px; font-weight: 700; }
-  .alert-inline a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
-  .alert-inline.visible { display: block; }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<div class="sa-top">
-  <a class="sa-brand" href="../learning/dashboard.html">
-    <img src="../img/imi-mark-ink.png" alt="IMI">
-    <span class="sa-brand-text">IMI</span>
-    <span class="sa-brand-sub">Learning</span>
+  <!-- LOGO: top-left of page, NOT in card -->
+  <a class="auth-logo" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" alt="IMI">
+    <span class="auth-logo-text">IMI</span>
+    <span class="auth-logo-sub">Learning</span>
   </a>
-</div>
 
-<div class="sa-wrap">
-  <main class="sa-main">
-    <div class="auth-card">
+  <div class="auth-split">
 
-      <a class="auth-lockup" href="../learning/dashboard.html">
-        <img src="../img/imi-logo.png" alt="IMI">
-      </a>
+    <!-- LEFT: card + form -->
+    <div class="auth-split-left">
+      <main class="auth-card">
 
-      <p class="auth-eyebrow">Verify your email</p>
-      <h1 class="auth-title">Check your <em>inbox</em></h1>
-      <p class="auth-sub">We sent a 6-digit code to</p>
-      <p class="auth-email" id="otp-dest">salman@webinnoventix.com</p>
+        <!-- Back to sign-in -->
+        <a class="auth-back" href="login.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to sign in
+        </a>
 
-      <div class="otp-row" id="otp-row">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5">
-        <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
-      </div>
+        <p class="auth-eyebrow">Verify your email</p>
+        <h1 class="auth-card-title">Check your <em>inbox</em></h1>
+        <p class="auth-card-sub">We sent a 6-digit code to</p>
+        <p class="auth-dest-email" id="otp-dest">your email</p>
 
-      <!-- inline: wrong OTP / general error -->
-      <div id="otp-error" style="display:none;margin-bottom:12px;font-size: var(--fs-meta);color:var(--c-warn-text,#b85200);font-weight:500;text-align:center;" role="alert"></div>
+        <!-- error banner: wrong OTP -->
+        <div class="auth-alert alert-warn" id="alert-wrong" role="alert">
+          <strong>Incorrect code</strong>
+          That code doesn't match. <span id="attempts-left"></span>
+        </div>
 
-      <!-- inline: account locked after repeated wrong OTP -->
-      <div class="alert-inline alert-locked" id="alert-otp-locked" role="alert">
-        <strong>Account temporarily locked</strong>
-        Too many incorrect codes. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
-      </div>
+        <!-- error banner: account locked -->
+        <div class="auth-alert alert-locked" id="alert-locked" role="alert">
+          <strong>Account temporarily locked</strong>
+          Too many incorrect codes. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
+        </div>
 
-      <p class="otp-expiry">Code expires in <strong id="otp-timer">10:00</strong></p>
+        <!-- OTP digit inputs -->
+        <div class="otp-row" id="otp-row">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 2">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 3">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 4">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 5">
+          <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
 
-      <button class="btn btn-primary btn-full" id="btn-verify" type="button">Verify &rarr;</button>
+        <!-- inline short error (incomplete input) -->
+        <div class="otp-err" id="otp-err" role="alert"></div>
 
-      <div class="auth-divider"></div>
+        <p class="otp-expiry">Code expires in <strong id="otp-timer">10:00</strong></p>
 
-      <p class="auth-foot">Didn't get it? <button id="btn-resend" class="btn btn-ghost btn-sm" type="button" disabled style="font-size: var(--fs-body);">Resend code</button></p>
-      <p class="auth-foot help"><a href="../profile/help-center.html">Need help?</a></p>
+        <button class="btn btn-primary auth-submit" id="btn-verify" type="button">Verify &rarr;</button>
 
-      <div class="auth-legal">
-        <a href="../profile/help-center.html" rel="privacy">Privacy Policy</a>
-        <a href="../profile/help-center.html" rel="terms">Terms of Service</a>
-      </div>
+        <div class="auth-divider"></div>
 
+        <p class="otp-resend-line auth-alt">Didn't get it? <button id="btn-resend" class="btn btn-ghost btn-sm" type="button" disabled style="font-size:var(--fs-body)">Resend code</button></p>
+        <p class="auth-alt" style="margin-top:8px"><a href="../profile/help-center.html">Need help?</a></p>
+
+      </main>
     </div>
-  </main>
-</div>
+
+    <!-- RIGHT: warm photo (cover-2 = different from login which uses cover-1) + testimonial -->
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-2.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">One-click access and a verification flow that actually makes sense. Our team logs in without friction every day.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-3.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Ananya Krishnan</div>
+            <div class="auth-cite-role">Head of Talent, NovaBridge</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- FOOTER: policy links, page bottom -->
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
+
+  <!-- AI SUPPORT PILL: bottom-right -->
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 (function () {
@@ -300,8 +204,10 @@
 
   var boxes = Array.from(document.querySelectorAll('.otp-box'));
   var timerEl = document.getElementById('otp-timer');
-  var errEl = document.getElementById('otp-error');
-  var alertOtpLocked = document.getElementById('alert-otp-locked');
+  var errEl = document.getElementById('otp-err');
+  var alertWrong = document.getElementById('alert-wrong');
+  var attemptsLeft = document.getElementById('attempts-left');
+  var alertLocked = document.getElementById('alert-locked');
   var btnVerify = document.getElementById('btn-verify');
   var btnResend = document.getElementById('btn-resend');
   var wrongAttempts = 0;
@@ -341,16 +247,25 @@
 
   function updateFilled() {
     boxes.forEach(function (b) { b.classList.toggle('filled', b.value !== ''); });
-    clearError();
+    clearErr();
   }
 
   function getCode() { return boxes.map(function (b) { return b.value; }).join(''); }
 
-  function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
-  function clearError() { errEl.style.display = 'none'; }
+  function showErr(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
+  function clearErr() { errEl.style.display = 'none'; alertWrong.classList.remove('is-visible'); }
+
+  function showWrong(remaining) {
+    alertWrong.classList.add('is-visible');
+    alertLocked.classList.remove('is-visible');
+    attemptsLeft.textContent = remaining + ' attempt' + (remaining === 1 ? '' : 's') + ' remaining.';
+    btnVerify.disabled = false;
+    btnVerify.textContent = 'Verify →';
+  }
+
   function showLocked() {
-    errEl.style.display = 'none';
-    alertOtpLocked.classList.add('visible');
+    alertWrong.classList.remove('is-visible');
+    alertLocked.classList.add('is-visible');
     btnVerify.disabled = true;
     btnResend.disabled = true;
     boxes.forEach(function (b) { b.disabled = true; });
@@ -367,7 +282,7 @@
       clearInterval(expiryIv);
       timerEl.textContent = '0:00';
       timerEl.style.color = 'var(--c-warn-text, #b85200)';
-      showError('This code has expired. Request a new one below.');
+      showErr('This code has expired. Request a new one below.');
       btnVerify.disabled = true;
       btnResend.disabled = false;
     } else {
@@ -381,7 +296,6 @@
 
   btnResend.addEventListener('click', function () {
     if (btnResend.disabled) return;
-    /* inline resend: reset expiry timer, re-disable button, clear boxes */
     expiryLeft = 600;
     timerEl.textContent = '10:00';
     timerEl.style.color = '';
@@ -389,11 +303,11 @@
     btnVerify.textContent = 'Verify →';
     btnResend.disabled = true;
     wrongAttempts = 0;
-    alertOtpLocked.classList.remove('visible');
-    clearError();
+    alertWrong.classList.remove('is-visible');
+    alertLocked.classList.remove('is-visible');
+    clearErr();
     boxes.forEach(function (b) { b.disabled = false; b.value = ''; b.classList.remove('filled'); });
     boxes[0].focus();
-    /* restart expiry interval */
     clearInterval(expiryIv);
     expiryIv = setInterval(tickExpiry, 1000);
   });
@@ -401,32 +315,31 @@
   /* Prototype: read ?error= param to demo error states */
   var params = new URLSearchParams(window.location.search);
   var errParam = params.get('error');
-  if (errParam === 'wrong') showError('That code is incorrect. Please try again.');
+  if (errParam === 'wrong') showWrong(2);
   else if (errParam === 'locked') showLocked();
 
   /* verify */
   btnVerify.addEventListener('click', function () {
     var code = getCode();
     if (code.length < 6) {
-      showError('Please enter all 6 digits of your code.');
+      showErr('Please enter all 6 digits of your code.');
       var emptyIdx = boxes.findIndex(function (b) { return b.value === ''; });
       if (emptyIdx >= 0) boxes[emptyIdx].focus();
       return;
     }
-    clearError();
+    clearErr();
     btnVerify.textContent = 'Verifying...';
     btnVerify.disabled = true;
-    /* Prototype: simulate wrong OTP on attempt to show inline errors */
     setTimeout(function () {
-      /* In production this branches on server response.
-         Demo: first submit simulates wrong OTP, third triggers lock. */
+      /* Prototype flow: first 2 submits simulate wrong OTP, 3rd triggers lock.
+         In production, branch on server response. */
       wrongAttempts++;
       if (wrongAttempts >= MAX_ATTEMPTS) {
         showLocked();
         return;
       }
-      /* Simulate wrong OTP: uncomment next line to test wrong-OTP path */
-      /* showError('That code is incorrect. ' + (MAX_ATTEMPTS - wrongAttempts) + ' attempt(s) remaining.'); btnVerify.disabled = false; btnVerify.textContent = 'Verify →'; return; */
+      /* To test wrong-OTP path, uncomment: */
+      /* showWrong(MAX_ATTEMPTS - wrongAttempts); return; */
       window.location.href = '../profile/profile-edit-v2.html';
     }, 800);
   });

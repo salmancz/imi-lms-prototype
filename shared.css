@@ -1801,3 +1801,287 @@ img[src*="imi-mark-ink"], img[src*="imi-mark-honey"] { max-width: 40px; max-heig
 .is-saved { color: var(--accent) !important; }
 .is-saved svg { fill: currentColor; }
 .cp-heart.is-saved, .is-saved.cp-heart { color: var(--c-danger) !important; }
+
+/* =====================================================================
+   CANONICAL AUTH LAYOUT  — redesign 2026-06-23 (Pooja, single source of truth).
+   Reference: Mighty Networks / Magnific / Untitled UI.
+   ONE shared split screen for EVERY auth page (login, signup, otp, errors).
+
+   STRUCTURE: card/form on the LEFT, warm photo + testimonial on the RIGHT.
+   The company LOGO sits TOP-LEFT of the PAGE (never inside the card).
+   A static AI-support pill sits BOTTOM-RIGHT (opens window.imiToast).
+
+   RULES (baked in, do not override per-page):
+   - ALL text is black (var(--ink)). Muted greys allowed for secondary meta.
+   - ONLY headings (.auth-card-title) may mix black + brown (var(--accent))
+     via <em>. No other element uses brown text.
+   - Fonts use the var(--fs-*) scale only. No hardcoded px font sizes.
+   - NO logo inside the card. NO policy/legal row inside the card
+     (policy links live in .auth-footer at page bottom only).
+   - Card surface is white Variant-2 (var(--paper)), wider than legacy
+     (~420-460px form column).
+
+   These classes REPLACE the old per-page .auth-card / .auth-lockup /
+   .auth-legal / .sa-top / .sa-wrap markup. Build agents must use ONLY
+   the classes below and the skeleton in the spec.
+   ===================================================================== */
+
+/* page shell: full-viewport flex column so footer pins to the bottom */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  position: relative;
+}
+
+/* LOGO — top-left of the PAGE, floats above the split (not in the card) */
+.auth-logo {
+  position: absolute;
+  top: 28px;
+  left: 32px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.auth-logo img { height: 30px; width: auto; display: block; }
+.auth-logo .auth-logo-text {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.auth-logo .auth-logo-sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--fs-body);
+  color: var(--ink);
+  margin-left: 2px;
+}
+
+/* SPLIT SHELL — two columns: form left, aside (photo) right */
+.auth-split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+}
+
+/* LEFT COLUMN wrapper — centers the card, gives the logo headroom */
+.auth-split-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 40px 48px;
+  min-width: 0;
+}
+
+/* CARD — white Variant-2 surface, left column, wider than legacy */
+.auth-card {
+  width: 100%;
+  max-width: 452px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  padding: 40px 40px 34px;
+}
+
+/* card heading block — eyebrow / title / sub. ALL black except <em> accent */
+.auth-eyebrow {
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+/* the ONLY element allowed to mix black + brown */
+.auth-card-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.auth-card-title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.auth-card-sub {
+  font-size: var(--fs-body);
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: 26px;
+}
+
+/* form sizing inside the card (reuses .field / .input / .btn from above) */
+.auth-card .field { margin-bottom: 18px; }
+.auth-card .input { height: 46px; font-size: var(--fs-body); }
+.auth-card .auth-submit {
+  width: 100%;
+  justify-content: center;
+  height: 48px;
+  font-size: var(--fs-body);
+  border-radius: var(--r-md);
+}
+
+/* divider + in-card secondary links (NOT policy links) */
+.auth-divider { height: 1px; background: var(--line); margin: 22px 0 18px; }
+.auth-alt {
+  font-size: var(--fs-body);
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.6;
+}
+.auth-alt a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.auth-alt + .auth-alt { margin-top: 6px; }
+
+/* RIGHT COLUMN — warm photo + short testimonial overlay */
+.auth-aside {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-alt) center / cover no-repeat;
+  display: flex;
+  align-items: flex-end;
+}
+/* dark scrim so white testimonial text stays legible on any photo */
+.auth-aside::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(26,10,4,0.42);
+  z-index: 0;
+}
+.auth-aside-inner {
+  position: relative;
+  z-index: 1;
+  padding: 48px 56px 52px;
+  max-width: 560px;
+}
+.auth-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.4;
+  color: #FFFFFF;
+  margin-bottom: 18px;
+}
+.auth-cite { display: flex; align-items: center; gap: 12px; }
+.auth-cite img {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.35);
+}
+.auth-cite-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.3;
+}
+.auth-cite-role {
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+}
+
+/* FOOTER — page bottom, full width. Site Map / Privacy / Terms / Cookie */
+.auth-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 20px 40px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  font-family: var(--font-label);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.auth-footer a { color: var(--ink); text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; text-underline-offset: 2px; }
+.auth-footer .auth-footer-sep { color: var(--ink-faint); margin: 0 12px; }
+.auth-footer .auth-footer-copy { color: var(--ink-mute); margin-left: 12px; }
+
+/* AI SUPPORT PILL — static affordance, bottom-right, opens window.imiToast */
+.auth-ai {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: #FBF7EF;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  box-shadow: 0 12px 28px -10px rgba(42,17,8,0.5);
+  transition: transform 0.2s var(--tn), box-shadow 0.2s;
+}
+.auth-ai:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -10px rgba(42,17,8,0.55); }
+.auth-ai svg { width: 18px; height: 18px; }
+.auth-ai .auth-ai-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--c-sage);
+  box-shadow: 0 0 0 3px rgba(126,155,111,0.30);
+}
+
+/* inline alert banners (errors) — reusable across all auth pages */
+.auth-alert {
+  display: none;
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+  color: var(--ink);
+}
+.auth-alert.is-visible { display: block; }
+.auth-alert strong { display: block; margin-bottom: 2px; font-weight: 700; color: var(--ink); }
+.auth-alert a { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.auth-alert.alert-warn   { background: var(--c-clay-wash);  border-color: var(--c-clay-soft); }
+.auth-alert.alert-locked { background: var(--c-danger-wash); border-color: #fca5a5; }
+.auth-alert.alert-device { background: var(--c-honey-wash);  border-color: var(--c-honey-soft); }
+
+/* RESPONSIVE — collapse to one column; hide the photo aside on mobile */
+@media (max-width: 880px) {
+  .auth-split { grid-template-columns: 1fr; }
+  .auth-aside { display: none; }
+  .auth-split-left { padding: 88px 20px 40px; }
+  .auth-logo { top: 22px; left: 20px; }
+  .auth-footer { padding: 18px 20px; text-align: center; }
+}
+@media (max-width: 420px) {
+  .auth-card { padding: 32px 24px 28px; }
+  .auth-footer .auth-footer-sep { margin: 0 7px; }
+}

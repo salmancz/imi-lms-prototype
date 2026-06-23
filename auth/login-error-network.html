@@ -10,69 +10,7 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body {
-    background: var(--bg);
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Auth top bar */
-  .auth-top {
-    padding: 20px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .auth-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .auth-brand img {
-    height: 30px;
-    width: auto;
-    display: block;
-  }
-  .auth-brand-text {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: var(--fs-h3);
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-
-  /* Centered layout */
-  .auth-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .auth-main {
-    width: 100%;
-    max-width: 460px;
-  }
-
-  /* Error card */
-  .err-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-card);
-    padding: 48px 44px 44px;
-    text-align: center;
-  }
-
-  /* Icon circle */
+  /* status icon circle */
   .err-icon {
     width: 64px;
     height: 64px;
@@ -84,115 +22,80 @@
     margin: 0 auto 24px;
     color: var(--c-clay);
   }
-  .err-icon svg {
-    width: 28px;
-    height: 28px;
-  }
+  .err-icon svg { width: 28px; height: 28px; }
 
-  /* Eyebrow */
-  .err-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 10px;
-  }
-
-  /* Heading */
-  .err-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-    color: var(--ink);
-    margin-bottom: 12px;
-  }
-  .err-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-
-  /* Body copy */
-  .err-copy {
-    font-family: var(--font-sans);
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.6;
-    max-width: 320px;
-    margin: 0 auto 28px;
-  }
-
-  /* Divider */
-  .err-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 0 0 24px;
-  }
-
-  /* Retry button */
-  .btn-full {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    padding: 13px 18px;
-    font-size: var(--fs-body);
-    margin-bottom: 14px;
-  }
-
-  /* Hint text */
   .err-hint {
-    font-family: var(--font-sans);
     font-size: var(--fs-meta);
     color: var(--ink-mute);
     line-height: 1.55;
     margin-top: 4px;
+    text-align: center;
   }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<header class="auth-top">
-  <a class="auth-brand" href="login.html">
+  <a class="auth-logo" href="../learning/dashboard.html">
     <img src="../img/imi-logo.png" alt="IMI">
   </a>
-</header>
 
-<div class="auth-wrap">
-  <main class="auth-main">
-    <div class="err-card">
+  <div class="auth-split">
 
-      <div class="err-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="1" y1="1" x2="23" y2="23"/>
-          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
-          <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
-          <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
-          <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
-          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-          <line x1="12" y1="20" x2="12.01" y2="20"/>
-        </svg>
-      </div>
+    <div class="auth-split-left">
+      <main class="auth-card" role="alertdialog" aria-labelledby="net-title" style="text-align:center;">
 
-      <div class="err-eyebrow">Connection</div>
+        <div class="err-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"/>
+            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+            <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+            <line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+        </div>
 
-      <h1 class="err-title">Connection <em>lost</em></h1>
+        <p class="auth-eyebrow">Connection</p>
+        <h1 class="auth-card-title" id="net-title">Connection <em>lost</em></h1>
+        <p class="auth-card-sub">Check your internet connection and try again.</p>
 
-      <p class="err-copy">We could not reach IMI. Check your internet connection and try again.</p>
+        <div class="auth-divider"></div>
 
-      <div class="err-divider"></div>
+        <button class="btn btn-primary auth-submit" id="retry-net-btn" type="button" onclick="retryConnection()">Retry</button>
 
-      <button class="btn btn-primary btn-full" id="retry-net-btn" onclick="retryConnection()">Retry</button>
+        <p class="err-hint">If this keeps happening, your network may be blocking the IMI app.</p>
 
-      <p class="err-hint">If this keeps happening, your network may be blocking the IMI app.</p>
-
+      </main>
     </div>
-  </main>
-</div>
+
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-2.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">IMI turned our compliance training from a chore into something the team actually finishes.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-1.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Priya Nair</div>
+            <div class="auth-cite-role">L&amp;D Lead, Acme Corp</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
+
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 function retryConnection() {

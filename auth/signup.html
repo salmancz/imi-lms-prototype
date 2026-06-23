@@ -10,196 +10,16 @@
 <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css">
 <style>
-  body { background: var(--bg); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-
-  /* top strip */
-  .sa-top {
-    padding: 18px 40px;
-    border-bottom: 1px solid var(--line);
-    background: rgba(250, 246, 240, 0.92);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  /* name row: two columns */
+  .name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
-  .sa-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--ink);
-  }
-  .sa-brand img { height: 28px; width: auto; display: block; }
-  .sa-brand-text {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h3);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-  .sa-brand-sub {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    margin-left: 2px;
-  }
-
-  /* centered layout */
-  .sa-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 20px 80px;
-  }
-  .sa-main { width: 100%; max-width: 480px; }
-
-  /* auth card */
-  .auth-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 44px 40px 36px;
-    box-shadow: var(--shadow-card);
-  }
-
-  /* centered logo lockup at card top */
-  .auth-lockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 32px;
-  }
-  .auth-lockup img { height: 38px; width: auto; display: block; }
-
-  /* eyebrow + heading */
-  .auth-eyebrow {
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-    margin-bottom: 8px;
-    text-align: center;
-  }
-  .auth-title {
-    font-family: var(--font-sans);
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    color: var(--ink);
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .auth-title em {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
-  .auth-sub {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin-bottom: 28px;
-    text-align: center;
-  }
-
-  /* form field sizing */
-  .auth-card .input { height: 46px; font-size: var(--fs-body); }
-  .auth-card .field { margin-bottom: 20px; }
+  /* required star */
   .field label .req { color: var(--accent); margin-left: 2px; }
 
-  /* name row */
-  .name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-  /* primary CTA */
-  .btn-full {
-    width: 100%;
-    justify-content: center;
-    height: 48px;
-    font-size: var(--fs-body);
-    border-radius: var(--r-md);
-  }
-
-  /* consent checkbox row */
-  .consent-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 22px;
-    padding: 14px 16px;
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-radius: var(--r-sm);
-  }
-  .consent-row input[type="checkbox"] {
-    margin-top: 2px;
-    flex-shrink: 0;
-    accent-color: var(--accent);
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-  }
-  .consent-row label {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    line-height: 1.5;
-    cursor: pointer;
-  }
-
-  /* divider */
-  .auth-divider {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0 20px;
-  }
-
-  /* footer links */
-  .auth-foot {
-    font-size: var(--fs-body);
-    color: var(--ink-soft);
-    text-align: center;
-    line-height: 1.6;
-  }
-  .auth-foot a {
-    color: var(--ink);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .auth-foot a:hover { color: var(--accent); }
-  .auth-foot + .auth-foot { margin-top: 8px; }
-  .auth-foot.help a { font-weight: 500; color: var(--ink-soft); }
-  .auth-foot.help a:hover { color: var(--ink); }
-
-  /* legal strip */
-  .auth-legal {
-    margin-top: 28px;
-    text-align: center;
-    font-family: var(--font-label);
-    font-size: var(--fs-label);
-    letter-spacing: 0.04em;
-    color: var(--ink-mute);
-    line-height: 1.7;
-  }
-  .auth-legal a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
-  .auth-legal a:hover { color: var(--ink); }
-  .auth-legal .sep { color: var(--ink-faint); margin: 0 7px; }
-  .auth-legal .copy { display: block; margin-top: 8px; color: var(--ink-faint); font-size: var(--fs-label); }
-
-  /* inline field error state */
-  .input.is-error {
-    border-color: var(--c-danger) !important;
-    background: #FFF7F6;
-    box-shadow: 0 0 0 3px rgba(193, 42, 28, 0.10);
-  }
-  .input.is-error:focus {
-    border-color: var(--c-danger) !important;
-    box-shadow: 0 0 0 4px rgba(193, 42, 28, 0.14);
-  }
+  /* inline field error */
   .field-error {
     display: none;
     margin-top: 5px;
@@ -210,128 +30,460 @@
     line-height: 1.4;
   }
   .field-error.visible { display: block; }
-
-  /* form-level alert (OTP-send failures, server errors) */
-  .form-alert {
-    display: none;
-    margin-bottom: 16px;
-    padding: 11px 14px;
+  .input.is-error {
+    border-color: var(--c-danger) !important;
     background: var(--c-danger-wash);
-    border: 1px solid rgba(193, 42, 28, 0.22);
-    border-radius: var(--r-sm);
-    font-size: var(--fs-body);
-    color: var(--c-danger);
-    font-weight: 500;
-    line-height: 1.45;
+    box-shadow: 0 0 0 3px rgba(193, 42, 28, 0.10);
   }
-  .form-alert.visible { display: block; }
+  .input.is-error:focus {
+    border-color: var(--c-danger) !important;
+    box-shadow: 0 0 0 4px rgba(193, 42, 28, 0.14);
+  }
+
+  /* select styling inside auth-card */
+  .auth-card select.input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+
+  /* marketing note (no checkbox) */
+  .marketing-note {
+    font-family: var(--font-label);
+    font-size: var(--fs-meta);
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+  }
+
+  /* "By clicking" consent line */
+  .consent-line {
+    font-family: var(--font-label);
+    font-size: var(--fs-meta);
+    color: var(--ink-mute);
+    letter-spacing: 0.03em;
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .consent-line a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* DOB row */
+  .dob-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .name-row { grid-template-columns: 1fr; }
+    .dob-row  { grid-template-columns: 1fr 1fr; }
+    .dob-row .field:first-child { grid-column: 1 / -1; }
+  }
 </style>
 </head>
-<body>
+<body class="auth-page">
 
-<!-- top navigation strip -->
-<div class="sa-top">
-  <a class="sa-brand" href="../learning/dashboard.html">
-    <img src="../img/imi-mark-ink.png" alt="IMI">
-    <span class="sa-brand-text">IMI</span>
-    <span class="sa-brand-sub">Learning</span>
+  <!-- LOGO: top-left of page, NOT in card -->
+  <a class="auth-logo" href="../learning/dashboard.html">
+    <img src="../img/imi-logo.png" alt="IMI">
+    <span class="auth-logo-text">IMI</span>
+    <span class="auth-logo-sub">Learning</span>
   </a>
-</div>
 
-<!-- centered auth card -->
-<div class="sa-wrap">
-  <main class="sa-main">
+  <div class="auth-split">
 
-    <div class="auth-card">
+    <!-- LEFT: card + form -->
+    <div class="auth-split-left">
+      <main class="auth-card">
 
-      <!-- logo lockup -->
-      <a class="auth-lockup" href="../learning/dashboard.html">
-        <img src="../img/imi-logo.png" alt="IMI">
-      </a>
+        <p class="auth-eyebrow">Get started</p>
+        <h1 class="auth-card-title">Create your <em>IMI account</em></h1>
+        <p class="auth-card-sub">We'll send a one-time code to verify your email.</p>
 
-      <!-- heading -->
-      <p class="auth-eyebrow">Create account</p>
-      <h1 class="auth-title">Join <em>IMI</em></h1>
-      <p class="auth-sub">We'll send a one-time code to verify your email.</p>
-
-      <!-- name row -->
-      <div class="name-row">
-        <div class="field">
-          <label for="su-first">First Name <span class="req">*</span></label>
-          <input class="input" id="su-first" type="text" placeholder="First name" autocomplete="given-name" aria-describedby="err-first" aria-invalid="false">
-          <span class="field-error" id="err-first" role="alert"></span>
+        <!-- duplicate email alert -->
+        <div class="auth-alert alert-warn" id="alert-duplicate" role="alert" aria-live="assertive">
+          <strong>Email already registered</strong>
+          An account with this email exists. <a href="login.html">Sign in instead</a> or use a different address.
         </div>
+
+        <!-- under-age alert -->
+        <div class="auth-alert alert-warn" id="alert-underage" role="alert" aria-live="assertive">
+          <strong>Age requirement not met</strong>
+          You must be 18 or older to create an IMI account.
+        </div>
+
+        <!-- OTP send failure alert -->
+        <div class="auth-alert alert-locked" id="alert-otp-fail" role="alert" aria-live="assertive">
+          <strong>Could not send verification code</strong>
+          Check the email address and try again, or contact <a href="../profile/help-center.html">support</a>.
+        </div>
+
+        <!-- name row -->
+        <div class="name-row">
+          <div class="field">
+            <label for="su-first">First name <span class="req">*</span></label>
+            <input class="input" id="su-first" type="text" placeholder="First name" autocomplete="given-name" aria-describedby="err-first" aria-invalid="false">
+            <span class="field-error" id="err-first" role="alert"></span>
+          </div>
+          <div class="field">
+            <label for="su-last">Last name <span class="req">*</span></label>
+            <input class="input" id="su-last" type="text" placeholder="Last name" autocomplete="family-name" aria-describedby="err-last" aria-invalid="false">
+            <span class="field-error" id="err-last" role="alert"></span>
+          </div>
+        </div>
+
+        <!-- email -->
         <div class="field">
-          <label for="su-last">Last Name <span class="req">*</span></label>
-          <input class="input" id="su-last" type="text" placeholder="Last name" autocomplete="family-name" aria-describedby="err-last" aria-invalid="false">
-          <span class="field-error" id="err-last" role="alert"></span>
+          <label for="su-email">Email address <span class="req">*</span></label>
+          <input class="input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email" aria-describedby="err-email" aria-invalid="false">
+          <span class="field-error" id="err-email" role="alert"></span>
+        </div>
+
+        <!-- date of birth -->
+        <div class="field">
+          <label>Date of birth <span class="req">*</span></label>
+          <div class="dob-row">
+            <div class="field" style="margin-bottom:0">
+              <select class="input" id="su-dob-month" aria-label="Month" aria-describedby="err-dob" aria-invalid="false">
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <select class="input" id="su-dob-day" aria-label="Day" aria-invalid="false">
+                <option value="">Day</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <select class="input" id="su-dob-year" aria-label="Year" aria-invalid="false">
+                <option value="">Year</option>
+              </select>
+            </div>
+          </div>
+          <span class="field-error" id="err-dob" role="alert" style="margin-top:6px;display:none;"></span>
+        </div>
+
+        <!-- country -->
+        <div class="field">
+          <label for="su-country">Country <span class="req">*</span></label>
+          <select class="input" id="su-country" autocomplete="country-name" aria-describedby="err-country" aria-invalid="false">
+            <option value="">Select country...</option>
+            <option value="AF">Afghanistan</option>
+            <option value="AL">Albania</option>
+            <option value="DZ">Algeria</option>
+            <option value="AD">Andorra</option>
+            <option value="AO">Angola</option>
+            <option value="AG">Antigua and Barbuda</option>
+            <option value="AR">Argentina</option>
+            <option value="AM">Armenia</option>
+            <option value="AU">Australia</option>
+            <option value="AT">Austria</option>
+            <option value="AZ">Azerbaijan</option>
+            <option value="BS">Bahamas</option>
+            <option value="BH">Bahrain</option>
+            <option value="BD">Bangladesh</option>
+            <option value="BB">Barbados</option>
+            <option value="BY">Belarus</option>
+            <option value="BE">Belgium</option>
+            <option value="BZ">Belize</option>
+            <option value="BJ">Benin</option>
+            <option value="BT">Bhutan</option>
+            <option value="BO">Bolivia</option>
+            <option value="BA">Bosnia and Herzegovina</option>
+            <option value="BW">Botswana</option>
+            <option value="BR">Brazil</option>
+            <option value="BN">Brunei</option>
+            <option value="BG">Bulgaria</option>
+            <option value="BF">Burkina Faso</option>
+            <option value="BI">Burundi</option>
+            <option value="CV">Cabo Verde</option>
+            <option value="KH">Cambodia</option>
+            <option value="CM">Cameroon</option>
+            <option value="CA">Canada</option>
+            <option value="CF">Central African Republic</option>
+            <option value="TD">Chad</option>
+            <option value="CL">Chile</option>
+            <option value="CN">China</option>
+            <option value="CO">Colombia</option>
+            <option value="KM">Comoros</option>
+            <option value="CD">Congo (DRC)</option>
+            <option value="CG">Congo (Republic)</option>
+            <option value="CR">Costa Rica</option>
+            <option value="HR">Croatia</option>
+            <option value="CU">Cuba</option>
+            <option value="CY">Cyprus</option>
+            <option value="CZ">Czech Republic</option>
+            <option value="DK">Denmark</option>
+            <option value="DJ">Djibouti</option>
+            <option value="DM">Dominica</option>
+            <option value="DO">Dominican Republic</option>
+            <option value="EC">Ecuador</option>
+            <option value="EG">Egypt</option>
+            <option value="SV">El Salvador</option>
+            <option value="GQ">Equatorial Guinea</option>
+            <option value="ER">Eritrea</option>
+            <option value="EE">Estonia</option>
+            <option value="SZ">Eswatini</option>
+            <option value="ET">Ethiopia</option>
+            <option value="FJ">Fiji</option>
+            <option value="FI">Finland</option>
+            <option value="FR">France</option>
+            <option value="GA">Gabon</option>
+            <option value="GM">Gambia</option>
+            <option value="GE">Georgia</option>
+            <option value="DE">Germany</option>
+            <option value="GH">Ghana</option>
+            <option value="GR">Greece</option>
+            <option value="GD">Grenada</option>
+            <option value="GT">Guatemala</option>
+            <option value="GN">Guinea</option>
+            <option value="GW">Guinea-Bissau</option>
+            <option value="GY">Guyana</option>
+            <option value="HT">Haiti</option>
+            <option value="HN">Honduras</option>
+            <option value="HU">Hungary</option>
+            <option value="IS">Iceland</option>
+            <option value="IN">India</option>
+            <option value="ID">Indonesia</option>
+            <option value="IR">Iran</option>
+            <option value="IQ">Iraq</option>
+            <option value="IE">Ireland</option>
+            <option value="IL">Israel</option>
+            <option value="IT">Italy</option>
+            <option value="JM">Jamaica</option>
+            <option value="JP">Japan</option>
+            <option value="JO">Jordan</option>
+            <option value="KZ">Kazakhstan</option>
+            <option value="KE">Kenya</option>
+            <option value="KI">Kiribati</option>
+            <option value="KP">Korea (North)</option>
+            <option value="KR">Korea (South)</option>
+            <option value="KW">Kuwait</option>
+            <option value="KG">Kyrgyzstan</option>
+            <option value="LA">Laos</option>
+            <option value="LV">Latvia</option>
+            <option value="LB">Lebanon</option>
+            <option value="LS">Lesotho</option>
+            <option value="LR">Liberia</option>
+            <option value="LY">Libya</option>
+            <option value="LI">Liechtenstein</option>
+            <option value="LT">Lithuania</option>
+            <option value="LU">Luxembourg</option>
+            <option value="MG">Madagascar</option>
+            <option value="MW">Malawi</option>
+            <option value="MY">Malaysia</option>
+            <option value="MV">Maldives</option>
+            <option value="ML">Mali</option>
+            <option value="MT">Malta</option>
+            <option value="MH">Marshall Islands</option>
+            <option value="MR">Mauritania</option>
+            <option value="MU">Mauritius</option>
+            <option value="MX">Mexico</option>
+            <option value="FM">Micronesia</option>
+            <option value="MD">Moldova</option>
+            <option value="MC">Monaco</option>
+            <option value="MN">Mongolia</option>
+            <option value="ME">Montenegro</option>
+            <option value="MA">Morocco</option>
+            <option value="MZ">Mozambique</option>
+            <option value="MM">Myanmar</option>
+            <option value="NA">Namibia</option>
+            <option value="NR">Nauru</option>
+            <option value="NP">Nepal</option>
+            <option value="NL">Netherlands</option>
+            <option value="NZ">New Zealand</option>
+            <option value="NI">Nicaragua</option>
+            <option value="NE">Niger</option>
+            <option value="NG">Nigeria</option>
+            <option value="MK">North Macedonia</option>
+            <option value="NO">Norway</option>
+            <option value="OM">Oman</option>
+            <option value="PK">Pakistan</option>
+            <option value="PW">Palau</option>
+            <option value="PA">Panama</option>
+            <option value="PG">Papua New Guinea</option>
+            <option value="PY">Paraguay</option>
+            <option value="PE">Peru</option>
+            <option value="PH">Philippines</option>
+            <option value="PL">Poland</option>
+            <option value="PT">Portugal</option>
+            <option value="QA">Qatar</option>
+            <option value="RO">Romania</option>
+            <option value="RU">Russia</option>
+            <option value="RW">Rwanda</option>
+            <option value="KN">Saint Kitts and Nevis</option>
+            <option value="LC">Saint Lucia</option>
+            <option value="VC">Saint Vincent and the Grenadines</option>
+            <option value="WS">Samoa</option>
+            <option value="SM">San Marino</option>
+            <option value="ST">Sao Tome and Principe</option>
+            <option value="SA">Saudi Arabia</option>
+            <option value="SN">Senegal</option>
+            <option value="RS">Serbia</option>
+            <option value="SC">Seychelles</option>
+            <option value="SL">Sierra Leone</option>
+            <option value="SG">Singapore</option>
+            <option value="SK">Slovakia</option>
+            <option value="SI">Slovenia</option>
+            <option value="SB">Solomon Islands</option>
+            <option value="SO">Somalia</option>
+            <option value="ZA">South Africa</option>
+            <option value="SS">South Sudan</option>
+            <option value="ES">Spain</option>
+            <option value="LK">Sri Lanka</option>
+            <option value="SD">Sudan</option>
+            <option value="SR">Suriname</option>
+            <option value="SE">Sweden</option>
+            <option value="CH">Switzerland</option>
+            <option value="SY">Syria</option>
+            <option value="TW">Taiwan</option>
+            <option value="TJ">Tajikistan</option>
+            <option value="TZ">Tanzania</option>
+            <option value="TH">Thailand</option>
+            <option value="TL">Timor-Leste</option>
+            <option value="TG">Togo</option>
+            <option value="TO">Tonga</option>
+            <option value="TT">Trinidad and Tobago</option>
+            <option value="TN">Tunisia</option>
+            <option value="TR">Turkey</option>
+            <option value="TM">Turkmenistan</option>
+            <option value="TV">Tuvalu</option>
+            <option value="UG">Uganda</option>
+            <option value="UA">Ukraine</option>
+            <option value="AE">United Arab Emirates</option>
+            <option value="GB">United Kingdom</option>
+            <option value="US">United States</option>
+            <option value="UY">Uruguay</option>
+            <option value="UZ">Uzbekistan</option>
+            <option value="VU">Vanuatu</option>
+            <option value="VE">Venezuela</option>
+            <option value="VN">Vietnam</option>
+            <option value="YE">Yemen</option>
+            <option value="ZM">Zambia</option>
+            <option value="ZW">Zimbabwe</option>
+          </select>
+          <span class="field-error" id="err-country" role="alert"></span>
+        </div>
+
+        <!-- marketing note: no checkbox, will be on by default in profile -->
+        <p class="marketing-note">
+          Marketing emails are on by default. You can manage your preferences in your profile settings after signing up.
+        </p>
+
+        <!-- "By clicking" consent line -->
+        <p class="consent-line">
+          By clicking Continue, you agree to our
+          <a href="../profile/help-center.html">Privacy Policy</a>,
+          <a href="../profile/help-center.html">Terms of Use</a>, and
+          <a href="../profile/help-center.html">Cookie Policy</a>.
+        </p>
+
+        <!-- primary CTA -->
+        <button class="btn btn-primary auth-submit" id="btn-signup" type="button">Continue &rarr;</button>
+
+        <div class="auth-divider"></div>
+
+        <p class="auth-alt">Already have an account? <a href="login.html">Sign in</a></p>
+        <p class="auth-alt"><a href="../profile/help-center.html">Need help?</a></p>
+
+      </main>
+    </div>
+
+    <!-- RIGHT: warm photo + testimonial -->
+    <aside class="auth-aside" style="background-image:url('../img/covers/cover-2.jpg')">
+      <div class="auth-aside-inner">
+        <p class="auth-quote">Joining IMI gave our team the structure and confidence to lead compliance training that actually sticks.</p>
+        <div class="auth-cite">
+          <img src="../img/covers/cover-3.jpg" alt="">
+          <div>
+            <div class="auth-cite-name">Aisha Al-Rashid</div>
+            <div class="auth-cite-role">Training Manager, Gulf Enterprises</div>
+          </div>
         </div>
       </div>
+    </aside>
 
-      <!-- email field -->
-      <div class="field">
-        <label for="su-email">Email address <span class="req">*</span></label>
-        <input class="input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email" aria-describedby="err-email" aria-invalid="false">
-        <span class="field-error" id="err-email" role="alert"></span>
-      </div>
+  </div>
 
-      <!-- country dropdown -->
-      <div class="field">
-        <label for="su-country">Country <span class="req">*</span></label>
-        <select class="input" id="su-country" autocomplete="country-name" required aria-describedby="err-country" aria-invalid="false">
-          <option value="">Select country...</option>
-          <option value="OM">Oman</option>
-          <option value="AE">UAE</option>
-          <option value="SA">Saudi Arabia</option>
-          <option value="QA">Qatar</option>
-          <option value="KW">Kuwait</option>
-          <option value="BH">Bahrain</option>
-          <option value="OT">Other</option>
-        </select>
-        <span class="field-error" id="err-country" role="alert"></span>
-      </div>
+  <!-- FOOTER: policy links, page bottom -->
+  <footer class="auth-footer">
+    <a href="../profile/help-center.html">Site Map</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Privacy</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Terms of Use</a><span class="auth-footer-sep">&middot;</span>
+    <a href="../profile/help-center.html">Cookie Policy</a>
+    <span class="auth-footer-copy">IMI 2025</span>
+  </footer>
 
-      <!-- form-level alert (OTP send failure, server errors) -->
-      <div class="form-alert" id="su-form-alert" role="alert" aria-live="assertive"></div>
-
-      <!-- marketing consent -->
-      <div class="consent-row" id="consent-row">
-        <input type="checkbox" id="marketing-consent" aria-describedby="err-consent" aria-invalid="false">
-        <label for="marketing-consent">I agree to receive marketing communications from IMI by email. You must enable this consent to create an account.</label>
-      </div>
-      <span class="field-error" id="err-consent" role="alert" style="margin-top:-12px;margin-bottom:14px;display:none;"></span>
-
-      <!-- primary CTA -->
-      <button class="btn btn-primary btn-full" id="btn-signup" type="button">Send OTP &rarr;</button>
-
-      <div class="auth-divider"></div>
-
-      <!-- footer links -->
-      <p class="auth-foot">Already have an account? <a href="login.html">Sign in</a></p>
-      <p class="auth-foot help"><a href="../profile/help-center.html">Need help?</a></p>
-
-      <!-- legal -->
-      <div class="auth-legal">
-        <a href="../profile/help-center.html">Privacy Policy</a><span class="sep">&middot;</span><a href="../profile/help-center.html">Terms of Service</a><span class="sep">&middot;</span><a href="../profile/help-center.html">Terms &amp; Conditions</a>
-        <span class="copy">IMI 2025</span>
-      </div>
-
-    </div><!-- /auth-card -->
-  </main>
-</div>
+  <!-- AI SUPPORT PILL: bottom-right -->
+  <button class="auth-ai" type="button"
+    onclick="window.imiToast('AI support is coming soon. Email support@imi.com for now.')">
+    <span class="auth-ai-dot"></span> Ask AI for help
+  </button>
 
 <script>
 (function () {
-  var firstEl    = document.getElementById('su-first');
-  var lastEl     = document.getElementById('su-last');
-  var emailEl    = document.getElementById('su-email');
-  var countryEl  = document.getElementById('su-country');
-  var consentEl  = document.getElementById('marketing-consent');
-  var consentRow = document.getElementById('consent-row');
-  var formAlert  = document.getElementById('su-form-alert');
-  var btn        = document.getElementById('btn-signup');
+  /* populate day options */
+  var dayEl = document.getElementById('su-dob-day');
+  for (var d = 1; d <= 31; d++) {
+    var o = document.createElement('option');
+    o.value = d;
+    o.textContent = d;
+    dayEl.appendChild(o);
+  }
 
-  /* --- per-field error helpers --- */
+  /* populate year options (current year - 100 to current year - 10) */
+  var yearEl = document.getElementById('su-dob-year');
+  var now = new Date().getFullYear();
+  for (var y = now - 10; y >= now - 100; y--) {
+    var oy = document.createElement('option');
+    oy.value = y;
+    oy.textContent = y;
+    yearEl.appendChild(oy);
+  }
+
+  var firstEl   = document.getElementById('su-first');
+  var lastEl    = document.getElementById('su-last');
+  var emailEl   = document.getElementById('su-email');
+  var monthEl   = document.getElementById('su-dob-month');
+  var countryEl = document.getElementById('su-country');
+  var btn       = document.getElementById('btn-signup');
+
+  var alertDup      = document.getElementById('alert-duplicate');
+  var alertUnder    = document.getElementById('alert-underage');
+  var alertOtpFail  = document.getElementById('alert-otp-fail');
+
+  function hideAlerts() {
+    alertDup.classList.remove('is-visible');
+    alertUnder.classList.remove('is-visible');
+    alertOtpFail.classList.remove('is-visible');
+  }
+
+  /* field error helpers */
   function fieldErr(input, msgEl, msg) {
     input.classList.add('is-error');
     input.setAttribute('aria-invalid', 'true');
@@ -347,48 +499,49 @@
     msgEl.style.display = 'none';
   }
 
-  /* --- form-level alert (OTP-send failures, server errors) --- */
-  function showFormAlert(msg) {
-    formAlert.textContent = msg;
-    formAlert.classList.add('visible');
-    formAlert.style.display = 'block';
-  }
-  function clearFormAlert() {
-    formAlert.textContent = '';
-    formAlert.classList.remove('visible');
-    formAlert.style.display = 'none';
-  }
-
-  /* clear field error on any change */
-  function bindClear(input, msgEl) {
-    var evts = ['input', 'change'];
-    evts.forEach(function (ev) {
-      input.addEventListener(ev, function () { fieldOk(input, msgEl); clearFormAlert(); });
+  /* clear errors on input */
+  function bindClear(input, errId) {
+    var errEl = document.getElementById(errId);
+    ['input', 'change'].forEach(function (ev) {
+      input.addEventListener(ev, function () {
+        fieldOk(input, errEl);
+        hideAlerts();
+      });
     });
   }
-  bindClear(firstEl,   document.getElementById('err-first'));
-  bindClear(lastEl,    document.getElementById('err-last'));
-  bindClear(emailEl,   document.getElementById('err-email'));
-  bindClear(countryEl, document.getElementById('err-country'));
-  consentEl.addEventListener('change', function () {
-    fieldOk(consentEl, document.getElementById('err-consent'));
-    consentRow.style.borderColor = '';
-    consentRow.style.background  = '';
-    clearFormAlert();
-  });
+  bindClear(firstEl,   'err-first');
+  bindClear(lastEl,    'err-last');
+  bindClear(emailEl,   'err-email');
+  bindClear(monthEl,   'err-dob');
+  bindClear(dayEl,     'err-dob');
+  bindClear(yearEl,    'err-dob');
+  bindClear(countryEl, 'err-country');
 
-  /* --- validate all fields; returns true if clean --- */
+  /* age check: must be >= 18 */
+  function isUnderAge(month, day, year) {
+    var dob  = new Date(year, month - 1, day);
+    var today = new Date();
+    var age   = today.getFullYear() - dob.getFullYear();
+    var m     = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    return age < 18;
+  }
+
   function validate() {
     var ok = true;
     var first   = firstEl.value.trim();
     var last    = lastEl.value.trim();
     var email   = emailEl.value.trim();
+    var month   = monthEl.value;
+    var day     = dayEl.value;
+    var year    = yearEl.value;
     var country = countryEl.value;
+
     var errFirst   = document.getElementById('err-first');
     var errLast    = document.getElementById('err-last');
     var errEmail   = document.getElementById('err-email');
+    var errDob     = document.getElementById('err-dob');
     var errCountry = document.getElementById('err-country');
-    var errConsent = document.getElementById('err-consent');
 
     if (!first) {
       fieldErr(firstEl, errFirst, 'Please enter your first name.');
@@ -402,41 +555,46 @@
       fieldErr(emailEl, errEmail, 'Please enter your email address.');
       ok = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      /* (c) invalid email format - inline, stay on page */
       fieldErr(emailEl, errEmail, 'Please enter a valid email address (e.g. name@example.com).');
+      ok = false;
+    }
+    if (!month || !day || !year) {
+      monthEl.classList.add('is-error');
+      dayEl.classList.add('is-error');
+      yearEl.classList.add('is-error');
+      errDob.textContent = 'Please select your full date of birth.';
+      errDob.classList.add('visible');
+      errDob.style.display = 'block';
+      ok = false;
+    } else if (isUnderAge(parseInt(month), parseInt(day), parseInt(year))) {
+      monthEl.classList.add('is-error');
+      dayEl.classList.add('is-error');
+      yearEl.classList.add('is-error');
+      errDob.textContent = 'You must be 18 or older to create an account.';
+      errDob.classList.add('visible');
+      errDob.style.display = 'block';
+      alertUnder.classList.add('is-visible');
       ok = false;
     }
     if (!country) {
       fieldErr(countryEl, errCountry, 'Please select your country.');
       ok = false;
     }
-    if (!consentEl.checked) {
-      fieldErr(consentEl, errConsent, 'You must agree to marketing communications to create an account.');
-      consentRow.style.borderColor = 'var(--c-danger)';
-      consentRow.style.background  = 'var(--c-danger-wash)';
-      ok = false;
-    }
+
     if (!ok) {
-      var firstInvalid = document.querySelector('.input.is-error, #marketing-consent.is-error');
+      var firstInvalid = document.querySelector('.input.is-error');
       if (firstInvalid) firstInvalid.focus();
     }
     return ok;
   }
 
-  /* --- simulate OTP send (replace with real API call) --- */
+  /* stub: replace with real API call */
   function sendOtp(email, onSuccess, onError) {
-    /* Stub: in production replace this with a fetch() to your auth endpoint.
-       Error scenarios:
-         code "EMAIL_EXISTS"     -> (a) email already registered
-         code "DUPLICATE"        -> (b) duplicate signup (race condition)
-         code "OTP_FAILED"       -> (d) OTP-send failure (email delivery error)
-    */
-    /* For prototype purposes, immediately call onSuccess so flow continues. */
     onSuccess();
   }
 
   btn.addEventListener('click', function () {
-    clearFormAlert();
+    hideAlerts();
     if (!validate()) return;
 
     var email   = emailEl.value.trim();
@@ -448,7 +606,6 @@
     btn.textContent = 'Sending…';
 
     sendOtp(email, function () {
-      /* success: store and proceed to OTP screen */
       sessionStorage.setItem('imi_email',   email);
       sessionStorage.setItem('imi_first',   first);
       sessionStorage.setItem('imi_last',    last);
@@ -456,26 +613,17 @@
       window.location.href = 'otp.html';
     }, function (code) {
       btn.disabled    = false;
-      btn.textContent = 'Send OTP →';
+      btn.textContent = 'Continue →';
 
       var errEmail = document.getElementById('err-email');
-      if (code === 'EMAIL_EXISTS') {
-        /* (a) email already registered - inline under email field */
-        fieldErr(emailEl, errEmail,
-          'An account with this email already exists. Sign in instead or use a different address.');
-        emailEl.focus();
-      } else if (code === 'DUPLICATE') {
-        /* (b) duplicate signup - inline under email field */
-        fieldErr(emailEl, errEmail,
-          'This email was just registered. Please check your inbox for the verification code or sign in.');
+      if (code === 'EMAIL_EXISTS' || code === 'DUPLICATE') {
+        fieldErr(emailEl, errEmail, 'An account with this email already exists.');
+        alertDup.classList.add('is-visible');
         emailEl.focus();
       } else if (code === 'OTP_FAILED') {
-        /* (d) OTP-send failure - form-level alert, field stays clean */
-        showFormAlert(
-          'We could not send a verification code to this address right now. Please check the email and try again, or contact support if the issue continues.');
+        alertOtpFail.classList.add('is-visible');
       } else {
-        /* generic server error - form-level alert */
-        showFormAlert('Something went wrong. Please try again in a moment.');
+        alertOtpFail.classList.add('is-visible');
       }
     });
   });
