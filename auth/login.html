@@ -158,6 +158,36 @@
   .auth-legal a:hover { color: var(--ink); }
   .auth-legal .sep { color: var(--ink-faint); margin: 0 7px; }
   .auth-legal .copy { display: block; margin-top: 8px; color: var(--ink-faint); font-size: 10.5px; }
+
+  /* ── inline alert banners ── */
+  .alert-inline {
+    display: none;
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+  }
+  .alert-inline.alert-warn {
+    background: var(--c-clay-wash);
+    border-color: var(--c-clay-soft);
+    color: var(--accent-deep);
+  }
+  .alert-inline.alert-locked {
+    background: #fef3f2;
+    border-color: #fca5a5;
+    color: var(--c-danger-deep, #9e2014);
+  }
+  .alert-inline.alert-device {
+    background: var(--c-honey-wash);
+    border-color: var(--c-honey-soft);
+    color: var(--c-honey-text);
+  }
+  .alert-inline strong { display: block; margin-bottom: 2px; font-weight: 700; }
+  .alert-inline a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+  .alert-inline.visible { display: block; }
 </style>
 </head>
 <body>
@@ -186,6 +216,24 @@
       <p class="auth-eyebrow">Welcome back</p>
       <h1 class="auth-title">Sign in to <em>continue</em></h1>
       <p class="auth-sub">We'll send you a one-time code by email.</p>
+
+      <!-- inline error: wrong credentials / unrecognised email -->
+      <div class="alert-inline alert-warn" id="alert-wrong-creds" role="alert">
+        <strong>Email not recognised</strong>
+        No account found for this address. Check for a typo or <a href="signup.html">create a free account</a>.
+      </div>
+
+      <!-- inline error: account locked -->
+      <div class="alert-inline alert-locked" id="alert-locked" role="alert">
+        <strong>Account temporarily locked</strong>
+        Too many failed attempts. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
+      </div>
+
+      <!-- inline error: device limit reached -->
+      <div class="alert-inline alert-device" id="alert-device" role="alert">
+        <strong>Device limit reached</strong>
+        You have reached the maximum number of active devices. <a href="device-limit.html">Manage your devices</a> to sign in on this one.
+      </div>
 
       <!-- email field -->
       <div class="field" id="email-field">
@@ -216,34 +264,55 @@
 <script>
 (function () {
   var emailEl = document.getElementById('login-email');
-  var errEl = document.getElementById('email-error');
+  var fieldErrEl = document.getElementById('email-error');
   var btn = document.getElementById('btn-send-otp');
 
-  function showError(msg) {
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
+  var alertWrong = document.getElementById('alert-wrong-creds');
+  var alertLocked = document.getElementById('alert-locked');
+  var alertDevice = document.getElementById('alert-device');
+
+  function hideAlerts() {
+    alertWrong.classList.remove('visible');
+    alertLocked.classList.remove('visible');
+    alertDevice.classList.remove('visible');
+  }
+
+  function showFieldError(msg) {
+    fieldErrEl.textContent = msg;
+    fieldErrEl.style.display = 'block';
     emailEl.style.borderColor = 'var(--c-warn-text, #b85200)';
   }
-  function clearError() {
-    errEl.style.display = 'none';
+  function clearFieldError() {
+    fieldErrEl.style.display = 'none';
     emailEl.style.borderColor = '';
   }
 
-  emailEl.addEventListener('input', clearError);
+  emailEl.addEventListener('input', function () {
+    clearFieldError();
+    hideAlerts();
+  });
+
+  /* Prototype: read ?error= param to show inline states on load */
+  var params = new URLSearchParams(window.location.search);
+  var errParam = params.get('error');
+  if (errParam === 'wrong') alertWrong.classList.add('visible');
+  else if (errParam === 'locked') alertLocked.classList.add('visible');
+  else if (errParam === 'device') alertDevice.classList.add('visible');
 
   btn.addEventListener('click', function () {
+    hideAlerts();
+    clearFieldError();
     var val = emailEl.value.trim();
     if (!val) {
-      showError('Please enter your email address.');
+      showFieldError('Please enter your email address.');
       emailEl.focus();
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-      showError('Please enter a valid email address.');
+      showFieldError('Please enter a valid email address.');
       emailEl.focus();
       return;
     }
-    clearError();
     sessionStorage.setItem('imi_email', val);
     sessionStorage.removeItem('imi_first');
     sessionStorage.removeItem('imi_last');

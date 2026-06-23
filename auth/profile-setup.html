@@ -201,12 +201,12 @@
     letter-spacing: 0.12em;
     font-weight: 600;
     text-transform: uppercase;
-    color: var(--ink-mute);
+    color: var(--ink);
     margin-bottom: 7px;
   }
   .ps-field label .req { color: var(--accent); margin-left: 2px; }
   .ps-field label .opt { color: var(--ink-faint); font-weight: 500; letter-spacing: 0.04em; text-transform: none; }
-  .ps-field .input { height: 40px; font-size: 14px; }
+  .ps-field .input { height: 40px; font-size: 14px; color: var(--ink); }
   .ps-field select.input {
     appearance: none;
     padding-right: 32px;
@@ -214,9 +214,10 @@
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 14px;
+    color: var(--ink);
   }
   .ps-field .input:disabled { background: var(--bg-alt); color: var(--ink-mute); cursor: not-allowed; }
-  .ps-field .hint { font-size: 12px; color: var(--ink-mute); margin-top: 7px; line-height: 1.45; }
+  .ps-field .hint { font-size: 12px; color: var(--ink); margin-top: 7px; line-height: 1.45; }
   .ps-field .hint.warm { color: var(--c-honey-text); }
 
   /* drag/drop zone */
@@ -290,12 +291,32 @@
   .ps-chips .chip { cursor: default; }
   .ps-chips .chip .x { color: var(--ink-faint); font-weight: 700; }
 
+  /* link rows */
+  .ps-link-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .ps-link-row { display: flex; align-items: center; gap: 10px; }
+  .ps-link-row .input { height: 40px; font-size: 14px; color: var(--ink); }
+  .ps-link-remove {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    padding: 6px;
+    color: var(--ink-faint);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .ps-link-remove:hover { color: #c0392b; border-color: #f5c6c2; }
+
   /* add link */
   .ps-addlink {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 10px;
+    margin-top: 4px;
     font-family: var(--font-label);
     font-size: 12px;
     font-weight: 700;
@@ -308,13 +329,101 @@
   }
   .ps-addlink:hover { color: var(--accent); }
 
+  /* employment block repeater */
+  .ps-emp-block {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 18px 14px;
+    background: var(--paper-2);
+    position: relative;
+  }
+  .ps-emp-block + .ps-emp-block { margin-top: 14px; }
+  .ps-emp-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    padding: 5px;
+    color: var(--ink-faint);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .ps-emp-remove:hover { color: #c0392b; border-color: #f5c6c2; }
+  .ps-emp-remove svg { display: block; width: 13px; height: 13px; }
+  .ps-addexp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .ps-addexp:hover { color: var(--accent); }
+
+  /* link type select */
+  .ps-link-type {
+    flex: 0 0 140px;
+    height: 40px;
+    font-size: 14px;
+    color: var(--ink);
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 13px;
+    min-width: 0;
+  }
+
+  /* doc title select in upload rows */
+  .ps-doc-title-select {
+    height: 40px;
+    font-size: 14px;
+    color: var(--ink);
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 13px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* "Other" title text input */
+  .ps-title-other {
+    margin-top: 8px;
+    display: none;
+  }
+  .ps-title-other.visible { display: block; }
+
+  /* per-tab next button row */
+  .ps-tab-next {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+
   /* footer actions */
   .ps-foot {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 16px;
-    margin-top: 26px;
+    margin-top: 18px;
   }
 
   /* skip */
@@ -327,6 +436,13 @@
   }
   .ps-skip a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
   .ps-skip a:hover { color: var(--accent); }
+</style>
+<style>
+/* Pooja 2026-06-23: all profile text in black */
+.sa-main, .sa-main * { color: var(--ink) !important; }
+.sa-main .ps-tab.is, .sa-main .ps-tab.is * { color: var(--hero-bg) !important; }
+.sa-main .req { color: var(--accent) !important; }
+.sa-main .input::placeholder { color: var(--ink-faint) !important; }
 </style>
 </head>
 <body>
@@ -351,7 +467,6 @@
         <div class="progress"><div class="progress-fill sage" style="width:42%"></div></div>
       </div>
       <div class="ps-pct">42%<small>Complete</small></div>
-      <button class="btn btn-primary btn-sm" id="btn-save-progress" type="button">Save and continue</button>
     </div>
 
     <div class="ps-tabs" role="tablist">
@@ -361,6 +476,7 @@
       <button class="ps-tab" data-tab="docs" type="button">Documents <span class="ps-count">0/2</span></button>
     </div>
 
+    <!-- PERSONAL TAB -->
     <section class="ps-panel" data-panel="personal">
       <div class="ps-panel-label">Personal &middot; Core identity and demographic</div>
       <div class="ps-grid">
@@ -379,8 +495,20 @@
           <input class="input" id="ps-email" value="salman@webinnoventix.com" disabled>
         </div>
         <div class="ps-field">
-          <label>Title / Prefix <span class="opt">(optional)</span></label>
-          <input class="input" placeholder="e.g. Mr., Dr., Eng.">
+          <label>Title / Prefix</label>
+          <select class="input" id="ps-title-select">
+            <option value="">Select...</option>
+            <option value="Mr">Mr</option>
+            <option value="Ms">Ms</option>
+            <option value="Mrs">Mrs</option>
+            <option value="Miss">Miss</option>
+            <option value="Dr">Dr</option>
+            <option value="Prof">Prof</option>
+            <option value="Fellow">Fellow</option>
+            <option value="Mx">Mx</option>
+            <option value="Other">Other</option>
+          </select>
+          <input class="input ps-title-other" id="ps-title-other" placeholder="Enter your title or prefix">
         </div>
         <div class="ps-field">
           <label>Name on your Course Completed proof <span class="req">*</span></label>
@@ -395,7 +523,7 @@
           </div>
         </div>
         <div class="ps-field">
-          <label>Preferred Language <span class="opt">(recommended)</span></label>
+          <label>Preferred Language</label>
           <select class="input"><option>English</option><option>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577; (Arabic)</option></select>
         </div>
         <div class="ps-field">
@@ -420,7 +548,7 @@
           <input class="input" placeholder="+968 9X XXX XXXX">
         </div>
         <div class="ps-field full">
-          <label>Learning interests <span class="opt">(used for recommendations)</span></label>
+          <label>Learning interests</label>
           <select class="input"><option>Add interest...</option><option>Records management</option><option>ISO 30401</option><option>Data governance</option></select>
           <div class="ps-chips">
             <span class="chip">Records mgmt <span class="x">&times;</span></span>
@@ -429,64 +557,128 @@
           </div>
         </div>
       </div>
+      <div class="ps-tab-next">
+        <button class="btn btn-primary" type="button" id="next-personal">Next</button>
+      </div>
     </section>
 
+    <!-- PROFESSIONAL TAB -->
     <section class="ps-panel" data-panel="pro" hidden>
       <div class="ps-panel-label">Professional &middot; Professional profile</div>
       <div class="ps-grid">
         <div class="ps-field">
-          <label>Current Role <span class="opt">(optional)</span></label>
+          <label>Current Role</label>
           <input class="input" placeholder="e.g. Information Architect">
         </div>
         <div class="ps-field">
-          <label>Experience Level <span class="opt">(optional)</span></label>
+          <label>Experience Level</label>
           <select class="input"><option>Select...</option><option>Entry (0-2 yrs)</option><option>Mid (3-7 yrs)</option><option>Senior (8-15 yrs)</option><option>Lead / Principal (15+ yrs)</option></select>
         </div>
         <div class="ps-field full">
-          <label>Industry <span class="opt">(optional)</span></label>
+          <label>Industry</label>
           <select class="input"><option>Select...</option><option>Government</option><option>Banking and Finance</option><option>Oil and Gas</option><option>Telecom</option><option>Healthcare</option><option>Education</option><option>Technology</option><option>Other</option></select>
         </div>
       </div>
-    </section>
 
-    <section class="ps-panel" data-panel="links" hidden>
-      <div class="ps-panel-label">Personal links &middot; One field, multiple links allowed</div>
-      <div class="ps-grid">
-        <div class="ps-field full">
-          <label>Personal Site / Blog Links <span class="opt">(optional &middot; multiple allowed)</span></label>
-          <input class="input" placeholder="https://">
-          <button type="button" class="ps-addlink" onclick="var f=document.createElement('input');f.className='input';f.placeholder='https://';f.style.marginTop='8px';this.closest('.ps-field').querySelector('.input').parentNode.insertBefore(f,this)">+ Add another link</button>
-          <div class="hint">One field that allows multiple social, professional, or personal web links.</div>
+      <!-- Employment / Experience repeater -->
+      <div style="margin-top:22px;">
+        <div class="ps-panel-label" style="margin-bottom:14px;padding-bottom:10px;">Employment / Experience</div>
+        <div id="ps-emp-list">
+          <div class="ps-emp-block" data-emp-block>
+            <div class="ps-grid">
+              <div class="ps-field">
+                <label>Employer</label>
+                <input class="input" placeholder="Organisation name">
+              </div>
+              <div class="ps-field">
+                <label>Role / Title</label>
+                <input class="input" placeholder="e.g. Records Manager">
+              </div>
+              <div class="ps-field">
+                <label>Start date</label>
+                <input class="input" placeholder="MM / YYYY">
+              </div>
+              <div class="ps-field">
+                <label>End date</label>
+                <input class="input" placeholder="MM / YYYY or Present">
+              </div>
+              <div class="ps-field full">
+                <label>Description</label>
+                <input class="input" placeholder="Brief description of your responsibilities">
+              </div>
+            </div>
+          </div>
         </div>
+        <button type="button" class="ps-addexp" id="ps-add-exp">+ Add experience</button>
+      </div>
+
+      <div class="ps-tab-next">
+        <button class="btn btn-primary" type="button" id="next-pro">Next</button>
       </div>
     </section>
 
+    <!-- PERSONAL LINKS TAB -->
+    <section class="ps-panel" data-panel="links" hidden>
+      <div class="ps-panel-label">Personal links &middot; Name and URL for each link</div>
+      <div class="ps-field full">
+        <label>Personal Site / Blog Links</label>
+        <div class="ps-link-list" id="ps-link-list">
+          <div class="ps-link-row">
+            <select class="input ps-link-type">
+              <option value="Website">Website</option>
+              <option value="Articles/Blogs">Articles/Blogs</option>
+              <option value="Social">Social</option>
+            </select>
+            <input class="input ps-link-name" placeholder="Name (e.g. LinkedIn, Portfolio)" style="flex:0 0 160px;min-width:0;">
+            <input class="input ps-link-url" placeholder="https://" style="flex:1;min-width:0;">
+            <button type="button" class="ps-link-remove" aria-label="Remove link" data-close="link-row" style="display:none">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="ps-addlink" id="ps-add-link">+ Add another link</button>
+        <div class="hint">Each link has a type, a short name and a URL. Add as many as you need.</div>
+      </div>
+      <div class="ps-tab-next">
+        <button class="btn btn-primary" type="button" id="next-links">Next</button>
+      </div>
+    </section>
+
+    <!-- DOCUMENTS TAB -->
     <section class="ps-panel" data-panel="docs" hidden>
       <div class="ps-panel-label">Documents &middot; Supporting evidence</div>
       <div class="ps-grid">
         <div class="ps-field full">
-          <label>CV / Resume <span class="opt">(PDF, up to 5 MB &middot; optional)</span></label>
+          <label>Upload Document</label>
+          <select class="input ps-doc-title-select" id="ps-doc-title">
+            <option value="CV">CV</option>
+            <option value="Certification">Certification</option>
+          </select>
           <div class="ps-upload" id="upload-cv">
             <div class="ps-drop tall" data-upload="cv" data-accept="application/pdf" data-max-mb="5" data-hint="PDF up to 5 MB">Drag PDF or click to upload</div>
             <input type="file" accept="application/pdf" style="display:none" id="file-cv">
           </div>
         </div>
         <div class="ps-field full">
-          <label>Externally Earned Certificates, Portfolio <span class="opt">(optional &middot; multi-upload)</span></label>
+          <label>Additional Documents</label>
+          <select class="input ps-doc-title-select" id="ps-doc-title-2">
+            <option value="CV">CV</option>
+            <option value="Certification">Certification</option>
+          </select>
           <div class="ps-upload" id="upload-certs">
             <div class="ps-drop tall" data-upload="certs" data-accept="application/pdf,image/jpeg,image/png" data-max-mb="10" data-multi="true" data-hint="PDF/JPG/PNG up to 10 MB each">Add files or URLs &middot; certificates earned outside the platform and portfolio items combined in one field</div>
             <input type="file" accept="application/pdf,image/jpeg,image/png" style="display:none" id="file-certs" multiple>
           </div>
         </div>
       </div>
+      <div class="ps-tab-next">
+        <button class="btn btn-primary" type="button" id="next-docs">Finish</button>
+      </div>
     </section>
 
     <div class="ps-foot">
-      <button class="btn btn-ghost" id="btn-save-later" type="button">Save and continue later</button>
-      <button class="btn btn-primary" id="btn-save-continue" type="button">Save and continue &rarr;</button>
+      <button class="btn btn-ghost" id="btn-skip" type="button">Skip for now</button>
     </div>
-
-    <div class="ps-skip">Not ready yet? <a href="../learning/dashboard.html">Skip for now</a></div>
 
   </main>
 </div>
@@ -528,14 +720,39 @@
     }, 2800);
   }
 
-  /* ---- tab switching ---- */
+  /* ---- tab order ---- */
+  var TAB_ORDER = ['personal', 'pro', 'links', 'docs'];
+
+  function switchTab(name) {
+    document.querySelectorAll('.ps-tab').forEach(function (t) { t.classList.toggle('is', t.dataset.tab === name); });
+    document.querySelectorAll('.ps-panel').forEach(function (p) { p.hidden = p.dataset.panel !== name; });
+  }
+
+  /* ---- tab switching (manual click) ---- */
   document.querySelectorAll('.ps-tab').forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      var name = tab.dataset.tab;
-      document.querySelectorAll('.ps-tab').forEach(function (t) { t.classList.toggle('is', t === tab); });
-      document.querySelectorAll('.ps-panel').forEach(function (p) { p.hidden = p.dataset.panel !== name; });
-    });
+    tab.addEventListener('click', function () { switchTab(tab.dataset.tab); });
   });
+
+  /* ---- Next buttons ---- */
+  document.getElementById('next-personal').addEventListener('click', function () { switchTab('pro'); });
+  document.getElementById('next-pro').addEventListener('click', function () { switchTab('links'); });
+  document.getElementById('next-links').addEventListener('click', function () { switchTab('docs'); });
+  document.getElementById('next-docs').addEventListener('click', function () { window.location.href = '../profile/profile-edit-v2.html'; });
+
+  /* ---- Title / Prefix Other reveal ---- */
+  var titleSelect = document.getElementById('ps-title-select');
+  var titleOther = document.getElementById('ps-title-other');
+  if (titleSelect && titleOther) {
+    titleSelect.addEventListener('change', function () {
+      if (titleSelect.value === 'Other') {
+        titleOther.classList.add('visible');
+        titleOther.focus();
+      } else {
+        titleOther.classList.remove('visible');
+        titleOther.value = '';
+      }
+    });
+  }
 
   /* file upload widget */
   var FILE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
@@ -637,7 +854,6 @@
   });
 
   /* ---- interests select: add chip ---- */
-  var interestSelect = document.querySelector('[data-panel="personal"] select.input:last-of-type, [data-panel="personal"] .ps-field:last-child select.input');
   var allSelects = document.querySelectorAll('[data-panel="personal"] select.input');
   var interestSel = allSelects[allSelects.length - 1];
   if (interestSel) {
@@ -657,20 +873,84 @@
     });
   }
 
-  /* ---- save handlers ---- */
-  function doSave(dest) {
-    showToast('Profile saved successfully.', 'success');
-    setTimeout(function () { window.location.href = dest; }, 1200);
+  /* ---- Employment repeater ---- */
+  function empBlockHTML() {
+    return '<div class="ps-emp-block" data-emp-block>' +
+      '<button type="button" class="ps-emp-remove" aria-label="Remove experience">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>' +
+      '<div class="ps-grid">' +
+        '<div class="ps-field"><label>Employer</label><input class="input" placeholder="Organisation name"></div>' +
+        '<div class="ps-field"><label>Role / Title</label><input class="input" placeholder="e.g. Records Manager"></div>' +
+        '<div class="ps-field"><label>Start date</label><input class="input" placeholder="MM / YYYY"></div>' +
+        '<div class="ps-field"><label>End date</label><input class="input" placeholder="MM / YYYY or Present"></div>' +
+        '<div class="ps-field full"><label>Description</label><input class="input" placeholder="Brief description of your responsibilities"></div>' +
+      '</div>' +
+    '</div>';
   }
 
-  var btnSaveProgress = document.getElementById('btn-save-progress');
-  if (btnSaveProgress) btnSaveProgress.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+  function updateEmpRemoveButtons() {
+    var blocks = document.querySelectorAll('#ps-emp-list [data-emp-block]');
+    blocks.forEach(function (b) {
+      var btn = b.querySelector('.ps-emp-remove');
+      if (btn) btn.style.display = blocks.length > 1 ? '' : 'none';
+    });
+  }
 
-  var btnSaveLater = document.getElementById('btn-save-later');
-  if (btnSaveLater) btnSaveLater.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+  document.getElementById('ps-add-exp').addEventListener('click', function () {
+    var list = document.getElementById('ps-emp-list');
+    var div = document.createElement('div');
+    div.innerHTML = empBlockHTML();
+    var block = div.firstChild;
+    block.querySelector('.ps-emp-remove').addEventListener('click', function () {
+      block.remove();
+      updateEmpRemoveButtons();
+    });
+    list.appendChild(block);
+    updateEmpRemoveButtons();
+    block.querySelector('.input').focus();
+  });
 
-  var btnSaveContinue = document.getElementById('btn-save-continue');
-  if (btnSaveContinue) btnSaveContinue.addEventListener('click', function () { doSave('../learning/dashboard.html'); });
+  updateEmpRemoveButtons();
+
+  /* ---- personal links: type+name+url rows ---- */
+  function updateRemoveButtons() {
+    var rows = document.querySelectorAll('#ps-link-list .ps-link-row');
+    rows.forEach(function (row) {
+      var btn = row.querySelector('.ps-link-remove');
+      if (btn) btn.style.display = rows.length > 1 ? '' : 'none';
+    });
+  }
+
+  document.getElementById('ps-add-link').addEventListener('click', function () {
+    var list = document.getElementById('ps-link-list');
+    var row = document.createElement('div');
+    row.className = 'ps-link-row';
+    row.innerHTML =
+      '<select class="input ps-link-type">' +
+        '<option value="Website">Website</option>' +
+        '<option value="Articles/Blogs">Articles/Blogs</option>' +
+        '<option value="Social">Social</option>' +
+      '</select>' +
+      '<input class="input ps-link-name" placeholder="Name (e.g. LinkedIn, Portfolio)" style="flex:0 0 160px;min-width:0;">' +
+      '<input class="input ps-link-url" placeholder="https://" style="flex:1;min-width:0;">' +
+      '<button type="button" class="ps-link-remove" aria-label="Remove link" data-close="link-row">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '</button>';
+    row.querySelector('.ps-link-remove').addEventListener('click', function () {
+      row.remove();
+      updateRemoveButtons();
+    });
+    list.appendChild(row);
+    updateRemoveButtons();
+    row.querySelector('.ps-link-name').focus();
+  });
+
+  updateRemoveButtons();
+
+  /* ---- skip ---- */
+  var btnSkip = document.getElementById('btn-skip');
+  if (btnSkip) btnSkip.addEventListener('click', function () { window.location.href = '../learning/dashboard.html'; });
 </script>
 <script src="../ui-enhance.js"></script>
 </body>

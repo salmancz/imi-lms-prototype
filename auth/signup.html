@@ -189,6 +189,42 @@
   .auth-legal a:hover { color: var(--ink); }
   .auth-legal .sep { color: var(--ink-faint); margin: 0 7px; }
   .auth-legal .copy { display: block; margin-top: 8px; color: var(--ink-faint); font-size: 10.5px; }
+
+  /* inline field error state */
+  .input.is-error {
+    border-color: var(--c-danger) !important;
+    background: #FFF7F6;
+    box-shadow: 0 0 0 3px rgba(193, 42, 28, 0.10);
+  }
+  .input.is-error:focus {
+    border-color: var(--c-danger) !important;
+    box-shadow: 0 0 0 4px rgba(193, 42, 28, 0.14);
+  }
+  .field-error {
+    display: none;
+    margin-top: 5px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-danger);
+    line-height: 1.4;
+  }
+  .field-error.visible { display: block; }
+
+  /* form-level alert (OTP-send failures, server errors) */
+  .form-alert {
+    display: none;
+    margin-bottom: 16px;
+    padding: 11px 14px;
+    background: var(--c-danger-wash);
+    border: 1px solid rgba(193, 42, 28, 0.22);
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    color: var(--c-danger);
+    font-weight: 500;
+    line-height: 1.45;
+  }
+  .form-alert.visible { display: block; }
 </style>
 </head>
 <body>
@@ -222,24 +258,27 @@
       <div class="name-row">
         <div class="field">
           <label for="su-first">First Name <span class="req">*</span></label>
-          <input class="input" id="su-first" type="text" placeholder="First name" autocomplete="given-name">
+          <input class="input" id="su-first" type="text" placeholder="First name" autocomplete="given-name" aria-describedby="err-first" aria-invalid="false">
+          <span class="field-error" id="err-first" role="alert"></span>
         </div>
         <div class="field">
           <label for="su-last">Last Name <span class="req">*</span></label>
-          <input class="input" id="su-last" type="text" placeholder="Last name" autocomplete="family-name">
+          <input class="input" id="su-last" type="text" placeholder="Last name" autocomplete="family-name" aria-describedby="err-last" aria-invalid="false">
+          <span class="field-error" id="err-last" role="alert"></span>
         </div>
       </div>
 
       <!-- email field -->
       <div class="field">
         <label for="su-email">Email address <span class="req">*</span></label>
-        <input class="input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email">
+        <input class="input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email" aria-describedby="err-email" aria-invalid="false">
+        <span class="field-error" id="err-email" role="alert"></span>
       </div>
 
       <!-- country dropdown -->
       <div class="field">
         <label for="su-country">Country <span class="req">*</span></label>
-        <select class="input" id="su-country" autocomplete="country-name" required>
+        <select class="input" id="su-country" autocomplete="country-name" required aria-describedby="err-country" aria-invalid="false">
           <option value="">Select country...</option>
           <option value="OM">Oman</option>
           <option value="AE">UAE</option>
@@ -249,16 +288,18 @@
           <option value="BH">Bahrain</option>
           <option value="OT">Other</option>
         </select>
+        <span class="field-error" id="err-country" role="alert"></span>
       </div>
 
-      <!-- form error -->
-      <div id="su-error" style="display:none;margin-bottom:14px;padding:10px 14px;background:var(--c-warn-wash,#fff4ec);border:1px solid var(--c-warn-soft,#f5c8a0);border-radius:var(--r-sm);font-size:12.5px;color:var(--c-warn-text,#b85200);font-weight:500;"></div>
+      <!-- form-level alert (OTP send failure, server errors) -->
+      <div class="form-alert" id="su-form-alert" role="alert" aria-live="assertive"></div>
 
       <!-- marketing consent -->
       <div class="consent-row" id="consent-row">
-        <input type="checkbox" id="marketing-consent">
+        <input type="checkbox" id="marketing-consent" aria-describedby="err-consent" aria-invalid="false">
         <label for="marketing-consent">I agree to receive marketing communications from IMI by email. You must enable this consent to create an account.</label>
       </div>
+      <span class="field-error" id="err-consent" role="alert" style="margin-top:-12px;margin-bottom:14px;display:none;"></span>
 
       <!-- primary CTA -->
       <button class="btn btn-primary btn-full" id="btn-signup" type="button">Send OTP &rarr;</button>
@@ -281,52 +322,162 @@
 
 <script>
 (function () {
-  var firstEl = document.getElementById('su-first');
-  var lastEl = document.getElementById('su-last');
-  var emailEl = document.getElementById('su-email');
-  var countryEl = document.getElementById('su-country');
-  var consentEl = document.getElementById('marketing-consent');
+  var firstEl    = document.getElementById('su-first');
+  var lastEl     = document.getElementById('su-last');
+  var emailEl    = document.getElementById('su-email');
+  var countryEl  = document.getElementById('su-country');
+  var consentEl  = document.getElementById('marketing-consent');
   var consentRow = document.getElementById('consent-row');
-  var errEl = document.getElementById('su-error');
-  var btn = document.getElementById('btn-signup');
+  var formAlert  = document.getElementById('su-form-alert');
+  var btn        = document.getElementById('btn-signup');
 
-  function showError(msg) {
-    errEl.textContent = msg;
-    errEl.style.display = 'block';
+  /* --- per-field error helpers --- */
+  function fieldErr(input, msgEl, msg) {
+    input.classList.add('is-error');
+    input.setAttribute('aria-invalid', 'true');
+    msgEl.textContent = msg;
+    msgEl.classList.add('visible');
+    msgEl.style.display = 'block';
   }
-  function clearError() { errEl.style.display = 'none'; }
+  function fieldOk(input, msgEl) {
+    input.classList.remove('is-error');
+    input.setAttribute('aria-invalid', 'false');
+    msgEl.textContent = '';
+    msgEl.classList.remove('visible');
+    msgEl.style.display = 'none';
+  }
 
-  [firstEl, lastEl, emailEl, countryEl, consentEl].forEach(function (el) {
-    el.addEventListener('input', clearError);
-    el.addEventListener('change', clearError);
+  /* --- form-level alert (OTP-send failures, server errors) --- */
+  function showFormAlert(msg) {
+    formAlert.textContent = msg;
+    formAlert.classList.add('visible');
+    formAlert.style.display = 'block';
+  }
+  function clearFormAlert() {
+    formAlert.textContent = '';
+    formAlert.classList.remove('visible');
+    formAlert.style.display = 'none';
+  }
+
+  /* clear field error on any change */
+  function bindClear(input, msgEl) {
+    var evts = ['input', 'change'];
+    evts.forEach(function (ev) {
+      input.addEventListener(ev, function () { fieldOk(input, msgEl); clearFormAlert(); });
+    });
+  }
+  bindClear(firstEl,   document.getElementById('err-first'));
+  bindClear(lastEl,    document.getElementById('err-last'));
+  bindClear(emailEl,   document.getElementById('err-email'));
+  bindClear(countryEl, document.getElementById('err-country'));
+  consentEl.addEventListener('change', function () {
+    fieldOk(consentEl, document.getElementById('err-consent'));
+    consentRow.style.borderColor = '';
+    consentRow.style.background  = '';
+    clearFormAlert();
   });
 
-  btn.addEventListener('click', function () {
-    var first = firstEl.value.trim();
-    var last = lastEl.value.trim();
-    var email = emailEl.value.trim();
+  /* --- validate all fields; returns true if clean --- */
+  function validate() {
+    var ok = true;
+    var first   = firstEl.value.trim();
+    var last    = lastEl.value.trim();
+    var email   = emailEl.value.trim();
     var country = countryEl.value;
-    var consent = consentEl.checked;
+    var errFirst   = document.getElementById('err-first');
+    var errLast    = document.getElementById('err-last');
+    var errEmail   = document.getElementById('err-email');
+    var errCountry = document.getElementById('err-country');
+    var errConsent = document.getElementById('err-consent');
 
-    if (!first) { showError('Please enter your first name.'); firstEl.focus(); return; }
-    if (!last) { showError('Please enter your last name.'); lastEl.focus(); return; }
-    if (!email) { showError('Please enter your email address.'); emailEl.focus(); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); emailEl.focus(); return; }
-    if (!country) { showError('Please select your country.'); countryEl.focus(); return; }
-    if (!consent) {
-      showError('You must agree to marketing communications to create an account.');
-      consentRow.style.borderColor = 'var(--c-warn-soft, #f5c8a0)';
-      consentRow.style.background = 'var(--c-warn-wash, #fff4ec)';
-      return;
+    if (!first) {
+      fieldErr(firstEl, errFirst, 'Please enter your first name.');
+      ok = false;
     }
-    clearError();
-    consentRow.style.borderColor = '';
-    consentRow.style.background = '';
-    sessionStorage.setItem('imi_email', email);
-    sessionStorage.setItem('imi_first', first);
-    sessionStorage.setItem('imi_last', last);
-    sessionStorage.setItem('imi_country', country);
-    window.location.href = 'otp.html';
+    if (!last) {
+      fieldErr(lastEl, errLast, 'Please enter your last name.');
+      ok = false;
+    }
+    if (!email) {
+      fieldErr(emailEl, errEmail, 'Please enter your email address.');
+      ok = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      /* (c) invalid email format - inline, stay on page */
+      fieldErr(emailEl, errEmail, 'Please enter a valid email address (e.g. name@example.com).');
+      ok = false;
+    }
+    if (!country) {
+      fieldErr(countryEl, errCountry, 'Please select your country.');
+      ok = false;
+    }
+    if (!consentEl.checked) {
+      fieldErr(consentEl, errConsent, 'You must agree to marketing communications to create an account.');
+      consentRow.style.borderColor = 'var(--c-danger)';
+      consentRow.style.background  = 'var(--c-danger-wash)';
+      ok = false;
+    }
+    if (!ok) {
+      var firstInvalid = document.querySelector('.input.is-error, #marketing-consent.is-error');
+      if (firstInvalid) firstInvalid.focus();
+    }
+    return ok;
+  }
+
+  /* --- simulate OTP send (replace with real API call) --- */
+  function sendOtp(email, onSuccess, onError) {
+    /* Stub: in production replace this with a fetch() to your auth endpoint.
+       Error scenarios:
+         code "EMAIL_EXISTS"     -> (a) email already registered
+         code "DUPLICATE"        -> (b) duplicate signup (race condition)
+         code "OTP_FAILED"       -> (d) OTP-send failure (email delivery error)
+    */
+    /* For prototype purposes, immediately call onSuccess so flow continues. */
+    onSuccess();
+  }
+
+  btn.addEventListener('click', function () {
+    clearFormAlert();
+    if (!validate()) return;
+
+    var email   = emailEl.value.trim();
+    var first   = firstEl.value.trim();
+    var last    = lastEl.value.trim();
+    var country = countryEl.value;
+
+    btn.disabled    = true;
+    btn.textContent = 'Sending…';
+
+    sendOtp(email, function () {
+      /* success: store and proceed to OTP screen */
+      sessionStorage.setItem('imi_email',   email);
+      sessionStorage.setItem('imi_first',   first);
+      sessionStorage.setItem('imi_last',    last);
+      sessionStorage.setItem('imi_country', country);
+      window.location.href = 'otp.html';
+    }, function (code) {
+      btn.disabled    = false;
+      btn.textContent = 'Send OTP →';
+
+      var errEmail = document.getElementById('err-email');
+      if (code === 'EMAIL_EXISTS') {
+        /* (a) email already registered - inline under email field */
+        fieldErr(emailEl, errEmail,
+          'An account with this email already exists. Sign in instead or use a different address.');
+        emailEl.focus();
+      } else if (code === 'DUPLICATE') {
+        /* (b) duplicate signup - inline under email field */
+        fieldErr(emailEl, errEmail,
+          'This email was just registered. Please check your inbox for the verification code or sign in.');
+        emailEl.focus();
+      } else if (code === 'OTP_FAILED') {
+        /* (d) OTP-send failure - form-level alert, field stays clean */
+        showFormAlert(
+          'We could not send a verification code to this address right now. Please check the email and try again, or contact support if the issue continues.');
+      } else {
+        /* generic server error - form-level alert */
+        showFormAlert('Something went wrong. Please try again in a moment.');
+      }
+    });
   });
 
   emailEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') btn.click(); });

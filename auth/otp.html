@@ -210,6 +210,27 @@
     text-underline-offset: 2px;
   }
   .auth-legal a:hover { color: var(--ink); }
+
+  /* inline alert banners */
+  .alert-inline {
+    display: none;
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid transparent;
+    text-align: left;
+  }
+  .alert-inline.alert-locked {
+    background: #fef3f2;
+    border-color: #fca5a5;
+    color: var(--c-danger-deep, #9e2014);
+  }
+  .alert-inline strong { display: block; margin-bottom: 2px; font-weight: 700; }
+  .alert-inline a { color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+  .alert-inline.visible { display: block; }
 </style>
 </head>
 <body>
@@ -244,7 +265,14 @@
         <input class="otp-box" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 6">
       </div>
 
-      <div id="otp-error" style="display:none;margin-bottom:12px;font-size:12.5px;color:var(--c-warn-text,#b85200);font-weight:500;text-align:center;"></div>
+      <!-- inline: wrong OTP / general error -->
+      <div id="otp-error" style="display:none;margin-bottom:12px;font-size:12.5px;color:var(--c-warn-text,#b85200);font-weight:500;text-align:center;" role="alert"></div>
+
+      <!-- inline: account locked after repeated wrong OTP -->
+      <div class="alert-inline alert-locked" id="alert-otp-locked" role="alert">
+        <strong>Account temporarily locked</strong>
+        Too many incorrect codes. Contact <a href="../profile/help-center.html">support</a> to unlock your account.
+      </div>
 
       <p class="otp-expiry">Code expires in <strong id="otp-timer">10:00</strong></p>
 
@@ -252,7 +280,7 @@
 
       <div class="auth-divider"></div>
 
-      <p class="auth-foot">Didn't get it? <button id="btn-resend" class="btn btn-ghost btn-sm" type="button" disabled style="font-size:13px;">Resend code (<span id="resend-cd">0:30</span>)</button></p>
+      <p class="auth-foot">Didn't get it? <button id="btn-resend" class="btn btn-ghost btn-sm" type="button" disabled style="font-size:13px;">Resend code</button></p>
       <p class="auth-foot help"><a href="../profile/help-center.html">Need help?</a></p>
 
       <div class="auth-legal">
@@ -273,9 +301,11 @@
   var boxes = Array.from(document.querySelectorAll('.otp-box'));
   var timerEl = document.getElementById('otp-timer');
   var errEl = document.getElementById('otp-error');
+  var alertOtpLocked = document.getElementById('alert-otp-locked');
   var btnVerify = document.getElementById('btn-verify');
   var btnResend = document.getElementById('btn-resend');
-  var resendCdEl = document.getElementById('resend-cd');
+  var wrongAttempts = 0;
+  var MAX_ATTEMPTS = 3;
 
   /* OTP input wiring */
   boxes.forEach(function (box, i) {
@@ -318,10 +348,20 @@
 
   function showError(msg) { errEl.textContent = msg; errEl.style.display = 'block'; }
   function clearError() { errEl.style.display = 'none'; }
+  function showLocked() {
+    errEl.style.display = 'none';
+    alertOtpLocked.classList.add('visible');
+    btnVerify.disabled = true;
+    btnResend.disabled = true;
+    boxes.forEach(function (b) { b.disabled = true; });
+    clearInterval(expiryIv);
+  }
 
   /* expiry countdown: 10 min */
   var expiryLeft = 600;
-  var expiryIv = setInterval(function () {
+  var expiryIv;
+
+  function tickExpiry() {
     expiryLeft--;
     if (expiryLeft <= 0) {
       clearInterval(expiryIv);
@@ -329,30 +369,40 @@
       timerEl.style.color = 'var(--c-warn-text, #b85200)';
       showError('This code has expired. Request a new one below.');
       btnVerify.disabled = true;
+      btnResend.disabled = false;
     } else {
       var m = Math.floor(expiryLeft / 60);
       var s = expiryLeft % 60;
       timerEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
     }
-  }, 1000);
+  }
 
-  /* resend countdown: 30 s */
-  var resendLeft = 30;
-  var resendIv = setInterval(function () {
-    resendLeft--;
-    if (resendLeft <= 0) {
-      clearInterval(resendIv);
-      btnResend.disabled = false;
-      btnResend.innerHTML = 'Resend code';
-    } else {
-      resendCdEl.textContent = '0:' + (resendLeft < 10 ? '0' : '') + resendLeft;
-    }
-  }, 1000);
+  expiryIv = setInterval(tickExpiry, 1000);
 
   btnResend.addEventListener('click', function () {
     if (btnResend.disabled) return;
-    window.location.href = 'resend-otp.html';
+    /* inline resend: reset expiry timer, re-disable button, clear boxes */
+    expiryLeft = 600;
+    timerEl.textContent = '10:00';
+    timerEl.style.color = '';
+    btnVerify.disabled = false;
+    btnVerify.textContent = 'Verify →';
+    btnResend.disabled = true;
+    wrongAttempts = 0;
+    alertOtpLocked.classList.remove('visible');
+    clearError();
+    boxes.forEach(function (b) { b.disabled = false; b.value = ''; b.classList.remove('filled'); });
+    boxes[0].focus();
+    /* restart expiry interval */
+    clearInterval(expiryIv);
+    expiryIv = setInterval(tickExpiry, 1000);
   });
+
+  /* Prototype: read ?error= param to demo error states */
+  var params = new URLSearchParams(window.location.search);
+  var errParam = params.get('error');
+  if (errParam === 'wrong') showError('That code is incorrect. Please try again.');
+  else if (errParam === 'locked') showLocked();
 
   /* verify */
   btnVerify.addEventListener('click', function () {
@@ -366,10 +416,18 @@
     clearError();
     btnVerify.textContent = 'Verifying...';
     btnVerify.disabled = true;
-    /* Prototype: route to email-verification for new signups, dashboard for returning logins */
-    var isSignup = sessionStorage.getItem('imi_first') || sessionStorage.getItem('imi_last');
+    /* Prototype: simulate wrong OTP on attempt to show inline errors */
     setTimeout(function () {
-      window.location.href = isSignup ? 'email-verification.html' : '../learning/dashboard.html';
+      /* In production this branches on server response.
+         Demo: first submit simulates wrong OTP, third triggers lock. */
+      wrongAttempts++;
+      if (wrongAttempts >= MAX_ATTEMPTS) {
+        showLocked();
+        return;
+      }
+      /* Simulate wrong OTP: uncomment next line to test wrong-OTP path */
+      /* showError('That code is incorrect. ' + (MAX_ATTEMPTS - wrongAttempts) + ' attempt(s) remaining.'); btnVerify.disabled = false; btnVerify.textContent = 'Verify →'; return; */
+      window.location.href = '../profile/profile-edit-v2.html';
     }, 800);
   });
 

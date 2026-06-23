@@ -15,7 +15,7 @@
   .pe-actions { display: flex; align-items: center; gap: 14px; }
   .pe-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
   .pe-bar .progress { flex: 1; height: 8px; }
-  .pe-bar .pe-val { font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--ink-soft); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
+  .pe-bar .pe-val { font-family: var(--font-label); font-size: 13px; font-weight: 700; color: var(--ink); min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
   .pe-tabs { display: flex; gap: 6px; padding: 4px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r-pill); margin-bottom: 26px; width: fit-content; max-width: 100%; flex-wrap: wrap; }
   .pe-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 16px; border-radius: var(--r-pill); font-family: var(--font-sans); font-size: 12.5px; font-weight: 600; color: var(--ink-soft); transition: background 0.18s, color 0.18s; }
   .pe-tabs button.is { background: var(--ink); color: var(--hero-bg); }
@@ -24,28 +24,31 @@
   .pe-tabs button.is .frac { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
   .pe-tabs .frac.ok { color: var(--c-sage-text); background: var(--c-sage-wash); }
   .pe-tabs button.is .frac.ok { background: rgba(252, 247, 174, 0.20); color: var(--hero-bg); }
-  .pe-section-label { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 18px; }
+  .pe-section-label { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; }
   .pe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
   .pe-stack { display: flex; flex-direction: column; gap: 4px; }
   .pe-grid .field, .pe-stack .field { margin-bottom: 0; }
   .field .input[disabled], .field select.input[disabled] { background: var(--paper-2); color: var(--ink-soft); cursor: not-allowed; opacity: 0.85; }
   .field .opt { color: var(--ink-mute); font-weight: 400; letter-spacing: 0.04em; text-transform: none; }
   .field .req { color: var(--accent); margin-left: 2px; }
-  .field .hint { font-size: 12px; color: var(--ink-soft); margin-top: 7px; line-height: 1.45; }
+  .field label { color: var(--ink); }
+  .field .hint { font-size: 12px; color: var(--ink); margin-top: 7px; line-height: 1.45; }
   .field .hint.warn { color: var(--c-honey-text); }
+  .field .input { color: var(--ink); }
+  .field select.input { color: var(--ink); }
   .pe-upload { display: flex; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed var(--line-strong); border-radius: var(--r-md); background: var(--paper-2); color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; padding: 16px 18px; cursor: pointer; transition: border-color 0.18s, background 0.18s; }
   .pe-upload:hover { border-color: var(--accent); background: var(--paper); }
   .pe-upload input[type="file"] { display: none; }
   .pe-file { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 14px 16px; }
   .pe-file .pf-info { font-size: 13px; color: var(--ink); }
-  .pe-file .pf-meta { font-size: 12px; color: var(--ink-mute); margin-top: 3px; font-family: var(--font-label); letter-spacing: 0.03em; }
+  .pe-file .pf-meta { font-size: 12px; color: var(--ink); margin-top: 3px; font-family: var(--font-label); letter-spacing: 0.03em; }
   /* Pending file (selected, not yet uploaded) */
   .pf-pending { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); padding: 12px 16px; margin-top: 10px; }
   .pf-pending .pf-icon { width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--paper-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .pf-pending .pf-icon svg { width: 16px; height: 16px; color: var(--ink-soft); }
   .pf-pending .pf-body { flex: 1; min-width: 0; }
   .pf-pending .pf-name { font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pf-pending .pf-size { font-size: 11.5px; color: var(--ink-mute); font-family: var(--font-label); margin-top: 2px; }
+  .pf-pending .pf-size { font-size: 11.5px; color: var(--ink); font-family: var(--font-label); margin-top: 2px; }
   .pf-pending .pf-remove { flex-shrink: 0; background: none; border: none; cursor: pointer; color: var(--ink-mute); padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: color 0.15s, background 0.15s; }
   .pf-pending .pf-remove:hover { color: #c0392b; background: #fdecea; }
   .pf-pending .pf-remove svg { width: 15px; height: 15px; }
@@ -53,7 +56,7 @@
   .pf-progress-wrap { margin-top: 8px; }
   .pf-progress-track { height: 5px; background: var(--paper-2); border-radius: 99px; overflow: hidden; margin-bottom: 5px; }
   .pf-progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width 0.25s ease; }
-  .pf-progress-label { font-size: 11.5px; color: var(--ink-soft); font-family: var(--font-label); display: flex; justify-content: space-between; }
+  .pf-progress-label { font-size: 11.5px; color: var(--ink); font-family: var(--font-label); display: flex; justify-content: space-between; }
   .pf-progress-label .pf-pct { font-weight: 700; color: var(--ink); }
   .pf-status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-family: var(--font-label); padding: 3px 9px; border-radius: var(--r-pill); margin-top: 6px; }
   .pf-status.uploading { background: #fff9e0; color: #a07800; }
@@ -64,12 +67,116 @@
   .pe-chips .chip { cursor: default; }
   .pe-chips .chip .x { color: var(--ink-mute); font-weight: 700; margin-left: 1px; }
   .span-2 { grid-column: 1 / -1; }
+  .pe-link-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 0; }
   .pe-link-row { display: flex; align-items: center; gap: 10px; }
-  .pe-link-row .input { flex: 1; }
-  textarea.input { height: auto; padding: 9px 14px; resize: vertical; line-height: 1.5; }
+  .pe-link-row .input { height: 40px; color: var(--ink); }
+  .pe-link-remove {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    padding: 6px;
+    color: var(--ink-faint);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .pe-link-remove:hover { color: #c0392b; border-color: #f5c6c2; }
+  textarea.input { height: auto; padding: 9px 14px; resize: vertical; line-height: 1.5; color: var(--ink); }
   html { scroll-behavior: smooth; }
   .pe-section { scroll-margin-top: 96px; }
   @media (max-width: 1080px) { .pe-grid { grid-template-columns: 1fr; } }
+
+  /* link type select */
+  .pe-link-type {
+    flex: 0 0 140px;
+    height: 40px;
+    font-size: 14px;
+    color: var(--ink);
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 13px;
+    min-width: 0;
+  }
+
+  /* Title / Prefix other input */
+  .pe-title-other {
+    margin-top: 8px;
+    display: none;
+  }
+  .pe-title-other.visible { display: block; }
+
+  /* employment block repeater */
+  .pe-emp-block {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 18px 14px;
+    background: var(--paper-2);
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .pe-emp-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    padding: 5px;
+    color: var(--ink-faint);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .pe-emp-remove:hover { color: #c0392b; border-color: #f5c6c2; }
+  .pe-emp-remove svg { display: block; width: 13px; height: 13px; }
+  .pe-addexp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-family: var(--font-label);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .pe-addexp:hover { color: var(--accent); }
+
+  /* doc title select */
+  .pe-doc-title-select {
+    height: 40px;
+    font-size: 14px;
+    color: var(--ink);
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3D2A' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 13px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+</style>
+<style>
+/* Pooja 2026-06-23: all profile text in black */
+main, main * { color: var(--ink) !important; }
+main .pe-tabs button.is, main .pe-tabs button.is * { color: var(--hero-bg) !important; }
+main .req { color: var(--accent) !important; }
+main .input::placeholder { color: var(--ink-faint) !important; }
 </style>
 </head>
 <body data-crumbs="Account|settings.html;Profile|profile.html;Edit profile">
@@ -80,8 +187,8 @@
     <span class="sep">·</span>
     <span class="copy">Featured course, partner promo, or new program launch</span>
   </div>
-  <a href="#" class="ad-cta">Learn more →</a>
-  <button class="ad-close" aria-label="Dismiss ad">×</button>
+  <a href="#" class="ad-cta">Learn more &rarr;</a>
+  <button class="ad-close" aria-label="Dismiss ad">&times;</button>
 </div>
 
 <header class="topbar">
@@ -117,7 +224,7 @@
   <div>
     <div class="eyebrow">Profile &amp; Account</div>
     <h1 class="page-title">Edit <em>profile</em></h1>
-    <p class="page-sub">Complete every field, including optional ones, to reach 100%. Full completion is required before your Course Completed proof can be issued.</p>
+    <p class="page-sub">Complete every field to reach 100%. Full completion is required before your Course Completed proof can be issued.</p>
   </div>
   <div class="pe-actions">
     <span class="chip t-sage dot" id="completion-chip">67% complete</span>
@@ -157,8 +264,20 @@
         <input class="input" value="salman@webinnoventix.com" disabled>
       </div>
       <div class="field">
-        <label>Title / Prefix <span class="opt">(optional)</span></label>
-        <input class="input" placeholder="e.g. Mr., Dr., Eng.">
+        <label>Title / Prefix</label>
+        <select class="input" id="pe-title-select">
+          <option value="">Select...</option>
+          <option value="Mr">Mr</option>
+          <option value="Ms">Ms</option>
+          <option value="Mrs">Mrs</option>
+          <option value="Miss">Miss</option>
+          <option value="Dr">Dr</option>
+          <option value="Prof">Prof</option>
+          <option value="Fellow">Fellow</option>
+          <option value="Mx">Mx</option>
+          <option value="Other">Other</option>
+        </select>
+        <input class="input pe-title-other" id="pe-title-other" placeholder="Enter your title or prefix">
       </div>
       <div class="field">
         <label>Name on your Course Completed proof <span class="req">*</span></label>
@@ -169,7 +288,7 @@
         <label>Photo</label>
         <div class="pe-upload" id="photo-upload-zone" role="button" tabindex="0" aria-label="Upload profile photo">
           <input type="file" id="photo-file-input" accept=".jpg,.jpeg,.png" style="display:none">
-          <span id="photo-upload-label">Drag image or click to upload · square JPG/PNG up to 2 MB · preview shown before save</span>
+          <span id="photo-upload-label">Drag image or click to upload &middot; square JPG/PNG up to 2 MB &middot; preview shown before save</span>
         </div>
         <div id="photo-preview-wrap" style="display:none;margin-top:10px;align-items:center;gap:12px;">
           <img id="photo-preview-img" src="" alt="Preview" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--line);">
@@ -177,11 +296,11 @@
         </div>
       </div>
       <div class="field">
-        <label>Preferred Language <span class="opt">(recommended)</span></label>
-        <select class="input"><option>English</option><option>العربية (Arabic)</option></select>
+        <label>Preferred Language</label>
+        <select class="input"><option>English</option><option>&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577; (Arabic)</option></select>
       </div>
       <div class="field">
-        <label>Date of birth <span class="opt">(used for age verification · min 16)</span></label>
+        <label>Date of birth <span class="opt">(used for age verification &middot; min 16)</span></label>
         <input class="input" value="11 / 04 / 1998">
       </div>
       <div class="field">
@@ -201,12 +320,12 @@
         <input class="input" placeholder="+968 9X XXX XXXX">
       </div>
       <div class="field span-2">
-        <label>Learning interests <span class="opt">(used for recommendations)</span></label>
-        <input class="input" placeholder="Add interest ▾">
+        <label>Learning interests</label>
+        <input class="input" placeholder="Add interest &#9662;">
         <div class="pe-chips" id="interest-chips">
-          <span class="chip" data-chip>Records mgmt <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
-          <span class="chip" data-chip>ISO 30401 <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
-          <span class="chip" data-chip>Data governance <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">×</span></span>
+          <span class="chip" data-chip>Records mgmt <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">&#215;</span></span>
+          <span class="chip" data-chip>ISO 30401 <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">&#215;</span></span>
+          <span class="chip" data-chip>Data governance <span class="x" onclick="this.closest('[data-chip]').remove();updateCompletion()">&#215;</span></span>
         </div>
       </div>
     </div>
@@ -244,6 +363,38 @@
         </select>
       </div>
     </div>
+
+    <!-- Employment / Experience repeater -->
+    <div style="margin-top:22px;">
+      <div class="pe-section-label" style="margin-bottom:14px;">Employment / Experience</div>
+      <div id="pe-emp-list">
+        <div class="pe-emp-block" data-emp-block>
+          <div class="pe-grid">
+            <div class="field">
+              <label>Employer</label>
+              <input class="input" placeholder="Organisation name">
+            </div>
+            <div class="field">
+              <label>Role / Title</label>
+              <input class="input" placeholder="e.g. Records Manager">
+            </div>
+            <div class="field">
+              <label>Start date</label>
+              <input class="input" placeholder="MM / YYYY">
+            </div>
+            <div class="field">
+              <label>End date</label>
+              <input class="input" placeholder="MM / YYYY or Present">
+            </div>
+            <div class="field span-2">
+              <label>Description</label>
+              <input class="input" placeholder="Brief description of your responsibilities">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="pe-addexp" id="pe-add-exp">+ Add experience</button>
+    </div>
   </div>
 </div>
 
@@ -253,13 +404,26 @@
     <span class="chip">0/1 complete</span>
   </div>
   <div class="card-body">
-    <div class="pe-section-label">One field, multiple links allowed</div>
+    <div class="pe-section-label">Name and URL for each link</div>
     <div class="pe-stack">
       <div class="field">
-        <label>Personal Site / Blog Links <span class="opt">(optional · multiple allowed)</span></label>
-        <input class="input" placeholder="https://">
+        <label>Personal Site / Blog Links</label>
+        <div class="pe-link-list" id="pe-link-list">
+          <div class="pe-link-row">
+            <select class="input pe-link-type">
+              <option value="Website">Website</option>
+              <option value="Articles/Blogs">Articles/Blogs</option>
+              <option value="Social">Social</option>
+            </select>
+            <input class="input pe-link-name" placeholder="Name (e.g. LinkedIn, Portfolio)" style="flex:0 0 160px;min-width:0;">
+            <input class="input pe-link-url" placeholder="https://" style="flex:1;min-width:0;">
+            <button type="button" class="pe-link-remove" aria-label="Remove link" data-close="link-row" style="display:none">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
         <button type="button" class="btn btn-ghost btn-sm" style="margin-top:10px" id="add-link-btn">+ Add another link</button>
-        <div class="hint">A single field that allows multiple social, professional, or personal web links.</div>
+        <div class="hint">Each link has a type, a short name and a URL. Add as many as you need.</div>
       </div>
     </div>
   </div>
@@ -274,7 +438,11 @@
     <div class="pe-section-label">Supporting evidence</div>
     <div class="pe-stack">
       <div class="field">
-        <label>CV / Resume <span class="opt">(PDF, up to 5 MB · optional)</span></label>
+        <label>Upload Document</label>
+        <select class="input pe-doc-title-select" id="pe-doc-title-1" style="margin-bottom:10px;">
+          <option value="CV">CV</option>
+          <option value="Certification">Certification</option>
+        </select>
         <div class="pe-file">
           <div>
             <div class="pf-info">cv-salman-ali.pdf</div>
@@ -284,10 +452,14 @@
         </div>
       </div>
       <div class="field">
-        <label>Externally Earned Certificates, Portfolio <span class="opt">(optional · multi-upload)</span></label>
+        <label>Additional Documents</label>
+        <select class="input pe-doc-title-select" id="pe-doc-title-2" style="margin-bottom:10px;">
+          <option value="CV">CV</option>
+          <option value="Certification">Certification</option>
+        </select>
         <div class="pe-upload" id="cert-upload-zone" role="button" tabindex="0" aria-label="Upload certificates or portfolio files">
           <input type="file" id="cert-file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.zip">
-          <span>Add files · PDF, JPG, PNG, ZIP up to 10 MB each · certificates earned outside the platform plus portfolio items</span>
+          <span>Add files &middot; PDF, JPG, PNG, ZIP up to 10 MB each &middot; certificates earned outside the platform plus portfolio items</span>
         </div>
         <div id="cert-file-list"></div>
       </div>
@@ -332,7 +504,7 @@
     var bar = document.querySelector('.progress-fill');
     var valEl = document.querySelector('.pe-val');
     var chips = document.querySelectorAll('[data-chip]').length;
-    var linkInputs = document.querySelectorAll('#sec-links .input');
+    var linkInputs = document.querySelectorAll('#pe-link-list .pe-link-url');
     var hasLink = false;
     linkInputs.forEach(function(inp) { if (inp.value.trim()) hasLink = true; });
     var roleInput = document.querySelector('#sec-professional .input[placeholder]');
@@ -372,6 +544,21 @@
         });
       }, { rootMargin: '-20% 0px -70% 0px' });
       document.querySelectorAll('.pe-section[id]').forEach(function (sec) { io.observe(sec); });
+    }
+
+    /* Title / Prefix Other reveal */
+    var titleSelect = document.getElementById('pe-title-select');
+    var titleOther = document.getElementById('pe-title-other');
+    if (titleSelect && titleOther) {
+      titleSelect.addEventListener('change', function () {
+        if (titleSelect.value === 'Other') {
+          titleOther.classList.add('visible');
+          titleOther.focus();
+        } else {
+          titleOther.classList.remove('visible');
+          titleOther.value = '';
+        }
+      });
     }
 
     /* Photo upload */
@@ -433,7 +620,7 @@
           var chip = document.createElement('span');
           chip.className = 'chip';
           chip.setAttribute('data-chip', '');
-          chip.innerHTML = val + ' <span class="x" onclick="this.closest(\'[data-chip]\').remove();updateCompletion()">×</span>';
+          chip.innerHTML = val + ' <span class="x" onclick="this.closest(\'[data-chip]\').remove();updateCompletion()">&#215;</span>';
           chipsWrap.appendChild(chip);
           interestInput.value = '';
           updateCompletion();
@@ -441,18 +628,87 @@
       });
     }
 
-    /* + Add another link */
+    /* Employment repeater */
+    function empBlockHTML() {
+      return '<div class="pe-emp-block" data-emp-block>' +
+        '<button type="button" class="pe-emp-remove" aria-label="Remove experience">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
+        '<div class="pe-grid">' +
+          '<div class="field"><label>Employer</label><input class="input" placeholder="Organisation name"></div>' +
+          '<div class="field"><label>Role / Title</label><input class="input" placeholder="e.g. Records Manager"></div>' +
+          '<div class="field"><label>Start date</label><input class="input" placeholder="MM / YYYY"></div>' +
+          '<div class="field"><label>End date</label><input class="input" placeholder="MM / YYYY or Present"></div>' +
+          '<div class="field span-2"><label>Description</label><input class="input" placeholder="Brief description of your responsibilities"></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    function updateEmpRemoveButtons() {
+      var blocks = document.querySelectorAll('#pe-emp-list [data-emp-block]');
+      blocks.forEach(function (b) {
+        var btn = b.querySelector('.pe-emp-remove');
+        if (btn) btn.style.display = blocks.length > 1 ? '' : 'none';
+      });
+    }
+
+    var addExpBtn = document.getElementById('pe-add-exp');
+    if (addExpBtn) {
+      addExpBtn.addEventListener('click', function () {
+        var list = document.getElementById('pe-emp-list');
+        var div = document.createElement('div');
+        div.innerHTML = empBlockHTML();
+        var block = div.firstChild;
+        block.querySelector('.pe-emp-remove').addEventListener('click', function () {
+          block.remove();
+          updateEmpRemoveButtons();
+        });
+        list.appendChild(block);
+        updateEmpRemoveButtons();
+        block.querySelector('.input').focus();
+      });
+    }
+
+    updateEmpRemoveButtons();
+
+    /* + Add another link (type + name + URL rows) */
+    function peUpdateRemoveButtons() {
+      var rows = document.querySelectorAll('#pe-link-list .pe-link-row');
+      rows.forEach(function (row) {
+        var btn = row.querySelector('.pe-link-remove');
+        if (btn) btn.style.display = rows.length > 1 ? '' : 'none';
+      });
+    }
+
     var addLinkBtn = document.getElementById('add-link-btn');
     if (addLinkBtn) {
       addLinkBtn.addEventListener('click', function () {
-        var inp = document.createElement('input');
-        inp.className = 'input';
-        inp.placeholder = 'https://';
-        inp.style.marginTop = '8px';
-        addLinkBtn.parentNode.insertBefore(inp, addLinkBtn);
-        inp.focus();
+        var list = document.getElementById('pe-link-list');
+        var row = document.createElement('div');
+        row.className = 'pe-link-row';
+        row.innerHTML =
+          '<select class="input pe-link-type">' +
+            '<option value="Website">Website</option>' +
+            '<option value="Articles/Blogs">Articles/Blogs</option>' +
+            '<option value="Social">Social</option>' +
+          '</select>' +
+          '<input class="input pe-link-name" placeholder="Name (e.g. LinkedIn, Portfolio)" style="flex:0 0 160px;min-width:0;">' +
+          '<input class="input pe-link-url" placeholder="https://" style="flex:1;min-width:0;">' +
+          '<button type="button" class="pe-link-remove" aria-label="Remove link" data-close="link-row">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '</button>';
+        row.querySelector('.pe-link-remove').addEventListener('click', function () {
+          row.remove();
+          peUpdateRemoveButtons();
+          updateCompletion();
+        });
+        list.appendChild(row);
+        peUpdateRemoveButtons();
+        row.querySelector('.pe-link-name').focus();
       });
     }
+
+    peUpdateRemoveButtons();
 
     /* File upload with progress + remove (Gmail-attachment pattern) */
     function formatBytes(bytes) {
